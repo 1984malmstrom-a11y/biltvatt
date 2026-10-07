@@ -18,6 +18,7 @@ import {
   Users,
   X,
   RefreshCw,
+  Bell,
 } from "lucide-react";
 import type { Staff, WashProgram, Sale, Stats } from "./types";
 import { api, HttpError, sek, send } from "./api";
@@ -26,6 +27,8 @@ import {
   ResetStatistics,
   StaffMaintenance,
 } from "./AdminMaintenance";
+import { leaguePeriodLabel } from "../shared/business";
+import { AdminNotifications, PushControls } from "./PushControls";
 import {
   Avatar,
   Brand,
@@ -54,6 +57,7 @@ type AdminTab =
   | "overview"
   | "staff"
   | "sales"
+  | "notifications"
   | "programs"
   | "goals"
   | "statistics"
@@ -63,6 +67,7 @@ const adminTabs = [
   ["overview", "Översikt", Home],
   ["staff", "Personal", Users],
   ["sales", "Försäljningar", Clock3],
+  ["notifications", "Notiser", Bell],
   ["programs", "Tvättprogram", CarFront],
   ["goals", "Mål", Target],
   ["statistics", "Statistik", BarChart3],
@@ -71,7 +76,11 @@ const adminTabs = [
 ] as const;
 
 export default function App() {
-  const [page, setPage] = useState<Page>("home");
+  const [page, setPage] = useState<Page>(() =>
+    new URLSearchParams(window.location.search).get("view") === "stats"
+      ? "stats"
+      : "home",
+  );
   const [staff, setStaff] = useState<Staff[]>([]),
     [programs, setPrograms] = useState<WashProgram[]>([]);
   const [selected, setSelected] = useState<Staff | null>(null);
@@ -204,6 +213,26 @@ export default function App() {
     setNotice("");
     setPage(target);
   };
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const open = (event: MessageEvent) => {
+      if (
+        event.data?.type !== "TVATTLIGAN_OPEN" ||
+        !["stats", "home"].includes(event.data.view)
+      )
+        return;
+      if (busyRef.current || pending) {
+        setNotice(
+          "Slutför den aktuella registreringen innan du öppnar notisens sida.",
+        );
+        return;
+      }
+      setPage(event.data.view);
+      setError("");
+    };
+    navigator.serviceWorker.addEventListener("message", open);
+    return () => navigator.serviceWorker.removeEventListener("message", open);
+  }, [pending]);
   const chooseStaff = (person: Staff) => {
     setSelected(person);
     setLast(null);
@@ -344,7 +373,18 @@ export default function App() {
         </div>
       )}
       {statsBusy && !stats && <p className="loading">Hämtar statistik…</p>}
-      {stats && <Dashboard stats={stats} />}
+      {stats && (
+        <Dashboard
+          stats={stats}
+          periodLabel={leaguePeriodLabel(
+            period,
+            stats.range.start,
+            stats.range.end,
+          )}
+          primary={page === "stats"}
+          compareTeam={!(page === "stats" && scope !== "team")}
+        />
+      )}
     </>
   );
   const editPerson = (person?: Staff) => {
@@ -763,6 +803,13 @@ export default function App() {
               </>
             )}
             {adminTab === "sales" && <AdminSales {...maintenanceProps} />}
+            {adminTab === "notifications" && (
+              <AdminNotifications
+                staff={allStaff}
+                dailyGoal={goals.daily_goal}
+                onUnauthorized={maintenanceUnauthorized}
+              />
+            )}
             {adminTab === "statistics" && (
               <ResetStatistics {...maintenanceProps} />
             )}
@@ -1130,6 +1177,7 @@ export default function App() {
           </section>
         </div>
       )}
+      <PushControls staff={staff} disabled={busy || !!pending} />
       <footer className="app-footer">
         <span>Tvättligan · Preem Tingsryd</span>
         <span>

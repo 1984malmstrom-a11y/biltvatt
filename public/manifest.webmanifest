@@ -1,0 +1,32 @@
+{
+  "id": "/",
+  "name": "Tvättligan",
+  "short_name": "Tvättligan",
+  "lang": "sv-SE",
+  "description": "Registrera biltvättar och följ lagets resultat.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#edf6fc",
+  "theme_color": "#edf6fc",
+  "icons": [
+    {
+      "src": "/icons/tvattligan-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/tvattligan-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/tvattligan-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

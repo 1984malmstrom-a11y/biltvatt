@@ -56,6 +56,12 @@ beforeEach(() => {
       "utf8",
     ),
   );
+  db.exec(
+    readFileSync(
+      new URL("../migrations/0003_push_notifications.sql", import.meta.url),
+      "utf8",
+    ),
+  );
   env = {
     ADMIN_PIN: "123456",
     DB: {

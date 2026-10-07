@@ -11,6 +11,7 @@ import {
 import type { CSSProperties } from "react";
 import type { Staff, Stats } from "./types";
 import { percent, sek } from "./api";
+import { AverageLeague, BenchmarkDelta } from "./AverageLeague";
 
 export function StationLogo() {
   return (
@@ -38,7 +39,7 @@ export function Avatar({
   person,
   small = false,
 }: {
-  person: Staff;
+  person: Pick<Staff, "color">;
   small?: boolean;
 }) {
   return (
@@ -237,7 +238,17 @@ export function Goals({ stats }: { stats: Stats }) {
     </div>
   );
 }
-export function Dashboard({ stats }: { stats: Stats }) {
+export function Dashboard({
+  stats,
+  periodLabel = "Idag",
+  primary = true,
+  compareTeam = true,
+}: {
+  stats: Stats;
+  periodLabel?: string;
+  primary?: boolean;
+  compareTeam?: boolean;
+}) {
   const kpis = [
     ["Antal tvättar", String(stats.count), "blue", CarFront],
     ["Omsättning", sek(stats.revenue), "cyan", Droplets],
@@ -247,7 +258,6 @@ export function Dashboard({ stats }: { stats: Stats }) {
   const leaderFields = [
     ["count", "Flest sålda tvättar"],
     ["revenue", "Högst omsättning"],
-    ["average", "Högst snittköp"],
     ["premiumShare", "Högst Preemium-andel"],
   ] as const;
   return (
@@ -261,36 +271,48 @@ export function Dashboard({ stats }: { stats: Stats }) {
             <div>
               <span>{label}</span>
               <strong>{value}</strong>
-              <small>
-                {stats.count ? "Vald period" : "Inga registreringar ännu"}
-              </small>
+              {label === "Snittköp" && compareTeam ? (
+                <BenchmarkDelta
+                  average={stats.average}
+                  count={stats.count}
+                  explanation
+                />
+              ) : (
+                <small>
+                  {stats.count ? "Vald period" : "Inga registreringar ännu"}
+                </small>
+              )}
             </div>
           </div>
         ))}
       </div>
       <Goals stats={stats} />
       <div className="dashboard-grid">
-        <section className="subpanel">
-          <h3>Sålda tvättprogram</h3>
-          {!stats.programs.length ? (
-            <Empty>Här visas tvättarna när laget börjar sälja.</Empty>
-          ) : (
-            <div className="bar-chart">
-              {stats.programs.map((p) => (
-                <div className="bar-column" key={p.id}>
-                  <strong>{p.count}</strong>
-                  <div
-                    className={`bar ${p.id}`}
-                    style={{
-                      height: `${Math.max(6, (p.count / Math.max(...stats.programs.map((x) => x.count))) * 150)}px`,
-                    }}
-                  />
-                  <span>{p.name}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        {primary ? (
+          <AverageLeague stats={stats} periodLabel={periodLabel} />
+        ) : (
+          <section className="subpanel">
+            <h3>Sålda tvättprogram</h3>
+            {!stats.programs.length ? (
+              <Empty>Här visas tvättarna när laget börjar sälja.</Empty>
+            ) : (
+              <div className="bar-chart">
+                {stats.programs.map((p) => (
+                  <div className="bar-column" key={p.id}>
+                    <strong>{p.count}</strong>
+                    <div
+                      className={`bar ${p.id}`}
+                      style={{
+                        height: `${Math.max(6, (p.count / Math.max(...stats.programs.map((x) => x.count))) * 150)}px`,
+                      }}
+                    />
+                    <span>{p.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
         <section className="subpanel">
           <h3>
             Topplista <span className="tag">Säljare</span>
@@ -301,7 +323,7 @@ export function Dashboard({ stats }: { stats: Stats }) {
                 <h4>{label}</h4>
                 {!stats.leaders[field].length ? (
                   <p className="muted small-text">
-                    {field === "average" || field === "premiumShare"
+                    {field === "premiumShare"
                       ? "Minst 3 tvättar krävs för att kvalificera."
                       : "Inga försäljningar i perioden."}
                   </p>

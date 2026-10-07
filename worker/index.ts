@@ -9,11 +9,20 @@ import {
 import type { Sale, Staff, WashProgram } from "../src/types";
 import { maintenance } from "./maintenance";
 import { ApiError, body, checkFields, fail, integer, json, text } from "./http";
+import {
+  configuredKeys,
+  deliverSaleEvents,
+  goalEventStatement,
+  pushApi,
+} from "./notifications";
 
 export interface Env {
   DB: D1Database;
   ADMIN_PIN?: string;
   ASSETS?: Fetcher;
+  VAPID_PUBLIC_KEY?: string;
+  VAPID_PRIVATE_KEY?: string;
+  VAPID_SUBJECT?: string;
 }
 const hash = async (text: string) =>
   [
@@ -50,7 +59,11 @@ const cookie = (request: Request, token: string, age: number) =>
 const saleQuery =
   "SELECT s.*, p.name AS program_name, t.name AS staff_name, t.color AS staff_color FROM sales s JOIN staff t ON s.staff_id=t.id JOIN wash_programs p ON s.wash_program_id=p.id";
 
-async function api(request: Request, env: Env): Promise<Response> {
+async function api(
+  request: Request,
+  env: Env,
+  context?: ExecutionContext,
+): Promise<Response> {
   const url = new URL(request.url),
     path = url.pathname,
     method = request.method;
@@ -103,6 +116,13 @@ async function api(request: Request, env: Env): Promise<Response> {
     });
   }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
+  if (
+    path.startsWith("/api/push/") ||
+    path.startsWith("/api/admin/notifications")
+  ) {
+    const response = await pushApi(request, env);
+    if (response) return response;
+  }
   if (path.startsWith("/api/admin/")) {
     const response = await maintenance(request, env);
     if (response) return response;
@@ -143,11 +163,17 @@ async function api(request: Request, env: Env): Promise<Response> {
     const id = crypto.randomUUID();
     // The request ID doubles as a private undo receipt. Only a hash is returned in database exports.
     const undoHash = await hash(requestId);
-    await env.DB.prepare(
+    const insert = env.DB.prepare(
       "INSERT OR IGNORE INTO sales(id,staff_id,wash_program_id,price_sek,sold_at,created_at,request_id,undo_token_hash) SELECT ?,t.id,p.id,p.price_sek,?,?,?,? FROM staff t CROSS JOIN wash_programs p WHERE t.id=? AND p.id=? AND t.active=1 AND t.deleted_at IS NULL AND p.active=1",
-    )
-      .bind(id, now, now, requestId, undoHash, staffId, programId)
-      .run();
+    ).bind(id, now, now, requestId, undoHash, staffId, programId);
+    let queuedNotification = false;
+    if (configuredKeys(env)) {
+      const results = await env.DB.batch([
+        insert,
+        goalEventStatement(env, id, now),
+      ]);
+      queuedNotification = results[1].meta.changes > 0;
+    } else await insert.run();
     const sale = await env.DB.prepare(
       "SELECT id,staff_id,wash_program_id,price_sek,sold_at,voided_at,request_id FROM sales WHERE request_id=?",
     )
@@ -160,6 +186,17 @@ async function api(request: Request, env: Env): Promise<Response> {
       );
     if (sale!.staff_id !== staffId || sale!.wash_program_id !== programId)
       fail(409, "Begärande-ID har redan använts för en annan försäljning.");
+    if (sale!.id === id && context && queuedNotification) {
+      try {
+        context.waitUntil(
+          deliverSaleEvents(env, id).catch(() => {
+            console.warn("En bakgrundsnotis kunde inte slutföras.");
+          }),
+        );
+      } catch {
+        /* A background notification must never fail a committed sale. */
+      }
+    }
     return json(sale, sale!.id === id ? 201 : 200);
   }
   const undo = path.match(/^\/api\/sales\/([^/]+)\/void$/);
@@ -291,7 +328,9 @@ async function api(request: Request, env: Env): Promise<Response> {
     return json({ ok: true });
   }
   if (path === "/api/admin/settings" && method === "GET") {
-    const rows = await env.DB.prepare("SELECT key,value FROM settings").all<{
+    const rows = await env.DB.prepare(
+      "SELECT key,value FROM settings WHERE key IN('daily_goal','monthly_goal')",
+    ).all<{
       key: string;
       value: string;
     }>();
@@ -360,12 +399,16 @@ async function api(request: Request, env: Env): Promise<Response> {
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    context?: ExecutionContext,
+  ): Promise<Response> {
     const url = new URL(request.url);
     let response: Response;
     try {
       response = url.pathname.startsWith("/api/")
-        ? await api(request, env)
+        ? await api(request, env, context)
         : env.ASSETS
           ? await env.ASSETS.fetch(request)
           : json({ error: "Sidan finns inte." }, 404);
@@ -389,6 +432,8 @@ export default {
     headers.set("X-Content-Type-Options", "nosniff");
     headers.set("Referrer-Policy", "same-origin");
     headers.set("X-Frame-Options", "DENY");
+    if (["/sw.js", "/manifest.webmanifest"].includes(url.pathname))
+      headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
     if (url.protocol === "https:")
       headers.set("Strict-Transport-Security", "max-age=31536000");
     return new Response(response.body, { status: response.status, headers });

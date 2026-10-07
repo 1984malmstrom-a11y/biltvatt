@@ -1,4 +1,5 @@
 import type { Stats, PersonStats, Sale } from "../src/types";
+import { AVERAGE_LEAGUE_MINIMUM_SALES } from "../shared/business";
 export interface StatsRow extends Sale {
   staff_name: string;
   staff_color: string;
@@ -69,8 +70,8 @@ export function summarize(rows: StatsRow[]): Omit<Stats, "goals" | "range"> {
     leaders: {
       count: rank("count"),
       revenue: rank("revenue"),
-      average: rank("average", 3),
-      premiumShare: rank("premiumShare", 3),
+      average: rank("average", AVERAGE_LEAGUE_MINIMUM_SALES),
+      premiumShare: rank("premiumShare", AVERAGE_LEAGUE_MINIMUM_SALES),
     },
   };
 }
