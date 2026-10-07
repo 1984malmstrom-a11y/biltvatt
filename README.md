@@ -37,6 +37,8 @@ Enhet-/integrationstesterna kör faktisk migrations-SQL och Worker-anrop mot SQL
 
 Tester täcker serverns prisuppslag, begärande-ID/dubbletter, kvittoskyddad makulering, omsättning, snittköp, Preemium-andel, personalbaserade topplistor och tre-tvättarsgränsen, historiska priser, aktiva poster, sessioner, CSRF, PIN-begränsning, export samt Stockholmstid och DST. Webbläsartester täcker dessutom dubbelklick, förlorat nätverkssvar och säker återförsökning, samtliga adminvyer samt mobil och surfplatta. Skärmbilder sparas i ignorerade `test-results/`.
 
+`e2e/visual.spec.ts` granskar även namnval, försäljning, statistik och Admin/Personal vid 1440×900 samt försäljning och statistik vid 390×844. Testet kontrollerar programordning/priser, 3×2-layouten, synlig registreringsrad på desktop, minst 44-pixels tryckytor, mobilens omflöde och att visade KPI-värden stämmer med API:ets verkliga data. Det sparar skärmbilder som `test-results/visual-*.png` och injicerar inga påhittade statistikvärden.
+
 ## Vyer
 
 - **Registrera:** namnval, sex färgkodade touchkort, omedelbar registrering, bekräftelse och ”Ångra senaste”.
