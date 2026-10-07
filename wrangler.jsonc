@@ -13,7 +13,7 @@
     {
       "binding": "DB",
       "database_name": "tvattligan",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "695033b7-6bb2-47a3-a9c3-08d4ca818088",
       "migrations_dir": "migrations",
     },
   ],
