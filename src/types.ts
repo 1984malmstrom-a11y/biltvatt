@@ -3,6 +3,7 @@ export interface Staff {
   name: string;
   color: string;
   active: number;
+  deleted_at?: string | null;
 }
 export interface WashProgram {
   id: string;

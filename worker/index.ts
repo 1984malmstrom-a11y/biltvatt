@@ -7,28 +7,14 @@ import {
   type StatsRow,
 } from "./stats";
 import type { Sale, Staff, WashProgram } from "../src/types";
+import { maintenance } from "./maintenance";
+import { ApiError, body, checkFields, fail, integer, json, text } from "./http";
 
 export interface Env {
   DB: D1Database;
   ADMIN_PIN?: string;
   ASSETS?: Fetcher;
 }
-class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-  }
-}
-const json = (data: unknown, status = 200, headers: HeadersInit = {}) =>
-  Response.json(data, {
-    status,
-    headers: { "Cache-Control": "no-store", ...headers },
-  });
-const fail = (status: number, message: string): never => {
-  throw new ApiError(status, message);
-};
 const hash = async (text: string) =>
   [
     ...new Uint8Array(
@@ -37,21 +23,6 @@ const hash = async (text: string) =>
   ]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");
-function text(value: unknown, label: string, max = 80): string {
-  if (typeof value !== "string" || !value.trim() || value.length > max)
-    return fail(400, `${label} är ogiltigt.`);
-  return value.trim();
-}
-function integer(value: unknown, label: string, maximum = 1000000): number {
-  if (
-    typeof value !== "number" ||
-    !Number.isInteger(value) ||
-    value < 0 ||
-    value > maximum
-  )
-    return fail(400, `${label} måste vara ett giltigt heltal.`);
-  return value;
-}
 function active(value: unknown): number {
   if (value !== 0 && value !== 1)
     return fail(400, "Aktiv måste vara 0 eller 1.");
@@ -61,27 +32,6 @@ function color(value: unknown): string {
   if (typeof value !== "string" || !/^#[0-9a-f]{6}$/i.test(value))
     return fail(400, "Välj en giltig färg.");
   return value;
-}
-async function body(request: Request): Promise<Record<string, unknown>> {
-  if (!request.headers.get("Content-Type")?.includes("application/json"))
-    return fail(415, "Använd JSON för anropet.");
-  const raw = await request.text();
-  if (raw.length > 8192) return fail(413, "Anropet är för stort.");
-  try {
-    const data = JSON.parse(raw);
-    if (!data || typeof data !== "object" || Array.isArray(data))
-      throw new Error();
-    return data;
-  } catch {
-    return fail(400, "Anropet innehåller ogiltig JSON.");
-  }
-}
-function checkFields(data: Record<string, unknown>, allowed: string[]) {
-  if (
-    !Object.keys(data).length ||
-    Object.keys(data).some((k) => !allowed.includes(k))
-  )
-    fail(400, "Anropet innehåller okända eller saknade fält.");
 }
 async function requireAdmin(request: Request, env: Env) {
   const token = request.headers
@@ -153,6 +103,10 @@ async function api(request: Request, env: Env): Promise<Response> {
     });
   }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
+  if (path.startsWith("/api/admin/")) {
+    const response = await maintenance(request, env);
+    if (response) return response;
+  }
   if (path === "/api/admin/logout" && method === "POST") {
     const token = request.headers
       .get("Cookie")!
@@ -170,7 +124,7 @@ async function api(request: Request, env: Env): Promise<Response> {
     if (all) await requireAdmin(request, env);
     const isStaff = path === "/api/staff";
     const rows = await env.DB.prepare(
-      `SELECT ${isStaff ? "id,name,color,active" : "id,name,price_sek,sort_order,active"} FROM ${isStaff ? "staff" : "wash_programs"} ${all ? "" : "WHERE active=1"} ORDER BY ${isStaff ? "created_at,rowid" : "sort_order,id"}`,
+      `SELECT ${isStaff ? "id,name,color,active,deleted_at" : "id,name,price_sek,sort_order,active"} FROM ${isStaff ? "staff" : "wash_programs"} ${all ? "" : `WHERE active=1 ${isStaff ? "AND deleted_at IS NULL" : ""}`} ORDER BY ${isStaff ? "created_at,rowid" : "sort_order,id"}`,
     ).all();
     return json(rows.results);
   }
@@ -190,7 +144,7 @@ async function api(request: Request, env: Env): Promise<Response> {
     // The request ID doubles as a private undo receipt. Only a hash is returned in database exports.
     const undoHash = await hash(requestId);
     await env.DB.prepare(
-      "INSERT OR IGNORE INTO sales(id,staff_id,wash_program_id,price_sek,sold_at,created_at,request_id,undo_token_hash) SELECT ?,t.id,p.id,p.price_sek,?,?,?,? FROM staff t CROSS JOIN wash_programs p WHERE t.id=? AND p.id=? AND t.active=1 AND p.active=1",
+      "INSERT OR IGNORE INTO sales(id,staff_id,wash_program_id,price_sek,sold_at,created_at,request_id,undo_token_hash) SELECT ?,t.id,p.id,p.price_sek,?,?,?,? FROM staff t CROSS JOIN wash_programs p WHERE t.id=? AND p.id=? AND t.active=1 AND t.deleted_at IS NULL AND p.active=1",
     )
       .bind(id, now, now, requestId, undoHash, staffId, programId)
       .run();
@@ -222,9 +176,9 @@ async function api(request: Request, env: Env): Promise<Response> {
     if (sale!.undo_token_hash !== (await hash(receipt)))
       fail(403, "Du kan bara ångra din egen registrering.");
     await env.DB.prepare(
-      "UPDATE sales SET voided_at=COALESCE(voided_at,?) WHERE id=?",
+      "UPDATE sales SET voided_at=?,void_reason='SELLER_UNDO',voided_by='SELLER',updated_by='SELLER',updated_at=?,revision=revision+1 WHERE id=? AND voided_at IS NULL",
     )
-      .bind(now, undo[1])
+      .bind(now, now, undo[1])
       .run();
     return json({ ok: true });
   }
@@ -243,13 +197,15 @@ async function api(request: Request, env: Env): Promise<Response> {
       : null;
     if (
       staffId &&
-      !(await env.DB.prepare("SELECT id FROM staff WHERE id=?")
+      !(await env.DB.prepare(
+        "SELECT id FROM staff WHERE id=? AND deleted_at IS NULL",
+      )
         .bind(staffId)
         .first())
     )
       fail(404, "Säljaren finns inte.");
     const rows = await env.DB.prepare(
-      `${saleQuery} WHERE s.sold_at>=? AND s.sold_at<? AND s.voided_at IS NULL ${staffId ? "AND s.staff_id=?" : ""}`,
+      `${saleQuery} WHERE s.sold_at>=? AND s.sold_at<? AND s.voided_at IS NULL AND t.deleted_at IS NULL ${staffId ? "AND s.staff_id=?" : ""}`,
     )
       .bind(range.from, range.to, ...(staffId ? [staffId] : []))
       .all<StatsRow>();
@@ -264,7 +220,7 @@ async function api(request: Request, env: Env): Promise<Response> {
     const nextMonth = new Date(`${monthStart}T12:00:00Z`);
     nextMonth.setUTCMonth(nextMonth.getUTCMonth() + 1);
     const counts = await env.DB.prepare(
-      "SELECT SUM(CASE WHEN sold_at>=? AND sold_at<? THEN 1 ELSE 0 END) AS daily, COUNT(*) AS monthly FROM sales WHERE voided_at IS NULL AND sold_at>=? AND sold_at<?",
+      "SELECT SUM(CASE WHEN sold_at>=? AND sold_at<? THEN 1 ELSE 0 END) AS daily, COUNT(*) AS monthly FROM sales JOIN staff ON staff.id=sales.staff_id WHERE voided_at IS NULL AND staff.deleted_at IS NULL AND sold_at>=? AND sold_at<?",
     )
       .bind(
         midnightUTC(today),
@@ -327,7 +283,7 @@ async function api(request: Request, env: Env): Promise<Response> {
         validated,
       )
         .map((k) => `${k}=?`)
-        .join(",")} WHERE id=?`,
+        .join(",")} WHERE id=? ${isStaff ? "AND deleted_at IS NULL" : ""}`,
     )
       .bind(...Object.values(validated), id)
       .run();

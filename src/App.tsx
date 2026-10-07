@@ -22,6 +22,11 @@ import {
 import type { Staff, WashProgram, Sale, Stats } from "./types";
 import { api, HttpError, sek, send } from "./api";
 import {
+  AdminSales,
+  ResetStatistics,
+  StaffMaintenance,
+} from "./AdminMaintenance";
+import {
   Avatar,
   Brand,
   CarArt,
@@ -48,6 +53,7 @@ type Page = "home" | "sale" | "stats" | "admin";
 type AdminTab =
   | "overview"
   | "staff"
+  | "sales"
   | "programs"
   | "goals"
   | "statistics"
@@ -56,6 +62,7 @@ type AdminTab =
 const adminTabs = [
   ["overview", "Översikt", Home],
   ["staff", "Personal", Users],
+  ["sales", "Försäljningar", Clock3],
   ["programs", "Tvättprogram", CarFront],
   ["goals", "Mål", Target],
   ["statistics", "Statistik", BarChart3],
@@ -178,6 +185,16 @@ export default function App() {
     setAllPrograms(washes);
     setGoals(settings);
   }, []);
+  const maintenanceChanged = useCallback(async () => {
+    await Promise.all([refreshAdmin(), loadCatalog(), loadStats()]);
+  }, [refreshAdmin, loadCatalog, loadStats]);
+  const maintenanceUnauthorized = useCallback(() => setAdmin(false), []);
+  const maintenanceProps = {
+    staff: allStaff,
+    programs: allPrograms,
+    onChanged: maintenanceChanged,
+    onUnauthorized: maintenanceUnauthorized,
+  };
   useEffect(() => {
     if (admin) refreshAdmin().catch((e) => setError(e.message));
   }, [admin, refreshAdmin]);
@@ -745,6 +762,10 @@ export default function App() {
                 {statsView}
               </>
             )}
+            {adminTab === "sales" && <AdminSales {...maintenanceProps} />}
+            {adminTab === "statistics" && (
+              <ResetStatistics {...maintenanceProps} />
+            )}
             {adminTab === "staff" && (
               <>
                 <div className="table-scroll">
@@ -774,7 +795,11 @@ export default function App() {
                               <span
                                 className={`status-dot ${p.active ? "" : "inactive"}`}
                               />
-                              {p.active ? "Ja" : "Nej"}
+                              {p.deleted_at
+                                ? "Arkiverad"
+                                : p.active
+                                  ? "Ja"
+                                  : "Nej"}
                             </td>
                             <td>{s?.count ?? 0}</td>
                             <td>{sek(s?.revenue ?? 0)}</td>
@@ -782,14 +807,14 @@ export default function App() {
                             <td>
                               <button
                                 className="button tiny secondary"
-                                disabled={busy}
+                                disabled={busy || !!p.deleted_at}
                                 onClick={() => editPerson(p)}
                               >
-                                Ändra
+                                Redigera
                               </button>
                               <button
                                 className="text-button"
-                                disabled={busy}
+                                disabled={busy || !!p.deleted_at}
                                 onClick={() =>
                                   void adminAction(
                                     () =>
@@ -807,6 +832,11 @@ export default function App() {
                               >
                                 {p.active ? "Inaktivera" : "Aktivera"}
                               </button>
+                              <StaffMaintenance
+                                person={p}
+                                onChanged={maintenanceChanged}
+                                onUnauthorized={maintenanceUnauthorized}
+                              />
                             </td>
                           </tr>
                         );

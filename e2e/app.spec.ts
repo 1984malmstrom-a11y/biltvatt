@@ -120,7 +120,7 @@ test("PIN-inloggning, alla adminvyer, mål, personal och historiska prisändring
   await page
     .getByRole("row")
     .filter({ hasText: "Peter" })
-    .getByRole("button", { name: "Ändra", exact: true })
+    .getByRole("button", { name: "Redigera", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("dialog").getByLabel("Namn").fill("Peter");
