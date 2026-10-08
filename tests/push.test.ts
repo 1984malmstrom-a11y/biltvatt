@@ -1,5 +1,6 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
 import { fixture } from "./fixture";
+import { createServer } from "node:http";
 import {
   base64url,
   bytes,
@@ -13,6 +14,7 @@ import { stockholmDay } from "../worker/stats";
 let f: ReturnType<typeof fixture>, cookie: string;
 let browserKeys: { publicKey: string; auth: string; privateKey: CryptoKey };
 const transport = vi.fn<typeof fetch>();
+const nativeFetch = globalThis.fetch;
 async function keys() {
   const pair = await crypto.subtle.generateKey(
     { name: "ECDSA", namedCurve: "P-256" },
@@ -688,6 +690,151 @@ describe("Sanerad leveransdiagnostik", () => {
       });
     },
   );
+  it.each([300, 301, 302, 307, 308, 399])(
+    "HTTP %s följs aldrig av riktig fetch och Location/Authorization förblir privata",
+    async (status) => {
+      const owner = await diagnosticDevice();
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      let providerRequests = 0,
+        redirectedRequests = 0,
+        providerAuthorized = false;
+      let location = "";
+      // Local-only provider fixture: real fetch redirect handling, never internet push.
+      const server = createServer((request, response) => {
+        request.resume();
+        if (request.url?.startsWith("/redirected")) {
+          redirectedRequests++;
+          response.writeHead(201).end();
+        } else {
+          providerRequests++;
+          providerAuthorized =
+            !!request.headers.authorization?.startsWith("vapid t=");
+          response.writeHead(status, { Location: location }).end();
+        }
+      });
+      try {
+        await new Promise<void>((resolve) =>
+          server.listen(0, "127.0.0.1", resolve),
+        );
+        const address = server.address();
+        if (!address || typeof address === "string")
+          throw new Error("Local test server unavailable");
+        const origin = `http://127.0.0.1:${address.port}`;
+        location = `${origin}/redirected?private=${browserKeys.auth}`;
+        transport.mockImplementation((url, options) => {
+          expect(url).toBe(appleEndpoint);
+          expect(options?.redirect).toBe("manual");
+          // Only map the approved provider URL to the local fixture; preserve every request option.
+          return nativeFetch(origin + "/provider", options);
+        });
+        const response = await manual();
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual({
+          state: "complete",
+          total: 1,
+          sent: 0,
+          failed: 1,
+        });
+        expect(transport).toHaveBeenCalledTimes(1);
+        expect(providerRequests).toBe(1);
+        expect(providerAuthorized).toBe(true);
+        // No request reaches Location, so Authorization cannot be forwarded even to the same host.
+        expect(redirectedRequests).toBe(0);
+        expect(warn).toHaveBeenCalledExactlyOnceWith(
+          JSON.stringify({
+            event: "push_delivery_failed",
+            provider: "apple",
+            status,
+            event_type: "manual",
+          }),
+        );
+        expectSanitized(warn, owner);
+        expect(JSON.stringify(warn.mock.calls)).not.toContain(location);
+        expect(JSON.stringify(warn.mock.calls)).not.toContain("Location");
+        expect(
+          f.db
+            .prepare(
+              "SELECT active,failure_count,disabled_at,last_success_at FROM push_subscriptions",
+            )
+            .get(),
+        ).toEqual({
+          active: 1,
+          failure_count: 1,
+          disabled_at: null,
+          last_success_at: null,
+        });
+      } finally {
+        await new Promise<void>((resolve, reject) => {
+          server.close((error) => (error ? reject(error) : resolve()));
+          server.closeAllConnections();
+        });
+      }
+    },
+  );
+  it.each([200, 204])(
+    "HTTP %s behåller lyckad leverans utan diagnostik",
+    async (status) => {
+      await diagnosticDevice();
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      transport.mockResolvedValueOnce(new Response(null, { status }));
+      expect(await (await manual()).json()).toEqual({
+        state: "complete",
+        total: 1,
+        sent: 1,
+        failed: 0,
+      });
+      expect(warn).not.toHaveBeenCalled();
+      expect(
+        f.db
+          .prepare(
+            "SELECT active,failure_count,last_success_at FROM push_subscriptions",
+          )
+          .get(),
+      ).toEqual({
+        active: 1,
+        failure_count: 0,
+        last_success_at: expect.any(String),
+      });
+    },
+  );
+  it("behåller åtta sekunders timeout och sanerad fetch_provider-diagnostik vid timeout", async () => {
+    const owner = await diagnosticDevice();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const controller = new AbortController();
+    const timeout = vi
+      .spyOn(AbortSignal, "timeout")
+      .mockReturnValue(controller.signal);
+    transport.mockImplementation(async (_url, options) => {
+      expect(options?.signal).toBe(controller.signal);
+      controller.abort(
+        new DOMException(appleEndpoint + browserKeys.auth, "TimeoutError"),
+      );
+      throw controller.signal.reason;
+    });
+    expect(await (await manual()).json()).toEqual({
+      state: "complete",
+      total: 1,
+      sent: 0,
+      failed: 1,
+    });
+    expect(timeout).toHaveBeenCalledExactlyOnceWith(8000);
+    expect(warn).toHaveBeenCalledExactlyOnceWith(
+      JSON.stringify({
+        event: "push_delivery_exception",
+        provider: "apple",
+        stage: "fetch_provider",
+        exception_type: "TimeoutError",
+      }),
+    );
+    expectSanitized(warn, owner);
+    expect(
+      f.db
+        .prepare(
+          "SELECT active,failure_count,disabled_at FROM push_subscriptions",
+        )
+        .get(),
+    ).toEqual({ active: 1, failure_count: 1, disabled_at: null });
+  });
   it.each(["validate", "crypto", "vapid", "fetch", "custom-name"])(
     "%s-undantag loggar enbart en säker typ och behåller befintligt felresultat",
     async (source) => {
@@ -1113,10 +1260,13 @@ describe("Standardenlig kryptering och VAPID", () => {
     await enable();
     await manual();
     const options = transport.mock.calls[0][1]!;
-    expect(options.redirect).toBe("error");
+    expect(options.method).toBe("POST");
+    expect(options.redirect).toBe("manual");
     expect(options.headers).toMatchObject({
       "Content-Encoding": "aes128gcm",
+      "Content-Type": "application/octet-stream",
       TTL: "3600",
+      Urgency: "normal",
     });
     expect((options.headers as Record<string, string>).Authorization).toMatch(
       /^vapid t=/,

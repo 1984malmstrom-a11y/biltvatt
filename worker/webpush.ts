@@ -285,7 +285,7 @@ export async function deliverPush(
     stage = "fetch_provider";
     response = await fetch(target.endpoint, {
       method: "POST",
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(8000),
       headers: {
         Authorization: authorization,
@@ -305,6 +305,7 @@ export async function deliverPush(
     });
     throw error; // Preserve the caller's existing failure handling.
   }
+  // Every 3xx is a failure too. Never read or follow Location with VAPID credentials.
   if (response.status < 200 || response.status >= 300)
     warnPush({
       event: "push_delivery_failed",
