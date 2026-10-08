@@ -1,0 +1,27 @@
+name: Validate station V2 launch script
+
+on:
+  push:
+    branches: [feat/station-dashboard-v2]
+    paths:
+      - scripts/launch-station-v2.ps1
+      - .github/workflows/station-v2-launch-check.yml
+
+jobs:
+  parse-windows-powershell:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse script with Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD 'scripts\launch-station-v2.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host 'PowerShell 5.1 syntax OK.'

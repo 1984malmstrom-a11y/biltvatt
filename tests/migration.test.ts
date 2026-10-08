@@ -102,10 +102,20 @@ it("verifierar en syntetisk fullständig D1-export och stoppar en trasig backup"
     expect(JSON.parse(good.stdout)).toMatchObject({ verified: true, counts: {
       sales: 0, staff: 5, station_store_daily_sales: 0,
     } });
+    const keysScript = new URL("../scripts/station-v2-backup-keys.mjs", import.meta.url);
+    const keys = spawnSync(process.execPath, [keysScript.pathname, valid], { encoding: "utf8" });
+    expect(keys.status).toBe(0);
+    expect(JSON.parse(keys.stdout)).toMatchObject({
+      staff: ["emma", "johan", "kalle", "lisa", "peter"],
+      sales: [], push_subscriptions: [], station_view_sessions: [],
+    });
     const bad = spawnSync(process.execPath, [script.pathname, invalid], { encoding: "utf8" });
     expect(bad.status).toBe(1);
     expect(bad.stdout).toBe("");
     expect(bad.stderr).toContain("Stoppa lanseringen");
+    const badKeys = spawnSync(process.execPath, [keysScript.pathname, invalid], { encoding: "utf8" });
+    expect(badKeys.status).toBe(1);
+    expect(badKeys.stdout).toBe("");
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
