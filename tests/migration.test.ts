@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { it, expect } from "vitest";
 
 it("0003 är additiv på en databas med historik och bevarar all befintlig affärsdata", () => {
@@ -96,37 +97,37 @@ it("verifierar en syntetisk fullständig D1-export och stoppar en trasig backup"
       "0003_push_notifications.sql", "0004_station_dashboard.sql"].map((name) =>
       readFileSync(new URL("../migrations/" + name, import.meta.url), "utf8")).join("\n"));
     writeFileSync(invalid, "not a database export");
-    const script = new URL("../scripts/verify-d1-backup.mjs", import.meta.url);
-    const good = spawnSync(process.execPath, [script.pathname, valid], { encoding: "utf8" });
+    const script = fileURLToPath(new URL("../scripts/verify-d1-backup.mjs", import.meta.url));
+    const good = spawnSync(process.execPath, [script, valid], { encoding: "utf8" });
     expect(good.status).toBe(0);
     expect(JSON.parse(good.stdout)).toMatchObject({ verified: true, counts: {
       sales: 0, staff: 5, station_store_daily_sales: 0,
     } });
-    const keysScript = new URL("../scripts/station-v2-backup-keys.mjs", import.meta.url);
-    const keys = spawnSync(process.execPath, [keysScript.pathname, valid], { encoding: "utf8" });
+    const keysScript = fileURLToPath(new URL("../scripts/station-v2-backup-keys.mjs", import.meta.url));
+    const keys = spawnSync(process.execPath, [keysScript, valid], { encoding: "utf8" });
     expect(keys.status).toBe(0);
     expect(JSON.parse(keys.stdout)).toMatchObject({
       staff: ["emma", "johan", "kalle", "lisa", "peter"],
       sales: [], push_subscriptions: [], station_view_sessions: [],
     });
-    const bad = spawnSync(process.execPath, [script.pathname, invalid], { encoding: "utf8" });
+    const bad = spawnSync(process.execPath, [script, invalid], { encoding: "utf8" });
     expect(bad.status).toBe(1);
     expect(bad.stdout).toBe("");
     expect(bad.stderr).toContain("Stoppa lanseringen");
-    const badKeys = spawnSync(process.execPath, [keysScript.pathname, invalid], { encoding: "utf8" });
+    const badKeys = spawnSync(process.execPath, [keysScript, invalid], { encoding: "utf8" });
     expect(badKeys.status).toBe(1);
     expect(badKeys.stdout).toBe("");
-    const snapshotScript = new URL("../scripts/station-v2-snapshot.mjs", import.meta.url);
-    const integrity = spawnSync(process.execPath, [snapshotScript.pathname, "query", valid, "PRAGMA integrity_check"], { encoding: "utf8" });
+    const snapshotScript = fileURLToPath(new URL("../scripts/station-v2-snapshot.mjs", import.meta.url));
+    const integrity = spawnSync(process.execPath, [snapshotScript, "query", valid, "PRAGMA integrity_check"], { encoding: "utf8" });
     expect(integrity.status).toBe(0);
     expect(JSON.parse(integrity.stdout)).toMatchObject({
       ok: true, results: [{ integrity_check: "ok" }],
     });
-    const mutation = spawnSync(process.execPath, [snapshotScript.pathname, "query", valid, "DELETE FROM sales"], { encoding: "utf8" });
+    const mutation = spawnSync(process.execPath, [snapshotScript, "query", valid, "DELETE FROM sales"], { encoding: "utf8" });
     expect(JSON.parse(mutation.stdout)).toMatchObject({
       ok: false, errorType: "invalid_read_only_query",
     });
-    const corrupted = spawnSync(process.execPath, [snapshotScript.pathname, "query", invalid, "PRAGMA integrity_check"], { encoding: "utf8" });
+    const corrupted = spawnSync(process.execPath, [snapshotScript, "query", invalid, "PRAGMA integrity_check"], { encoding: "utf8" });
     expect(JSON.parse(corrupted.stdout)).toMatchObject({
       ok: false, errorType: "snapshot_or_query_failed",
     });

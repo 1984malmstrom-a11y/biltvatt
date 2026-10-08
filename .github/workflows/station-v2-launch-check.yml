@@ -5,6 +5,10 @@ on:
     branches: [feat/station-dashboard-v2]
     paths:
       - scripts/launch-station-v2.ps1
+      - scripts/station-v2-snapshot.mjs
+      - tests/**
+      - package.json
+      - package-lock.json
       - .github/workflows/station-v2-launch-check.yml
 
 jobs:
@@ -17,6 +21,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run all unit tests on Windows
+        run: npm test
       - name: Parse script with Windows PowerShell 5.1
         shell: powershell
         run: |

@@ -41,6 +41,43 @@ function Run([string]$Program, [string[]]$Arguments, [string]$Label) {
     return ($output -join "`n")
   } finally { Remove-Item -LiteralPath $errorFile -ErrorAction SilentlyContinue }
 }
+function Run-UnitTests {
+  $reportPath = Join-Path ([IO.Path]::GetTempPath()) ("station-v2-vitest-" + [guid]::NewGuid().ToString('N') + '.json')
+  try {
+    try {
+      $null = Run $script:npm @('test','--','--reporter=json',"--outputFile=$reportPath") 'Enhetstester'
+    } catch {
+      $runFailure = $_.Exception.Message
+      $failedNames = @()
+      if (Test-Path -LiteralPath $reportPath -PathType Leaf) {
+        try {
+          $report = Get-Content -LiteralPath $reportPath -Raw -Encoding UTF8 | ConvertFrom-Json
+          $knownFiles = @(Get-ChildItem -LiteralPath (Join-Path $root 'tests') -Filter '*.test.ts' -File | ForEach-Object { $_.Name })
+          foreach ($suite in @($report.testResults)) {
+            $file = [IO.Path]::GetFileName([string]$suite.name)
+            if ($knownFiles -notcontains $file) { continue }
+            foreach ($test in @($suite.assertionResults)) {
+              if ($test.status -ne 'failed') { continue }
+              # Only test names from tracked test files are shown. Failure messages and
+              # captured stdout/stderr may contain secrets and are never displayed.
+              $name = ([string]$test.fullName -replace '[\r\n\t]', ' ').Trim()
+              if ($name.Length -gt 140) { $name = $name.Substring(0, 140) + '…' }
+              if ($name) { $failedNames += "$file`: $name" }
+              if ($failedNames.Count -ge 5) { break }
+            }
+            if ($failedNames.Count -ge 5) { break }
+          }
+        } catch { $failedNames = @() }
+      }
+      if ($failedNames.Count -gt 0) {
+        Stop-Launch "$runFailure Misslyckade test: $($failedNames -join '; '). Felutskrifter och privata värden visas inte."
+      }
+      Stop-Launch "$runFailure Vitest gav ingen läsbar felrapport. Felutskrifter och privata värden visas inte."
+    }
+  } finally {
+    Remove-Item -LiteralPath $reportPath -ErrorAction SilentlyContinue
+  }
+}
 function Command-Path([string]$Name) {
   $found = Get-Command $Name -ErrorAction SilentlyContinue
   if (-not $found) { Stop-Launch "Verktyget $Name saknas. Installera det innan lanseringen." }
@@ -297,7 +334,7 @@ try {
   Info 'Kör lokala tester och produktionsbuild före publicering.'
   $null = Run $npx @('playwright','install','chromium') 'Installation av Chromium för test'
   $null = Run $npm @('run','typecheck') 'TypeScript-kontroll'
-  $null = Run $npm @('test') 'Enhetstester'
+  Run-UnitTests
   $null = Run $npm @('run','test:e2e') 'Playwright-tester'
   $null = Run $npm @('run','build') 'Produktionsbuild'
   Info 'TypeScript, enhetstester, Playwright och produktionsbuild passerade.'
