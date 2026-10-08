@@ -28,6 +28,7 @@ import {
   StaffMaintenance,
 } from "./AdminMaintenance";
 import { leaguePeriodLabel } from "../shared/business";
+import { medalPlacements } from "./medals";
 import { AdminNotifications, PushControls } from "./PushControls";
 import {
   Avatar,
@@ -112,6 +113,9 @@ export default function App() {
     [statsError, setStatsError] = useState(""),
     [statsBusy, setStatsBusy] = useState(false),
     [scope, setScope] = useState("team");
+  const [medalStats, setMedalStats] = useState<Stats | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState(() => today().slice(0, 7));
+  const medalSequence = useRef(0);
   const [admin, setAdmin] = useState(false),
     [adminTab, setAdminTab] = useState<AdminTab>("overview");
   const [pin, setPin] = useState("");
@@ -180,6 +184,26 @@ export default function App() {
       statsSequence.current++;
     };
   }, [page, admin, loadStats]);
+  const loadMedals = useCallback(async () => {
+    const sequence = ++medalSequence.current;
+    try {
+      const result = await api<Stats>("/stats?period=month");
+      if (sequence === medalSequence.current) setMedalStats(result);
+    } catch {
+      if (sequence === medalSequence.current) setMedalStats(null);
+    }
+  }, []);
+  useEffect(() => {
+    if (page !== "home") return;
+    setCalendarMonth(today().slice(0, 7));
+    void loadMedals();
+    const timer = window.setInterval(() => {
+      setCalendarMonth(today().slice(0, 7));
+      void loadMedals();
+    }, 30000);
+    return () => window.clearInterval(timer);
+  }, [page, loadMedals]);
+  const medals = medalPlacements(medalStats, calendarMonth);
   useEffect(() => {
     if (page !== "admin") return;
     api<{ daily_goal: number; monthly_goal: number }>("/admin/settings")
@@ -271,6 +295,7 @@ export default function App() {
           ? "Den här registreringen har redan ångrats."
           : "Registrerad",
       );
+      void loadMedals();
     } catch (e) {
       if (!(e instanceof HttpError) || e.status >= 500) {
         setPending(payload);
@@ -302,6 +327,7 @@ export default function App() {
       );
       setLast({ ...last, voided_at: new Date().toISOString() });
       setNotice("Senaste tvätten har ångrats.");
+      void loadMedals();
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -552,15 +578,13 @@ export default function App() {
                 {staff.map((person) => (
                   <button
                     key={person.id}
-                    className="staff-card"
+                    className={`staff-card${medals[person.id] ? ` staff-card-metal staff-card-metal-${medals[person.id]}` : ""}`}
                     onClick={() => chooseStaff(person)}
                     style={{ "--accent": person.color } as React.CSSProperties}
                   >
-                    <Avatar person={person} />
+                    {!medals[person.id] && <Avatar person={person} />}
                     <strong>{person.name}</strong>
-                    <span>
-                      Välj <ArrowRight size={14} />
-                    </span>
+                    {!medals[person.id] && <span>Välj <ArrowRight size={14} /></span>}
                   </button>
                 ))}
               </div>

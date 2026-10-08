@@ -5,6 +5,13 @@ import {
   CarFront,
   Check,
   ChevronRight,
+  Cloud,
+  CloudDrizzle,
+  CloudFog,
+  CloudLightning,
+  CloudRain,
+  CloudSnow,
+  CloudSun,
   ClipboardCheck,
   Info,
   Plus,
@@ -56,6 +63,40 @@ type Monthly = {
   metrics: { label: string; value: string; unit: string; order: number }[];
   updated_at: string | null;
 };
+type WeatherPeriod = { time: string; temperature: number; symbol: number };
+type Weather = {
+  source: "SMHI SNOW1gv1";
+  kind: "forecast";
+  now: WeatherPeriod | null;
+  tomorrow: WeatherPeriod | null;
+};
+function weatherDisplay(symbol: number) {
+  if (symbol === 1) return { label: "Klart", Icon: Sun };
+  if (symbol <= 4) return { label: "Växlande molnighet", Icon: CloudSun };
+  if (symbol <= 6) return { label: "Molnigt", Icon: Cloud };
+  if (symbol === 7) return { label: "Dimma", Icon: CloudFog };
+  if ([11, 21].includes(symbol)) return { label: "Åska", Icon: CloudLightning };
+  if (symbol >= 15 && symbol <= 17 || symbol >= 25 && symbol <= 27)
+    return { label: "Snö", Icon: CloudSnow };
+  if (symbol >= 8 && symbol <= 10 || symbol >= 18 && symbol <= 20)
+    return { label: "Regn", Icon: CloudRain };
+  if (symbol >= 12 && symbol <= 14 || symbol >= 22 && symbol <= 24)
+    return { label: "Snöblandat regn", Icon: CloudDrizzle };
+  return { label: "Väderläge", Icon: Cloud };
+}
+function WeatherItem({ label, period }: { label: string; period: WeatherPeriod | null }) {
+  const display = period ? weatherDisplay(period.symbol) : null;
+  return (
+    <div className="v2-weather-item">
+      <span className="v2-weather-label">{label}</span>
+      <span className="v2-weather-value">
+        {display && <display.Icon aria-hidden="true" />}
+        {period ? `${Math.round(period.temperature)}°` : "—"}
+        <small>{display?.label ?? "Prognos saknas"}</small>
+      </span>
+    </div>
+  );
+}
 const kronor = (ore: number) =>
   new Intl.NumberFormat("sv-SE", {
     style: "currency",
@@ -169,6 +210,7 @@ export default function StationDashboardV2() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState("");
+  const [weather, setWeather] = useState<Weather | null>(null);
   const [modal, setModal] = useState<
     "shifts" | "tasks" | "notices" | "monthly" | null
   >(null);
@@ -208,6 +250,28 @@ export default function StationDashboardV2() {
       document.removeEventListener("visibilitychange", visible);
     };
   }, [load]);
+  const loadWeather = useCallback(async () => {
+    try {
+      const result = await api<Weather>("/station/weather");
+      setWeather(result.kind === "forecast" ? result : null);
+    } catch {
+      setWeather(null);
+    }
+  }, []);
+  useEffect(() => {
+    void loadWeather();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") void loadWeather();
+    }, 30 * 60_000);
+    const visible = () => {
+      if (document.visibilityState === "visible") void loadWeather();
+    };
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [loadWeather]);
   async function addTask(e: React.FormEvent) {
     e.preventDefault();
     if (!newTask.trim()) return;
@@ -306,16 +370,16 @@ export default function StationDashboardV2() {
           </div>
         </div>
         <div className="v2-header-right">
-          <span>
+          <span className="v2-updated">
             <CalendarDays aria-hidden="true" />{" "}
             {last ? `Uppdaterad ${time(last)}` : "Uppdatering saknas"}
           </span>
           <i />
-          <span>
-            <Sun aria-hidden="true" /> Tillsammans
-            <br />
-            skapar vi en bättre resa
-          </span>
+          <div className="v2-weather" aria-label="SMHI väderprognos för Tingsryd">
+            <WeatherItem label="PROGNOS JUST NU" period={weather?.now ?? null} />
+            <WeatherItem label="IMORGON CA 12" period={weather?.tomorrow ?? null} />
+            <span className="v2-weather-source">SMHI · prognos</span>
+          </div>
         </div>
       </header>
       <main className="v2-layout">

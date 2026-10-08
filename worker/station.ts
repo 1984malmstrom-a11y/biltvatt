@@ -2,6 +2,7 @@ import type { Env } from "./index";
 import { addDays, stockholmDay } from "./stats";
 import { ApiError, body, checkFields, fail, json, text } from "./http";
 import { stationV2Api } from "./station-v2";
+import { getWeather } from "./weather";
 
 const STATION = "tingsryd";
 const MAX_ORE = 10_000_000_000;
@@ -84,6 +85,18 @@ export async function stationApi(
       await requireAdmin(req, configuration);
     }
   };
+  if (path === "/api/station/weather" && method === "GET") {
+    await viewerOrAdmin(request, env);
+    try {
+      return json(await getWeather(new Date(), fetch, undefined, request.url), 200, {
+        "Cache-Control": "no-store",
+      });
+    } catch {
+      return json({ error: "Väderprognosen är tillfälligt otillgänglig." }, 503, {
+        "Cache-Control": "no-store",
+      });
+    }
+  }
   if (
     path.startsWith("/api/station/v2") ||
     path.startsWith("/api/admin/station/v2")

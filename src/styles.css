@@ -397,6 +397,62 @@ p {
   border-color: var(--accent);
   background: #f4f9ff;
 }
+.staff-card-metal {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid #ffffffb8;
+  color: #1c2735;
+  box-shadow: inset 0 2px 2px #ffffffb8, inset 0 -3px 6px #51422b35,
+    0 7px 19px #1c355234;
+}
+.staff-card-metal-1 {
+  background: linear-gradient(155deg, #fff9df 0%, #e6c778 18%, #fff6d0 36%, #cba65e 57%, #f8e4aa 77%, #a87b3d 100%);
+}
+.staff-card-metal-2 {
+  background: linear-gradient(155deg, #f9fdff 0%, #aab7c5 19%, #edf4f9 36%, #8d9dab 57%, #e3edf3 78%, #8493a1 100%);
+}
+.staff-card-metal-3 {
+  background: linear-gradient(155deg, #ffead6 0%, #ba7956 19%, #f2c5a2 36%, #98563e 58%, #e7a982 78%, #83442e 100%);
+  color: #211e20;
+}
+.staff-card-metal::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -40% auto -40% -60%;
+  width: 52%;
+  transform: skewX(-23deg) translateX(-180%);
+  background: linear-gradient(90deg, transparent, #ffffff0d 20%, #ffffffad 50%, #ffffff38 75%, transparent);
+  animation: metal-shimmer 4.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.staff-card-metal-2::after { animation-delay: -1.6s; }
+.staff-card-metal-3::after { animation-delay: -3.2s; }
+.staff-card-metal strong {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(18px, 1.35vw, 23px);
+  text-shadow: 0 1px 1px #ffffffa8;
+}
+.staff-card-metal:hover {
+  transform: translateY(-3px);
+  border-color: #fff;
+  box-shadow: inset 0 2px 2px #ffffffd4, inset 0 -3px 6px #51422b35,
+    0 11px 24px #1c355247;
+}
+.staff-card-metal:focus-visible {
+  outline: 3px solid #063e81;
+  outline-offset: 3px;
+  border-color: #fff;
+}
+@keyframes metal-shimmer {
+  0%, 20% { left: -60%; transform: skewX(-23deg) translateX(-180%); }
+  58%, 100% { left: 125%; transform: skewX(-23deg) translateX(180%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .staff-card-metal::after { animation: none; display: none; }
+}
 .avatar {
   display: inline-flex;
   align-items: center;

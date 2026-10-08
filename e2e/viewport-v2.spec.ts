@@ -14,6 +14,11 @@ const rankings = people.map((person, index) => ({
   average: 330 - index * 15, premiumShare: 35 - index * 3,
 }));
 async function syntheticData(page: Page) {
+  await page.route("**/api/station/weather", (route) => route.fulfill({ json: {
+    source: "SMHI SNOW1gv1", kind: "forecast",
+    now: { time: "2026-10-08T10:00:00Z", temperature: 12, symbol: 3 },
+    tomorrow: { time: "2026-10-09T10:00:00Z", temperature: 11, symbol: 6 },
+  } }));
   await page.route("**/api/staff*", (route) => route.fulfill({ json: people }));
   await page.route("**/api/wash-programs*", (route) => route.fulfill({ json: programs }));
   await page.route("**/api/stats*", (route) => route.fulfill({ json: {
