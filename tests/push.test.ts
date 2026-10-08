@@ -56,6 +56,7 @@ afterEach(async () => {
   await f.finish();
   f.db.close();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 const subscription = (suffix = "one") => ({
@@ -594,6 +595,220 @@ describe("Leverans, mottagare och spam-skydd", () => {
         )
       ).status,
     ).toBe(400);
+  });
+});
+describe("Sanerad leveransdiagnostik", () => {
+  const appleEndpoint = "https://web.push.apple.com/private-endpoint-path";
+  async function diagnosticDevice(endpoint = appleEndpoint) {
+    const response = await f.call("/push/subscribe", "POST", {
+      subscription: { ...subscription(), endpoint },
+      staff_id: "emma",
+    });
+    expect(response.status).toBe(201);
+    await enable();
+    return (await response.json()) as { id: string; token: string };
+  }
+  function expectSanitized(
+    warn: ReturnType<typeof vi.spyOn>,
+    owner: { id: string; token: string },
+  ) {
+    const log = JSON.stringify(warn.mock.calls);
+    for (const secret of [
+      appleEndpoint,
+      "private-endpoint-path",
+      browserKeys.auth,
+      browserKeys.publicKey,
+      f.env.VAPID_PUBLIC_KEY!,
+      f.env.VAPID_PRIVATE_KEY!,
+      f.env.ADMIN_PIN!,
+      owner.id,
+      owner.token,
+      "Emma",
+      "emma",
+      "Dagens fokus",
+      "Nu kör vi!",
+    ])
+      expect(log).not.toContain(secret);
+    if (transport.mock.calls.length) {
+      const options = transport.mock.calls[0][1]!;
+      expect(log).not.toContain(
+        (options.headers as Record<string, string>).Authorization,
+      );
+      expect(log).not.toContain(
+        base64url(new Uint8Array(options.body as ArrayBuffer)),
+      );
+    }
+  }
+  it.each([400, 403])(
+    "HTTP %s ger exakt en sanerad Apple-varning utan ändrat API eller felhantering",
+    async (status) => {
+      const owner = await diagnosticDevice();
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      // Even provider response bodies may contain sensitive details; they must not be logged.
+      transport.mockResolvedValueOnce(
+        new Response(
+          appleEndpoint + browserKeys.auth + f.env.VAPID_PRIVATE_KEY,
+          { status },
+        ),
+      );
+      const response = await f.call(
+        "/push/test",
+        "POST",
+        { request_id: crypto.randomUUID() },
+        undefined,
+        ownerHeaders(owner),
+      );
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        state: "complete",
+        total: 1,
+        sent: 0,
+        failed: 1,
+      });
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        JSON.stringify({
+          event: "push_delivery_failed",
+          provider: "apple",
+          status,
+          event_type: "test",
+        }),
+      );
+      expectSanitized(warn, owner);
+      expect(
+        f.db
+          .prepare(
+            "SELECT active,failure_count,disabled_at,last_success_at FROM push_subscriptions",
+          )
+          .get(),
+      ).toEqual({
+        active: 1,
+        failure_count: 1,
+        disabled_at: null,
+        last_success_at: null,
+      });
+    },
+  );
+  it.each(["fetch", "crypto", "custom-name"])(
+    "%s-undantag loggar enbart en säker typ och behåller befintligt felresultat",
+    async (source) => {
+      const owner = await diagnosticDevice();
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const sensitive = [
+        appleEndpoint,
+        browserKeys.auth,
+        browserKeys.publicKey,
+        f.env.VAPID_PRIVATE_KEY,
+        owner.id,
+        "Emma",
+      ].join(" ");
+      if (source === "crypto")
+        vi.spyOn(crypto.subtle, "encrypt").mockRejectedValueOnce(
+          new DOMException(sensitive, "OperationError"),
+        );
+      else {
+        const error = new TypeError(sensitive);
+        if (source === "custom-name") error.name = sensitive;
+        transport.mockRejectedValueOnce(error);
+      }
+      const response = await manual();
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        state: "complete",
+        total: 1,
+        sent: 0,
+        failed: 1,
+      });
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        JSON.stringify({
+          event: "push_delivery_exception",
+          provider: "apple",
+          exception_type:
+            source === "crypto"
+              ? "OperationError"
+              : source === "fetch"
+                ? "TypeError"
+                : "Error",
+        }),
+      );
+      expectSanitized(warn, owner);
+      expect(
+        f.db
+          .prepare(
+            "SELECT active,failure_count,disabled_at,last_success_at FROM push_subscriptions",
+          )
+          .get(),
+      ).toEqual({
+        active: 1,
+        failure_count: 1,
+        disabled_at: null,
+        last_success_at: null,
+      });
+      if (source === "crypto") expect(transport).not.toHaveBeenCalled();
+    },
+  );
+  it.each([
+    ["https://fcm.googleapis.com/fcm/send/private-path", "google"],
+    [
+      "https://updates.push.services.mozilla.com/wpush/v2/private-path",
+      "mozilla",
+    ],
+    ["https://wns1.notify.windows.com/private-path", "windows"],
+  ])(
+    "kategoriserar %s utan att logga URL eller ändra 410-hantering",
+    async (endpoint, provider) => {
+      const owner = await diagnosticDevice(endpoint);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      transport.mockResolvedValueOnce(new Response(null, { status: 410 }));
+      expect(await (await manual()).json()).toEqual({
+        state: "complete",
+        total: 1,
+        sent: 0,
+        failed: 1,
+      });
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        JSON.stringify({
+          event: "push_delivery_failed",
+          provider,
+          status: 410,
+          event_type: "manual",
+        }),
+      );
+      expect(JSON.stringify(warn.mock.calls)).not.toContain(endpoint);
+      expectSanitized(warn, owner);
+      expect(
+        f.db
+          .prepare(
+            "SELECT active,failure_count,disabled_at FROM push_subscriptions",
+          )
+          .get(),
+      ).toEqual({
+        active: 0,
+        failure_count: 1,
+        disabled_at: expect.any(String),
+      });
+    },
+  );
+  it("lyckad leverans förblir tyst och återställer fortfarande felräknaren", async () => {
+    await diagnosticDevice();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(await (await manual()).json()).toEqual({
+      state: "complete",
+      total: 1,
+      sent: 1,
+      failed: 0,
+    });
+    expect(warn).not.toHaveBeenCalled();
+    expect(
+      f.db
+        .prepare(
+          "SELECT active,failure_count,last_success_at FROM push_subscriptions",
+        )
+        .get(),
+    ).toEqual({
+      active: 1,
+      failure_count: 0,
+      last_success_at: expect.any(String),
+    });
   });
 });
 describe("Automatiska målnotiser", () => {

@@ -210,29 +210,108 @@ export async function vapidAuthorization(
   );
   return `vapid t=${header}.${claims}.${base64url(signature)},k=${keys.publicKey}`;
 }
+function pushProvider(endpoint: string) {
+  try {
+    const host = new URL(endpoint).hostname;
+    if (host === "web.push.apple.com") return "apple";
+    if (host === "fcm.googleapis.com") return "google";
+    if (host === "updates.push.services.mozilla.com") return "mozilla";
+    if (/^[a-z0-9-]+\.notify\.windows\.com$/.test(host)) return "windows";
+  } catch {
+    /* Never log malformed URLs either. */
+  }
+  return "unknown";
+}
+function safeExceptionName(error: unknown) {
+  // Error.name can contain arbitrary data. Only fixed standard names are safe.
+  // Never inspect message, stack, cause or constructor names.
+  try {
+    if (error instanceof Error || error instanceof DOMException) {
+      const name = error.name;
+      if (
+        [
+          "Error",
+          "TypeError",
+          "RangeError",
+          "SyntaxError",
+          "ReferenceError",
+          "URIError",
+          "EvalError",
+          "AggregateError",
+          "AbortError",
+          "TimeoutError",
+          "OperationError",
+          "DataError",
+          "InvalidAccessError",
+          "NotSupportedError",
+          "InvalidStateError",
+          "SecurityError",
+          "NetworkError",
+          "UnknownError",
+          "QuotaExceededError",
+        ].includes(name)
+      )
+        return name;
+    }
+  } catch {
+    /* A custom name getter must not affect delivery handling. */
+  }
+  return "Error";
+}
+function warnPush(fields: Record<string, string | number>) {
+  try {
+    console.warn(JSON.stringify(fields));
+  } catch {
+    /* Diagnostics must not change delivery behavior. */
+  }
+}
 export async function deliverPush(
   target: PushTarget,
   payload: PushPayload,
   keys: PushKeys,
 ): Promise<number> {
-  await validateTarget(target);
-  const [encrypted, authorization] = await Promise.all([
-    encryptPayload(target, payload),
-    vapidAuthorization(target.endpoint, keys),
-  ]);
-  const response = await fetch(target.endpoint, {
-    method: "POST",
-    redirect: "error",
-    signal: AbortSignal.timeout(8000),
-    headers: {
-      Authorization: authorization,
-      "Content-Encoding": "aes128gcm",
-      "Content-Type": "application/octet-stream",
-      TTL: "3600",
-      Urgency: "normal",
-    },
-    body: bytes(encrypted),
-  });
+  let response: Response;
+  try {
+    await validateTarget(target);
+    const [encrypted, authorization] = await Promise.all([
+      encryptPayload(target, payload),
+      vapidAuthorization(target.endpoint, keys),
+    ]);
+    response = await fetch(target.endpoint, {
+      method: "POST",
+      redirect: "error",
+      signal: AbortSignal.timeout(8000),
+      headers: {
+        Authorization: authorization,
+        "Content-Encoding": "aes128gcm",
+        "Content-Type": "application/octet-stream",
+        TTL: "3600",
+        Urgency: "normal",
+      },
+      body: bytes(encrypted),
+    });
+  } catch (error) {
+    warnPush({
+      event: "push_delivery_exception",
+      provider: pushProvider(target.endpoint),
+      exception_type: safeExceptionName(error),
+    });
+    throw error; // Preserve the caller's existing failure handling.
+  }
+  if (response.status < 200 || response.status >= 300)
+    warnPush({
+      event: "push_delivery_failed",
+      provider: pushProvider(target.endpoint),
+      status: response.status,
+      event_type: [
+        "test",
+        "manual",
+        "daily_goal_close",
+        "daily_goal_reached",
+      ].includes(payload.type)
+        ? payload.type
+        : "unknown",
+    });
   await response.body?.cancel();
   return response.status;
 }
