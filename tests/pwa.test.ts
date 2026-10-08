@@ -67,7 +67,12 @@ describe("PWA och Service Worker", () => {
         // NTFS ACLs, not POSIX mode bits, control access on Windows.
         const acl = spawnSync("powershell.exe", [
           "-NoProfile", "-NonInteractive", "-Command",
-          "$acl = Get-Acl -LiteralPath $env:VAPID_TEST_FILE; " +
+          "$target = $env:VAPID_TEST_FILE; " +
+          "if (-not $target) { Write-Output 'target=missing'; exit 1 }; " +
+          "if (-not (Test-Path -LiteralPath $target -PathType Leaf)) { Write-Output 'file=missing'; exit 1 }; " +
+          "try { $acl = Get-Acl -LiteralPath $target -ErrorAction Stop } " +
+          "catch { Write-Output 'acl=error'; exit 1 }; " +
+          "if (-not $acl) { Write-Output 'acl=empty'; exit 1 }; " +
           "$broadCount = 0; " +
           "$broad = @('S-1-1-0','S-1-5-11','S-1-5-32-545'); " +
           "foreach ($rule in $acl.Access) { " +
