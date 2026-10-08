@@ -48,6 +48,14 @@ const descriptions: Record<string, string> = {
   fin: "Ren och fräsch",
   borstlos: "Skonsam och effektiv",
 };
+const programImages: Record<string, string> = {
+  preemium: "/wash-programs/preemium",
+  "finast-plus": "/wash-programs/finast-plus",
+  hosttvatt: "/wash-programs/hosttvatt",
+  finast: "/wash-programs/finast",
+  fin: "/wash-programs/fin",
+  borstlos: "/wash-programs/borstlos",
+};
 const today = () =>
   new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(
     new Date(),
@@ -573,16 +581,6 @@ export default function App() {
               <span>Tillsammans skapar vi en renare vardag!</span>
             </div>
           </div>
-          <div className="welcome-visual">
-            <div className="wash-bubbles" />
-            <CarArt hero />
-            <div className="hero-caption">
-              Renare resor
-              <br />
-              varje dag
-              <span />
-            </div>
-          </div>
         </main>
       )}
       {page === "sale" && (
@@ -612,8 +610,22 @@ export default function App() {
                     onClick={() => void register(program)}
                     aria-label={`Registrera ${program.name}, ${sek(program.price_sek)}`}
                   >
-                    <div className="wash-shimmer" />
-                    <CarArt tone={program.id} />
+                    <span className="wash-image" aria-hidden="true">
+                      {programImages[program.id] ? (
+                        <img
+                          src={`${programImages[program.id]}-600.webp`}
+                          srcSet={`${programImages[program.id]}-600.webp 600w, ${programImages[program.id]}-1200.webp 1200w`}
+                          sizes="(max-width: 760px) 45vw, (max-width: 1100px) 30vw, 410px"
+                          alt=""
+                          width={1200}
+                          height={529}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <CarArt tone={program.id} />
+                      )}
+                    </span>
                     <div className="wash-copy">
                       <strong>{program.name}</strong>
                       <span>
@@ -621,9 +633,6 @@ export default function App() {
                       </span>
                       <b>{sek(program.price_sek)}</b>
                     </div>
-                    <span className="wash-arrow">
-                      <ArrowRight size={22} />
-                    </span>
                   </button>
                 ))}
               </div>
