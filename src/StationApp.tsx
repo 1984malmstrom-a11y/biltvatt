@@ -6,9 +6,10 @@ import {
   LockKeyhole,
   RefreshCw,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { api, HttpError, send } from "./api";
+import StationDashboardV2 from "./StationDashboardV2";
+import StationV2Admin from "./StationV2Admin";
 
 type Summary = {
   business_date: string;
@@ -82,9 +83,7 @@ function Shell({
     <div className="station-shell">
       <header className="station-head">
         <div className="station-mark">
-          <span className="station-mark-icon" aria-hidden="true">
-            ✦
-          </span>
+          <img className="station-mark-logo" src="/preem-logo.png" alt="Preem" />
           <div>
             <strong>PREEM TINGSRYD</strong>
             <small>BUTIKSFÖRSÄLJNING</small>
@@ -103,144 +102,6 @@ function Shell({
         </a>
       </footer>
     </div>
-  );
-}
-
-function StationDashboard() {
-  const [data, setData] = useState<Summary | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const load = useCallback(async () => {
-    try {
-      const value = await api<Summary>("/station/dashboard");
-      setData(value);
-      setError("");
-    } catch (e) {
-      if (e instanceof HttpError && e.status === 401) {
-        window.location.replace("/station/login");
-        return;
-      }
-      setError((e as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  useEffect(() => {
-    void load();
-    const timer = window.setInterval(() => void load(), 60000);
-    const visible = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    document.addEventListener("visibilitychange", visible);
-    return () => {
-      clearInterval(timer);
-      document.removeEventListener("visibilitychange", visible);
-    };
-  }, [load]);
-  const message =
-    !data || data.net_sales_ore === null
-      ? "Redo för en ny dag? Gårdagens resultat väntar."
-      : data.percent === null
-        ? "Tillsammans gör vi varje dag starkare."
-        : data.percent >= 15
-          ? "Vilken dag! Vi fortsätter framåt."
-          : data.percent >= 0
-            ? "Starkt jobbat, team Tingsryd!"
-            : "Ny dag, nya möjligheter.";
-  return (
-    <Shell
-      sub="Gårdagens resultat"
-      onViewerLogout={() => {
-        void api("/station/logout", { method: "POST" })
-          .catch(() => {})
-          .finally(() => window.location.replace("/station/login"));
-      }}
-    >
-      <main className="station-main">
-        <div className="station-kicker">
-          <span className="station-kicker-dot" /> DAGENS ÖVERBLICK{" "}
-          <span className="station-kicker-line" />
-        </div>
-        <section className="station-hero" aria-live="polite">
-          <p className="station-eyebrow">BUTIK · EXKLUSIVE MOMS</p>
-          <h1>{data ? dated(data.business_date) : "Gårdagens försäljning"}</h1>
-          {loading && !data ? (
-            <p className="station-loading">Hämtar resultat…</p>
-          ) : (
-            <div className="station-amount">
-              {data?.net_sales_ore === null || !data
-                ? "—"
-                : kronor(data.net_sales_ore)}
-            </div>
-          )}
-          {data?.net_sales_ore === null && (
-            <p className="station-empty">
-              Gårdagens butiksförsäljning är ännu inte registrerad.
-            </p>
-          )}
-          {error && (
-            <p className="station-error" role="alert">
-              {error} <button onClick={() => void load()}>Försök igen</button>
-            </p>
-          )}
-          {data?.net_sales_ore !== null && data && (
-            <div className="station-comparison">
-              <div>
-                <span className="station-comparison-label">
-                  MOT SAMMA VECKODAG 52 VECKOR TIDIGARE
-                </span>
-                <strong
-                  className={
-                    data.percent === null
-                      ? "station-neutral"
-                      : data.percent >= 0
-                        ? "station-positive"
-                        : "station-negative"
-                  }
-                >
-                  {data.percent === null
-                    ? "—"
-                    : `${data.percent > 0 ? "+" : ""}${new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 1 }).format(data.percent)} %`}
-                </strong>
-                <small>
-                  {data.comparison_sales_ore === null
-                    ? "Jämförelsevärde saknas"
-                    : data.comparison_sales_ore === 0
-                      ? "Procent kan inte beräknas mot 0 kr"
-                      : "jämfört med motsvarande veckodag"}
-                </small>
-              </div>
-              <div className="station-comparison-side">
-                <span>Skillnad</span>
-                <strong>
-                  {data.difference_ore === null
-                    ? "—"
-                    : signed(data.difference_ore)}
-                </strong>
-                <span className="station-compare-date">
-                  {dated(data.comparison_date)}
-                  <br />
-                  <b>
-                    {data.comparison_sales_ore === null
-                      ? "Inget värde registrerat"
-                      : kronor(data.comparison_sales_ore)}
-                  </b>
-                </span>
-              </div>
-            </div>
-          )}
-        </section>
-        <div className="station-bottom">
-          <p className="station-message">
-            <Sparkles size={19} />
-            {message}
-          </p>
-          <a className="station-wash-link" href="/">
-            ÖPPNA TVÄTTLIGAN <ArrowRight size={23} />
-          </a>
-        </div>
-      </main>
-    </Shell>
   );
 }
 
@@ -673,6 +534,7 @@ function StationAdmin() {
                 )}
               </div>
             </section>
+            <StationV2Admin />
           </>
         )}
         {error && (
@@ -706,6 +568,6 @@ export default function StationApp() {
   ) : path === "/station/login" ? (
     <StationLogin />
   ) : (
-    <StationDashboard />
+    <StationDashboardV2 />
   );
 }

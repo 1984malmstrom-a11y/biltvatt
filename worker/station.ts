@@ -1,6 +1,7 @@
 import type { Env } from "./index";
 import { addDays, stockholmDay } from "./stats";
 import { body, checkFields, fail, json, text } from "./http";
+import { stationV2Api } from "./station-v2";
 
 const STATION = "tingsryd";
 const MAX_ORE = 10_000_000_000;
@@ -75,6 +76,8 @@ export async function stationApi(
   )
     return null;
   if (path.startsWith("/api/admin/station/")) await requireAdmin(request, env);
+  if (path.startsWith("/api/station/v2") || path.startsWith("/api/admin/station/v2"))
+    return stationV2Api(request, env, viewer, requireAdmin);
   if (path === "/api/station/activate" && method === "POST") {
     const data = await body(request);
     checkFields(data, ["code"]);
@@ -127,11 +130,12 @@ export async function stationApi(
     await viewer(request, env);
     const day = addDays(stockholmDay(), -1),
       previousDay = comparisonDay(day);
+    const weekStart = addDays(day, -6);
     const rows = await env.DB.prepare(
-      "SELECT business_date,net_sales_ore FROM station_store_daily_sales WHERE station_id=? AND business_date IN (?,?)",
+      "SELECT business_date,net_sales_ore,updated_at FROM station_store_daily_sales WHERE station_id=? AND (business_date BETWEEN ? AND ? OR business_date=?)",
     )
-      .bind(STATION, day, previousDay)
-      .all<{ business_date: string; net_sales_ore: number }>();
+      .bind(STATION, weekStart, day, previousDay)
+      .all<{ business_date: string; net_sales_ore: number; updated_at: string }>();
     const current =
       rows.results.find((r) => r.business_date === day)?.net_sales_ore ?? null;
     const previous =
@@ -142,6 +146,11 @@ export async function stationApi(
       comparison_date: previousDay,
       net_sales_ore: current,
       comparison_sales_ore: previous,
+      updated_at: rows.results.find((r) => r.business_date === day)?.updated_at ?? null,
+      week: Array.from({ length: 7 }, (_, i) => {
+        const date = addDays(weekStart, i);
+        return { date, net_sales_ore: rows.results.find((r) => r.business_date === date)?.net_sales_ore ?? null };
+      }),
       ...(current === null
         ? { difference_ore: null, percent: null }
         : change(current, previous)),

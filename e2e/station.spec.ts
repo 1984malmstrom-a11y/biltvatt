@@ -35,7 +35,7 @@ test("stationsvisning kräver aktivering; admin kan skapa kod och återkalla enh
   await expect(viewerPage).toHaveURL(/\/station$/);
   await expect(
     viewerPage.getByText(
-      "Gårdagens butiksförsäljning är ännu inte registrerad.",
+      "Gårdagens försäljning är ännu inte registrerad.",
     ),
   ).toBeVisible();
   await expect(
@@ -56,6 +56,7 @@ test("stationsvisning kräver aktivering; admin kan skapa kod och återkalla enh
 test("stationsdashboard har tydlig hierarki utan scroll på TV och fungerar på mobil", async ({
   page,
 }) => {
+  await page.route("**/api/station/v2", (route) => route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({today:"2026-10-08",shifts:[],tasks:[],notices:[],updated_at:null})}));
   await page.route("**/api/station/dashboard", (route) =>
     route.fulfill({
       status: 200,
@@ -72,12 +73,13 @@ test("stationsdashboard har tydlig hierarki utan scroll på TV och fungerar på 
   );
   for (const [width, height] of [
     [1920, 1080],
+    [1600, 900],
     [1366, 768],
     [390, 844],
   ]) {
     await page.setViewportSize({ width, height });
     await page.goto("/station");
-    await expect(page.locator(".station-amount")).toContainText("12 345,67");
+    await expect(page.locator(".v2-amount")).toContainText("12 345,67");
     await expect(page.getByText("onsdag 8 oktober 2025")).toBeVisible();
     const size = await page.evaluate(() => ({
       scroll: document.documentElement.scrollHeight,
@@ -92,6 +94,7 @@ test("stationsdashboard har tydlig hierarki utan scroll på TV och fungerar på 
 test("dashboarden visar saknat jämförelsevärde och nollbas utan procent", async ({
   page,
 }) => {
+  await page.route("**/api/station/v2", (route) => route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({today:"2026-10-08",shifts:[],tasks:[],notices:[],updated_at:null})}));
   let previous: number | null = null;
   await page.route("**/api/station/dashboard", (route) =>
     route.fulfill({
@@ -108,14 +111,11 @@ test("dashboarden visar saknat jämförelsevärde och nollbas utan procent", asy
     }),
   );
   await page.goto("/station");
-  await expect(page.getByText("Jämförelsevärde saknas")).toBeVisible();
-  await expect(page.getByText("Inget värde registrerat")).toBeVisible();
+  await expect(page.getByText("Saknas", { exact: true })).toBeVisible();
   previous = 0;
   await page.reload();
-  await expect(
-    page.getByText("Procent kan inte beräknas mot 0 kr"),
-  ).toBeVisible();
-  await expect(page.locator(".station-comparison-side strong")).toContainText(
+  await expect(page.locator(".v2-change strong")).toContainText("—");
+  await expect(page.locator(".v2-comparison")).toContainText(
     "100",
   );
 });

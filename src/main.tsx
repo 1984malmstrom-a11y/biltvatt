@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles.css";
 import StationApp from "./StationApp";
 import "./station.css";
+import "./station-v2.css";
 import { registerServiceWorker } from "./pwa";
 void registerServiceWorker()?.catch(() => {
   /* UI offers useful feedback when push is requested. */
