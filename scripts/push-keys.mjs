@@ -10,10 +10,14 @@ function protectWindowsFile(path) {
   });
   const sid = user.stdout?.match(/\bS-1-\d+(?:-\d+)+\b/)?.[0];
   if (user.status !== 0 || !sid) throw new Error("Windows user SID unavailable");
-  const acl = spawnSync("icacls.exe", [path, "/inheritance:r", "/grant:r", `*${sid}:(F)`], {
+  const inheritance = spawnSync("icacls.exe", [path, "/inheritance:r"], {
     encoding: "utf8", windowsHide: true,
   });
-  if (acl.status !== 0) throw new Error("Windows private ACL failed");
+  if (inheritance.status !== 0) throw new Error("Windows ACL inheritance removal failed");
+  const grant = spawnSync("icacls.exe", [path, "/grant:r", `*${sid}:(F)`], {
+    encoding: "utf8", windowsHide: true,
+  });
+  if (grant.status !== 0) throw new Error("Windows private ACL grant failed");
 }
 if (existsSync(output)) {
   console.error(

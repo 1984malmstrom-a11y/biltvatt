@@ -68,17 +68,20 @@ describe("PWA och Service Worker", () => {
         const acl = spawnSync("powershell.exe", [
           "-NoProfile", "-NonInteractive", "-Command",
           "$acl = Get-Acl -LiteralPath $env:VAPID_TEST_FILE; " +
-          "if (-not $acl.AreAccessRulesProtected) { exit 1 }; " +
+          "$broadCount = 0; " +
           "$broad = @('S-1-1-0','S-1-5-11','S-1-5-32-545'); " +
           "foreach ($rule in $acl.Access) { " +
           "$sid = $rule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; " +
-          "if ($rule.AccessControlType -eq 'Allow' -and $sid -in $broad) { exit 1 } " +
-          "}; exit 0",
+          "if ($rule.AccessControlType -eq 'Allow' -and $sid -in $broad) { $broadCount++ } " +
+          "}; Write-Output \"protected=$($acl.AreAccessRulesProtected);broad=$broadCount\"; " +
+          "if (-not $acl.AreAccessRulesProtected -or $broadCount -gt 0) { exit 1 }",
         ], {
           encoding: "utf8", windowsHide: true,
           env: { ...process.env, VAPID_TEST_FILE: file },
         });
-        expect(acl.status).toBe(0);
+        expect({ status: acl.status, summary: acl.stdout.trim() }).toEqual({
+          status: 0, summary: "protected=True;broad=0",
+        });
       } else {
         expect(statSync(file).mode & 0o777).toBe(0o600);
       }
