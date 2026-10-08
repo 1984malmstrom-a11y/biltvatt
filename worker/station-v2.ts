@@ -52,11 +52,42 @@ const shiftInput = (value: unknown) => {
 };
 const taskFields = (row: Record<string, unknown>) =>
   text(row.text, "Uppgift", 180);
+const validMonth = (value: unknown): value is string =>
+  typeof value === "string" &&
+  /^\d{4}-(0[1-9]|1[0-2])$/.test(value) &&
+  Number(value.slice(0, 4)) >= 2000;
+const monthlyMetrics = (value: unknown) => {
+  if (!Array.isArray(value) || value.length > 24)
+    return fail(400, "Ange högst 24 månadsvärden.");
+  const rows = value.map((entry: unknown) => {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry))
+      fail(400, "Ogiltigt månadsvärde.");
+    const row = entry as Record<string, unknown>;
+    checkFields(row, ["label", "value", "unit", "order"]);
+    if (
+      !Number.isSafeInteger(row.order) ||
+      (row.order as number) < 0 ||
+      (row.order as number) > 999 ||
+      (row.unit !== undefined &&
+        (typeof row.unit !== "string" || row.unit.length > 24))
+    )
+      fail(400, "Ogiltig ordning eller enhet.");
+    return {
+      label: text(row.label, "Rubrik", 80),
+      value: text(row.value, "Värde", 80),
+      unit: (row.unit as string | undefined)?.trim() ?? "",
+      order: row.order as number,
+    };
+  });
+  if (new Set(rows.map((row) => row.order)).size !== rows.length)
+    fail(400, "Varje månadsvärde behöver en egen plats i ordningen.");
+  return rows.sort((a, b) => a.order - b.order);
+};
 async function limitTaskWrites(request: Request, env: Env) {
   const token = request.headers
     .get("Cookie")
     ?.match(/(?:^|;\s*)station_view=([a-f0-9]{64})/)?.[1];
-  if (!token) fail(401, "Aktivera visning för den här enheten.");
+  if (!token) return; // An admin session was already verified by stationApi.
   const digest = await crypto.subtle.digest(
     "SHA-256",
     new TextEncoder().encode(token),
@@ -98,6 +129,68 @@ export async function stationV2Api(
     minute: "2-digit",
     hourCycle: "h23",
   }).format(new Date());
+  const previousMonth = addDays(`${today.slice(0, 7)}-01`, -1).slice(0, 7);
+
+  if (path === "/api/station/v2/monthly" && method === "GET") {
+    const requested = new URL(request.url).searchParams.get("month");
+    const month = requested ?? previousMonth;
+    if (!validMonth(month) || month >= today.slice(0, 7))
+      fail(400, "Välj en avslutad månad.");
+    const row = await env.DB.prepare(
+      "SELECT month,metrics_json,updated_at FROM station_monthly_figures WHERE station_id=? AND month=?",
+    )
+      .bind(STATION, month)
+      .first<{ month: string; metrics_json: string; updated_at: string }>();
+    return json({
+      month,
+      metrics: row ? JSON.parse(row.metrics_json) : [],
+      updated_at: row?.updated_at ?? null,
+    });
+  }
+  if (path === "/api/admin/station/v2/monthly" && method === "GET") {
+    const rows = await env.DB.prepare(
+      "SELECT month,metrics_json,revision,updated_at FROM station_monthly_figures WHERE station_id=? ORDER BY month DESC LIMIT 60",
+    )
+      .bind(STATION)
+      .all<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
+    return json(rows.results.map((row) => ({
+      month: row.month,
+      metrics: JSON.parse(row.metrics_json),
+      revision: row.revision,
+      updated_at: row.updated_at,
+    })));
+  }
+  const monthlyId = path.match(
+    /^\/api\/admin\/station\/v2\/monthly\/(\d{4}-\d{2})$/,
+  );
+  if (monthlyId && method === "PUT") {
+    const month = monthlyId[1];
+    if (!validMonth(month) || month >= today.slice(0, 7))
+      fail(400, "Välj en avslutad månad.");
+    const data = await body(request);
+    checkFields(data, ["metrics", "expected_revision"]);
+    const metrics = monthlyMetrics(data.metrics);
+    const payload = JSON.stringify(metrics);
+    if (data.expected_revision === null) {
+      const result = await env.DB.prepare(
+        "INSERT OR IGNORE INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)",
+      )
+        .bind(STATION, month, payload, now, now)
+        .run();
+      if (result.meta.changes !== 1)
+        fail(409, "Månaden finns redan. Uppdatera sidan.");
+      return json({ month, revision: 0 }, 201);
+    }
+    const expected = version(data.expected_revision);
+    const result = await env.DB.prepare(
+      "UPDATE station_monthly_figures SET metrics_json=?,revision=revision+1,updated_at=? WHERE station_id=? AND month=? AND revision=?",
+    )
+      .bind(payload, now, STATION, month, expected)
+      .run();
+    if (result.meta.changes !== 1)
+      fail(409, "Månadens siffror har ändrats. Uppdatera sidan.");
+    return json({ month, revision: expected + 1 });
+  }
 
   if (path === "/api/station/v2" && method === "GET") {
     const [shifts, tasks, notices, latest] = await Promise.all([
@@ -112,9 +205,9 @@ export async function stationV2Api(
         .bind(STATION, today)
         .all(),
       env.DB.prepare(
-        "SELECT id,title,message,updated_at FROM station_notices WHERE station_id=? AND published=1 AND (expires_on IS NULL OR expires_on>=?) ORDER BY updated_at DESC,id DESC LIMIT 20",
+        "SELECT id,title,message,updated_at FROM station_notices WHERE station_id=? AND published=1 AND (expires_on IS NULL OR expires_on>? OR (expires_on=? AND (expires_time IS NULL OR expires_time>=?))) ORDER BY updated_at DESC,id DESC LIMIT 20",
       )
-        .bind(STATION, today)
+        .bind(STATION, today, today, localTime)
         .all(),
       env.DB.prepare(
         "SELECT MAX(updated_at) AS updated_at FROM (SELECT updated_at FROM station_schedule_periods WHERE station_id=? UNION ALL SELECT updated_at FROM station_tasks WHERE station_id=? UNION ALL SELECT updated_at FROM station_notices WHERE station_id=?)",
@@ -367,17 +460,19 @@ export async function stationV2Api(
   }
   if (path === "/api/admin/station/v2/notices" && method === "POST") {
     const data = await body(request);
-    checkFields(data, ["title", "message", "published", "expires_on"]);
+    checkFields(data, ["title", "message", "published", "expires_on", "expires_time"]);
     if (
       typeof data.published !== "boolean" ||
       (data.expires_on !== null &&
         data.expires_on !== undefined &&
-        !isoDay(data.expires_on))
+        !isoDay(data.expires_on)) ||
+      (data.expires_time !== null && data.expires_time !== undefined && !clock(data.expires_time)) ||
+      (data.expires_time && !data.expires_on)
     )
-      fail(400, "Ogiltig publicering eller slutdatum.");
+      fail(400, "Ogiltig publicering eller sluttid.");
     const id = crypto.randomUUID();
     await env.DB.prepare(
-      "INSERT INTO station_notices(id,station_id,title,message,published,expires_on,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)",
+      "INSERT INTO station_notices(id,station_id,title,message,published,expires_on,expires_time,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
     )
       .bind(
         id,
@@ -386,6 +481,7 @@ export async function stationV2Api(
         text(data.message, "Meddelande", 1000),
         data.published ? 1 : 0,
         data.expires_on ?? null,
+        data.expires_time ?? null,
         now,
         now,
       )
@@ -400,7 +496,7 @@ export async function stationV2Api(
     checkFields(
       data,
       method === "PUT"
-        ? ["title", "message", "published", "expires_on", "expected_revision"]
+        ? ["title", "message", "published", "expires_on", "expires_time", "expected_revision"]
         : ["expected_revision"],
     );
     const expected = version(data.expected_revision);
@@ -416,17 +512,20 @@ export async function stationV2Api(
         typeof data.published !== "boolean" ||
         (data.expires_on !== null &&
           data.expires_on !== undefined &&
-          !isoDay(data.expires_on))
+          !isoDay(data.expires_on)) ||
+        (data.expires_time !== null && data.expires_time !== undefined && !clock(data.expires_time)) ||
+        (data.expires_time && !data.expires_on)
       )
-        fail(400, "Ogiltig publicering eller slutdatum.");
+        fail(400, "Ogiltig publicering eller sluttid.");
       result = await env.DB.prepare(
-        "UPDATE station_notices SET title=?,message=?,published=?,expires_on=?,revision=revision+1,updated_at=? WHERE id=? AND station_id=? AND revision=?",
+        "UPDATE station_notices SET title=?,message=?,published=?,expires_on=?,expires_time=?,revision=revision+1,updated_at=? WHERE id=? AND station_id=? AND revision=?",
       )
         .bind(
           text(data.title, "Rubrik", 100),
           text(data.message, "Meddelande", 1000),
           data.published ? 1 : 0,
           data.expires_on ?? null,
+          data.expires_time ?? null,
           now,
           noticeId[1],
           STATION,

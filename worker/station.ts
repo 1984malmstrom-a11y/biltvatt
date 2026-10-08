@@ -1,6 +1,6 @@
 import type { Env } from "./index";
 import { addDays, stockholmDay } from "./stats";
-import { body, checkFields, fail, json, text } from "./http";
+import { ApiError, body, checkFields, fail, json, text } from "./http";
 import { stationV2Api } from "./station-v2";
 
 const STATION = "tingsryd";
@@ -76,8 +76,19 @@ export async function stationApi(
   )
     return null;
   if (path.startsWith("/api/admin/station/")) await requireAdmin(request, env);
-  if (path.startsWith("/api/station/v2") || path.startsWith("/api/admin/station/v2"))
-    return stationV2Api(request, env, viewer, requireAdmin);
+  const viewerOrAdmin = async (req: Request, configuration: Env) => {
+    try {
+      await viewer(req, configuration);
+    } catch (error) {
+      if (!(error instanceof ApiError) || error.status !== 401) throw error;
+      await requireAdmin(req, configuration);
+    }
+  };
+  if (
+    path.startsWith("/api/station/v2") ||
+    path.startsWith("/api/admin/station/v2")
+  )
+    return stationV2Api(request, env, viewerOrAdmin, requireAdmin);
   if (path === "/api/station/activate" && method === "POST") {
     const data = await body(request);
     checkFields(data, ["code"]);

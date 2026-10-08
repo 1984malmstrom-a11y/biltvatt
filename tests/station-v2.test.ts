@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { fixture } from "./fixture";
 import { addDays, stockholmDay } from "../worker/stats";
 import { parseScheduleCsv } from "../src/StationV2Admin";
@@ -346,5 +346,60 @@ describe("Stationsdashboard V2", () => {
         .status,
     ).toBe(429);
     f.db.close();
+  });
+  it("visar bara dagens uppgifter och låter befintlig adminsession använda visningsfunktioner", async () => {
+    const f = fixture(), {admin, viewer} = await sessions(f);
+    const yesterday = addDays(stockholmDay(), -1);
+    f.db.prepare("INSERT INTO station_tasks(id,station_id,task_date,text,created_at,updated_at) VALUES(?,?,?,?,?,?)")
+      .run(crypto.randomUUID(),"tingsryd",yesterday,"Gammal uppgift",new Date().toISOString(),new Date().toISOString());
+    expect((await f.call("/station/v2/tasks","POST",{text:"Adminuppgift"},admin)).status).toBe(201);
+    const adminOverview = await f.call("/station/v2","GET",undefined,admin);
+    expect(adminOverview.status).toBe(200);
+    const overview = await (await f.call("/station/v2","GET",undefined,viewer)).json() as {tasks:{text:string}[]};
+    expect(overview.tasks.map((item)=>item.text)).toEqual(["Adminuppgift"]);
+    expect((await f.call("/station/dashboard","GET",undefined,admin)).status).toBe(401);
+    expect((await f.call("/station/v2/tasks","POST",{text:"   "},viewer)).status).toBe(400);
+    expect((await f.call("/station/v2/tasks","POST",{text:"x".repeat(181)},viewer)).status).toBe(400);
+    f.db.close();
+  });
+  it("lagrar fria månadsrader i ordning med endast adminskrivning och rätt månad", async () => {
+    const f = fixture(), {admin,viewer} = await sessions(f);
+    const current=stockholmDay().slice(0,7);
+    const previous=addDays(`${current}-01`,-1).slice(0,7);
+    const path=`/admin/station/v2/monthly/${previous}`;
+    const metrics=[
+      {label:"Rad B",value:"12,4",unit:"%",order:1},
+      {label:"Rad A",value:"123",unit:"st",order:0},
+    ];
+    expect((await f.call("/station/v2/monthly")).status).toBe(401);
+    expect((await f.call(path,"PUT",{metrics,expected_revision:null},viewer)).status).toBe(401);
+    expect((await f.call(`/admin/station/v2/monthly/${current}`,"PUT",{metrics,expected_revision:null},admin)).status).toBe(400);
+    expect((await f.call(path,"PUT",{metrics:[{...metrics[0],label:""}],expected_revision:null},admin)).status).toBe(400);
+    expect((await f.call(path,"PUT",{metrics,expected_revision:null},admin)).status).toBe(201);
+    expect((await f.call(path,"PUT",{metrics,expected_revision:null},admin)).status).toBe(409);
+    const read=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {month:string;metrics:typeof metrics};
+    expect(read.month).toBe(previous);
+    expect(read.metrics.map((row)=>row.label)).toEqual(["Rad A","Rad B"]);
+    expect((await f.call(path,"PUT",{metrics:[],expected_revision:3},admin)).status).toBe(409);
+    expect((await f.call(path,"PUT",{metrics:[],expected_revision:0},admin)).status).toBe(200);
+    expect((await f.call("/admin/station/v2/monthly","GET",undefined,viewer)).status).toBe(401);
+    const all=await (await f.call("/admin/station/v2/monthly","GET",undefined,admin)).json() as {month:string;revision:number}[];
+    expect(all[0]).toMatchObject({month:previous,revision:1});
+    f.db.close();
+  });
+  it("döljer viktigt meddelande när sluttiden i Stockholm passerat", async () => {
+    vi.useFakeTimers({toFake:["Date"]});
+    vi.setSystemTime(new Date("2026-10-08T10:00:00Z"));
+    const f=fixture();
+    try {
+      const {admin,viewer}=await sessions(f);
+      const day=stockholmDay();
+      for(const [title,expires_time] of [["Utgånget","11:00"],["Aktuellt","13:00"]]) {
+        expect((await f.call("/admin/station/v2/notices","POST",{title,message:"Testmeddelande",published:true,expires_on:day,expires_time},admin)).status).toBe(201);
+      }
+      const result=await (await f.call("/station/v2","GET",undefined,viewer)).json() as {notices:{title:string}[]};
+      expect(result.notices.map((row)=>row.title)).toEqual(["Aktuellt"]);
+      expect((await f.call("/admin/station/v2/notices","POST",{title:"Fel",message:"Text",published:true,expires_on:null,expires_time:"13:00"},admin)).status).toBe(400);
+    } finally {f.db.close();vi.useRealTimers();}
   });
 });

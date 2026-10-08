@@ -65,6 +65,9 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
       }),
     }),
   );
+  await page.route("**/api/station/v2/monthly", (r) =>
+    r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({month:"2026-09",metrics:[{label:"Demovärde",value:"123",unit:"st",order:0}],updated_at:null})}),
+  );
   await page.route("**/api/station/v2/tasks/**", async (r) => {
     const body = r.request().postDataJSON();
     if (r.request().method() === "PUT") {
@@ -119,6 +122,11 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
       .getByText("Kontrollera lagret"),
   ).toBeVisible();
   await page.keyboard.press("Escape");
+  const monthlyButton=page.getByRole("button",{name:/Förra månadens siffror/i});
+  await monthlyButton.click();
+  await expect(page.getByRole("dialog",{name:"Förra månadens siffror"}).getByText("Demovärde")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(monthlyButton).toBeFocused();
   await page.getByRole("button", { name: "Fylla på kylar" }).click();
   await expect(
     page.getByRole("progressbar", { name: "Färdiga uppgifter" }),
@@ -137,7 +145,13 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   page,
 }) => {
   let imports = 0,
-    messages = 0;
+    messages = 0,
+    months = 0;
+  await page.route("**/api/admin/station/v2/monthly",(r)=>r.fulfill({status:200,contentType:"application/json",body:"[]"}));
+  await page.route("**/api/admin/station/v2/monthly/*",(r)=>{
+    months++;
+    return r.fulfill({status:201,contentType:"application/json",body:'{"revision":0}'});
+  });
   await page.route("**/api/admin/station/v2/schedule/import", async (r) => {
     imports++;
     await r.fulfill({
@@ -189,4 +203,12 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   await page.getByRole("button", { name: "Skapa meddelande" }).click();
   await expect(page.getByText("Meddelandet sparades.")).toBeVisible();
   expect(messages).toBe(1);
+  const monthSection=page.locator("#station-monthly");
+  await monthSection.getByRole("button",{name:"Lägg till rad"}).click();
+  await monthSection.getByLabel("Rubrik").fill("Demovärde");
+  await monthSection.getByLabel("Värde",{exact:true}).fill("123");
+  await monthSection.getByLabel("Enhet (valfri)").fill("st");
+  await monthSection.getByRole("button",{name:"Spara månad"}).click();
+  await expect(page.getByText("Månadens siffror sparades.")).toBeVisible();
+  expect(months).toBe(1);
 });

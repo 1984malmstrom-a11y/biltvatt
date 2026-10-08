@@ -55,7 +55,7 @@ export function AverageLeague({
             : "Snart börjar kampen om förstaplatsen."}
         </Empty>
       ) : (
-        <ol className="average-league-list">
+        <ol className="average-league-list" tabIndex={qualifying.length > 5 ? 0 : undefined} aria-label="Rankade säljare">
           {qualifying.map((p, i) => (
             <li key={p.id} className={`league-place-${i + 1}`}>
               <span className="league-rank" aria-label={`Plats ${i + 1}`}>

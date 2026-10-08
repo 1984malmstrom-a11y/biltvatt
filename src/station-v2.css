@@ -356,7 +356,7 @@
 }
 .v2-side {
   display: grid;
-  grid-template-rows: 0.48fr 0.52fr;
+  grid-template-rows: 0.42fr 0.58fr;
   gap: 2vh;
   min-height: 0;
 }
@@ -404,17 +404,6 @@
 }
 .v2-shift-row:last-of-type {
   border-bottom: 0;
-}
-.v2-avatar {
-  width: clamp(31px, 2.6vw, 45px);
-  height: clamp(31px, 2.6vw, 45px);
-  border-radius: 50%;
-  background: #e0ebf7;
-  display: grid;
-  place-items: center;
-  font-size: 0.8em;
-  font-weight: 700;
-  flex: none;
 }
 .v2-shift-row time {
   margin-left: auto;
@@ -960,6 +949,75 @@
 .v2-admin-sections code {
   font-size: 12px;
   overflow-wrap: anywhere;
+}
+.v2-business-date {
+  font-size: clamp(12px, 1vw, 17px);
+  color: #6078a2 !important;
+  margin-top: 5px !important;
+}
+.v2-shift-row {
+  gap: 8px;
+}
+.v2-monthly-cta {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 13px;
+  border: 1px solid #c7def1;
+  border-radius: 10px;
+  color: #164c88;
+  background: #fffef4f2;
+  font-size: clamp(12px, .94vw, 16px) !important;
+  font-weight: 700;
+  box-shadow: 0 3px 12px #244a7420;
+}
+.v2-monthly-month {
+  color: #57719c !important;
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 17px !important;
+}
+.v2-monthly-metrics { margin: 0; display: grid; gap: 8px; }
+.v2-monthly-metrics > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  padding: 12px 14px;
+  background: #f4f8fd;
+  border-radius: 10px;
+}
+.v2-monthly-metrics dt { color: #455e84; }
+.v2-monthly-metrics dd { margin: 0; font-weight: 750; font-size: 20px; text-align: right; }
+.v2-monthly-admin { grid-column: 1 / -1; }
+.v2-monthly-editor { display: grid; grid-template-columns: 1.3fr 1fr .8fr auto; gap: 10px; align-items: end; margin: 12px 0; }
+.v2-monthly-editor label { min-width: 0; }
+.v2-monthly-controls, .v2-monthly-actions { display: flex; align-items: center; gap: 8px; }
+.v2-monthly-controls button, .v2-monthly-actions > button:first-child, .v2-monthly-list button {
+  min-height: 40px;
+  border: 1px solid #d7e6f3;
+  border-radius: 8px;
+  background: #f3f8fd;
+  color: #235b99;
+  padding: 8px 11px;
+}
+.v2-monthly-list { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.v2-monthly-list h3 { width: 100%; margin: 0; }
+.station-admin-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 4px; }
+.station-admin-nav a { display: inline-block; padding: 9px 13px; border: 1px solid #d6e6f4; border-radius: 9px; background: #fff; color: #145caa; font-size: 13px; font-weight: 700; }
+.station-admin-nav a:focus-visible { outline: 3px solid #187cfa; outline-offset: 2px; }
+.station-admin-sales-title { margin: 16px 0 2px; font-size: 22px; }
+@media (max-width: 700px) {
+  .v2-business-date { font-size: 12px; }
+  .v2-info { min-height: 0; }
+  .v2-monthly-editor { grid-template-columns: 1fr 1fr; }
+  .v2-monthly-editor label:first-child { grid-column: 1 / -1; }
+  .v2-monthly-controls { justify-content: flex-end; }
+  .v2-station-image { min-height: 140px; }
+  .v2-station-image em { margin-right: 0; }
 }
 .v2-admin-pair {
   display: grid;

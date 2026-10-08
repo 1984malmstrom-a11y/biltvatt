@@ -318,7 +318,7 @@ function StationAdmin() {
         <div className="station-admin-heading">
           <div>
             <p className="station-eyebrow">SKYDDAD ADMINISTRATION</p>
-            <h1>Butikens dagsresultat</h1>
+            <h1>Station admin</h1>
             <p>
               Registrera nettot från gårdagen och rätta historiska värden med
               spårbarhet.
@@ -357,7 +357,14 @@ function StationAdmin() {
           </section>
         ) : (
           <>
-            <div className="station-admin-grid">
+            <nav className="station-admin-nav" aria-label="Administrera stationen">
+              <a href="#station-sales">Försäljningsdata</a>
+              <a href="#station-notices">Viktig info</a>
+              <a href="#station-monthly">Förra månadens siffror</a>
+              <a href="#station-schedule">Arbetsschema</a>
+            </nav>
+            <h2 className="station-admin-sales-title">Butikens dagsresultat</h2>
+            <div className="station-admin-grid" id="station-sales">
               <section className="station-admin-card">
                 <span className="station-card-index">01 / REGISTRERA</span>
                 <h2>{selected ? "Rätta dagsvärde" : "Registrera dagsvärde"}</h2>

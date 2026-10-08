@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, send } from "./api";
 type Shift = {
   id: string;
@@ -24,11 +24,24 @@ type Notice = {
   message: string;
   published: number;
   expires_on: string | null;
+  expires_time: string | null;
   revision: number;
   updated_at: string;
 };
 type Row = Omit<Shift, "id" | "period_id" | "revision" | "updated_at">;
-const blank = { title: "", message: "", published: false, expires_on: "" };
+type Metric = { label: string; value: string; unit: string; order: number };
+type Monthly = { month: string; metrics: Metric[]; revision: number; updated_at: string };
+const blank = {
+  title: "", message: "", published: false, expires_on: "", expires_time: "",
+};
+const previousMonth = () => {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric", month: "2-digit", timeZone: "Europe/Stockholm",
+  }).formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  return new Date(Date.UTC(year, month - 2, 1)).toISOString().slice(0, 7);
+};
 
 function csvRows(input: string): string[][] {
   const rows: string[][] = [];
@@ -98,7 +111,12 @@ export function parseScheduleCsv(raw: string): Row[] {
 export default function StationV2Admin() {
   const [periods, setPeriods] = useState<Period[]>([]),
     [shifts, setShifts] = useState<Shift[]>([]),
-    [notices, setNotices] = useState<Notice[]>([]);
+    [notices, setNotices] = useState<Notice[]>([]),
+    [monthly, setMonthly] = useState<Monthly[]>([]);
+  const [month, setMonth] = useState(previousMonth),
+    [metrics, setMetrics] = useState<Metric[]>([]),
+    [monthlyVersion, setMonthlyVersion] = useState<number | null>(null);
+  const monthlyInitialized = useRef(false);
   const [label, setLabel] = useState(""),
     [starts, setStarts] = useState(""),
     [ends, setEnds] = useState(""),
@@ -122,15 +140,25 @@ export default function StationV2Admin() {
     [busy, setBusy] = useState(false);
   const load = useCallback(async () => {
     try {
-      const [schedule, info] = await Promise.all([
+      const [schedule, info, figures] = await Promise.all([
         api<{ periods: Period[]; shifts: Shift[] }>(
           "/admin/station/v2/schedule",
         ),
         api<Notice[]>("/admin/station/v2/notices"),
+        api<Monthly[]>("/admin/station/v2/monthly"),
       ]);
       setPeriods(schedule.periods);
       setShifts(schedule.shifts);
       setNotices(info);
+      setMonthly(figures);
+      if (!monthlyInitialized.current) {
+        const latest = figures.find((row) => row.month === previousMonth());
+        if (latest) {
+          setMetrics(latest.metrics);
+          setMonthlyVersion(latest.revision);
+        }
+        monthlyInitialized.current = true;
+      }
       setPeriodId((p) => p || schedule.periods[0]?.id || "");
     } catch (e) {
       setError((e as Error).message);
@@ -249,6 +277,7 @@ export default function StationV2Admin() {
           message: notice.message,
           published: notice.published,
           expires_on: notice.expires_on || null,
+          expires_time: notice.expires_time || null,
           ...(noticeId ? { expected_revision: noticeVersion } : {}),
         }),
       );
@@ -276,9 +305,48 @@ export default function StationV2Admin() {
       await load();
     }
   }
+  function chooseMonth(value: string) {
+    const row = monthly.find((item) => item.month === value);
+    setMonth(value);
+    setMetrics(row?.metrics ?? []);
+    setMonthlyVersion(row?.revision ?? null);
+  }
+  async function saveMonthly(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const result = await api<{ revision: number }>(
+        `/admin/station/v2/monthly/${month}`,
+        send("PUT", {
+          metrics: metrics.map((row, index) => ({ ...row, order: index })),
+          expected_revision: monthlyVersion,
+        }),
+      );
+      setMonthlyVersion(result.revision);
+      setMessage("Månadens siffror sparades.");
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+  function moveMetric(index: number, direction: number) {
+    const next = [...metrics], target = index + direction;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    setMetrics(next.map((row, i) => ({ ...row, order: i })));
+  }
+  function editMetric(index: number, field: "label" | "value" | "unit", value: string) {
+    setMetrics((current) => current.map((row, i) =>
+      i === index ? { ...row, [field]: value } : row,
+    ));
+  }
   return (
     <div className="v2-admin-sections">
-      <section className="station-admin-card">
+      <section className="station-admin-card" id="station-schedule">
         <span className="station-card-index">04 / SCHEMA</span>
         <h2>Arbetsschema</h2>
         <p>
@@ -505,7 +573,7 @@ export default function StationV2Admin() {
           </>
         )}
       </section>
-      <section className="station-admin-card">
+      <section className="station-admin-card" id="station-notices">
         <span className="station-card-index">05 / VIKTIG INFO</span>
         <h2>Meddelanden till personalen</h2>
         <form onSubmit={(e) => void saveNotice(e)}>
@@ -536,8 +604,21 @@ export default function StationV2Admin() {
               type="date"
               value={notice.expires_on}
               onChange={(e) =>
-                setNotice({ ...notice, expires_on: e.target.value })
+                setNotice({
+                  ...notice,
+                  expires_on: e.target.value,
+                  expires_time: e.target.value ? notice.expires_time : "",
+                })
               }
+            />
+          </label>
+          <label>
+            Sluttid i Tingsryd (valfritt)
+            <input
+              type="time"
+              value={notice.expires_time}
+              disabled={!notice.expires_on}
+              onChange={(e) => setNotice({ ...notice, expires_time: e.target.value })}
             />
           </label>
           <label className="v2-admin-checkbox">
@@ -571,7 +652,9 @@ export default function StationV2Admin() {
               <strong>{n.title}</strong>
               <span>
                 {n.published ? "Publicerat" : "Utkast"}
-                {n.expires_on ? ` · Till ${n.expires_on}` : ""}
+                {n.expires_on
+                  ? ` · Till ${n.expires_on}${n.expires_time ? ` ${n.expires_time}` : ""}`
+                  : ""}
               </span>
               <p>{n.message}</p>
               <button
@@ -583,6 +666,7 @@ export default function StationV2Admin() {
                     message: n.message,
                     published: !!n.published,
                     expires_on: n.expires_on ?? "",
+                    expires_time: n.expires_time ?? "",
                   });
                 }}
               >
@@ -592,6 +676,68 @@ export default function StationV2Admin() {
             </article>
           ))}
         </div>
+      </section>
+      <section className="station-admin-card v2-monthly-admin" id="station-monthly">
+        <span className="station-card-index">06 / MÅNADSSIFFROR</span>
+        <h2>Förra månadens siffror</h2>
+        <p>
+          Välj en avslutad månad och fyll i raderna från stationens månadskort.
+          Rubriker och värden visas precis som du anger dem.
+        </p>
+        <form onSubmit={(e) => void saveMonthly(e)}>
+          <label>
+            Månad
+            <input type="month" value={month} max={previousMonth()} required
+              onChange={(e) => chooseMonth(e.target.value)} />
+          </label>
+          {metrics.map((row, index) => (
+            <div className="v2-monthly-editor" key={index}>
+              <label>
+                Rubrik
+                <input value={row.label} maxLength={80} required
+                  onChange={(e) => editMetric(index, "label", e.target.value)} />
+              </label>
+              <label>
+                Värde
+                <input value={row.value} maxLength={80} required
+                  onChange={(e) => editMetric(index, "value", e.target.value)} />
+              </label>
+              <label>
+                Enhet (valfri)
+                <input value={row.unit} maxLength={24}
+                  onChange={(e) => editMetric(index, "unit", e.target.value)} />
+              </label>
+              <div className="v2-monthly-controls">
+                <button type="button" aria-label={`Flytta ${row.label || `rad ${index + 1}`} upp`}
+                  disabled={index === 0} onClick={() => moveMetric(index, -1)}>↑</button>
+                <button type="button" aria-label={`Flytta ${row.label || `rad ${index + 1}`} ned`}
+                  disabled={index === metrics.length - 1} onClick={() => moveMetric(index, 1)}>↓</button>
+                <button type="button" onClick={() => setMetrics(metrics.filter((_, i) => i !== index))}>
+                  Ta bort
+                </button>
+              </div>
+            </div>
+          ))}
+          <div className="v2-monthly-actions">
+            <button type="button" disabled={metrics.length >= 24}
+              onClick={() => setMetrics([...metrics, { label: "", value: "", unit: "", order: metrics.length }])}>
+              Lägg till rad
+            </button>
+            <button className="station-primary" disabled={busy || !month}>
+              Spara månad
+            </button>
+          </div>
+        </form>
+        {monthly.length > 0 && (
+          <div className="v2-monthly-list">
+            <h3>Registrerade månader</h3>
+            {monthly.map((row) => (
+              <button key={row.month} onClick={() => chooseMonth(row.month)}>
+                {row.month} · {row.metrics.length} rader
+              </button>
+            ))}
+          </div>
+        )}
       </section>
       {error && (
         <p className="station-error" role="alert">

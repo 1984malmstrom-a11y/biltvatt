@@ -51,6 +51,11 @@ type Overview = {
   notices: Notice[];
   updated_at: string | null;
 };
+type Monthly = {
+  month: string;
+  metrics: { label: string; value: string; unit: string; order: number }[];
+  updated_at: string | null;
+};
 const kronor = (ore: number) =>
   new Intl.NumberFormat("sv-SE", {
     style: "currency",
@@ -81,6 +86,10 @@ const weekday = (day: string) =>
   })
     .format(new Date(`${day}T12:00:00Z`))
     .replace(".", "");
+const monthLabel = (month: string) =>
+  new Intl.DateTimeFormat("sv-SE", {
+    month: "long", year: "numeric", timeZone: "Europe/Stockholm",
+  }).format(new Date(`${month}-01T12:00:00Z`));
 
 function Modal({
   title,
@@ -92,11 +101,13 @@ function Modal({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     dialog.current?.focus();
     const keys = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
       if (e.key === "Tab" && dialog.current) {
         const items = [
           ...dialog.current.querySelectorAll<HTMLElement>(
@@ -109,7 +120,10 @@ function Modal({
         }
         const first = items[0],
           last = items.at(-1)!;
-        if (e.shiftKey && document.activeElement === first) {
+        if (document.activeElement === dialog.current) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        } else if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
@@ -123,7 +137,7 @@ function Modal({
       window.removeEventListener("keydown", keys);
       previous?.focus();
     };
-  }, [onClose]);
+  }, []);
   return (
     <div
       className="v2-modal-backdrop"
@@ -155,9 +169,12 @@ export default function StationDashboardV2() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState("");
-  const [modal, setModal] = useState<"shifts" | "tasks" | "notices" | null>(
-    null,
-  );
+  const [modal, setModal] = useState<
+    "shifts" | "tasks" | "notices" | "monthly" | null
+  >(null);
+  const [monthly, setMonthly] = useState<Monthly | null>(null);
+  const [monthlyLoading, setMonthlyLoading] = useState(false);
+  const [monthlyError, setMonthlyError] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
   const load = useCallback(async () => {
@@ -174,7 +191,7 @@ export default function StationDashboardV2() {
         window.location.replace("/station/login");
         return;
       }
-      setError((e as Error).message);
+      setError("Kunde inte hämta stationsuppgifterna. Försök igen.");
     }
   }, []);
   useEffect(() => {
@@ -200,7 +217,7 @@ export default function StationDashboardV2() {
       setNewTask("");
       await load();
     } catch (e) {
-      setError((e as Error).message);
+      setError("Uppgiften kunde inte sparas. Försök igen.");
     } finally {
       setBusy(false);
     }
@@ -235,10 +252,22 @@ export default function StationDashboardV2() {
       );
       await load();
     } catch (e) {
-      setError((e as Error).message);
+      setError("Ändringen kunde inte sparas. Listan har uppdaterats.");
       await load();
     } finally {
       setBusy(false);
+    }
+  }
+  async function openMonthly() {
+    setModal("monthly");
+    setMonthlyLoading(true);
+    setMonthlyError(false);
+    try {
+      setMonthly(await api<Monthly>("/station/v2/monthly"));
+    } catch {
+      setMonthlyError(true);
+    } finally {
+      setMonthlyLoading(false);
     }
   }
   const tasks = overview?.tasks ?? [];
@@ -297,6 +326,9 @@ export default function StationDashboardV2() {
           <div className="v2-sales-copy">
             <p className="v2-eyebrow">
               GÅRDAGENS BUTIKSFÖRSÄLJNING · EXKL. MOMS
+            </p>
+            <p className="v2-business-date">
+              {summary ? `Igår · ${date(summary.business_date)}` : ""}
             </p>
             <div className="v2-amount" aria-live="polite">
               {summary
@@ -408,7 +440,6 @@ export default function StationDashboardV2() {
             {shifts.length ? (
               shifts.slice(0, 3).map((s) => (
                 <div className="v2-shift-row" key={s.id}>
-                  <span className="v2-avatar">{s.first_name.charAt(0)}</span>
                   <strong>{s.first_name}</strong>
                   <time>
                     {s.starts_at}–{s.ends_at}
@@ -456,6 +487,7 @@ export default function StationDashboardV2() {
                     disabled={busy}
                     key={t.id}
                     className={`v2-task-row ${t.done ? "done" : ""}`}
+                    aria-pressed={!!t.done}
                     onClick={() => void updateTask(t, "toggle")}
                   >
                     <span className="v2-check">
@@ -480,7 +512,9 @@ export default function StationDashboardV2() {
           </section>
         </div>
         <div className="v2-station-image">
-          <span>Illustrationsbild</span>
+          <button className="v2-monthly-cta" onClick={() => void openMonthly()}>
+            Förra månadens siffror <ChevronRight size={17} aria-hidden="true" />
+          </button>
           <em>
             Mer än
             <br />
@@ -498,11 +532,12 @@ export default function StationDashboardV2() {
             <>
               <h3>{notices[0].title}</h3>
               <p>{notices[0].message}</p>
-              {notices.length > 1 && (
-                <button onClick={() => setModal("notices")}>
-                  Visa alla meddelanden <ChevronRight size={15} />
-                </button>
-              )}
+              <button onClick={() => setModal("notices")}>
+                {notices.length > 1
+                  ? "Visa alla meddelanden"
+                  : "Läs hela meddelandet"}{" "}
+                <ChevronRight size={15} />
+              </button>
             </>
           ) : (
             <p className="v2-panel-empty">Inga aktuella meddelanden.</p>
@@ -564,6 +599,7 @@ export default function StationDashboardV2() {
             <div className="v2-detail-row" key={t.id}>
               <button
                 disabled={busy}
+                aria-pressed={!!t.done}
                 onClick={() => void updateTask(t, "toggle")}
               >
                 {t.done ? "✓" : "○"} {t.text}
@@ -594,6 +630,34 @@ export default function StationDashboardV2() {
               <p>{n.message}</p>
             </article>
           ))}
+        </Modal>
+      )}
+      {modal === "monthly" && (
+        <Modal title="Förra månadens siffror" onClose={() => setModal(null)}>
+          {monthlyLoading ? (
+            <p>Hämtar månadens siffror…</p>
+          ) : monthlyError ? (
+            <p role="alert">
+              Kunde inte hämta månadens siffror.{" "}
+              <button onClick={() => void openMonthly()}>Försök igen</button>
+            </p>
+          ) : monthly ? (
+            <>
+              <p className="v2-monthly-month">{monthLabel(monthly.month)}</p>
+              {monthly.metrics.length ? (
+                <dl className="v2-monthly-metrics">
+                  {monthly.metrics.map((item, index) => (
+                    <div key={index}>
+                      <dt>{item.label}</dt>
+                      <dd>{item.value}{item.unit ? ` ${item.unit}` : ""}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p>Inga månadssiffror har registrerats ännu.</p>
+              )}
+            </>
+          ) : null}
         </Modal>
       )}
     </div>
