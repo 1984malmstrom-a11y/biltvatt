@@ -2,6 +2,7 @@ import type { Env } from "./index";
 import { stockholmDay } from "./stats";
 import { addDays } from "./stats";
 import { body, checkFields, fail, json, text } from "./http";
+import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 
 const STATION = "tingsryd";
 const isoDay = (value: unknown): value is string =>
@@ -319,13 +320,20 @@ export async function stationV2Api(
     const startsOn = data.starts_on as string,
       endsOn = data.ends_on as string;
     const rows = (data.shifts as unknown[]).map(shiftInput);
-    const keys = new Set<string>();
     for (const row of rows) {
       if (row.work_date < startsOn || row.work_date > endsOn)
         fail(400, "Ett pass ligger utanför perioden.");
-      const key = `${row.work_date}|${row.first_name.toLocaleLowerCase("sv-SE")}|${row.starts_at}|${row.ends_at}`;
-      if (keys.has(key)) fail(400, "Schemat innehåller dubbla pass.");
-      keys.add(key);
+    }
+    const existing = await env.DB.prepare(
+      "SELECT s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id=? AND s.work_date BETWEEN ? AND ?",
+    ).bind(STATION, addDays(startsOn, -1), addDays(endsOn, 1)).all<ScheduleRow>();
+    const conflicts = findScheduleConflicts(rows, existing.results);
+    if (conflicts.length) {
+      const first = conflicts[0];
+      fail(first.existing ? 409 : 400,
+        first.kind === "duplicate"
+          ? "Schemat innehåller dubbla pass. Kontrollera förhandsgranskningen."
+          : "Schemat innehåller överlappande aktiva pass. Kontrollera förhandsgranskningen.");
     }
     const period = crypto.randomUUID();
     try {

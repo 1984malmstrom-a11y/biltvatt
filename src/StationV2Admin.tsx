@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, send } from "./api";
+import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 type Shift = {
   id: string;
   period_id: string;
@@ -28,7 +29,7 @@ type Notice = {
   revision: number;
   updated_at: string;
 };
-type Row = Omit<Shift, "id" | "period_id" | "revision" | "updated_at">;
+type Row = ScheduleRow;
 type Metric = { label: string; value: string; unit: string; order: number };
 type Monthly = { month: string; metrics: Metric[]; revision: number; updated_at: string };
 const blank = {
@@ -97,6 +98,8 @@ export function parseScheduleCsv(raw: string): Row[] {
       Number.isNaN(Date.parse(work_date)) ||
       new Date(work_date).toISOString().slice(0, 10) !== work_date ||
       !first_name ||
+      first_name.length > 60 ||
+      !/^[\p{L}][\p{L} .'-]*$/u.test(first_name) ||
       !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(starts_at) ||
       !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(ends_at) ||
       starts_at === ends_at ||
@@ -189,12 +192,17 @@ export default function StationV2Admin() {
       );
     } catch (e) {
       setPreview([]);
+      setFileName("");
       setError((e as Error).message);
     }
   }
   async function importSchedule(e: React.FormEvent) {
     e.preventDefault();
     if (!preview.length) return;
+    if (findScheduleConflicts(preview, shifts).length) {
+      setError("Rätta dubbletter och överlapp innan import.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -344,6 +352,7 @@ export default function StationV2Admin() {
       i === index ? { ...row, [field]: value } : row,
     ));
   }
+  const previewConflicts = preview.length ? findScheduleConflicts(preview, shifts) : [];
   return (
     <div className="v2-admin-sections">
       <section className="station-admin-card" id="station-schedule">
@@ -400,6 +409,20 @@ export default function StationV2Admin() {
                 Förhandsgranskning: {preview.length} pass från {fileName}. Inget
                 sparas förrän du väljer Importera.
               </p>
+              {previewConflicts.length > 0 && (
+                <div role="alert" className="station-error">
+                  <p>Importen är stoppad tills följande konflikter har rättats:</p>
+                  <ul>
+                    {previewConflicts.slice(0, 8).map((conflict, i) => (
+                      <li key={i}>
+                        Rad {conflict.row + 1}: {conflict.kind === "duplicate" ? "dubblett" : "överlappande aktivt pass"}
+                        {conflict.existing ? " med ett befintligt pass" : ` med rad ${(conflict.otherRow ?? 0) + 1}`}.
+                      </li>
+                    ))}
+                  </ul>
+                  {previewConflicts.length > 8 && <p>Ytterligare {previewConflicts.length - 8} konflikter finns.</p>}
+                </div>
+              )}
               <div className="v2-admin-table">
                 <table>
                   <thead>
@@ -424,7 +447,7 @@ export default function StationV2Admin() {
                   </tbody>
                 </table>
               </div>
-              <button className="station-primary" disabled={busy}>
+              <button className="station-primary" disabled={busy || previewConflicts.length > 0}>
                 Importera {preview.length} pass
               </button>
             </>

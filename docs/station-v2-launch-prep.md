@@ -1,15 +1,30 @@
-# Stationsdashboard V2: kontrollerad driftförberedelse
+# Stationsdashboard V2: kontrollerad lanseringsordning
 
-Denna plan är för en senare, separat godkänd produktionskörning. Inga kommandon här har körts mot produktions-D1 eller produktions-Workern under förberedelsen. Kör inte migration eller deployment innan SMHI-provet från Cloudflares nät, bildbeslutet och backupen är godkända.
+Det här är en körplan för **senare, separat godkänd** produktionsdrift. Inga kommandon i avsnitten för migration, deployment, schemaimport eller radering av prov-Worker har körts under förberedelsen. Vädervisning och automatiska väderanrop är pausade i V2. SMHI-testet är därför inte ett lanseringsvillkor. Den neutrala logotypsymbolen används tills godkänt varumärkesmaterial finns; stationsbilden är en märkt AI-illustration och får inte kallas ett stationsfoto.
 
-## 1. Kontrollera väder och bildbeslut
+Migrationerna är ordnade: `0005_station_dashboard_v2.sql` skapar enbart nya tabeller och index för schema, uppgifter och information. `0006_station_monthly_figures.sql` skapar tabellen för månadsresultat och lägger till `station_notices.expires_time`, alltså **efter 0005**. Ingen av dem uppdaterar eller raderar V1:s försäljnings-, personal-, tvätt-, sessions- eller pushrader. Lokal migrationstestning kontrollerar detta mot en V1-databas med syntetiska rader. Verklig produktionsstatus måste ändå kontrolleras före körning.
 
-1. Kör den fristående prov-Workern enligt `docs/weather-probe.md`. Kontrollera verkligt SNOW1gv1-svar och upprepad cacheträff på `workers.dev`.
-2. Bekräfta att V2 använder den neutrala symbolen i logotyputsmyckningen. En officiell Preem-logotyp får återinföras först med styrkt godkännande och fil. Stationsbilden är en märkt, AI-genererad illustration och ska inte presenteras som ett foto från Tingsryd.
+## 1. Hämta exakt V2-revision på Windows
 
-## 2. Privata kontroller före D1-migration
+Kör i PowerShell från projektroten. Spara commit-ID:t i driftanteckningarna. Fortsätt bara med ren arbetskatalog och rätt gren.
 
-Kör från projektroten i PowerShell på rätt Cloudflare-konto. Kontrollera `wrangler.jsonc`: D1-bindningen `DB` ska peka på befintliga databasen `tvattligan` med ID `695033b7-6bb2-47a3-a9c3-08d4ca818088`. Skydda terminalutdata och backup eftersom databasen innehåller försäljning, sessioner och pushuppgifter.
+```powershell
+git switch feat/station-dashboard-v2
+git pull --ff-only origin feat/station-dashboard-v2
+git status --short --branch
+git rev-parse HEAD
+npm ci
+npm run setup
+npx playwright install chromium
+npm run typecheck
+npm test
+npm run test:e2e
+npm run build
+```
+
+## 2. Kontrollera produktions-D1 utan skrivning
+
+Kontrollera att `wrangler.jsonc` har produktions-Worker `tvattligan` och befintlig D1-bindning `DB` till databasen `tvattligan` med ID `695033b7-6bb2-47a3-a9c3-08d4ca818088`. `migrations list` visar väntande filer; `d1_migrations` visar redan körda. `0001`–`0004` ska vara körda och **endast 0005 och 0006** ska vänta, i den ordningen. Stoppa vid avvikelse.
 
 ```powershell
 npx wrangler whoami --config wrangler.jsonc
@@ -17,40 +32,84 @@ npx wrangler d1 migrations list tvattligan --remote --config wrangler.jsonc
 npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "SELECT name, applied_at FROM d1_migrations ORDER BY id"
 ```
 
-Stoppa om andra migrationer än `0005_station_dashboard_v2.sql` och `0006_station_monthly_figures.sql` väntar, eller om tidigare migrationer saknas. Wrangler `migrations apply` kör alla väntande filer; använd därför inte kommandot förrän listan är granskad.
+## 3. Ta ny privat backup före migration
 
-Ta **före migration** en fullständig privat export utanför repositoryt, kontrollera att filen inte är tom och notera dess hash. Läs in exporten i en separat lokal SQLite-databas och kontrollera att den går att läsa. Dokumentera antal V1-rader i `sales`, `wash_programs`, `staff`, push-tabellerna och stationens befintliga tabeller.
+Behåll filen utanför Git, CI och chatt. Den innehåller privata försäljnings-, sessions- och pushuppgifter.
 
 ```powershell
 $private = Join-Path $env:USERPROFILE 'Documents\StationV2Private'
 New-Item -ItemType Directory -Force -Path $private | Out-Null
-npx wrangler d1 export tvattligan --remote --config wrangler.jsonc --output (Join-Path $private 'tvattligan-before-v2.sql')
-Get-Item (Join-Path $private 'tvattligan-before-v2.sql') | Select-Object Length
-Get-FileHash (Join-Path $private 'tvattligan-before-v2.sql') -Algorithm SHA256
+$backup = Join-Path $private ("tvattligan-before-v2-" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.sql')
+npx wrangler d1 export tvattligan --remote --config wrangler.jsonc --output $backup
+node .\scripts\verify-d1-backup.mjs $backup
 ```
 
-## 3. Migration och verifiering efter separat driftbeslut
+Verifieraren läser in hela SQL-exporten i en tillfällig SQLite-databas, kör integritets- och främmande-nyckelkontroll och skriver filstorlek, SHA-256 och radantal för V1-tabeller. Ett fel stoppar lanseringen. Den skriver inte ut privata rader.
 
-`0005` skapar nya schema-, uppgifts- och informationstabeller. `0006` skapar månadsresultat och lägger till `station_notices.expires_time`; den måste alltså följa `0005`. Båda är additiva. De ändrar inte Tvättligans befintliga försäljnings-, personal-, tvätt- eller pushrader. Efter godkänd backup:
+## 4. Jämför backupen med befintliga produktionsrader
+
+Kör samma radantal mot produktion och jämför **varje** tabell med verifierarens `counts`. Spara utdata privat. Kör även en läsande integritetskontroll. Skillnad stoppar migrationen.
 
 ```powershell
-npx wrangler d1 migrations apply tvattligan --remote --config wrangler.jsonc
-npx wrangler d1 migrations list tvattligan --remote --config wrangler.jsonc
+$countsSql = "SELECT 'sales' AS table_name, COUNT(*) AS row_count FROM sales UNION ALL SELECT 'sales_audit', COUNT(*) FROM sales_audit UNION ALL SELECT 'staff', COUNT(*) FROM staff UNION ALL SELECT 'wash_programs', COUNT(*) FROM wash_programs UNION ALL SELECT 'push_subscriptions', COUNT(*) FROM push_subscriptions UNION ALL SELECT 'notification_events', COUNT(*) FROM notification_events UNION ALL SELECT 'station_store_daily_sales', COUNT(*) FROM station_store_daily_sales UNION ALL SELECT 'station_view_sessions', COUNT(*) FROM station_view_sessions"
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command $countsSql
 npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "PRAGMA foreign_key_check"
 ```
 
-Kontrollera att båda migrationerna registrerats, att de sex nya tabellerna och `expires_time` finns, att V1-radantal stämmer och att V1:s försäljning, ångring, statistik, admin och push fortfarande fungerar. Migrera **före** V2-Worker. Vid Workerfel: rulla tillbaka Worker-versionen, men återställ inte hela D1-backupen över nytillkomna försäljningar.
+## 5. Kör 0005 och 0006 **efter separat godkännande**
 
-## 4. Oktober 2026 via skyddad administration
+Granska återigen väntande migrationer precis före körningen. `migrations apply` kör alla väntande filer; fortsätt endast om listan innehåller exakt 0005 och 0006. Kontrollera sedan att båda registrerats, att de sex nya tabellerna finns, att `expires_time` finns och att V1-radantalen inte minskat.
 
-Spara verklig CSV endast privat utanför Git, chatt, skärmbilder, CI och byggartefakter. Filen ska vara UTF-8 med exakt rubrik `datum,förnamn,start,slut,status`. Datum är `YYYY-MM-DD`, tid `HH:MM` i 24-timmarsformat. Tillåtna statusvärden är `active`, `cancelled`, `leave`, `sick`; tom status blir `active`. Ett pass med sluttid före start löper över midnatt. Importen accepterar 1–500 rader.
+```powershell
+npx wrangler d1 migrations list tvattligan --remote --config wrangler.jsonc
+npx wrangler d1 migrations apply tvattligan --remote --config wrangler.jsonc
+npx wrangler d1 migrations list tvattligan --remote --config wrangler.jsonc
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "SELECT name, applied_at FROM d1_migrations ORDER BY id"
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "PRAGMA foreign_key_check"
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command $countsSql
+```
 
-1. Granska originalet mot bemanningskällan dag för dag: tider, nattpass, frånvaro och inställda pass. Verifiera att alla datum är i oktober 2026 och att ingen person/dag har överlappande aktiva pass eller dubbletter.
-2. Logga in som admin och läs befintliga perioder/pass i `/station/admin` innan import. Vid osäkerhet, läs `station_shifts` för `2026-10-01`–`2026-10-31` via en **privat, läsande** D1-fråga och jämför mot CSV. UI-förhandsgranskningen gör inte denna jämförelse automatiskt.
-3. Välj den privata CSV-filen i admin, ange exempelvis `Oktober 2026` och kontrollera periodgränserna. Läs igenom hela förhandsgranskningen. Tryck `Importera` endast när den manuella jämförelsen är godkänd.
-4. Import-API:t använder `INSERT` i en D1-batch och gör inga `UPDATE` eller `DELETE` på befintliga pass. En identisk redan registrerad rad ger `409` och importen stoppas. Olika tider för samma person/dag kan annars skapa överlapp, därför krävs steg 1–2.
-5. Efter import, läs tillbaka oktoberpassen i admin och jämför antal, datumintervall, status och stickprov med den granskade källan. Kontrollera att tidigare pass fortfarande finns.
+## 6. Bygg och driftsätt V2 **efter separat godkännande**
 
-## 5. Worker och slutlig kontroll
+Verifiera att commit-ID:t från steg 1 fortfarande är valt och att testerna passerat. Bekräfta befintliga produktionshemligheter (`ADMIN_PIN`, VAPID) i rätt konto utan att kopiera dem till prov-Workern. Kör sedan:
 
-Efter lyckat Cloudflare-väderprov, godkända bilder, privat backup, migrationer och schemaimport kan V2-Workern driftsättas med separat beslut. Bekräfta att `ADMIN_PIN` och VAPID-hemligheter redan är korrekt satta; kopiera dem inte till test-Workern. Kontrollera oinloggad 401 för stationens belopp och väder, giltig visningssession, `Cache-Control: no-store` på skyddade svar samt V1:s försäljning/ångring, statistik, push och administration. Offentlig försäljningsregistrering är avsiktligt kvar utan admininloggning; följ audit och överväg riktad hastighetsbegränsning mot missbruk utan att ändra säljarflödet.
+```powershell
+npm run build
+npx wrangler deploy --config wrangler.jsonc
+```
+
+Detta är första kommandot som uppdaterar produktions-Workern `tvattligan`. Kör aldrig `wrangler deploy` med produktionskonfigurationen som ett test av SMHI.
+
+## 7. Verifiera V1 och V2 direkt efter deployment
+
+På en avsedd testenhet: kontrollera Tvättligans registrering, ångring, statistik, metallkort, tvättbilder och en riktad pushnotis. Kontrollera admininloggning och att stationens belopp nekas utan giltig visnings- eller adminbehörighet. Kontrollera därefter dashboardens försäljning, 364-dagarsjämförelse, to-do, Viktig info, månadsresultat och att inget väder visas eller hämtas automatiskt. Skyddade API-svar ska fortsatt ha `Cache-Control: no-store`. Tvättligans försäljningsregistrering är avsiktligt öppen utan administratörsinloggning enligt nuvarande arbetssätt; övervaka audit och missbruk separat.
+
+## 8. Granska och importera godkänd oktober-CSV privat
+
+Den verkliga filen ska ligga utanför repositoryt, byggartefakter, skärmbilder och chatt. Formatet är UTF-8 med exakt rubrik `datum,förnamn,start,slut,status`. Datum är `YYYY-MM-DD`, tider är lokal `HH:MM`, och status är `active`, `cancelled`, `leave` eller `sick` (tomt blir `active`). Stationschefen har godkänt underlaget för **2026-10-01–2026-10-31**, förväntat **111 rader**. Jämför den privata filen med godkänd källa: samtliga datum, namn, tider, nattpass, frånvaro och antal. Var särskilt noga med tvetydiga tider vid höstens klockomställning.
+
+Innan import: läs registrerade perioder och oktoberpass i skyddad admin. Följande privata, läsande kontroll visar befintligt antal utan namn eller tider:
+
+```powershell
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "SELECT COUNT(*) AS october_rows FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'"
+```
+
+I `/station/admin`: välj CSV-filen, ange `Oktober 2026`, kontrollera gränserna `2026-10-01` och `2026-10-31`, **111 förhandsgranskade rader**, status och varje datum. Adminvyn stoppar import vid dubblett eller överlapp mot redan lästa pass; servern gör en ny, auktoritativ kontroll mot befintliga pass före en atomisk `INSERT`-batch. Ingen befintlig rad skrivs över. Stoppa vid varning, ändrat antal eller manuell avvikelse. Välj **Importera** först när förhandsgranskningen är godkänd.
+
+## 9. Kontrollera arbetspassen efter import
+
+Läs tillbaka perioden i skyddad admin och jämför alla 111 rader med den privata godkända källan. Läs därefter antal per status i D1. Skillnaden i `october_rows` mot steg 8 ska vara 111, och tidigare rader ska finnas kvar. Kontrollera `Idag jobbar` på visningsenheten samt automatisk uppdatering vid nytt dygn enligt Europe/Stockholm.
+
+```powershell
+npx wrangler d1 execute tvattligan --remote --config wrangler.jsonc --command "SELECT s.status, COUNT(*) AS rows FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31' GROUP BY s.status ORDER BY s.status"
+```
+
+## 10. Radera endast den separata SMHI-proben när den inte längre behövs
+
+Kontrollera namnet innan radering. Kommandot nedan avser **endast** `tvattligan-smhi-probe-20261008`, aldrig produktions-Workern `tvattligan`:
+
+```powershell
+npx wrangler delete tvattligan-smhi-probe-20261008 --config .\scripts\weather-probe\wrangler.jsonc
+```
+
+Vid Workerfel kan den tidigare godkända Worker-revisionen återställas. Återställ inte hela D1-backupen över en databas som hunnit få nya tvättförsäljningar eller pushhändelser; använd den först för jämförelse och planera en separat, riktad rättning.

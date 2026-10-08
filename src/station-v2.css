@@ -102,6 +102,12 @@
   width: 1px;
   background: #cbdced;
 }
+.v2-motto {
+  color: #5572aa;
+  font-size: clamp(12px, 0.93vw, 17px);
+  font-weight: 500;
+  white-space: nowrap;
+}
 .v2-weather {
   display: flex;
   align-items: center;
@@ -797,10 +803,7 @@
     font-size: 13px;
   }
   .v2-header-right {
-    width: 100%;
-    padding-top: 8px;
-    justify-content: flex-end;
-    font-size: 11px;
+    display: none;
   }
   .v2-header {
     flex-wrap: wrap;

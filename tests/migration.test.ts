@@ -1,5 +1,9 @@
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 import { it, expect } from "vitest";
 
 it("0003 är additiv på en databas med historik och bevarar all befintlig affärsdata", () => {
@@ -80,5 +84,29 @@ it("0005 följt av 0006 lägger bara till stationsdata och bevarar Tvättligans 
     expect(db.prepare("PRAGMA foreign_key_check").all()).toEqual([]);
   } finally {
     db.close();
+  }
+});
+
+it("verifierar en syntetisk fullständig D1-export och stoppar en trasig backup", () => {
+  const directory = mkdtempSync(join(tmpdir(), "station-v2-backup-"));
+  const valid = join(directory, "valid.sql");
+  const invalid = join(directory, "invalid.sql");
+  try {
+    writeFileSync(valid, ["0001_initial.sql", "0002_admin_maintenance.sql",
+      "0003_push_notifications.sql", "0004_station_dashboard.sql"].map((name) =>
+      readFileSync(new URL("../migrations/" + name, import.meta.url), "utf8")).join("\n"));
+    writeFileSync(invalid, "not a database export");
+    const script = new URL("../scripts/verify-d1-backup.mjs", import.meta.url);
+    const good = spawnSync(process.execPath, [script.pathname, valid], { encoding: "utf8" });
+    expect(good.status).toBe(0);
+    expect(JSON.parse(good.stdout)).toMatchObject({ verified: true, counts: {
+      sales: 0, staff: 5, station_store_daily_sales: 0,
+    } });
+    const bad = spawnSync(process.execPath, [script.pathname, invalid], { encoding: "utf8" });
+    expect(bad.status).toBe(1);
+    expect(bad.stdout).toBe("");
+    expect(bad.stderr).toContain("Stoppa lanseringen");
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
   }
 });

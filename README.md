@@ -33,7 +33,7 @@ npm run build
 npm run test:e2e
 ```
 
-Enhet-/integrationstesterna kör faktisk migrations-SQL och Worker-anrop mot SQLite (`node:sqlite`). Webbläsartesterna startar Vite och kör Chromium mot lokal Worker/D1. `npm run setup` måste ha körts först. Chromium förväntas finnas på `/usr/bin/chromium`; sätt `CHROMIUM_PATH` till en annan installerad Chromium-binär vid behov. Testerna använder aldrig en fjärrdatabas. Webbläsartesterna registrerar och sedan makulerar testförsäljningar, och lämnar alltså makulerad testhistorik i den lokala databasen. De återställer priser och befintliga mål; kör inte dessa tester mot en produktionsinstans.
+Enhet-/integrationstesterna kör faktisk migrations-SQL och Worker-anrop mot SQLite (`node:sqlite`). Webbläsartesterna startar Vite och kör Chromium mot lokal Worker/D1. `npm run setup` måste ha körts först. På Windows, kör `npx playwright install chromium` före webbläsartesterna; på Linux används `/usr/bin/chromium` om `CHROMIUM_PATH` inte är satt. Testerna använder aldrig en fjärrdatabas. Webbläsartesterna registrerar och sedan makulerar testförsäljningar, och lämnar alltså makulerad testhistorik i den lokala databasen. De återställer priser och befintliga mål; kör inte dessa tester mot en produktionsinstans.
 
 Tester täcker serverns prisuppslag, begärande-ID/dubbletter, kvittoskyddad makulering, omsättning, snittköp, Preemium-andel, personalbaserade topplistor och tre-tvättarsgränsen, historiska priser, aktiva poster, sessioner, CSRF, PIN-begränsning, export samt Stockholmstid och DST. Webbläsartester täcker dessutom dubbelklick, förlorat nätverkssvar och säker återförsökning, samtliga adminvyer samt mobil och surfplatta. Skärmbilder sparas i ignorerade `test-results/`.
 

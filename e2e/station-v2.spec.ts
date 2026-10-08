@@ -141,6 +141,27 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
   ).toBeVisible();
 });
 
+test("Idag jobbar laddas om vid lokal midnatt i Stockholm", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-08T21:59:58Z") });
+  let nextDay = false;
+  await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: {
+    business_date: "2026-10-07", comparison_date: "2025-10-08",
+    net_sales_ore: 100000, comparison_sales_ore: 90000,
+    difference_ore: 10000, percent: 11.1, updated_at: null, week: [],
+  } }));
+  await page.route("**/api/station/v2", (route) => route.fulfill({ json: {
+    today: nextDay ? "2026-10-09" : "2026-10-08", updated_at: null,
+    shifts: [{ id: "demo", first_name: nextDay ? "Demo Ny" : "Demo Före",
+      starts_at: "08:00", ends_at: "16:00" }],
+    tasks: [], notices: [],
+  } }));
+  await page.goto("/station");
+  await expect(page.getByText("Demo Före")).toBeVisible();
+  nextDay = true;
+  await page.clock.fastForward(3000);
+  await expect(page.getByText("Demo Ny")).toBeVisible();
+});
+
 test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt meddelande", async ({
   page,
 }) => {
@@ -183,6 +204,18 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
     page.getByRole("heading", { name: "Arbetsschema" }),
   ).toBeVisible();
   await page.getByLabel("Periodens namn").fill("Vecka 41–44");
+  await page
+    .getByLabel("CSV-fil")
+    .setInputFiles({
+      name: "syntetisk-krock.csv",
+      mimeType: "text/csv",
+      buffer: Buffer.from(
+        "datum,förnamn,start,slut,status\n2026-10-08,Demo A,22:00,06:00,active\n2026-10-09,Demo A,05:30,12:00,active",
+      ),
+    });
+  await expect(page.getByRole("alert").filter({ hasText: "överlappande aktivt pass" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Importera 2 pass" })).toBeDisabled();
+  expect(imports).toBe(0);
   await page
     .getByLabel("CSV-fil")
     .setInputFiles({

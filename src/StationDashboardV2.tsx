@@ -22,6 +22,10 @@ import {
 } from "lucide-react";
 import { api, HttpError, send } from "./api";
 
+// Paused until the external Cloudflare fetch has been verified. Keep the
+// client component and API code for a later, separately reviewed reactivation.
+const WEATHER_ENABLED = false;
+
 type Summary = {
   business_date: string;
   comparison_date: string;
@@ -131,6 +135,21 @@ const monthLabel = (month: string) =>
   new Intl.DateTimeFormat("sv-SE", {
     month: "long", year: "numeric", timeZone: "Europe/Stockholm",
   }).format(new Date(`${month}-01T12:00:00Z`));
+const stockholmDay = (instant: Date) =>
+  new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Europe/Stockholm",
+  }).format(instant);
+export function msUntilNextStockholmDay(now = new Date()) {
+  const today = stockholmDay(now);
+  let before = now.getTime();
+  let after = before + 26 * 60 * 60_000;
+  while (after - before > 1) {
+    const middle = Math.floor((before + after) / 2);
+    if (stockholmDay(new Date(middle)) === today) before = middle;
+    else after = middle;
+  }
+  return Math.max(1, after - now.getTime());
+}
 
 function Modal({
   title,
@@ -241,12 +260,21 @@ export default function StationDashboardV2() {
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void load();
     }, 60000);
+    let midnightTimer: number;
+    const scheduleMidnight = () => {
+      midnightTimer = window.setTimeout(() => {
+        if (document.visibilityState === "visible") void load();
+        scheduleMidnight();
+      }, msUntilNextStockholmDay());
+    };
+    scheduleMidnight();
     const visible = () => {
       if (document.visibilityState === "visible") void load();
     };
     document.addEventListener("visibilitychange", visible);
     return () => {
       window.clearInterval(timer);
+      window.clearTimeout(midnightTimer);
       document.removeEventListener("visibilitychange", visible);
     };
   }, [load]);
@@ -259,6 +287,7 @@ export default function StationDashboardV2() {
     }
   }, []);
   useEffect(() => {
+    if (!WEATHER_ENABLED) return;
     void loadWeather();
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void loadWeather();
@@ -375,11 +404,18 @@ export default function StationDashboardV2() {
             {last ? `Uppdaterad ${time(last)}` : "Uppdatering saknas"}
           </span>
           <i />
-          <div className="v2-weather" aria-label="SMHI väderprognos för Tingsryd">
-            <WeatherItem label="PROGNOS JUST NU" period={weather?.now ?? null} />
-            <WeatherItem label="IMORGON CA 12" period={weather?.tomorrow ?? null} />
-            <span className="v2-weather-source">SMHI · prognos</span>
-          </div>
+          {WEATHER_ENABLED ? (
+            <div className="v2-weather" aria-label="SMHI väderprognos för Tingsryd">
+              <WeatherItem label="PROGNOS JUST NU" period={weather?.now ?? null} />
+              <WeatherItem label="IMORGON CA 12" period={weather?.tomorrow ?? null} />
+              <span className="v2-weather-source">SMHI · prognos</span>
+            </div>
+          ) : (
+            <span className="v2-motto">
+              <Sun aria-hidden="true" />
+              <span>Tillsammans<br />skapar vi en bättre resa</span>
+            </span>
+          )}
         </div>
       </header>
       <main className="v2-layout">

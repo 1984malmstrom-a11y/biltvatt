@@ -49,8 +49,10 @@ test("månadsskifte och statistikfel ger neutrala klickbara kort", async ({ page
   await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
 });
 
-test("vädret är tydligt märkt som prognos utan desktop-scroll", async ({ page }) => {
+test("pausat väder hämtas aldrig och sidhuvudet ryms utan desktop-scroll", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
+  await page.clock.install();
+  let weatherRequests = 0;
   await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: {
     business_date: "2026-10-07", comparison_date: "2025-10-08", net_sales_ore: 3845000,
     comparison_sales_ore: 3408700, difference_ore: 436300, percent: 12.8,
@@ -59,14 +61,14 @@ test("vädret är tydligt märkt som prognos utan desktop-scroll", async ({ page
   await page.route("**/api/station/v2", (route) => route.fulfill({ json: {
     today: "2026-10-08", shifts: [], tasks: [], notices: [], updated_at: null,
   } }));
-  await page.route("**/api/station/weather", (route) => route.fulfill({ json: {
-    source: "SMHI SNOW1gv1", kind: "forecast",
-    now: { time: "2026-10-08T10:00:00Z", temperature: 12.4, symbol: 3 },
-    tomorrow: { time: "2026-10-09T10:00:00Z", temperature: 8.7, symbol: 18 },
-  } }));
+  await page.route("**/api/station/weather", (route) => {
+    weatherRequests++;
+    return route.abort();
+  });
   await page.goto("/station");
-  await expect(page.getByText("PROGNOS JUST NU")).toBeVisible();
-  await expect(page.getByText("IMORGON CA 12")).toBeVisible();
-  await expect(page.getByText("SMHI · prognos")).toBeVisible();
+  await expect(page.locator(".v2-motto")).toContainText("Tillsammans");
+  await expect(page.getByText("PROGNOS JUST NU")).toHaveCount(0);
+  await page.clock.fastForward(31 * 60 * 1000);
+  expect(weatherRequests).toBe(0);
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(768);
 });

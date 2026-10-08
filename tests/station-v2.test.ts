@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { fixture } from "./fixture";
 import { addDays, stockholmDay } from "../worker/stats";
 import { parseScheduleCsv } from "../src/StationV2Admin";
+import { findScheduleConflicts } from "../shared/schedule";
+import { msUntilNextStockholmDay } from "../src/StationDashboardV2";
 
 async function sessions(f: ReturnType<typeof fixture>) {
   const admin = await f.login();
@@ -16,6 +18,14 @@ async function sessions(f: ReturnType<typeof fixture>) {
   return { admin, viewer: active.headers.get("Set-Cookie")!.split(";")[0] };
 }
 describe("Stationsdashboard V2", () => {
+  it("byter schemadag vid lokal midnatt i Stockholm även över vintertidsbytet", () => {
+    expect(stockholmDay(new Date("2026-10-08T21:59:59Z"))).toBe("2026-10-08");
+    expect(stockholmDay(new Date("2026-10-08T22:00:00Z"))).toBe("2026-10-09");
+    expect(stockholmDay(new Date("2026-10-26T22:59:59Z"))).toBe("2026-10-26");
+    expect(stockholmDay(new Date("2026-10-26T23:00:00Z"))).toBe("2026-10-27");
+    expect(msUntilNextStockholmDay(new Date("2026-10-08T21:59:59Z"))).toBe(1000);
+    expect(msUntilNextStockholmDay(new Date("2026-10-24T22:00:00Z"))).toBe(25 * 60 * 60_000);
+  });
   it("importerar schema, visar bara aktiva pass och tillåter rättning med version", async () => {
     const f = fixture(),
       { admin, viewer } = await sessions(f),
@@ -326,6 +336,52 @@ describe("Stationsdashboard V2", () => {
         "datum,förnamn,start,slut,status\n2026-02-30,Alva,05:30,14:15,active",
       ),
     ).toThrow();
+  });
+  it("förhandsgranskar 111 syntetiska oktoberrader och upptäcker dubblett, överlapp och nattpass", () => {
+    const header = "datum,förnamn,start,slut,status";
+    const rows = Array.from({ length: 111 }, (_, i) => {
+      const day = String(i % 31 + 1).padStart(2, "0");
+      const name = ["Demo A", "Demo B", "Demo C", "Demo D"][Math.floor(i / 31)];
+      return `2026-10-${day},${name},08:00,16:00,active`;
+    });
+    const parsed = parseScheduleCsv([header, ...rows].join("\n"));
+    expect(parsed).toHaveLength(111);
+    expect(parsed.every((row) => row.work_date >= "2026-10-01" && row.work_date <= "2026-10-31")).toBe(true);
+    expect(findScheduleConflicts(parsed)).toEqual([]);
+    const base = parseScheduleCsv([
+      header,
+      "2026-10-08,Demo A,22:00,06:00,active",
+      "2026-10-09,Demo A,05:30,12:00,active",
+      "2026-10-09,Demo A,05:30,12:00,active",
+      "2026-10-09,Demo A,07:00,15:00,sick",
+    ].join("\n"));
+    expect(findScheduleConflicts(base).map((conflict) => conflict.kind)).toEqual([
+      "overlap", "overlap", "duplicate",
+    ]);
+    expect(findScheduleConflicts([base[0]], [base[0]])[0]).toMatchObject({
+      kind: "duplicate", existing: true,
+    });
+    expect(() => parseScheduleCsv(`${header}\n2026-10-08,123,08:00,16:00,active`)).toThrow();
+  });
+  it("stoppar överlapp inom import och mot befintliga pass utan att ändra dem", async () => {
+    const f = fixture();
+    const { admin, viewer } = await sessions(f);
+    const day = stockholmDay();
+    const next = addDays(day, 1);
+    const first = { work_date: day, first_name: "Demo A", starts_at: "22:00", ends_at: "06:00", status: "active" };
+    const overlap = { work_date: next, first_name: "Demo A", starts_at: "05:30", ends_at: "12:00", status: "active" };
+    const payload = (label: string, shifts: typeof first[]) => ({ label, starts_on: day, ends_on: next, shifts });
+    expect((await f.call("/admin/station/v2/schedule/import", "POST", payload("Krock i fil", [first, overlap]), admin)).status).toBe(400);
+    expect((await f.call("/admin/station/v2/schedule/import", "POST", payload("Första", [first]), admin)).status).toBe(201);
+    expect((await f.call("/admin/station/v2/schedule/import", "POST", payload("Krock mot DB", [overlap]), admin)).status).toBe(409);
+    const stored = await (await f.call("/admin/station/v2/schedule", "GET", undefined, admin)).json() as { shifts: typeof first[] };
+    expect(stored.shifts).toHaveLength(1);
+    expect(stored.shifts[0]).toMatchObject(first);
+    const away = { ...overlap, status: "leave" };
+    expect((await f.call("/admin/station/v2/schedule/import", "POST", payload("Frånvaro", [away]), admin)).status).toBe(201);
+    const overview = await (await f.call("/station/v2", "GET", undefined, viewer)).json() as { shifts: { first_name: string }[] };
+    expect(overview.shifts.map((shift) => shift.first_name)).toEqual(["Demo A"]);
+    f.db.close();
   });
   it("begränsar mängden skrivningar per visningssession", async () => {
     const f = fixture(),
