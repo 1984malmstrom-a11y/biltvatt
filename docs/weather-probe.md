@@ -2,6 +2,8 @@
 
 `scripts/weather-probe/wrangler.jsonc` definierar en **separat** Worker på `workers.dev`. Den har ingen D1-bindning, inga produktionshemligheter, inga statiska resurser och ingen koppling till produktions-Workern. Den använder samma SMHI-fetch och prognostolkning som V2. Den ändrar inte produktionen.
 
+Den här versionen är avsedd för den redan driftsatta `tvattligan-smhi-probe-20261008`: alla fyra tidigare anrop kastade `TypeError` även utan preview-token. Alla fyra skapade en `AbortSignal.timeout(8000)`, så deras resultat avgör ännu inte om orsaken ligger i signalen, SMHI-nätvägen eller andra anropsinställningar. `elapsedMs: 0` är inte bevis för att inget nätverksförsök skedde; Cloudflare kan frysa `Date.now()` mellan I/O-operationer.
+
 Kör följande i PowerShell från projektroten, på `feat/station-dashboard-v2`, efter att grenen hämtats och `npm ci` har körts. Kontrollera först att `wrangler.jsonc` i provkatalogen fortfarande saknar `d1_databases` och `vars`. Det första kommandot använder en tillfällig Cloudflare-preview för att prova verklig SMHI-hämtning. Öppna den lokala adress Wrangler visar med `/probe` och stoppa sedan processen med Ctrl+C. Preview kan inte bevisa att cache fungerar.
 
 ```powershell
@@ -14,17 +16,22 @@ Kör i ett **andra** PowerShell-fönster med den lokala adress Wrangler visar (v
 curl.exe --silent --show-error --include http://127.0.0.1:8787/probe
 ```
 
-Svaret innehåller `stage` och `attempts` utan API-kropp, cookies, tokenvärden eller råa felmeddelanden. `app-fetch` använder exakt V2:s SMHI-inställningar. Om det misslyckas provar Workern ett anrop utan cache med manuell redirect och ett anrop där alla inkommande headers, inklusive Cloudflares preview-token, tagits bort. `httpStatus` är status från SMHI/Cloudflares subanrop; `errorType` skiljer timeout och nätverksfel från parserfel. `redirectHost` innehåller bara målvärdens namn. `shape` visar endast fälttyper och antal tidssteg.
+Svaret innehåller `stage`, `attempts` och `signalCheck` utan API-kropp, cookies, tokenvärden eller råa felmeddelanden. Anropsordningen är `example-basic` (enbart URL), `smhi-basic` (enbart URL), `smhi-redirect-manual`, `smhi-with-signal`, `smhi-cache-only` och `app-fetch` (exakt V2-anrop). `signalCheck` testar separat om `AbortSignal.timeout(8000)` kan skapas. `httpStatus` är status från externa anrop; `errorCategory` och den fasta `errorDescription` är bara ledtrådar utifrån feltextens kända ord, inte säkra diagnoser. `redirectHost` innehåller bara målvärdens namn. `shape` visar endast fälttyper och antal tidssteg. Ignorera `elapsedMs` vid orsaksbedömning på Cloudflare.
 
-- `app-fetch` misslyckas och `preview-header-stripped` ger 200: fjärrförhandsvisningens header är en stark felkandidat. Cloudflare dokumenterar [denna preview-begränsning](https://developers.cloudflare.com/workers/platform/known-issues/). Bekräfta sedan på separat driftsatt prov-Worker.
-- `manual-no-cache` ger 3xx: `redirect: "error"` stoppar en verklig omdirigering; kontrollera värdnamnet och ändra enbart enligt en godkänd redirect-policy.
-- Båda anrop utan cache ger 200 men `app-fetch` misslyckas: granska `cf`-cacheinställningarna i en separat driftsatt Worker.
-- `stage: "json"`, `"schema"` eller `"selection"`: hämtningen lyckades men svarstexten, datamodellen eller urvalet av prognostider behöver granskas. Skicka bara den lilla diagnostiska JSON:en, inte hela SMHI-svaret.
-- `TimeoutError` eller cirka 8 000 ms: undersök fördröjning innan timeout ändras. Ett HTTP-fel syns som `httpStatus`.
+- `example-basic` och `smhi-basic` misslyckas: kontrollera om felkategorierna pekar mot en bred nätverksbegränsning; jämför även HTTP-status.
+- `example-basic` lyckas men `smhi-basic` misslyckas: SMHI-nätvägen behöver undersökas, oberoende av V2:s cache och signal.
+- `smhi-basic` lyckas men `smhi-with-signal` misslyckas: signaltillägget är en konkret felkandidat. `signalCheck.supported: false` visar att redan skapandet misslyckas.
+- `smhi-basic` och `smhi-with-signal` lyckas men `smhi-cache-only` misslyckas: cacheinställningen är en konkret felkandidat.
+- `smhi-redirect-manual` ger 3xx: kontrollera `redirectHost`; V2:s `redirect: "error"` kan då kasta.
+- Endast `app-fetch` misslyckas: granska den kvarvarande kombinationen av headers, redirect, signal och cache. Ändra inte V2 utifrån enbart en felkategori.
+- `stage: "json"`, `"schema"` eller `"selection"`: V2-hämtningen lyckades men svarstexten, datamodellen eller prognostiderna behöver granskas.
 
-För cacheprovet, kontrollera i rätt Cloudflare-konto att namnet `tvattligan-smhi-probe-20261008` är ledigt. Stoppa om en Worker redan har det namnet. Driftsätt sedan **bara** denna fristående prov-Worker:
+För denna felsökning: uppdatera den **redan befintliga fristående** prov-Workern i samma Cloudflare-konto. Kontrollera först att `wrangler.jsonc` fortfarande heter `tvattligan-smhi-probe-20261008` och saknar D1-bindning, andra bindings och produktionshemligheter. Kör från projektroten på V2-grenen:
 
 ```powershell
+git switch feat/station-dashboard-v2
+git pull --ff-only origin feat/station-dashboard-v2
+npm ci
 npx wrangler deploy --config .\scripts\weather-probe\wrangler.jsonc
 ```
 
@@ -32,9 +39,9 @@ Wrangler visar prov-Workerns egen URL. Använd den URL:en med `/probe`, exempelv
 
 ```powershell
 $probe = 'https://tvattligan-smhi-probe-20261008.<ditt-subdomännamn>.workers.dev/probe'
-1..3 | ForEach-Object { curl.exe --silent --show-error $probe; Start-Sleep -Seconds 2 }
+curl.exe --silent --show-error --include $probe
 ```
 
-`ok` ska vara `true`, `kind` ska vara `forecast`, och `now` samt `tomorrow` ska ha UTC-tider, temperaturer och symbolkoder. I en separat driftsatt Worker ska `attempts[0].cacheStatus` visa ett cacheförsök och sedan `HIT` på upprepade anrop från samma plats. En preview eller ett lokalt anrop direkt mot SMHI bevisar inte att cachen fungerar på `workers.dev`. Om fälten saknas, `ok` är `false` eller ingen träff kan påvisas ska produktionsdriftsättningen stoppas och cachemetoden granskas.
+Kör först **ett** `/probe`-anrop och spara den korta JSON-responsen. Om `app-fetch` lyckas ska `kind` vara `forecast`, och `now` samt `tomorrow` ska ha UTC-tider, temperaturer och symbolkoder. För cachekontroll kan sedan upprepade anrop från samma plats visa `app-fetch.cacheStatus` som `HIT`; en preview eller ett lokalt anrop direkt mot SMHI bevisar inte att cachen fungerar på `workers.dev`. Om `ok` är `false` eller ingen cacheträff kan påvisas ska V2:s produktionsdriftsättning fortfarande avvakta.
 
 Provsvaret har `Cache-Control: no-store` och innehåller bara offentlig prognos och cachediagnostik. Radera prov-Workern efter granskningen med `npx wrangler delete --name tvattligan-smhi-probe-20261008` från kontot där den skapades. Kommandot får inte köras mot `tvattligan`.

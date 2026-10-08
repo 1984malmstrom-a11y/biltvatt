@@ -1,11 +1,14 @@
 import { fetchSmhiForecast, selectWeather, SMHI_POINT_URL } from "../../worker/weather";
 
 // Standalone public-data probe. It has no D1, assets or secret bindings.
+type ErrorCategory = "dns" | "tls" | "redirect" | "request-options" | "abort-signal" | "network" | "unknown";
 type Attempt = {
   mode: string;
   elapsedMs: number;
   httpStatus?: number;
   errorType?: string;
+  errorCategory?: ErrorCategory;
+  errorDescription?: string;
   contentType?: string | null;
   cacheStatus?: string | null;
   redirectHost?: string | null;
@@ -15,10 +18,40 @@ const reply = (data: unknown, status = 200) => Response.json(data, {
   status, headers: { "Cache-Control": "no-store" },
 });
 
-function errorType(error: unknown): string {
+// Never return an exception message or cause: they may contain a URL or secret.
+// These categories are hints from known terms, not proof of the underlying fault.
+function safeError(error: unknown) {
   const name = error instanceof Error ? error.name : "UnknownError";
-  return ["AbortError", "TimeoutError", "TypeError", "SyntaxError", "RangeError"].includes(name)
+  const errorType = ["AbortError", "TimeoutError", "TypeError", "SyntaxError", "RangeError"].includes(name)
     ? name : "UnknownError";
+  const cause = error instanceof Error ? (error as Error & { cause?: unknown }).cause : undefined;
+  const detail = [error, cause]
+    .filter((item): item is Error => item instanceof Error)
+    .map((item) => `${item.message} ${(item as Error & { code?: unknown }).code ?? ""}`)
+    .join(" ").toLowerCase();
+  let errorCategory: ErrorCategory = "unknown";
+  if (/\bdns\b|enotfound|eai_again|name resolution|resolve host|host not found/.test(detail))
+    errorCategory = "dns";
+  else if (/\btls\b|\bssl\b|certificate|handshake|cert_/.test(detail))
+    errorCategory = "tls";
+  else if (/redirect|location header/.test(detail))
+    errorCategory = "redirect";
+  else if (/requestinit|request init|invalid (?:option|property|init)|cache option|unsupported.*(?:cache|redirect|fetch option)/.test(detail))
+    errorCategory = "request-options";
+  else if (/abort|signal|timed? ?out|timeout/.test(detail))
+    errorCategory = "abort-signal";
+  else if (/network|connection|econn|fetch failed|failed to fetch|unable to fetch/.test(detail))
+    errorCategory = "network";
+  const descriptions: Record<ErrorCategory, string> = {
+    dns: "Feltexten nämner DNS eller namnuppslagning.",
+    tls: "Feltexten nämner TLS eller certifikat.",
+    redirect: "Feltexten nämner omdirigering.",
+    "request-options": "Feltexten nämner ogiltiga eller ostödda anropsinställningar.",
+    "abort-signal": "Feltexten nämner signal, avbrott eller timeout.",
+    network: "Feltexten nämner nätverk eller anslutning utan närmare orsak.",
+    unknown: "Feltexten gav ingen säker klassificering.",
+  };
+  return { errorType, errorCategory, errorDescription: descriptions[errorCategory] };
 }
 
 function redirectHost(response: Response): string | null {
@@ -28,20 +61,38 @@ function redirectHost(response: Response): string | null {
   catch { return "invalid-location"; }
 }
 
+function safeContentType(response: Response): string | null {
+  const value = response.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase();
+  if (!value) return null;
+  return ["application/json", "text/html", "text/plain", "application/octet-stream"].includes(value)
+    ? value : "other";
+}
+
+function safeCacheStatus(response: Response): string | null {
+  const value = response.headers.get("CF-Cache-Status")?.toUpperCase();
+  if (!value) return null;
+  return ["HIT", "MISS", "BYPASS", "DYNAMIC", "EXPIRED", "STALE", "UPDATING", "REVALIDATED"].includes(value)
+    ? value : "other";
+}
+
 async function attempt(mode: string, action: () => Promise<Response>) {
   const started = Date.now();
   try {
     const response = await action();
     const report: Attempt = {
       mode, elapsedMs: Date.now() - started, httpStatus: response.status,
-      contentType: response.headers.get("Content-Type")?.split(";")[0].slice(0, 60) ?? null,
-      cacheStatus: response.headers.get("CF-Cache-Status"),
+      contentType: safeContentType(response),
+      cacheStatus: safeCacheStatus(response),
       redirectHost: redirectHost(response),
     };
     return { report, response };
   } catch (error) {
-    return { report: { mode, elapsedMs: Date.now() - started, errorType: errorType(error) } as Attempt };
+    return { report: { mode, elapsedMs: Date.now() - started, ...safeError(error) } as Attempt };
   }
+}
+
+async function discard(response?: Response) {
+  try { await response?.body?.cancel(); } catch { /* Ignore cleanup failures. */ }
 }
 
 function shape(data: unknown) {
@@ -61,70 +112,61 @@ function shape(data: unknown) {
   };
 }
 
-// Cloudflare documents that remote previews can forward a preview token to
-// subrequests. Clone the incoming request as documented, then remove *all*
-// incoming headers so cookies, authorization and the preview token cannot reach SMHI.
-function withoutPreviewHeaders(incoming: Request, fetcher: typeof fetch): typeof fetch {
-  return ((url: string | URL | Request, init?: RequestInit) => {
-    const clean = new Request(url, incoming);
-    for (const name of [...clean.headers.keys()]) clean.headers.delete(name);
-    clean.headers.set("Accept", "application/json");
-    return fetcher(clean, { ...init, headers: { Accept: "application/json" } });
-  }) as typeof fetch;
-}
-
-function uncachedManual(fetcher: typeof fetch): Promise<Response> {
-  return fetcher(SMHI_POINT_URL, {
-    method: "GET", headers: { Accept: "application/json" },
-    redirect: "manual", cache: "no-store", signal: AbortSignal.timeout(8000),
-  });
-}
-
 export async function probeSmhi(request: Request, fetcher: typeof fetch = fetch): Promise<Response> {
   if (request.method !== "GET" || new URL(request.url).pathname !== "/probe")
     return new Response("Not found", { status: 404, headers: { "Cache-Control": "no-store" } });
 
   const attempts: Attempt[] = [];
+  const run = async (mode: string, action: () => Promise<Response>) => {
+    const result = await attempt(mode, action);
+    attempts.push(result.report);
+    await discard(result.response);
+    return result;
+  };
+
+  // Baselines contain no RequestInit, extra headers, cache configuration or signal.
+  await run("example-basic", () => fetcher("https://example.com"));
+  await run("smhi-basic", () => fetcher(SMHI_POINT_URL));
+  await run("smhi-redirect-manual", () => fetcher(SMHI_POINT_URL, { redirect: "manual" }));
+
+  let signal: AbortSignal | undefined;
+  let signalCheck: { supported: boolean; initiallyAborted?: boolean; errorType?: string;
+    errorCategory?: ErrorCategory; errorDescription?: string };
+  try {
+    signal = AbortSignal.timeout(8000);
+    signalCheck = { supported: true, initiallyAborted: signal.aborted };
+  } catch (error) {
+    signalCheck = { supported: false, ...safeError(error) };
+  }
+  if (signal) await run("smhi-with-signal", () => fetcher(SMHI_POINT_URL, { signal }));
+
+  // Same cache options as V2, isolated from its headers, redirect policy and signal.
+  await run("smhi-cache-only", () => fetcher(SMHI_POINT_URL, {
+    cf: { cacheEverything: true, cacheTtlByStatus: { "200": 1800, "201-599": -1 } },
+  }));
   const normal = await attempt("app-fetch", () => fetchSmhiForecast(fetcher));
   attempts.push(normal.report);
-  let upstream = normal.response;
-  let fetchMode = "app-fetch";
-
-  if (!upstream?.ok) {
-    const manual = await attempt("manual-no-cache", () => uncachedManual(fetcher));
-    attempts.push(manual.report);
-    const cleanFetcher = withoutPreviewHeaders(request, fetcher);
-    const clean = await attempt("preview-header-stripped", () => fetchSmhiForecast(cleanFetcher));
-    attempts.push(clean.report);
-    if (clean.response?.ok) {
-      upstream = clean.response;
-      fetchMode = "preview-header-stripped";
-    } else {
-      const cleanManual = await attempt("stripped-manual-no-cache", () => uncachedManual(cleanFetcher));
-      attempts.push(cleanManual.report);
-      return reply({
-        ok: false, stage: normal.response ? "http" : "fetch", attempts,
-        previewTokenPresent: request.headers.has("cf-workers-preview-token"),
-      }, 503);
-    }
+  const diagnostics = { attempts, signalCheck, previewTokenPresent: request.headers.has("cf-workers-preview-token") };
+  if (!normal.response?.ok) {
+    await discard(normal.response);
+    return reply({ ok: false, stage: normal.response ? "http" : "fetch", ...diagnostics }, 503);
   }
 
   let data: unknown;
-  try { data = await upstream.json(); }
+  try { data = await normal.response.json(); }
   catch (error) {
-    return reply({ ok: false, stage: "json", errorType: errorType(error), attempts }, 503);
+    return reply({ ok: false, stage: "json", ...safeError(error), ...diagnostics }, 503);
   }
   const model = shape(data);
   let forecast: ReturnType<typeof selectWeather>;
   try { forecast = selectWeather(data); }
   catch (error) {
-    return reply({ ok: false, stage: "schema", errorType: errorType(error), shape: model, attempts }, 503);
+    return reply({ ok: false, stage: "schema", ...safeError(error), shape: model, ...diagnostics }, 503);
   }
+  const complete = forecast.now !== null && forecast.tomorrow !== null;
   return reply({
-    ok: forecast.now !== null && forecast.tomorrow !== null,
-    stage: forecast.now !== null && forecast.tomorrow !== null ? "complete" : "selection",
-    fetchMode, attempts, shape: model,
-    source: forecast.source, kind: forecast.kind,
+    ok: complete, stage: complete ? "complete" : "selection", ...diagnostics,
+    shape: model, source: forecast.source, kind: forecast.kind,
     now: forecast.now, tomorrow: forecast.tomorrow,
   });
 }
