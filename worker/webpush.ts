@@ -271,12 +271,18 @@ export async function deliverPush(
   keys: PushKeys,
 ): Promise<number> {
   let response: Response;
+  let stage:
+    | "validate_target"
+    | "encrypt_payload"
+    | "vapid_authorization"
+    | "fetch_provider" = "validate_target";
   try {
     await validateTarget(target);
-    const [encrypted, authorization] = await Promise.all([
-      encryptPayload(target, payload),
-      vapidAuthorization(target.endpoint, keys),
-    ]);
+    stage = "encrypt_payload";
+    const encrypted = await encryptPayload(target, payload);
+    stage = "vapid_authorization";
+    const authorization = await vapidAuthorization(target.endpoint, keys);
+    stage = "fetch_provider";
     response = await fetch(target.endpoint, {
       method: "POST",
       redirect: "error",
@@ -294,6 +300,7 @@ export async function deliverPush(
     warnPush({
       event: "push_delivery_exception",
       provider: pushProvider(target.endpoint),
+      stage,
       exception_type: safeExceptionName(error),
     });
     throw error; // Preserve the caller's existing failure handling.

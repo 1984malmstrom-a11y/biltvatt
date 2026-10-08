@@ -688,7 +688,7 @@ describe("Sanerad leveransdiagnostik", () => {
       });
     },
   );
-  it.each(["fetch", "crypto", "custom-name"])(
+  it.each(["validate", "crypto", "vapid", "fetch", "custom-name"])(
     "%s-undantag loggar enbart en säker typ och behåller befintligt felresultat",
     async (source) => {
       const owner = await diagnosticDevice();
@@ -701,12 +701,21 @@ describe("Sanerad leveransdiagnostik", () => {
         owner.id,
         "Emma",
       ].join(" ");
-      if (source === "crypto")
+      if (source === "validate")
+        vi.spyOn(crypto.subtle, "importKey").mockRejectedValueOnce(
+          new TypeError(sensitive),
+        );
+      else if (source === "crypto")
         vi.spyOn(crypto.subtle, "encrypt").mockRejectedValueOnce(
           new DOMException(sensitive, "OperationError"),
         );
+      else if (source === "vapid")
+        vi.spyOn(crypto.subtle, "sign").mockRejectedValueOnce(
+          new TypeError(sensitive),
+        );
       else {
-        const error = new TypeError(sensitive);
+        const error = new TypeError(sensitive, { cause: sensitive });
+        error.stack = sensitive;
         if (source === "custom-name") error.name = sensitive;
         transport.mockRejectedValueOnce(error);
       }
@@ -722,12 +731,20 @@ describe("Sanerad leveransdiagnostik", () => {
         JSON.stringify({
           event: "push_delivery_exception",
           provider: "apple",
+          stage:
+            source === "validate"
+              ? "validate_target"
+              : source === "crypto"
+                ? "encrypt_payload"
+                : source === "vapid"
+                  ? "vapid_authorization"
+                  : "fetch_provider",
           exception_type:
             source === "crypto"
               ? "OperationError"
-              : source === "fetch"
-                ? "TypeError"
-                : "Error",
+              : source === "custom-name"
+                ? "Error"
+                : "TypeError",
         }),
       );
       expectSanitized(warn, owner);
@@ -743,7 +760,8 @@ describe("Sanerad leveransdiagnostik", () => {
         disabled_at: null,
         last_success_at: null,
       });
-      if (source === "crypto") expect(transport).not.toHaveBeenCalled();
+      if (["validate", "crypto", "vapid"].includes(source))
+        expect(transport).not.toHaveBeenCalled();
     },
   );
   it.each([
