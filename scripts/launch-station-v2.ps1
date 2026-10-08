@@ -14,6 +14,7 @@ $baseUrl = 'https://tvattligan.peter-malmstrom.workers.dev'
 $approvedCsvHash = '3F07FA2779C8AFB41BDAABC14A276AD58FF1235882758116FC798B3D5C1501DF'
 $approvedCsvName = 'preem_tingsryd_oktober_2026_IMPORT_KLAR.csv'
 $deployStarted = $false
+$snapshotPath = ''
 $oldTables = [ordered]@{
   sales = 'id'
   sales_audit = 'CAST(id AS TEXT)'
@@ -45,15 +46,35 @@ function Command-Path([string]$Name) {
   if (-not $found) { Stop-Launch "Verktyget $Name saknas. Installera det innan lanseringen." }
   return $found.Source
 }
-function Query([string]$Sql) {
-  $raw = Run $script:npx @('wrangler','d1','execute','tvattligan','--remote','--config','wrangler.jsonc','--command',$Sql,'--json') 'Läsning av produktions-D1'
-  try { $data = ConvertFrom-Json -InputObject $raw }
-  catch { Stop-Launch 'Wrangler returnerade inte giltig D1-JSON. Stoppa lanseringen.' }
-  $entry = if ($data -is [array]) { $data[0] } else { $data }
-  if (-not $entry -or $entry.success -ne $true -or $null -eq $entry.results) {
-    Stop-Launch 'D1-frågan lyckades inte eller saknar resultat. Stoppa lanseringen.'
+function Refresh-ProductionSnapshot([string]$Label) {
+  $directory = Split-Path -Parent $script:BackupPath
+  $next = Join-Path $directory ("tvattligan-v2-privat-kontroll-" + [guid]::NewGuid().ToString('N') + '.sql')
+  $raw = Run $script:node @('scripts/station-v2-snapshot.mjs','export',$next) "$Label`: läsande D1-export"
+  try { $report = ConvertFrom-Json -InputObject $raw }
+  catch { Stop-Launch "$Label misslyckades: exporthjälpen returnerade inte giltig JSON." }
+  if ($report.ok -ne $true) {
+    Stop-Launch "$Label misslyckades vid D1-export (typ $($report.errorType), avslutskod $($report.exitCode), Windows-status $($report.windowsStatus)). Ingen publicering sker."
   }
-  return @($entry.results)
+  $checked = Run $script:node @('scripts/verify-d1-backup.mjs',$next) "$Label`: integritet för färsk D1-export"
+  try { $verified = ConvertFrom-Json -InputObject $checked }
+  catch { Stop-Launch "$Label misslyckades: den nya privata D1-exporten kunde inte verifieras." }
+  if ($verified.verified -ne $true) { Stop-Launch "$Label misslyckades: den nya privata D1-exporten är ogiltig." }
+  $previous = $script:snapshotPath
+  $script:snapshotPath = $next
+  if ($previous -and (Test-Path -LiteralPath $previous -PathType Leaf)) {
+    Remove-Item -LiteralPath $previous -ErrorAction SilentlyContinue
+  }
+  Info "$Label`: färsk privat D1-export verifierad ($($report.bytes) byte)."
+}
+function Query([string]$Sql, [string]$Label) {
+  if (-not $script:snapshotPath) { Stop-Launch "$Label misslyckades: ingen verifierad produktionsbild finns." }
+  $raw = Run $script:node @('scripts/station-v2-snapshot.mjs','query',$script:snapshotPath,$Sql) "$Label`: lokal läskontroll"
+  try { $data = ConvertFrom-Json -InputObject $raw }
+  catch { Stop-Launch "$Label misslyckades: ögonblicksbilden gav inte giltig JSON." }
+  if ($data.ok -ne $true -or $null -eq $data.results) {
+    Stop-Launch "$Label misslyckades (typ $($data.errorType)). Ingen produktionsdata skrevs."
+  }
+  return @($data.results)
 }
 function Check-PrivateFile([string]$Path, [string]$Label) {
   if (-not $Path -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) {
@@ -64,6 +85,24 @@ function Check-PrivateFile([string]$Path, [string]$Label) {
     Stop-Launch "$Label ligger i repositoryt. Flytta den till en privat katalog utanför Git."
   }
   return $full
+}
+function Find-ApprovedCsv {
+  $queue = New-Object System.Collections.Queue
+  $queue.Enqueue([pscustomobject]@{ Path=$env:USERPROFILE; Depth=0 })
+  $visited = 0
+  while ($queue.Count -gt 0 -and $visited -lt 3000) {
+    $current = $queue.Dequeue(); $visited++
+    if ($current.Depth -gt 6 -or -not (Test-Path -LiteralPath $current.Path -PathType Container)) { continue }
+    $candidate = Join-Path $current.Path $approvedCsvName
+    if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+      if ((Get-FileHash -LiteralPath $candidate -Algorithm SHA256).Hash -eq $approvedCsvHash) { return $candidate }
+    }
+    foreach ($folder in @(Get-ChildItem -LiteralPath $current.Path -Directory -Force -ErrorAction SilentlyContinue)) {
+      if ($folder.Name -in @('AppData','node_modules','.git','.cache','.npm','.wrangler','Temp')) { continue }
+      $queue.Enqueue([pscustomobject]@{ Path=$folder.FullName; Depth=$current.Depth + 1 })
+    }
+  }
+  return ''
 }
 function Check-Git {
   $current = (Run $script:git @('branch','--show-current') 'Git-gren').Trim()
@@ -78,10 +117,11 @@ function Check-Git {
   Info "Git-gren och pushad commit verifierade: $head"
 }
 function Check-Database {
-  $integrity = @(Query 'PRAGMA integrity_check')
+  Refresh-ProductionSnapshot 'Databaskontroll'
+  $integrity = @(Query 'PRAGMA integrity_check' 'SQLite-integritet')
   if ($integrity.Count -ne 1 -or $integrity[0].integrity_check -ne 'ok') { Stop-Launch 'D1:s integritetskontroll misslyckades.' }
-  if (@(Query 'PRAGMA foreign_key_check').Count -ne 0) { Stop-Launch 'D1 innehåller främmande nyckelfel.' }
-  $applied = @(Query 'SELECT name FROM d1_migrations ORDER BY id' | ForEach-Object { $_.name })
+  if (@(Query 'PRAGMA foreign_key_check' 'Främmande nycklar').Count -ne 0) { Stop-Launch 'D1 innehåller främmande nyckelfel.' }
+  $applied = @(Query 'SELECT name FROM d1_migrations ORDER BY id' 'Migreringshistorik' | ForEach-Object { $_.name })
   $local = @(Get-ChildItem -LiteralPath (Join-Path $root 'migrations') -Filter '*.sql' | Sort-Object Name | ForEach-Object { $_.Name })
   if ($local.Count -ne 6 -or $applied.Count -ne $local.Count) { Stop-Launch 'Migreringshistoriken avviker: exakt 0001–0006 ska vara installerade.' }
   for ($i = 0; $i -lt $local.Count; $i++) {
@@ -90,7 +130,7 @@ function Check-Database {
   if ($applied[4] -ne '0005_station_dashboard_v2.sql' -or $applied[5] -ne '0006_station_monthly_figures.sql') {
     Stop-Launch 'Migration 0005 eller 0006 är inte installerad i rätt ordning.'
   }
-  $tables = @(Query "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('station_schedule_periods','station_shifts','station_tasks','station_task_write_limits','station_notices','station_monthly_figures')" | ForEach-Object { $_.name })
+  $tables = @(Query "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('station_schedule_periods','station_shifts','station_tasks','station_task_write_limits','station_notices','station_monthly_figures')" 'V2-tabeller' | ForEach-Object { $_.name })
   if ($tables.Count -ne 6) { Stop-Launch 'En eller flera nya V2-tabeller saknas.' }
   $columnSpecs = [ordered]@{
     station_shifts = @('id','period_id','work_date','first_name','starts_at','ends_at','status','revision')
@@ -99,12 +139,12 @@ function Check-Database {
     station_monthly_figures = @('station_id','month','metrics_json')
   }
   foreach ($table in $columnSpecs.Keys) {
-    $found = @(Query "PRAGMA table_info($table)" | ForEach-Object { $_.name })
+    $found = @(Query "PRAGMA table_info($table)" "Kolumner i $table" | ForEach-Object { $_.name })
     foreach ($column in $columnSpecs[$table]) { if ($found -notcontains $column) { Stop-Launch "Kolumnen $column saknas i $table." } }
   }
   foreach ($table in $oldTables.Keys) {
     $expression = $oldTables[$table]
-    $live = @(Query "SELECT $expression AS key FROM $table")
+    $live = @(Query "SELECT $expression AS key FROM $table" "Bevarade rader i $table")
     $liveKeys = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
     foreach ($row in $live) { [void]$liveKeys.Add([string]$row.key) }
     $before = @($script:baseline.PSObject.Properties[$table].Value)
@@ -171,14 +211,14 @@ function Check-Schedule {
     }
     $script:shifts += $row
   }
-  $existing = @(Query "SELECT s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-09-30' AND '2026-11-01'")
+  $existing = @(Query "SELECT s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-09-30' AND '2026-11-01'" 'Befintliga oktoberpass')
   foreach ($row in $script:shifts) {
     foreach ($prior in $existing) {
       $conflict = Collision $row $prior
       if ($conflict) { Stop-Launch "CSV har $conflict mot ett befintligt pass. Ingen import görs." }
     }
   }
-  $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'")
+  $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'" 'Antal oktoberpass före import')
   $script:beforeOctober = [int]$octoberCount[0].n
   $script:csvHash = (Get-FileHash -LiteralPath $SchedulePath -Algorithm SHA256).Hash
   if ($script:csvHash -ne $approvedCsvHash) {
@@ -187,7 +227,7 @@ function Check-Schedule {
   Info "Privat oktoberfil verifierad: 111 rader, inga dubbletter eller aktiva överlapp. Befintliga oktoberrader: $beforeOctober."
   Write-Host 'Förhandsgranskning på den här datorn (lägg inte terminalutskriften i Git eller chatt):'
   $script:shifts | Sort-Object work_date,starts_at,first_name | Format-Table work_date,first_name,starts_at,ends_at,status -AutoSize | Out-Host
-  Write-Host 'Granska namn, tider, nattpass, frånvaro och höstens klockomställning mot godkänd källa.'
+  Write-Host 'Filens godkända SHA-256, alla rader och konflikter är kontrollerade automatiskt. Förhandsgranskningen visas lokalt.'
 }
 function Http-Status([string]$Url) {
   try { return [int](Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 20).StatusCode }
@@ -213,6 +253,9 @@ try {
   $npm = Command-Path 'npm.cmd'; $npx = Command-Path 'npx.cmd'
   Info 'Startar V2-lansering. Ingen migration eller backupåterställning körs.'
   Check-Git
+  $null = Run $npm @('ci') 'Installation av låsta npm-paket'
+  $wranglerCli = 'node_modules/wrangler/wrangler-dist/cli.js'
+  if (-not (Test-Path -LiteralPath $wranglerCli -PathType Leaf)) { Stop-Launch 'Lokal Wrangler-installation saknas efter npm ci.' }
   $configText = Get-Content -LiteralPath (Join-Path $root 'wrangler.jsonc') -Raw -Encoding UTF8
   $config = ($configText -replace '(?m)^\s*//.*$','' -replace ',(\s*[}\]])','$1') | ConvertFrom-Json
   if ($config.name -ne 'tvattligan' -or $config.main -ne 'worker/index.ts' -or
@@ -221,11 +264,11 @@ try {
       $config.d1_databases[0].database_id -ne $databaseId) {
     Stop-Launch 'Wrangler-konfigurationen pekar inte på den godkända produktions-Workern och D1-databasen.'
   }
-  $who = Run $npx @('wrangler','whoami','--config','wrangler.jsonc','--json') 'Cloudflare-inloggning'
+  $who = Run $node @($wranglerCli,'whoami','--config','wrangler.jsonc','--json') 'Cloudflare-inloggning'
   try { $null = ConvertFrom-Json -InputObject $who }
   catch { Stop-Launch 'Cloudflare-inloggningen kunde inte verifieras som JSON.' }
-  Info "Cloudflare-inloggning finns; fjärrläsning av det fasta D1-ID:t $databaseId verifierar kontot."
-  $pending = Run $npx @('wrangler','d1','migrations','list','tvattligan','--remote','--config','wrangler.jsonc') 'Kontroll av väntande migrationer'
+  Info "Cloudflare-inloggning finns. Den kommande privata D1-exporten verifierar åtkomst till det fasta databas-ID:t $databaseId."
+  $pending = Run $node @($wranglerCli,'d1','migrations','list','tvattligan','--remote','--config','wrangler.jsonc') 'Kontroll av väntande migrationer'
   if ($pending -match '000[0-9]_[A-Za-z0-9_-]+\.sql') { Stop-Launch 'Wrangler visar väntande migrationer. Stoppa; inga migrationer körs automatiskt.' }
   if (-not $BackupPath) {
     $backupDirectory = Join-Path $env:USERPROFILE 'Documents\StationV2Private'
@@ -245,17 +288,13 @@ try {
   Check-Database
   Check-WeatherPaused
   if (-not $SchedulePath) {
-    foreach ($folder in @((Join-Path $env:USERPROFILE 'Downloads'), (Join-Path $env:USERPROFILE 'Documents'), (Join-Path $env:USERPROFILE 'Desktop'))) {
-      $candidate = Join-Path $folder $approvedCsvName
-      if (Test-Path -LiteralPath $candidate -PathType Leaf) { $SchedulePath = $candidate; break }
-    }
+    $SchedulePath = Find-ApprovedCsv
     if ($SchedulePath) { Info 'Hittade den godkända oktoberfilen på datorn.' }
-    else { $SchedulePath = Read-Host "Sökväg till bilagan $approvedCsvName (spara den privat, t.ex. i Hämtade filer)" }
+    else { $SchedulePath = Read-Host "Hittade inte den redan godkända oktoberfilen automatiskt. Ange dess befintliga sökväg ($approvedCsvName)" }
   }
   $SchedulePath = Check-PrivateFile $SchedulePath 'Oktober-CSV'
   Check-Schedule
-  Info 'Installerar låsta npm-paket och kör kontroller före publicering.'
-  $null = Run $npm @('ci') 'npm ci'
+  Info 'Kör lokala tester och produktionsbuild före publicering.'
   $null = Run $npx @('playwright','install','chromium') 'Installation av Chromium för test'
   $null = Run $npm @('run','typecheck') 'TypeScript-kontroll'
   $null = Run $npm @('test') 'Enhetstester'
@@ -273,7 +312,7 @@ try {
   $publish = Read-Host 'Skriv PUBLICERA V2 för att publicera till produktion; Enter avbryter'
   if ($publish -cne 'PUBLICERA V2') { Info 'Publicering avbruten på användarens begäran.'; exit 0 }
   $deployStarted = $true
-  $null = Run $npx @('wrangler','deploy','--config','wrangler.jsonc') 'Publicering av V2'
+  $null = Run $node @($wranglerCli,'deploy','--config','wrangler.jsonc') 'Publicering av V2'
   Info 'V2 publicerad. Kör läsande efterkontroller; ingen schemaimport har gjorts.'
   foreach ($path in @('/','/station','/api/staff','/api/wash-programs','/api/stats','/api/push/public-key')) {
     if ((Http-Status "$baseUrl$path") -ne 200) { Stop-Launch "Efterkontrollen misslyckades för $path. Stoppa och granska produktionen." }
@@ -326,12 +365,13 @@ try {
   if ($result.imported -ne 111 -or $result.period_id -notmatch '^[0-9a-f-]{36}$') {
     Stop-Launch 'Importsvaret är oväntat. Kontrollera perioden i /station/admin innan nytt försök.'
   }
-  $importedRows = @(Query "SELECT work_date,first_name,starts_at,ends_at,status FROM station_shifts WHERE period_id='$($result.period_id)'")
+  Check-Database
+  $importedRows = @(Query "SELECT work_date,first_name,starts_at,ends_at,status FROM station_shifts WHERE period_id='$($result.period_id)'" 'Återläsning av importerad schemaperiod')
   if ($importedRows.Count -ne 111) { Stop-Launch 'Efterkontroll: antalet importerade pass är inte 111.' }
   $expected = @($shifts | ForEach-Object { "$($_.work_date)|$($_.first_name)|$($_.starts_at)|$($_.ends_at)|$($_.status)" } | Sort-Object)
   $actual = @($importedRows | ForEach-Object { "$($_.work_date)|$($_.first_name)|$($_.starts_at)|$($_.ends_at)|$($_.status)" } | Sort-Object)
   for ($i = 0; $i -lt 111; $i++) { if ($expected[$i] -cne $actual[$i]) { Stop-Launch 'Efterkontroll: importerade pass skiljer sig från den privata CSV-filen.' } }
-  $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'")
+  $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'" 'Antal oktoberpass efter import')
   $afterOctober = [int]$octoberCount[0].n
   if ($afterOctober -ne $beforeOctober + 111) { Stop-Launch 'Efterkontroll: oktobers radantal ökade inte med exakt 111.' }
   $todayOverview = Invoke-RestMethod -Uri "$baseUrl/api/station/v2" -WebSession $session -TimeoutSec 20
@@ -343,7 +383,6 @@ try {
       if ($match.Count -lt 1) { Stop-Launch 'Efterkontroll: ett aktivt pass för dagens datum saknas i dashboardens API.' }
     }
   }
-  Check-Database
   Info "KLART: V2 är publicerad och 111 pass importerade/verifierade i perioden $($result.period_id). Kontrollera Idag jobbar och push på en avsedd enhet."
 } catch {
   Write-Host "STOPP: $($_.Exception.Message)" -ForegroundColor Red

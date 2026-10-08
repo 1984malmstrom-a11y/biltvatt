@@ -1,5 +1,7 @@
 # Stationsdashboard V2: kontrollerad lanseringsordning
 
+Den här sidan dokumenterar den tidigare manuella körplanen. Den aktuella lanseringen körs via `scripts/launch-station-v2.ps1`, som automatiskt gör en privat, läsande D1-export och kontrollerar dess SQLite-integritet innan ett separat publiceringsgodkännande. Kör inte de äldre manuella stegen nedan parallellt med skriptet.
+
 Det här är en körplan för **senare, separat godkänd** produktionsdrift. Inga kommandon i avsnitten för migration, deployment, schemaimport eller radering av prov-Worker har körts under förberedelsen. Vädervisning och automatiska väderanrop är pausade i V2. SMHI-testet är därför inte ett lanseringsvillkor. Den neutrala logotypsymbolen används tills godkänt varumärkesmaterial finns; stationsbilden är en märkt AI-illustration och får inte kallas ett stationsfoto.
 
 Migrationerna är ordnade: `0005_station_dashboard_v2.sql` skapar enbart nya tabeller och index för schema, uppgifter och information. `0006_station_monthly_figures.sql` skapar tabellen för månadsresultat och lägger till `station_notices.expires_time`, alltså **efter 0005**. Ingen av dem uppdaterar eller raderar V1:s försäljnings-, personal-, tvätt-, sessions- eller pushrader. Lokal migrationstestning kontrollerar detta mot en V1-databas med syntetiska rader. Verklig produktionsstatus måste ändå kontrolleras före körning.

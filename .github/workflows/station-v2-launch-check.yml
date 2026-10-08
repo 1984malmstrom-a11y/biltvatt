@@ -14,6 +14,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Parse script with Windows PowerShell 5.1
         shell: powershell
         run: |
@@ -25,3 +28,14 @@ jobs:
             exit 1
           }
           Write-Host 'PowerShell 5.1 syntax OK.'
+      - name: Exercise private snapshot checks with synthetic data
+        shell: powershell
+        run: |
+          $snapshot = Join-Path $env:RUNNER_TEMP 'station-v2-synthetic.sql'
+          $migrations = Get-ChildItem 'migrations\*.sql' | Sort-Object Name
+          $sql = ($migrations | ForEach-Object { [IO.File]::ReadAllText($_.FullName, [Text.Encoding]::UTF8) }) -join "`n"
+          [IO.File]::WriteAllText($snapshot, $sql, [Text.UTF8Encoding]::new($false))
+          $result = node .\scripts\station-v2-snapshot.mjs query $snapshot 'PRAGMA integrity_check' | ConvertFrom-Json
+          if (-not $result.ok -or $result.results[0].integrity_check -ne 'ok') { throw 'Snapshot integrity smoke test failed.' }
+          $blocked = node .\scripts\station-v2-snapshot.mjs query $snapshot 'DELETE FROM sales' | ConvertFrom-Json
+          if ($blocked.ok -or $blocked.errorType -ne 'invalid_read_only_query') { throw 'Read-only guard failed.' }

@@ -116,6 +116,20 @@ it("verifierar en syntetisk fullständig D1-export och stoppar en trasig backup"
     const badKeys = spawnSync(process.execPath, [keysScript.pathname, invalid], { encoding: "utf8" });
     expect(badKeys.status).toBe(1);
     expect(badKeys.stdout).toBe("");
+    const snapshotScript = new URL("../scripts/station-v2-snapshot.mjs", import.meta.url);
+    const integrity = spawnSync(process.execPath, [snapshotScript.pathname, "query", valid, "PRAGMA integrity_check"], { encoding: "utf8" });
+    expect(integrity.status).toBe(0);
+    expect(JSON.parse(integrity.stdout)).toMatchObject({
+      ok: true, results: [{ integrity_check: "ok" }],
+    });
+    const mutation = spawnSync(process.execPath, [snapshotScript.pathname, "query", valid, "DELETE FROM sales"], { encoding: "utf8" });
+    expect(JSON.parse(mutation.stdout)).toMatchObject({
+      ok: false, errorType: "invalid_read_only_query",
+    });
+    const corrupted = spawnSync(process.execPath, [snapshotScript.pathname, "query", invalid, "PRAGMA integrity_check"], { encoding: "utf8" });
+    expect(JSON.parse(corrupted.stdout)).toMatchObject({
+      ok: false, errorType: "snapshot_or_query_failed",
+    });
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
