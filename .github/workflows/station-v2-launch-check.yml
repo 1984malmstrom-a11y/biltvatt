@@ -4,10 +4,7 @@ on:
   push:
     branches: [feat/station-dashboard-v2]
     paths:
-      - scripts/launch-station-v2.ps1
-      - scripts/station-v2-snapshot.mjs
-      - scripts/push-keys.mjs
-      - scripts/local-secret.mjs
+      - scripts/**
       - tests/**
       - e2e/**
       - worker/**
@@ -32,12 +29,16 @@ jobs:
         run: npm ci
       - name: Run all unit tests on Windows
         run: npm test
+      - name: Check TypeScript on Windows
+        run: npm run typecheck
       - name: Prepare local-only Playwright D1 and PIN
         run: npm run setup
       - name: Install Playwright Chromium
         run: npx playwright install chromium
       - name: Run all Playwright tests on Windows
         run: npm run test:e2e
+      - name: Build production bundle on Windows
+        run: npm run build
       - name: Parse script with Windows PowerShell 5.1
         shell: powershell
         run: |

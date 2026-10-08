@@ -94,7 +94,8 @@ it("verifierar en syntetisk fullständig D1-export och stoppar en trasig backup"
   const invalid = join(directory, "invalid.sql");
   try {
     writeFileSync(valid, ["0001_initial.sql", "0002_admin_maintenance.sql",
-      "0003_push_notifications.sql", "0004_station_dashboard.sql"].map((name) =>
+      "0003_push_notifications.sql", "0004_station_dashboard.sql",
+      "0005_station_dashboard_v2.sql", "0006_station_monthly_figures.sql"].map((name) =>
       readFileSync(new URL("../migrations/" + name, import.meta.url), "utf8")).join("\n"));
     writeFileSync(invalid, "not a database export");
     const script = fileURLToPath(new URL("../scripts/verify-d1-backup.mjs", import.meta.url));

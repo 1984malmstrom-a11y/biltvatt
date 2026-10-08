@@ -10,6 +10,9 @@ const queries = {
   push_subscriptions: "SELECT id AS key FROM push_subscriptions",
   notification_events: "SELECT id AS key FROM notification_events",
   station_store_daily_sales: "SELECT station_id || '|' || business_date AS key FROM station_store_daily_sales",
+  station_store_sales_audit: "SELECT CAST(id AS TEXT) AS key FROM station_store_sales_audit",
+  station_schedule_periods: "SELECT id AS key FROM station_schedule_periods",
+  station_shifts: "SELECT id AS key FROM station_shifts",
   station_view_sessions: "SELECT token_hash AS key FROM station_view_sessions",
 };
 

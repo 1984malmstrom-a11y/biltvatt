@@ -8,6 +8,7 @@ import {
 } from "./stats";
 import type { Sale, Staff, WashProgram } from "../src/types";
 import { maintenance } from "./maintenance";
+import { launchLocked, launchResetApi } from "./launch-reset";
 import { stationApi } from "./station";
 import { ApiError, body, checkFields, fail, integer, json, text } from "./http";
 import {
@@ -121,6 +122,10 @@ async function api(
     });
   }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
+  if (path.startsWith("/api/admin/launch/")) {
+    const response = await launchResetApi(request, env);
+    if (response) return response;
+  }
   if (
     path.startsWith("/api/push/") ||
     path.startsWith("/api/admin/notifications")
@@ -129,6 +134,8 @@ async function api(
     if (response) return response;
   }
   if (path.startsWith("/api/admin/")) {
+    if ((path.startsWith("/api/admin/sales") || path.startsWith("/api/admin/stats")) &&
+        await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
     const response = await maintenance(request, env);
     if (response) return response;
   }
@@ -154,6 +161,7 @@ async function api(
     return json(rows.results);
   }
   if (path === "/api/sales" && method === "POST") {
+    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
     const data = await body(request);
     checkFields(data, ["staff_id", "wash_program_id", "request_id"]);
     const staffId = text(data.staff_id, "Säljare"),
@@ -206,6 +214,7 @@ async function api(
   }
   const undo = path.match(/^\/api\/sales\/([^/]+)\/void$/);
   if (undo && method === "POST") {
+    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
     const data = await body(request);
     checkFields(data, ["request_id"]);
     const receipt = text(data.request_id, "Kvitto", 36);
@@ -228,6 +237,7 @@ async function api(
     (path === "/api/stats" || /^\/api\/stats\/staff\/[^/]+$/.test(path)) &&
     method === "GET"
   ) {
+    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
     let range;
     try {
       range = dateRange(url);
@@ -296,6 +306,7 @@ async function api(
   const staffPatch = path.match(/^\/api\/admin\/staff\/([^/]+)$/);
   const programPatch = path.match(/^\/api\/admin\/wash-programs\/([^/]+)$/);
   if ((staffPatch || programPatch) && method === "PATCH") {
+    if (programPatch && await launchLocked(env)) fail(503, "Tvättprogrammen är låsta under V2-start.");
     const data = await body(request);
     const isStaff = !!staffPatch,
       id = (staffPatch ?? programPatch)![1];
@@ -356,6 +367,7 @@ async function api(
     return json({ ok: true });
   }
   if (path === "/api/admin/export" && method === "GET") {
+    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
     let range;
     try {
       range = dateRange(url);

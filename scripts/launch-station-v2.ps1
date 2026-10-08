@@ -14,6 +14,7 @@ $baseUrl = 'https://tvattligan.peter-malmstrom.workers.dev'
 $approvedCsvHash = '3F07FA2779C8AFB41BDAABC14A276AD58FF1235882758116FC798B3D5C1501DF'
 $approvedCsvName = 'preem_tingsryd_oktober_2026_IMPORT_KLAR.csv'
 $deployStarted = $false
+$launchLocked = $false
 $snapshotPath = ''
 $oldTables = [ordered]@{
   sales = 'id'
@@ -23,6 +24,9 @@ $oldTables = [ordered]@{
   push_subscriptions = 'id'
   notification_events = 'id'
   station_store_daily_sales = "station_id || '|' || business_date"
+  station_store_sales_audit = 'CAST(id AS TEXT)'
+  station_schedule_periods = 'id'
+  station_shifts = 'id'
   station_view_sessions = 'token_hash'
 }
 
@@ -75,6 +79,45 @@ function Run-UnitTests {
       Stop-Launch "$runFailure Vitest gav ingen läsbar felrapport. Felutskrifter och privata värden visas inte."
     }
   } finally {
+    Remove-Item -LiteralPath $reportPath -ErrorAction SilentlyContinue
+  }
+}
+function Find-PlaywrightFailures($Suite, [string[]]$KnownFiles, [System.Collections.Generic.List[string]]$Failures) {
+  $file = [IO.Path]::GetFileName([string]$Suite.file)
+  $specs = @(); if ($Suite.PSObject.Properties['specs']) { $specs = @($Suite.specs) }
+  foreach ($spec in $specs) {
+    if ($KnownFiles -notcontains $file) { continue }
+    $bad = @($spec.tests | Where-Object { $_.status -ne 'expected' -or @($_.results | Where-Object { $_.status -eq 'failed' }).Count -gt 0 })
+    if ($bad.Count -eq 0) { continue }
+    $title = ([string]$spec.title -replace '[\r\n\t]', ' ').Trim()
+    if ($title.Length -gt 140) { $title = $title.Substring(0, 140) + '…' }
+    if ($title -and $Failures.Count -lt 5) { $Failures.Add("$file`: $title") }
+  }
+  if ($Suite.PSObject.Properties['suites']) {
+    foreach ($child in @($Suite.suites)) { Find-PlaywrightFailures $child $KnownFiles $Failures }
+  }
+}
+function Run-PlaywrightTests {
+  $reportPath = Join-Path ([IO.Path]::GetTempPath()) ("station-v2-playwright-" + [guid]::NewGuid().ToString('N') + '.json')
+  $previous = $env:PLAYWRIGHT_JSON_OUTPUT_FILE
+  try {
+    $env:PLAYWRIGHT_JSON_OUTPUT_FILE = $reportPath
+    try { $null = Run $script:npm @('run','test:e2e','--','--reporter=json') 'Playwright-tester' }
+    catch {
+      $runFailure = $_.Exception.Message
+      $failedNames = [System.Collections.Generic.List[string]]::new()
+      if (Test-Path -LiteralPath $reportPath -PathType Leaf) {
+        try {
+          $report = Get-Content -LiteralPath $reportPath -Raw -Encoding UTF8 | ConvertFrom-Json
+          $known = @(Get-ChildItem -LiteralPath (Join-Path $root 'e2e') -Filter '*.spec.ts' -File | ForEach-Object { $_.Name })
+          foreach ($suite in @($report.suites)) { Find-PlaywrightFailures $suite $known $failedNames }
+        } catch { $failedNames.Clear() }
+      }
+      if ($failedNames.Count -gt 0) { Stop-Launch "$runFailure Misslyckade test: $($failedNames -join '; '). Privata felutskrifter visas inte." }
+      Stop-Launch "$runFailure Inget enskilt test rapporterades; kontrollera lokal webbserver, Chromium eller teststart. Privata felutskrifter visas inte."
+    }
+  } finally {
+    $env:PLAYWRIGHT_JSON_OUTPUT_FILE = $previous
     Remove-Item -LiteralPath $reportPath -ErrorAction SilentlyContinue
   }
 }
@@ -153,7 +196,7 @@ function Check-Git {
   if ($head -ne $remote) { Stop-Launch 'Lokal revision avviker från senaste pushade V2-grenen. Hämta och granska den före lansering.' }
   Info "Git-gren och pushad commit verifierade: $head"
 }
-function Check-Database {
+function Check-Database([switch]$AfterReset) {
   Refresh-ProductionSnapshot 'Databaskontroll'
   $integrity = @(Query 'PRAGMA integrity_check' 'SQLite-integritet')
   if ($integrity.Count -ne 1 -or $integrity[0].integrity_check -ne 'ok') { Stop-Launch 'D1:s integritetskontroll misslyckades.' }
@@ -180,6 +223,7 @@ function Check-Database {
     foreach ($column in $columnSpecs[$table]) { if ($found -notcontains $column) { Stop-Launch "Kolumnen $column saknas i $table." } }
   }
   foreach ($table in $oldTables.Keys) {
+    if ($AfterReset -and $table -in @('sales','sales_audit','notification_events')) { continue }
     $expression = $oldTables[$table]
     $live = @(Query "SELECT $expression AS key FROM $table" "Bevarade rader i $table")
     $liveKeys = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
@@ -194,6 +238,36 @@ function Check-Database {
     Info "$table`: $($live.Count) rader, alla $($before.Count) backuprader kvar."
   }
   Info 'D1-integritet, V2-schema, migrationer och befintliga rader verifierade.'
+}
+function Check-LaunchState([bool]$Locked, [bool]$ResetDone) {
+  $state = @(Query "SELECT key,value FROM settings WHERE key IN ('station_v2_launch_lock','station_v2_zero_reset_done','station_v2_launch_programs')" 'Lanseringsstatus')
+  $values = @{}; foreach ($row in $state) { $values[$row.key] = $row.value }
+  if (($values['station_v2_launch_lock'] -eq '1') -ne $Locked -or
+      ([bool]$values['station_v2_zero_reset_done']) -ne $ResetDone) { Stop-Launch 'Lanseringsspärr eller engångsstatus avviker. Stoppa utan ändring.' }
+  if ($Locked -and -not $values['station_v2_launch_programs']) { Stop-Launch 'Ursprungliga aktiva tvättprogram saknas.' }
+  if ($Locked -or $ResetDone) {
+    try { $originallyActive = @(ConvertFrom-Json -InputObject $values['station_v2_launch_programs']) }
+    catch { Stop-Launch 'Listan över ursprungliga tvättprogram är ogiltig.' }
+    if ($originallyActive.Count -eq 0) { Stop-Launch 'Inget ursprungligt aktivt tvättprogram finns att återställa.' }
+  }
+  if ($Locked) {
+    $stillActive = @(Query 'SELECT id FROM wash_programs WHERE active=1' 'Spärrade tvättprogram')
+    if ($stillActive.Count -ne 0) { Stop-Launch 'Ett tvättprogram är fortfarande aktivt; nya registreringar kan ske. Stoppa.' }
+  }
+  if (-not $Locked -and $ResetDone) {
+    $activeIds = @(Query 'SELECT id FROM wash_programs WHERE active=1' 'Återställda tvättprogram' | ForEach-Object { $_.id } | Sort-Object)
+    $expectedIds = @($originallyActive | ForEach-Object { [string]$_ } | Sort-Object)
+    if ($activeIds.Count -ne $expectedIds.Count) { Stop-Launch 'Antalet återställda tvättprogram avviker.' }
+    for ($i=0; $i -lt $expectedIds.Count; $i++) {
+      if ($activeIds[$i] -cne $expectedIds[$i]) { Stop-Launch 'Tvättprogrammens aktivstatus återställdes inte korrekt.' }
+    }
+  }
+}
+function Write-LaunchState([string]$Operation) {
+  $raw = Run $script:node @('scripts/station-v2-write.mjs',$Operation) "Lanseringsspärr: $Operation"
+  try { $result = ConvertFrom-Json -InputObject $raw }
+  catch { Stop-Launch "Lanseringsspärr: $Operation gav inte ett giltigt statusmeddelande." }
+  if ($result.ok -ne $true) { Stop-Launch "Lanseringsspärr: $Operation misslyckades ($($result.errorType))." }
 }
 function Check-WeatherPaused {
   $source = Get-Content -LiteralPath (Join-Path $root 'src\StationDashboardV2.tsx') -Raw -Encoding UTF8
@@ -248,12 +322,24 @@ function Check-Schedule {
     }
     $script:shifts += $row
   }
-  $existing = @(Query "SELECT s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-09-30' AND '2026-11-01'" 'Befintliga oktoberpass')
+  $existing = @(Query "SELECT s.period_id,s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-09-30' AND '2026-11-01'" 'Befintliga oktoberpass')
+  $script:scheduleAlreadyImported = $false
+  $script:schedulePeriodId = ''
+  $periods = @($existing | Where-Object { $_.work_date -ge '2026-10-01' -and $_.work_date -le '2026-10-31' } | Select-Object -ExpandProperty period_id -Unique)
+  if ($periods.Count -eq 1 -and $existing.Count -eq 111) {
+    $expectedRows = @($script:shifts | ForEach-Object { "$($_.work_date)|$($_.first_name)|$($_.starts_at)|$($_.ends_at)|$($_.status)" } | Sort-Object)
+    $actualRows = @($existing | ForEach-Object { "$($_.work_date)|$($_.first_name)|$($_.starts_at)|$($_.ends_at)|$($_.status)" } | Sort-Object)
+    $same = $true
+    for ($i = 0; $i -lt 111; $i++) { if ($expectedRows[$i] -cne $actualRows[$i]) { $same = $false; break } }
+    if ($same) { $script:scheduleAlreadyImported = $true; $script:schedulePeriodId = [string]$periods[0] }
+  }
+  if (-not $script:scheduleAlreadyImported) {
   foreach ($row in $script:shifts) {
     foreach ($prior in $existing) {
       $conflict = Collision $row $prior
       if ($conflict) { Stop-Launch "CSV har $conflict mot ett befintligt pass. Ingen import görs." }
     }
+  }
   }
   $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'" 'Antal oktoberpass före import')
   $script:beforeOctober = [int]$octoberCount[0].n
@@ -261,7 +347,7 @@ function Check-Schedule {
   if ($script:csvHash -ne $approvedCsvHash) {
     Stop-Launch 'CSV-filen är inte den godkända bilagan (SHA-256 avviker). Ingen import görs.'
   }
-  Info "Privat oktoberfil verifierad: 111 rader, inga dubbletter eller aktiva överlapp. Befintliga oktoberrader: $beforeOctober."
+  Info "Privat oktoberfil verifierad: 111 rader, inga dubbletter eller aktiva överlapp. Befintliga oktoberrader: $beforeOctober. Redan importerad: $scheduleAlreadyImported."
   Write-Host 'Förhandsgranskning på den här datorn (lägg inte terminalutskriften i Git eller chatt):'
   $script:shifts | Sort-Object work_date,starts_at,first_name | Format-Table work_date,first_name,starts_at,ends_at,status -AutoSize | Out-Host
   Write-Host 'Filens godkända SHA-256, alla rader och konflikter är kontrollerade automatiskt. Förhandsgranskningen visas lokalt.'
@@ -322,7 +408,13 @@ try {
   $baselineJson = Run $node @('scripts/station-v2-backup-keys.mjs',$BackupPath) 'Läsning av backuprader'
   $baseline = ConvertFrom-Json -InputObject $baselineJson
   Info "Backup verifierad: $($backupInfo.bytes) byte. Nycklar stannar i minnet och visas inte."
-  Check-Database
+  Refresh-ProductionSnapshot 'Inledande produktionsstatus'
+  $initialState = @(Query "SELECT key,value FROM settings WHERE key IN ('station_v2_launch_lock','station_v2_zero_reset_done')" 'Inledande lanseringsstatus')
+  $stateValues = @{}; foreach ($row in $initialState) { $stateValues[$row.key] = $row.value }
+  $resumeLocked = $stateValues['station_v2_launch_lock'] -eq '1'
+  $resumeResetDone = [bool]$stateValues['station_v2_zero_reset_done']
+  if ($resumeResetDone -and -not $resumeLocked) { Stop-Launch 'Tvättligans engångsnollställning är redan färdig och spärren är hävd. Skriptet kör inte en andra gång.' }
+  Check-Database -AfterReset:$resumeResetDone
   Check-WeatherPaused
   if (-not $SchedulePath) {
     $SchedulePath = Find-ApprovedCsv
@@ -337,25 +429,46 @@ try {
   $null = Run $npx @('playwright','install','chromium') 'Installation av Chromium för test'
   $null = Run $npm @('run','typecheck') 'TypeScript-kontroll'
   Run-UnitTests
-  $null = Run $npm @('run','test:e2e') 'Playwright-tester'
+  Run-PlaywrightTests
   $null = Run $npm @('run','build') 'Produktionsbuild'
   Info 'TypeScript, enhetstester, Playwright och produktionsbuild passerade.'
   Check-Git
   Check-WeatherPaused
-  Check-Database
+  Check-Database -AfterReset:$resumeResetDone
   if ((Get-FileHash -LiteralPath $BackupPath -Algorithm SHA256).Hash -ne $backupHash -or
       (Get-FileHash -LiteralPath $SchedulePath -Algorithm SHA256).Hash -ne $csvHash) {
     Stop-Launch 'Backupen eller CSV-filen ändrades under förkontrollen.'
   }
   Info 'Alla förkontroller passerade. Produktions-Workern är fortfarande oförändrad.'
+  Check-LaunchState $resumeLocked $resumeResetDone
   $publish = Read-Host 'Skriv PUBLICERA V2 för att publicera till produktion; Enter avbryter'
   if ($publish -cne 'PUBLICERA V2') { Info 'Publicering avbruten på användarens begäran.'; exit 0 }
+  if (-not $resumeResetDone) {
+    $zero = Read-Host 'Skriv NOLLSTÄLL TVÄTTLIGAN för att ta bort gamla tvättförsäljningar efter en ny privat backup; Enter avbryter'
+    if ($zero -cne 'NOLLSTÄLL TVÄTTLIGAN') { Info 'Nollställning och publicering avbröts.'; exit 0 }
+  }
+  $launchLocked = $true
+  if (-not $resumeLocked) { Write-LaunchState 'lock' }
+  Refresh-ProductionSnapshot 'Spärrad produktionsstatus'
+  Check-LaunchState $true $resumeResetDone
+  if (-not $resumeResetDone) {
+    $lockedSalesRows = @(Query 'SELECT COUNT(*) AS n FROM sales' 'Tvättförsäljningar före nollställning')
+    $lockedSalesCount = [int]$lockedSalesRows[0].n
+    $finalBackupPath = Join-Path (Split-Path -Parent $BackupPath) ("tvattligan-before-zero-reset-" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.sql')
+    Copy-Item -LiteralPath $snapshotPath -Destination $finalBackupPath -ErrorAction Stop
+    $finalBackupPath = Check-PrivateFile $finalBackupPath 'Nollställningsbackupen'
+    $finalBackupHash = (Get-FileHash -LiteralPath $finalBackupPath -Algorithm SHA256).Hash
+    $finalCheck = ConvertFrom-Json -InputObject (Run $node @('scripts/verify-d1-backup.mjs',$finalBackupPath) 'Verifiering av spärrad backup')
+    if ($finalCheck.verified -ne $true -or $finalCheck.sha256.ToUpperInvariant() -ne $finalBackupHash) { Stop-Launch 'Den spärrade backupen kunde inte verifieras.' }
+    Info "Privat backup efter spärr verifierad och sparad: $finalBackupPath"
+  }
   $deployStarted = $true
   $null = Run $node @($wranglerCli,'deploy','--config','wrangler.jsonc') 'Publicering av V2'
   Info 'V2 publicerad. Kör läsande efterkontroller; ingen schemaimport har gjorts.'
-  foreach ($path in @('/','/station','/api/staff','/api/wash-programs','/api/stats','/api/push/public-key')) {
+  foreach ($path in @('/','/station','/api/staff','/api/wash-programs','/api/push/public-key')) {
     if ((Http-Status "$baseUrl$path") -ne 200) { Stop-Launch "Efterkontrollen misslyckades för $path. Stoppa och granska produktionen." }
   }
+  if ((Http-Status "$baseUrl/api/stats") -ne 503) { Stop-Launch 'Tvättligans lanseringsspärr syns inte från den publicerade Workern.' }
   $push = Invoke-RestMethod -Uri "$baseUrl/api/push/public-key" -TimeoutSec 20
   if (@($baseline.push_subscriptions).Count -gt 0 -and $push.configured -ne $true) {
     Stop-Launch 'Pushprenumerationer finns, men produktionsnycklarna saknas efter publicering.'
@@ -363,7 +476,7 @@ try {
   foreach ($path in @('/api/station/dashboard','/api/station/v2','/api/admin/station/v2/schedule')) {
     Check-Protected $path
   }
-  Check-Database
+  Check-Database -AfterReset:$resumeResetDone
   Info 'Tvättligans läsande API:er fungerar och skyddade API:er nekar oinloggade anrop.'
   $securePin = Read-Host 'Ange admin-PIN för skyddad dashboardkontroll och valfri schemaimport' -AsSecureString
   if (-not $securePin -or $securePin.Length -eq 0) {
@@ -383,6 +496,30 @@ try {
   if (-not $dashboard.business_date -or -not $dashboard.comparison_date -or -not $overview.today) {
     Stop-Launch 'Skyddad dashboard returnerade inte förväntade V2-fält.'
   }
+  $resetStatus = Invoke-RestMethod -Uri "$baseUrl/api/admin/launch/status" -WebSession $session -TimeoutSec 20
+  if ($resetStatus.locked -ne $true -or [bool]$resetStatus.reset_done -ne $resumeResetDone -or
+      (-not $resumeResetDone -and [int]$resetStatus.sales_count -ne [int]$lockedSalesCount)) {
+    Stop-Launch 'Nollställningens behörighet, spärr eller förväntat antal stämmer inte.'
+  }
+  if (-not $resumeResetDone) {
+    try {
+      $resetBody = @{ confirmation='NOLLSTÄLL TVÄTTLIGAN'; backup_sha256=$finalBackupHash; expected_sales_count=[int]$lockedSalesCount } | ConvertTo-Json -Compress
+      $resetResult = Invoke-RestMethod -Uri "$baseUrl/api/admin/launch/reset-wash" -Method Post -ContentType 'application/json; charset=utf-8' -Body $resetBody -WebSession $session -TimeoutSec 60
+    } catch { Stop-Launch 'Engångsnollställningens svar uteblev eller nekades. Spärren är kvar; kör samma lanseringskommando igen för säker återupptagning.' }
+    finally { $resetBody = $null }
+    if ($resetResult.deleted_sales -ne [int]$lockedSalesCount) { Stop-Launch 'Nollställningens antal avviker. Spärren är kvar.' }
+  }
+  Check-Database -AfterReset
+  Check-LaunchState $true $true
+  foreach ($table in @('sales','sales_audit','maintenance_previews','maintenance_preview_sales','reset_batches')) {
+    $remaining = @(Query "SELECT COUNT(*) AS n FROM $table" "Nollställning: $table")
+    if ([int]$remaining[0].n -ne 0) { Stop-Launch "Gamla rader finns kvar i $table. Spärren är kvar." }
+  }
+  $remainingGoalEvents = @(Query "SELECT COUNT(*) AS n FROM notification_events WHERE event_type IN ('daily_goal_close','daily_goal_reached')" 'Gamla målstyrda pushhändelser')
+  if ([int]$remainingGoalEvents[0].n -ne 0) {
+    Stop-Launch 'Gamla målstyrda pushhändelser finns kvar. Spärren är kvar.'
+  }
+  Info 'Tvättligans tidigare försäljning, historik, audit och målstyrda pushhändelser är borta. Butiksförsäljning och prenumerationer är kvar.'
   $adminCookie = $session.Cookies.GetCookies([uri]"$baseUrl/api/station/dashboard")['tvattligan_session']
   if (-not $adminCookie) { Stop-Launch 'Admincookie saknas. Webbläsarkontroll och import stoppas.' }
   $smokeInput = @{baseUrl=$baseUrl;sessionCookie=$adminCookie.Value} | ConvertTo-Json -Compress
@@ -392,19 +529,24 @@ try {
   Info ($smoke -join "`n")
   Check-Schedule
   if ((Get-FileHash -LiteralPath $SchedulePath -Algorithm SHA256).Hash -ne $csvHash) { Stop-Launch 'CSV-filen ändrades efter förhandsgranskningen.' }
-  $import = Read-Host 'Skriv IMPORTERA 111 PASS för att lägga till schemat; Enter stoppar före import'
-  if ($import -cne 'IMPORTERA 111 PASS') {
-    Info 'Schemat importerades inte. Gå till /station/admin för manuell import och kontroll.'
-    exit 0
+  if ($scheduleAlreadyImported) {
+    $result = [pscustomobject]@{ imported=111; period_id=$schedulePeriodId }
+    Info 'De 111 godkända passen finns redan exakt i en importerad period. Ingen andra import görs.'
+  } else {
+    $import = Read-Host 'Skriv IMPORTERA 111 PASS för att lägga till schemat; Enter stoppar före import'
+    if ($import -cne 'IMPORTERA 111 PASS') {
+      Info 'Schemat importerades inte. Lanseringsspärren ligger kvar tills importen har gjorts och verifierats.'
+      exit 0
+    }
+    $payload = @{label='Oktober 2026';starts_on='2026-10-01';ends_on='2026-10-31';shifts=$shifts} | ConvertTo-Json -Depth 8 -Compress
+    try {
+      $result = Invoke-RestMethod -Uri "$baseUrl/api/admin/station/v2/schedule/import" -Method Post -ContentType 'application/json; charset=utf-8' -Body $payload -WebSession $session -TimeoutSec 60
+    } catch { Stop-Launch 'Serverimporten misslyckades eller svaret uteblev. Spärren är kvar; kör samma kommando igen för kontrollerad återupptagning.' }
+    if ($result.imported -ne 111 -or $result.period_id -notmatch '^[0-9a-f-]{36}$') {
+      Stop-Launch 'Importsvaret är oväntat. Spärren är kvar; kör samma kommando igen för kontroll.'
+    }
   }
-  $payload = @{label='Oktober 2026';starts_on='2026-10-01';ends_on='2026-10-31';shifts=$shifts} | ConvertTo-Json -Depth 8 -Compress
-  try {
-    $result = Invoke-RestMethod -Uri "$baseUrl/api/admin/station/v2/schedule/import" -Method Post -ContentType 'application/json; charset=utf-8' -Body $payload -WebSession $session -TimeoutSec 60
-  } catch { Stop-Launch 'Serverimporten misslyckades eller svaret uteblev. Kontrollera /station/admin innan något nytt försök; ingen automatisk återställning görs.' }
-  if ($result.imported -ne 111 -or $result.period_id -notmatch '^[0-9a-f-]{36}$') {
-    Stop-Launch 'Importsvaret är oväntat. Kontrollera perioden i /station/admin innan nytt försök.'
-  }
-  Check-Database
+  Check-Database -AfterReset
   $importedRows = @(Query "SELECT work_date,first_name,starts_at,ends_at,status FROM station_shifts WHERE period_id='$($result.period_id)'" 'Återläsning av importerad schemaperiod')
   if ($importedRows.Count -ne 111) { Stop-Launch 'Efterkontroll: antalet importerade pass är inte 111.' }
   $expected = @($shifts | ForEach-Object { "$($_.work_date)|$($_.first_name)|$($_.starts_at)|$($_.ends_at)|$($_.status)" } | Sort-Object)
@@ -412,7 +554,8 @@ try {
   for ($i = 0; $i -lt 111; $i++) { if ($expected[$i] -cne $actual[$i]) { Stop-Launch 'Efterkontroll: importerade pass skiljer sig från den privata CSV-filen.' } }
   $octoberCount = @(Query "SELECT COUNT(*) AS n FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id='tingsryd' AND s.work_date BETWEEN '2026-10-01' AND '2026-10-31'" 'Antal oktoberpass efter import')
   $afterOctober = [int]$octoberCount[0].n
-  if ($afterOctober -ne $beforeOctober + 111) { Stop-Launch 'Efterkontroll: oktobers radantal ökade inte med exakt 111.' }
+  $expectedOctober = if ($scheduleAlreadyImported) { $beforeOctober } else { $beforeOctober + 111 }
+  if ($afterOctober -ne $expectedOctober) { Stop-Launch 'Efterkontroll: oktobers radantal avviker.' }
   $todayOverview = Invoke-RestMethod -Uri "$baseUrl/api/station/v2" -WebSession $session -TimeoutSec 20
   if ($todayOverview.today -ge '2026-10-01' -and $todayOverview.today -le '2026-10-31') {
     foreach ($row in @($shifts | Where-Object { $_.work_date -eq $todayOverview.today -and $_.status -eq 'active' })) {
@@ -422,7 +565,14 @@ try {
       if ($match.Count -lt 1) { Stop-Launch 'Efterkontroll: ett aktivt pass för dagens datum saknas i dashboardens API.' }
     }
   }
-  Info "KLART: V2 är publicerad och 111 pass importerade/verifierade i perioden $($result.period_id). Kontrollera Idag jobbar och push på en avsedd enhet."
+  Write-LaunchState 'unlock'
+  Refresh-ProductionSnapshot 'Kontroll efter öppning'
+  Check-LaunchState $false $true
+  if ((Http-Status "$baseUrl/api/stats") -ne 200 -or (Http-Status "$baseUrl/api/wash-programs") -ne 200) {
+    Stop-Launch 'Tvättligans API öppnade inte korrekt efter nollställningen.'
+  }
+  $launchLocked = $false
+  Info "KLART: V2 är publicerad, Tvättligan nollställd och 111 pass importerade/verifierade i perioden $($result.period_id). Kontrollera Idag jobbar och push på en avsedd enhet."
 } catch {
   Write-Host "STOPP: $($_.Exception.Message)" -ForegroundColor Red
   if ($deployStarted) {
@@ -430,5 +580,6 @@ try {
   } else {
     Write-Host 'Ingen publicering, migration eller automatisk databasåterställning har körts.' -ForegroundColor Yellow
   }
+  if ($launchLocked) { Write-Host 'VIKTIGT: Tvättligans lanseringsspärr kan vara aktiv. Den privata backupen måste behållas. Kontrollera status innan ett nytt försök.' -ForegroundColor Yellow }
   exit 1
 }
