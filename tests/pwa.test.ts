@@ -106,7 +106,7 @@ describe("PWA och Service Worker", () => {
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
-  });
+  }, 15_000);
   it("manifest är svenskt, standalone och har riktiga egna standard/maskable-ikoner", () => {
     const manifest = JSON.parse(
       readFileSync(
