@@ -504,7 +504,12 @@ describe("Leverans, mottagare och spam-skydd", () => {
     await subscribe(null, "bad");
     await subscribe(null, "good");
     await enable();
-    transport.mockRejectedValueOnce(new Error("Transport unavailable"));
+    // Deliveries run concurrently; bind the simulated failure to the intended endpoint.
+    transport.mockImplementation(async (input) => {
+      if (String(input).endsWith("/bad"))
+        throw new Error("Transport unavailable");
+      return new Response(null, { status: 201 });
+    });
     expect(await (await manual()).json()).toMatchObject({
       sent: 1,
       failed: 1,

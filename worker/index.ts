@@ -8,6 +8,7 @@ import {
 } from "./stats";
 import type { Sale, Staff, WashProgram } from "../src/types";
 import { maintenance } from "./maintenance";
+import { stationApi } from "./station";
 import { ApiError, body, checkFields, fail, integer, json, text } from "./http";
 import {
   configuredKeys,
@@ -42,7 +43,7 @@ function color(value: unknown): string {
     return fail(400, "Välj en giltig färg.");
   return value;
 }
-async function requireAdmin(request: Request, env: Env) {
+export async function requireAdmin(request: Request, env: Env) {
   const token = request.headers
     .get("Cookie")
     ?.match(/(?:^|;\s*)tvattligan_session=([a-f0-9-]+)/)?.[1];
@@ -75,6 +76,10 @@ async function api(
       fail(403, "Anrop från en annan webbplats är inte tillåtet.");
   }
   const now = new Date().toISOString();
+  if (path.startsWith("/api/station/") || path.startsWith("/api/admin/station/")) {
+    const response = await stationApi(request, env, requireAdmin);
+    if (response) return response;
+  }
   if (path === "/api/admin/login" && method === "POST") {
     if (!env.ADMIN_PIN || !/^\d{6,12}$/.test(env.ADMIN_PIN))
       fail(503, "Administratörs-PIN är inte konfigurerad på servern.");

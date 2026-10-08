@@ -41,6 +41,8 @@ Tester täcker serverns prisuppslag, begärande-ID/dubbletter, kvittoskyddad mak
 
 ## Vyer
 
+**Stationsdashboard V1:** `/station` visar gårdagens manuellt rapporterade butiksförsäljning exklusive moms för Preem Tingsryd. Jämförelsen är samma veckodag exakt 364 kalenderdagar tidigare. `/station/login` aktiverar en separat lässession med en engångskod från `/station/admin`. En administratör använder befintlig PIN-session för dagsregistrering, rättningar, audit och för att återkalla visningsenheter. Stationsdata lagras i egna D1-tabeller från `0004_station_dashboard.sql`; Tvättligans försäljningar och pushdata används inte i beloppen. Import av Excel-historik 2025 förbereds enligt [docs/station-import.md](docs/station-import.md). Ingen historisk butikssiffra ingår i koden.
+
 - **Registrera:** namnval, sex färgkodade touchkort, omedelbar registrering, bekräftelse och ”Ångra senaste”.
 - **Statistik:** Idag, Vecka (måndag–söndag), Månad och Valfri period; hela laget eller en säljare, fyra KPI:er, Snittköpsligan, topplistor för antal/omsättning/Preemium-andel samt dagliga/månatliga lagmål. Automatisk uppdatering var 30:e sekund. Valfri period är begränsad till 367 dagar per anrop. Programfördelningen finns kvar i Admin.
 - **Admin:** Översikt, Personal, Försäljningar, Tvättprogram, Mål, Statistik, Exportera, Notiser och Inställningar. Lägg till/redigera personal och avatarfärg, aktivera/inaktivera personal/program, arkivera historisk personal, korrigera och makulera/återställa registreringar, ändra priser och sortering, spara mål och exportera CSV. Separata, granskade nollställningar finns under Statistik.

@@ -8,3 +8,11 @@ coverage/
 test-results/
 playwright-report/
 .vapid-keys.json
+# Private station source and generated SQL must stay outside Git.
+*.csv
+*.xls
+*.xlsx
+*.xlsm
+preem_tingsryd_butik_2025_ex_moms*
+station-import*.sql
+station-preflight*.sql
