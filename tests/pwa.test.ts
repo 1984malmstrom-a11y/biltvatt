@@ -70,13 +70,14 @@ describe("PWA och Service Worker", () => {
           "$target = $env:VAPID_TEST_FILE; " +
           "if (-not $target) { Write-Output 'target=missing'; exit 1 }; " +
           "if (-not (Test-Path -LiteralPath $target -PathType Leaf)) { Write-Output 'file=missing'; exit 1 }; " +
-          "try { $acl = Get-Acl -LiteralPath $target -ErrorAction Stop } " +
+          "try { $acl = [System.IO.File]::GetAccessControl($target) } " +
           "catch { Write-Output ('acl=' + $_.Exception.GetType().Name); exit 1 }; " +
           "if (-not $acl) { Write-Output 'acl=empty'; exit 1 }; " +
           "$broadCount = 0; " +
           "$broad = @('S-1-1-0','S-1-5-11','S-1-5-32-545'); " +
-          "foreach ($rule in $acl.Access) { " +
-          "$sid = $rule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; " +
+          "$rules = $acl.GetAccessRules($true, $true, [System.Security.Principal.SecurityIdentifier]); " +
+          "foreach ($rule in $rules) { " +
+          "$sid = $rule.IdentityReference.Value; " +
           "if ($rule.AccessControlType -eq 'Allow' -and $sid -in $broad) { $broadCount++ } " +
           "}; Write-Output \"protected=$($acl.AreAccessRulesProtected);broad=$broadCount\"; " +
           "if (-not $acl.AreAccessRulesProtected -or $broadCount -gt 0) { exit 1 }",
