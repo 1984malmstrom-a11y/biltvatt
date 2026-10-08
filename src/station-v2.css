@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Caveat V2";
+  src: url("/fonts/caveat-latin-500-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
 .station-v2-shell {
   --ink: #071c4b;
   --muted: #59729f;
@@ -214,10 +222,11 @@
   margin-top: auto !important;
   white-space: nowrap;
   color: #12275c !important;
-  font-size: clamp(22px, 2.3vw, 43px);
-  font-family: "Segoe Print", "Bradley Hand", cursive;
-  font-style: italic;
-  transform: rotate(-2deg);
+  font-size: clamp(26px, 2.55vw, 47px);
+  font-family: "Caveat V2", "Segoe Print", cursive;
+  font-weight: 500;
+  line-height: 1;
+  transform: rotate(-1.5deg);
   padding-top: 1vh;
 }
 .v2-trophy {
@@ -245,29 +254,44 @@
 .v2-result-ring {
   width: min(18vw, 32vh);
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, #59c788 0 74%, #e8f0f8 74% 100%);
+  position: relative;
   display: grid;
   place-items: center;
-  transform: rotate(-13deg);
 }
-.v2-result-ring.negative {
-  background: conic-gradient(from 0deg, #d88781 0 74%, #e8f0f8 74% 100%);
+.v2-result-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
 }
-.v2-result-ring.neutral {
-  background: #e8f0f8;
+.v2-result-ring circle {
+  fill: none;
+  stroke-width: 9.5;
+}
+.v2-ring-track {
+  stroke: #e7eff8;
+}
+.v2-ring-fill {
+  stroke: #5bc88a;
+  stroke-dasharray: 233 321;
+  stroke-linecap: round;
+}
+.v2-result-ring.negative .v2-ring-fill {
+  stroke: #d88781;
+}
+.v2-result-ring.neutral .v2-ring-fill {
+  display: none;
 }
 .v2-result-ring > div {
   width: 82%;
   height: 82%;
-  background: #fff;
-  border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  transform: rotate(13deg);
 }
 .v2-result-ring strong {
   font-size: clamp(27px, 2.9vw, 54px);
@@ -287,14 +311,15 @@
   letter-spacing: 0.09em;
   color: #405b8c;
   line-height: 1.3;
+  max-width: 72%;
 }
 .v2-chart {
-  width: 90%;
+  width: 88%;
   height: 21%;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1vw;
+  gap: clamp(8px, 0.8vw, 17px);
 }
 .v2-bar-column {
   flex: 1;
@@ -304,18 +329,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.7vh;
+  gap: 0.6vh;
   color: #6078aa;
   font-size: clamp(11px, 0.85vw, 15px);
 }
 .v2-bar {
-  width: 65%;
-  border-radius: 4px 4px 0 0;
-  background: #dae5f3;
+  width: 70%;
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, #d5e2f2, #e0eaf5);
   min-height: 4px;
 }
 .v2-bar.current {
-  background: #5fca8b;
+  background: linear-gradient(180deg, #5ac987, #62cb91);
 }
 .v2-chart p {
   font-size: 14px;
@@ -324,10 +349,9 @@
   align-self: center;
 }
 .v2-sales-visual small {
-  font-family: "Segoe Print", cursive;
+  font-family: "Caveat V2", "Segoe Print", cursive;
   color: #6283b7;
-  font-size: clamp(12px, 1vw, 20px);
-  font-style: italic;
+  font-size: clamp(16px, 1.35vw, 24px);
   align-self: flex-end;
 }
 .v2-side {
@@ -429,7 +453,7 @@
   height: 60%;
   overflow: hidden;
 }
-.v2-task-row {
+.station-v2-shell .v2-task-row {
   display: flex;
   align-items: center;
   text-align: left;
@@ -441,11 +465,13 @@
   border-bottom: 1px solid #dfe9f4;
   background: transparent;
   color: #0b2454;
-  font-size: clamp(14px, 1.13vw, 21px);
-  gap: 1.3vw;
+  font-size: clamp(16px, 1.05vw, 20px);
+  font-weight: 500;
+  line-height: 1.2;
+  gap: clamp(10px, 1vw, 18px);
 }
-.v2-task-row.done {
-  color: #5e7190;
+.station-v2-shell .v2-task-row.done {
+  color: #4d6486;
 }
 .v2-check {
   width: clamp(22px, 1.8vw, 30px);
@@ -501,9 +527,7 @@
 .v2-station-image em {
   position: relative;
   color: #284e83;
-  font:
-    italic clamp(16px, 1.7vw, 30px) "Segoe Print",
-    cursive;
+  font: 500 clamp(20px, 2vw, 34px) "Caveat V2", "Segoe Print", cursive;
   text-align: center;
   margin-right: 8%;
 }
@@ -774,7 +798,7 @@
   }
   .v2-message {
     white-space: normal;
-    font-size: 21px;
+    font-size: 26px;
     margin-top: 25px !important;
   }
   .v2-sales-visual {
@@ -792,6 +816,8 @@
   }
   .v2-result-ring span {
     font-size: 9px;
+    max-width: 100%;
+    letter-spacing: 0.05em;
   }
   .v2-chart {
     height: 115px;
@@ -818,11 +844,13 @@
   }
   .v2-task-row {
     height: 43px;
-    font-size: 15px;
+  }
+  .station-v2-shell .v2-task-row {
+    font-size: 16px;
   }
   .v2-info {
     width: 100%;
-    min-height: 170px;
+    min-height: 120px;
   }
   .v2-station-image {
     height: 160px;
@@ -869,7 +897,7 @@
     padding-top: 12px;
   }
   .v2-message {
-    font-size: clamp(19px, 2vw, 28px);
+    font-size: clamp(29px, 2.5vw, 37px);
   }
   .v2-result-ring {
     width: min(17vw, 30vh);

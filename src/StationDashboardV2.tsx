@@ -357,21 +357,17 @@ export default function StationDashboardV2() {
               className={`v2-result-ring ${tone}`}
               aria-label="Resultatindikator, bågen är dekorativ och visar ingen skala"
             >
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle className="v2-ring-track" cx="60" cy="60" r="51" />
+                <circle className="v2-ring-fill" cx="60" cy="60" r="51" />
+              </svg>
               <div>
                 <strong>
                   {summary?.percent === null || !summary
                     ? "—"
                     : pct(summary.percent)}
                 </strong>
-                <span>
-                  {tone === "negative"
-                    ? "LÄGRE"
-                    : tone === "positive"
-                      ? "HÖGRE"
-                      : "JÄMFÖRELSE"}
-                  <br />
-                  ÄN FÖRRA ÅRET
-                </span>
+                <span>MOT 52 VECKOR TIDIGARE</span>
               </div>
             </div>
             <div className="v2-chart">
