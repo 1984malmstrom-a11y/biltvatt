@@ -332,6 +332,8 @@ try {
   $SchedulePath = Check-PrivateFile $SchedulePath 'Oktober-CSV'
   Check-Schedule
   Info 'Kör lokala tester och produktionsbuild före publicering.'
+  # setup writes only ignored .dev.vars and applies D1 migrations with --local.
+  $null = Run $npm @('run','setup') 'Lokal testmiljö för Playwright'
   $null = Run $npx @('playwright','install','chromium') 'Installation av Chromium för test'
   $null = Run $npm @('run','typecheck') 'TypeScript-kontroll'
   Run-UnitTests

@@ -7,7 +7,12 @@ on:
       - scripts/launch-station-v2.ps1
       - scripts/station-v2-snapshot.mjs
       - scripts/push-keys.mjs
+      - scripts/local-secret.mjs
       - tests/**
+      - e2e/**
+      - worker/**
+      - migrations/**
+      - playwright.config.ts
       - package.json
       - package-lock.json
       - .github/workflows/station-v2-launch-check.yml
@@ -27,6 +32,12 @@ jobs:
         run: npm ci
       - name: Run all unit tests on Windows
         run: npm test
+      - name: Prepare local-only Playwright D1 and PIN
+        run: npm run setup
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+      - name: Run all Playwright tests on Windows
+        run: npm run test:e2e
       - name: Parse script with Windows PowerShell 5.1
         shell: powershell
         run: |
