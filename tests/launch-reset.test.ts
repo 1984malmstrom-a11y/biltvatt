@@ -17,6 +17,8 @@ describe('one-time V2 Tvättligan reset', () => {
     f.db.exec(sql('lock'));
     expect((await f.call('/admin/launch/reset-wash', 'POST', approval, cookie)).status).toBe(409);
     expect((await f.sale()).status).toBe(503);
+    f.db.prepare("DELETE FROM settings WHERE key='station_v2_launch_lock'").run();
+    expect((await f.sale()).status).toBe(400); // V1 also requires an active program.
     f.db.close();
   });
 
@@ -26,6 +28,7 @@ describe('one-time V2 Tvättligan reset', () => {
     const first = await (await f.sale()).json() as { id: string };
     const second = await (await f.sale('peter', 'fin')).json() as { id: string };
     const stamp = '2026-10-08T12:00:00.000Z';
+    f.db.prepare("UPDATE wash_programs SET active=0 WHERE id='borstlos'").run();
     f.db.prepare("UPDATE sales SET voided_at=?,void_reason='ADMIN_VOID',updated_by='ADMIN',updated_at=?,revision=revision+1 WHERE id=?").run(stamp, stamp, first.id);
     expect(f.db.prepare('SELECT COUNT(*) n FROM sales_audit').get()).toMatchObject({ n: 1 });
     f.db.prepare("INSERT INTO push_subscriptions(id,endpoint,p256dh,auth,management_token_hash,created_at,updated_at) VALUES('sub','https://example.test/push','key','auth','hash',?,?)").run(stamp, stamp);
