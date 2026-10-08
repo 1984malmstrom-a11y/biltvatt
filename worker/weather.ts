@@ -66,36 +66,27 @@ export function selectWeather(data: unknown, now = new Date()): Weather {
   };
 }
 
-// Cache the source series, not the selected periods: tomorrow changes at local midnight.
+// Only this public SMHI subrequest is cacheable. The authenticated station API
+// response remains no-store, and the local-day selection runs on every request.
+export function fetchSmhiForecast(fetcher: typeof fetch = fetch): Promise<Response> {
+  return fetcher(SMHI_POINT_URL, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    redirect: "error",
+    signal: AbortSignal.timeout(8000),
+    cf: {
+      // Scope the override to this one GET; never cache redirects or errors.
+      cacheEverything: true,
+      cacheTtlByStatus: { "200": CACHE_SECONDS, "201-599": -1 },
+    },
+  });
+}
+
 export async function getWeather(
   now = new Date(),
   fetcher: typeof fetch = fetch,
-  cache: Cache | undefined = (globalThis.caches as CacheStorage & { default?: Cache })?.default,
-  cacheKey = SMHI_POINT_URL,
 ): Promise<Weather> {
-  const key = new Request(cacheKey);
-  let response: Response | undefined;
-  try {
-    response = await cache?.match(key);
-  } catch {
-    // A transient edge-cache failure must not hide an available forecast.
-  }
-  if (!response) {
-    const upstream = await fetcher(SMHI_POINT_URL, {
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!upstream.ok) throw new Error(`SMHI svarade ${upstream.status}.`);
-    const data = await upstream.json();
-    selectWeather(data, now); // Never cache malformed responses.
-    response = new Response(JSON.stringify(data), {
-      headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${CACHE_SECONDS}` },
-    });
-    try {
-      await cache?.put(key, response.clone());
-    } catch {
-      // The fresh forecast can still be returned if the edge cache is unavailable.
-    }
-  }
-  return selectWeather(await response.json(), now);
+  const upstream = await fetchSmhiForecast(fetcher);
+  if (!upstream.ok) throw new Error(`SMHI svarade ${upstream.status}.`);
+  return selectWeather(await upstream.json(), now);
 }

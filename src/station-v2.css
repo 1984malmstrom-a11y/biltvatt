@@ -1001,6 +1001,14 @@
   border: 0;
   border-radius: 11px;
 }
+.v2-logo-placeholder {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, #eef6ff, #dceafa);
+  color: #2c649f;
+  font-size: clamp(26px, 3.7vh, 40px);
+  font-weight: 600;
+}
 .v2-admin-sections {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;

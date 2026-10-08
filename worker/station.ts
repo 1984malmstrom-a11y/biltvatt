@@ -88,7 +88,7 @@ export async function stationApi(
   if (path === "/api/station/weather" && method === "GET") {
     await viewerOrAdmin(request, env);
     try {
-      return json(await getWeather(new Date(), fetch, undefined, request.url), 200, {
+      return json(await getWeather(), 200, {
         "Cache-Control": "no-store",
       });
     } catch {

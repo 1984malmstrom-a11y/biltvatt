@@ -83,7 +83,7 @@ function Shell({
     <div className="station-shell">
       <header className="station-head">
         <div className="station-mark">
-          <img className="station-mark-logo" src="/preem-logo.png" alt="Preem" />
+          <span className="station-mark-icon" aria-hidden="true">✦</span>
           <div>
             <strong>PREEM TINGSRYD</strong>
             <small>BUTIKSFÖRSÄLJNING</small>

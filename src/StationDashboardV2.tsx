@@ -363,7 +363,7 @@ export default function StationDashboardV2() {
     <div className="station-v2-shell">
       <header className="v2-header">
         <div className="v2-brand">
-          <img className="v2-logo-slot" src="/preem-logo.png" alt="Preem" />
+          <span className="v2-logo-slot v2-logo-placeholder" aria-hidden="true">✦</span>
           <div>
             <h1>PREEM TINGSRYD</h1>
             <p>Stationsdashboard</p>

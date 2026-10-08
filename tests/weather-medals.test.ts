@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fixture } from "./fixture";
 import { getWeather, selectWeather, SMHI_POINT_URL } from "../worker/weather";
 import { medalPlacements } from "../src/medals";
@@ -30,35 +30,48 @@ describe("SMHI SNOW1gv1 prognos", () => {
     expect(forecast.tomorrow?.time).toBe("2026-03-29T10:30:00Z");
     expect(() => selectWeather({ timeSeries: "bad" })).toThrow();
   });
-  it("cachar källserien 30 minuter på servern men räknar om dagsskiftet", async () => {
-    const storage = new Map<string, Response>();
-    const cache = {
-      match: async (key: Request) => storage.get(key.url)?.clone(),
-      put: async (key: Request, response: Response) => { storage.set(key.url, response.clone()); },
-    } as unknown as Cache;
-    let requests = 0;
-    const fetcher = (async () => {
-      requests++;
+  it("cachar bara SMHI:s offentliga GET-subanrop och räknar om dagsskiftet", async () => {
+    const calls: { url: string; init: RequestInit }[] = [];
+    const fetcher = (async (url: string | URL | Request, init?: RequestInit) => {
+      calls.push({ url: String(url), init: init! });
       return new Response(JSON.stringify(series), { status: 200 });
     }) as typeof fetch;
-    await getWeather(new Date("2026-10-31T21:00:00Z"), fetcher, cache);
-    const second = await getWeather(new Date("2026-10-31T23:20:00Z"), fetcher, cache);
-    expect(requests).toBe(1);
-    expect(storage.get(SMHI_POINT_URL)?.headers.get("Cache-Control")).toBe("public, max-age=1800");
+    await getWeather(new Date("2026-10-31T21:00:00Z"), fetcher);
+    const second = await getWeather(new Date("2026-10-31T23:20:00Z"), fetcher);
+    expect(calls).toHaveLength(2);
+    expect(calls[0].url).toBe(SMHI_POINT_URL);
+    expect(calls[0].init.cf).toEqual({
+      cacheEverything: true,
+      cacheTtlByStatus: { "200": 1800, "201-599": -1 },
+    });
+    expect(calls[0].init.headers).toEqual({ Accept: "application/json" });
+    expect(calls[0].init.method).toBe("GET");
+    expect(calls[0].init.redirect).toBe("error");
     expect(second.tomorrow?.time).toBe("2026-11-02T11:00:00Z");
   });
   it("avvisar tjänstefel och felaktigt API-svar", async () => {
-    await expect(getWeather(new Date(), (async () => new Response("", { status: 500 })) as typeof fetch, undefined)).rejects.toThrow("500");
-    await expect(getWeather(new Date(), (async () => new Response("{}")) as typeof fetch, undefined)).rejects.toThrow("Ogiltig prognos");
+    await expect(getWeather(new Date(), (async () => new Response("", { status: 500 })) as typeof fetch)).rejects.toThrow("500");
+    await expect(getWeather(new Date(), (async () => new Response("{}")) as typeof fetch)).rejects.toThrow("Ogiltig prognos");
   });
-  it("visar färsk prognos även när edge-cachen tillfälligt fallerar", async () => {
-    const broken = {
-      match: async () => { throw new Error("cache offline"); },
-      put: async () => { throw new Error("cache offline"); },
-    } as unknown as Cache;
-    const fetcher = (async () => new Response(JSON.stringify(series))) as typeof fetch;
-    const result = await getWeather(new Date("2026-10-31T23:20:00Z"), fetcher, broken);
-    expect(result.now?.temperature).toBe(5.4);
+  it("kräver stationsbehörighet och skickar aldrig cachebara API-svar", async () => {
+    const f = fixture();
+    try {
+      const unauthenticated = await f.call("/station/weather");
+      expect(unauthenticated.status).toBe(401);
+      expect(unauthenticated.headers.get("Cache-Control")).toBe("no-store");
+      const admin = await f.login();
+      const upstream = vi.fn(async () => new Response(JSON.stringify(series)));
+      vi.stubGlobal("fetch", upstream);
+      const weather = await f.call("/station/weather", "GET", undefined, admin);
+      expect(weather.status).toBe(200);
+      expect(weather.headers.get("Cache-Control")).toBe("no-store");
+      expect(weather.headers.get("Set-Cookie")).toBeNull();
+      expect(upstream).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+      await f.finish();
+      f.db.close();
+    }
   });
 });
 
