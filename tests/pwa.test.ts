@@ -63,7 +63,25 @@ describe("PWA och Service Worker", () => {
       const keys = JSON.parse(contents);
       expect(Buffer.from(keys.VAPID_PUBLIC_KEY, "base64url").length).toBe(65);
       expect(Buffer.from(keys.VAPID_PRIVATE_KEY, "base64url").length).toBe(32);
-      expect(statSync(file).mode & 0o777).toBe(0o600);
+      if (process.platform === "win32") {
+        // NTFS ACLs, not POSIX mode bits, control access on Windows.
+        const acl = spawnSync("powershell.exe", [
+          "-NoProfile", "-NonInteractive", "-Command",
+          "$acl = Get-Acl -LiteralPath $env:VAPID_TEST_FILE; " +
+          "if (-not $acl.AreAccessRulesProtected) { exit 1 }; " +
+          "$broad = @('S-1-1-0','S-1-5-11','S-1-5-32-545'); " +
+          "foreach ($rule in $acl.Access) { " +
+          "$sid = $rule.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; " +
+          "if ($rule.AccessControlType -eq 'Allow' -and $sid -in $broad) { exit 1 } " +
+          "}; exit 0",
+        ], {
+          encoding: "utf8", windowsHide: true,
+          env: { ...process.env, VAPID_TEST_FILE: file },
+        });
+        expect(acl.status).toBe(0);
+      } else {
+        expect(statSync(file).mode & 0o777).toBe(0o600);
+      }
       expect(result.stdout + result.stderr).not.toContain(
         keys.VAPID_PRIVATE_KEY,
       );

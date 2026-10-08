@@ -6,6 +6,7 @@ on:
     paths:
       - scripts/launch-station-v2.ps1
       - scripts/station-v2-snapshot.mjs
+      - scripts/push-keys.mjs
       - tests/**
       - package.json
       - package-lock.json
