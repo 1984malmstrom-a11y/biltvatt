@@ -40,7 +40,7 @@ jobs:
             $result = node .\scripts\run-isolated-e2e.mjs | ConvertFrom-Json
             if ($LASTEXITCODE -ne 0 -or -not $result.ok -or $result.passed -lt 25) {
               $failures = @($result.failures | ForEach-Object { "$($_.file):$($_.line) $($_.assertion) $($_.source)" })
-              $diagnostic = if ($result.diagnostic) { "HTTP /=$($result.diagnostic.rootStatus), /api/staff=$($result.diagnostic.staffStatus), /src/main.tsx=$($result.diagnostic.moduleStatus), JS-fel=$($result.diagnostic.pageErrorCount)" } else { 'ingen säker startdiagnostik' }
+              $diagnostic = if ($result.diagnostic) { "HTTP /=$($result.diagnostic.rootStatus), /api/staff=$($result.diagnostic.staffStatus), /src/main.tsx=$($result.diagnostic.moduleStatus), demoantal=$($result.diagnostic.staffCount), rubrik senare=$($result.diagnostic.headingVisibleLater), JS-fel=$($result.diagnostic.pageErrorCount)" } else { 'ingen säker startdiagnostik' }
               throw "Isolated Playwright pass $i failed at $($result.stage): $($failures -join '; '); $diagnostic"
             }
             Write-Host "Isolated Playwright pass $i passed: $($result.passed) tests."

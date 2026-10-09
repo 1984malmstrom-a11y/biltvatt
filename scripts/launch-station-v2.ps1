@@ -106,9 +106,10 @@ function Run-PlaywrightTests {
   $detail = if ($safeFailures.Count) { " Påstående: $($safeFailures -join '; ')." } else { ' Ingen testspecifik felrad gavs; kontrollera start av lokal server eller Chromium.' }
   $diagnostic = ''
   if ($report.PSObject.Properties['diagnostic'] -and $report.diagnostic) {
-    $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount)
+    $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount,$report.diagnostic.staffCount)
     if (@($values | Where-Object { [int]$_ -lt -1 -or [int]$_ -gt 599 }).Count -eq 0) {
-      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), JS-fel=$($values[3])."
+      $later = if ($report.diagnostic.headingVisibleLater -eq $true) { 'ja' } else { 'nej' }
+      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), demoantal=$($values[4]), rubrik senare=$later, JS-fel=$($values[3])."
     }
   }
   Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."

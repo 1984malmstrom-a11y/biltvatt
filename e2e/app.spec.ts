@@ -25,12 +25,22 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
         try { return (await page.request.get(path, { timeout: 5000 })).status(); }
         catch { return -1; }
       };
+      let staffStatus = -1;
+      let staffCount = -1;
+      try {
+        const staffResponse = await page.request.get("/api/staff", { timeout: 5000 });
+        staffStatus = staffResponse.status();
+        const rows = await staffResponse.json();
+        if (Array.isArray(rows)) staffCount = rows.length;
+      } catch { /* Keep the original assertion as the test failure. */ }
       appendFileSync(journal, `${JSON.stringify({
         event: "bootstrap_diagnostic",
         rootStatus: initialResponse?.status() ?? -1,
-        staffStatus: await status("/api/staff"),
+        staffStatus,
+        staffCount,
         moduleStatus: await status("/src/main.tsx"),
         pageErrorCount: errors.length,
+        headingVisibleLater: await page.getByRole("heading", { name: "Välj ditt namn" }).isVisible(),
       })}\n`);
     }
     throw error;
