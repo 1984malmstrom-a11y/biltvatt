@@ -97,12 +97,15 @@ let directory;
 let configHome;
 let outcome;
 try {
-  directory = mkdtempSync(join(tmpdir(), "station-v2-e2e-"));
+  // On Windows, Rollup/Cloudflare's emitted asset paths must stay on the same
+  // volume as the checkout. %TEMP% can be on C: while GitHub uses D:.
+  const sibling = dirname(root);
+  directory = mkdtempSync(join(sibling, "station-v2-e2e-"));
   copyTracked(directory);
   const cli = npmCli();
   if (!cli) throw new Error("npm_cli_not_found");
-  // Keep Wrangler configuration and logs outside the Vite watch tree.
-  configHome = mkdtempSync(join(tmpdir(), "station-v2-e2e-config-"));
+  // Keep Wrangler configuration and logs outside the app copy.
+  configHome = mkdtempSync(join(sibling, "station-v2-e2e-config-"));
   // Chromium on Windows uses APPDATA for its own runtime state. Keep that
   // system path intact; Wrangler's local-only commands use the isolated cwd.
   const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome };
