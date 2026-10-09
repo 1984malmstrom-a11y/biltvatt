@@ -61,3 +61,13 @@ jobs:
           if (-not $result.ok -or $result.results[0].integrity_check -ne 'ok') { throw 'Snapshot integrity smoke test failed.' }
           $blocked = node .\scripts\station-v2-snapshot.mjs query $snapshot 'DELETE FROM sales' | ConvertFrom-Json
           if ($blocked.ok -or $blocked.errorType -ne 'invalid_read_only_query') { throw 'Read-only guard failed.' }
+          $legacyPath = Join-Path $env:RUNNER_TEMP 'station-v2-legacy-synthetic.sql'
+          $legacySql = ($migrations[0..3] | ForEach-Object { [IO.File]::ReadAllText($_.FullName, [Text.Encoding]::UTF8) }) -join "`n"
+          [IO.File]::WriteAllText($legacyPath, $legacySql, [Text.UTF8Encoding]::new($false))
+          $legacy = node .\scripts\station-v2-backup-keys.mjs $legacyPath | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0 -or @($legacy.station_schedule_periods).Count -ne 0 -or @($legacy.station_shifts).Count -ne 0) {
+            throw 'Pre-0005 backup keys were not interpreted as empty V2 rows.'
+          }
+          if (@($legacy.staff).Count -ne 5 -or @($legacy.wash_programs).Count -ne 6) {
+            throw 'Legacy V1 rows were not preserved by the backup check.'
+          }

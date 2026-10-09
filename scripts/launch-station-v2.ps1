@@ -407,6 +407,12 @@ try {
   if ($backupInfo.verified -ne $true -or $backupInfo.sha256.ToUpperInvariant() -ne $backupHash) { Stop-Launch 'Backupens integritet eller SHA-256 avviker.' }
   $baselineJson = Run $node @('scripts/station-v2-backup-keys.mjs',$BackupPath) 'Läsning av backuprader'
   $baseline = ConvertFrom-Json -InputObject $baselineJson
+  foreach ($table in $oldTables.Keys) {
+    $entry = $baseline.PSObject.Properties[$table]
+    if (-not $entry -or $null -eq $entry.Value) {
+      Stop-Launch "Backupkontrollen saknar tabellnycklar för $table. Stoppa utan att tolka saknade V1-rader som tomma."
+    }
+  }
   Info "Backup verifierad: $($backupInfo.bytes) byte. Nycklar stannar i minnet och visas inte."
   Refresh-ProductionSnapshot 'Inledande produktionsstatus'
   $initialState = @(Query "SELECT key,value FROM settings WHERE key IN ('station_v2_launch_lock','station_v2_zero_reset_done')" 'Inledande lanseringsstatus')
