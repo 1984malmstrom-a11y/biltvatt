@@ -109,7 +109,9 @@ function Run-PlaywrightTests {
     $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount,$report.diagnostic.staffCount,$report.diagnostic.rootChildCount,$report.diagnostic.consoleErrorCount,$report.diagnostic.failedRequestCount)
     if (@($values | Where-Object { [int]$_ -lt -1 -or [int]$_ -gt 599 }).Count -eq 0) {
       $later = if ($report.diagnostic.headingVisibleLater -eq $true) { 'ja' } else { 'nej' }
-      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
+      $mime = if (@('javascript','html','other','unavailable') -contains [string]$report.diagnostic.moduleMime) { [string]$report.diagnostic.moduleMime } else { 'okänd' }
+      $consoleType = if (@('none','module_mime','module_resolution','csp','fetch','http_status','other') -contains [string]$report.diagnostic.consoleCategory) { [string]$report.diagnostic.consoleCategory } else { 'okänd' }
+      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), modul=$mime, konsoltyp=$consoleType, demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
     }
   }
   Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."

@@ -131,12 +131,15 @@ try {
         const event = events.find((item) => item.event === "bootstrap_diagnostic");
         if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount", "staffCount", "consoleErrorCount", "failedRequestCount", "rootChildCount"]
           .every((key) => Number.isInteger(event[key]) && event[key] >= -1 && event[key] <= 599) &&
-          typeof event.headingVisibleLater === "boolean") {
+          typeof event.headingVisibleLater === "boolean" &&
+          ["javascript", "html", "other", "unavailable"].includes(event.moduleMime) &&
+          ["none", "module_mime", "module_resolution", "csp", "fetch", "http_status", "other"].includes(event.consoleCategory)) {
           diagnostic = { rootStatus: event.rootStatus, staffStatus: event.staffStatus,
             moduleStatus: event.moduleStatus, pageErrorCount: event.pageErrorCount,
             staffCount: event.staffCount, headingVisibleLater: event.headingVisibleLater,
             consoleErrorCount: event.consoleErrorCount, failedRequestCount: event.failedRequestCount,
-            rootChildCount: event.rootChildCount };
+            rootChildCount: event.rootChildCount, moduleMime: event.moduleMime,
+            consoleCategory: event.consoleCategory };
         }
       } catch { /* No safe bootstrap diagnostic was recorded. */ }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"

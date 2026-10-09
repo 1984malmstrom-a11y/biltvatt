@@ -11,9 +11,20 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
 }) => {
   const errors: string[] = [];
   let consoleErrorCount = 0;
+  let consoleCategory = "none";
   let failedRequestCount = 0;
   page.on("pageerror", (e) => errors.push(e.message));
-  page.on("console", (message) => { if (message.type() === "error") consoleErrorCount++; });
+  page.on("console", (message) => {
+    if (message.type() !== "error") return;
+    consoleErrorCount++;
+    if (consoleCategory !== "none") return;
+    const value = message.text();
+    consoleCategory = /MIME type|module script/i.test(value) ? "module_mime"
+      : /module specifier|Failed to resolve/i.test(value) ? "module_resolution"
+      : /Content Security Policy|CSP/i.test(value) ? "csp"
+      : /Failed to fetch|ERR_/i.test(value) ? "fetch"
+      : /404|500|502|503/i.test(value) ? "http_status" : "other";
+  });
   page.on("requestfailed", () => { failedRequestCount++; });
   const initialResponse = await page.goto("/");
   try {
@@ -25,10 +36,15 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
     // browser storage, PINs or page text.
     const journal = process.env.STATION_V2_E2E_PROGRESS_FILE;
     if (journal) {
-      const status = async (path: string) => {
-        try { return (await page.request.get(path, { timeout: 5000 })).status(); }
-        catch { return -1; }
-      };
+      let moduleStatus = -1;
+      let moduleMime = "unavailable";
+      try {
+        const response = await page.request.get("/src/main.tsx", { timeout: 5000 });
+        moduleStatus = response.status();
+        const contentType = response.headers()["content-type"] ?? "";
+        moduleMime = /javascript|typescript/i.test(contentType) ? "javascript"
+          : /text\/html/i.test(contentType) ? "html" : "other";
+      } catch { /* Keep the original assertion as the test failure. */ }
       let staffStatus = -1;
       let staffCount = -1;
       try {
@@ -42,9 +58,11 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
         rootStatus: initialResponse?.status() ?? -1,
         staffStatus,
         staffCount,
-        moduleStatus: await status("/src/main.tsx"),
+        moduleStatus,
+        moduleMime,
         pageErrorCount: errors.length,
         consoleErrorCount,
+        consoleCategory,
         failedRequestCount,
         rootChildCount: await page.locator("#root").evaluate((root) => root.childElementCount).catch(() => -1),
         headingVisibleLater: await page.getByRole("heading", { name: "Välj ditt namn" }).isVisible(),
