@@ -16,7 +16,8 @@ const baseEnv = { ...process.env, CI: "1", WRANGLER_SEND_METRICS: "false",
 for (const key of [
   "ADMIN_PIN", "VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY", "VAPID_SUBJECT",
   "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_API_KEY", "CLOUDFLARE_EMAIL",
-  "CLOUDFLARE_ENV", "PLAYWRIGHT_JSON_OUTPUT_FILE",
+  "CLOUDFLARE_ENV", "CLOUDFLARE_ACCOUNT_ID", "CF_API_TOKEN", "CF_API_KEY",
+  "CF_ACCOUNT_ID", "PLAYWRIGHT_JSON_OUTPUT_FILE",
 ]) delete baseEnv[key];
 
 function run(program, args, cwd, env = baseEnv, timeout = 180_000) {
@@ -73,8 +74,9 @@ try {
   if (!cli) throw new Error("npm_cli_not_found");
   // Keep Wrangler configuration and logs outside the Vite watch tree.
   configHome = mkdtempSync(join(tmpdir(), "station-v2-e2e-config-"));
-  const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome,
-    ...(process.platform === "win32" ? { APPDATA: configHome } : {}) };
+  // Chromium on Windows uses APPDATA for its own runtime state. Keep that
+  // system path intact; Wrangler's local-only commands use the isolated cwd.
+  const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome };
   progress("npm_ci");
   let result = run(process.execPath, [cli, "ci", "--no-audit", "--no-fund"], directory, localEnv, 240_000);
   if (result.status !== 0) outcome = { ok: false,
