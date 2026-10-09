@@ -15,8 +15,17 @@ export default defineConfig({
           next();
         });
       },
+      transformIndexHtml: {
+        order: "post" as const,
+        handler(html: string) {
+          // Playwright does not need HMR. The Cloudflare dev layer on Windows
+          // otherwise serves the encoded HMR client URL as HTML.
+          return html.replace(/<script\b[^>]*\bsrc="\/(?:@vite|%40vite)\/client"[^>]*><\/script>/gi, "");
+        },
+      },
     }] : []),
     react(),
     cloudflare(),
   ],
+  server: process.env.STATION_V2_E2E_ISOLATED === "1" ? { hmr: false } : undefined,
 });
