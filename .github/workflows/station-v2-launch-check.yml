@@ -10,6 +10,7 @@ on:
       - worker/**
       - migrations/**
       - playwright.config.ts
+      - vite.config.ts
       - package.json
       - package-lock.json
       - .github/workflows/station-v2-launch-check.yml
