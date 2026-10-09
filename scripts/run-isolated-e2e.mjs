@@ -37,6 +37,7 @@ function safeBuildDetail(path) {
     const lines = output.split(/\r?\n/)
       .filter((line) => /error|failed|cannot|could not|ERR_|TS\d{4}/i.test(line))
       .filter((line) => !/PIN|TOKEN|COOKIE|SECRET|VAPID|PASSWORD|PRIVATE_KEY/i.test(line))
+      .filter((line) => !/^\s*at\s|\bgetRollupError\b|\bError\s*\(file:/i.test(line))
       .slice(-2)
       .map((line) => line
         .replace(/(['"`])[^'"`]*\1/g, "<quoted>")
