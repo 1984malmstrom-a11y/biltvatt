@@ -2,7 +2,7 @@
 // server, local D1, .dev.vars, browser origin or service worker from a prior run.
 // stdout is a small safe JSON status; npm/Playwright output is never forwarded.
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, resolve, sep } from "node:path";
 import { createServer } from "node:net";
@@ -10,7 +10,6 @@ import { safeFailures } from "./playwright-safe-failures.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const reply = (value) => process.stdout.write(`${JSON.stringify(value)}\n`);
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 const baseEnv = { ...process.env, CI: "1", WRANGLER_SEND_METRICS: "false",
   npm_config_cache: join(tmpdir(), "station-v2-e2e-npm-cache") };
 for (const key of [
@@ -22,9 +21,23 @@ for (const key of [
 function run(program, args, cwd, env = baseEnv, timeout = 180_000) {
   return spawnSync(program, args, {
     cwd, env, encoding: "utf8", windowsHide: true,
-    shell: process.platform === "win32" && program === npm,
     timeout, maxBuffer: 8 * 1024 * 1024,
   });
+}
+function npmCli() {
+  const locations = [
+    process.env.npm_execpath,
+    join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"),
+    join(dirname(process.execPath), "..", "lib", "node_modules", "npm", "bin", "npm-cli.js"),
+  ];
+  if (process.platform === "win32") {
+    const found = spawnSync("where.exe", ["npm.cmd"], {
+      encoding: "utf8", windowsHide: true, timeout: 5000,
+    });
+    for (const path of String(found.stdout ?? "").split(/\r?\n/).filter(Boolean))
+      locations.push(join(dirname(path), "node_modules", "npm", "bin", "npm-cli.js"));
+  }
+  return locations.find((path) => path && existsSync(path));
 }
 function copyTracked(destination) {
   const result = spawnSync("git", ["ls-files", "-z"], {
@@ -55,14 +68,24 @@ let outcome;
 try {
   directory = mkdtempSync(join(tmpdir(), "station-v2-e2e-"));
   copyTracked(directory);
+  const cli = npmCli();
+  if (!cli) throw new Error("npm_cli_not_found");
   const configHome = join(directory, "config");
   mkdirSync(configHome, { recursive: true });
   const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome,
     ...(process.platform === "win32" ? { APPDATA: configHome } : {}) };
-  let result = run(npm, ["ci", "--no-audit", "--no-fund"], directory, localEnv, 240_000);
-  if (result.status !== 0) outcome = { ok: false, stage: "isolated_npm_ci", exitCode: result.status };
+  let result = run(process.execPath, [cli, "ci", "--no-audit", "--no-fund"], directory, localEnv, 240_000);
+  if (result.status !== 0) outcome = { ok: false,
+    stage: result.error?.code === "ETIMEDOUT" ? "isolated_npm_ci_timeout" : "isolated_npm_ci",
+    exitCode: result.status };
   if (!outcome) {
-    result = run(npm, ["run", "setup"], directory, localEnv, 120_000);
+    result = run(process.execPath, ["scripts/local-secret.mjs"], directory, localEnv, 15_000);
+    if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
+  }
+  if (!outcome) {
+    // This is the exact local migration from npm run setup, with --local fixed.
+    result = run(process.execPath, ["node_modules/wrangler/wrangler-dist/cli.js",
+      "d1", "migrations", "apply", "tvattligan", "--local"], directory, localEnv, 120_000);
     if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
   }
   if (!outcome) {
@@ -70,7 +93,7 @@ try {
     const reportPath = join(directory, "playwright-result.json");
     const env = { ...localEnv, STATION_V2_E2E_ISOLATED: "1",
       STATION_V2_E2E_PORT: String(port), PLAYWRIGHT_JSON_OUTPUT_FILE: reportPath };
-    result = run(npm, ["run", "test:e2e", "--", "--reporter=json"], directory, env, 300_000);
+    result = run(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--reporter=json"], directory, env, 300_000);
     if (result.status === 0) {
       const report = JSON.parse(readFileSync(reportPath, "utf8"));
       outcome = { ok: true, stage: "isolated_playwright", passed: report.stats?.expected ?? null };
@@ -78,7 +101,9 @@ try {
       let failures = [];
       try { failures = safeFailures(JSON.parse(readFileSync(reportPath, "utf8")), directory); }
       catch { /* A missing report points to browser or webserver startup. */ }
-      outcome = { ok: false, stage: failures.length ? "assertion" : "webserver_browser_or_runner",
+      outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
+        ? "isolated_playwright_timeout"
+        : failures.length ? "assertion" : "webserver_browser_or_runner",
         exitCode: result.status, failures };
     }
   }

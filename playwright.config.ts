@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: `npm run dev -- --port ${port} --strictPort`,
+    command: `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${port} --strictPort`,
     url: `http://127.0.0.1:${port}/api/staff`,
     reuseExistingServer: !isolated && !process.env.CI,
     timeout: 60000,
