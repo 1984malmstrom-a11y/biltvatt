@@ -68,6 +68,13 @@ async function washImages(page: Page) {
     };
   }));
 }
+async function waitForWashImages(page: Page) {
+  const images = page.locator(".wash-card img");
+  await expect(images).toHaveCount(6);
+  await expect.poll(() => images.evaluateAll((items) => items.every((item) =>
+    (item as HTMLImageElement).complete && (item as HTMLImageElement).naturalWidth > 0)),
+  { timeout: 10_000 }).toBe(true);
+}
 for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
   test(`station, Registrera och Statistik ryms på ${width}×${height}`, async ({ page }) => {
     await page.clock.install({ time: new Date("2026-10-09T09:00:00Z") });
@@ -83,8 +90,7 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     await expect(page.getByRole("heading", { name: "Välj ditt namn" })).toBeVisible();
     await page.locator(".staff-card").first().click();
     await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
-    expect(await page.locator(".wash-card img").count()).toBe(6);
-    expect(await page.locator(".wash-card img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+    await waitForWashImages(page);
     const images = await washImages(page);
     expect(images).toHaveLength(6);
     expect(images.every((image) => image.contained && image.fit === "contain" &&
@@ -117,6 +123,7 @@ test("mobilvyer har inga horisontella överflöden", async ({ page }) => {
   await page.goto("/");
   await page.locator(".staff-card").first().click();
   await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
+  await waitForWashImages(page);
   const mobileImages = await washImages(page);
   expect(mobileImages).toHaveLength(6);
   expect(mobileImages.every((image) => image.contained && image.fit === "contain" &&
