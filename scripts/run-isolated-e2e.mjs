@@ -133,17 +133,20 @@ try {
         const events = readFileSync(progressPath, "utf8").trim().split("\n")
           .map((line) => JSON.parse(line));
         const event = events.find((item) => item.event === "bootstrap_diagnostic");
-        if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount", "staffCount", "consoleErrorCount", "failedRequestCount", "rootChildCount"]
+        if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount", "staffCount", "consoleErrorCount", "failedRequestCount", "rootChildCount", "badScriptStatus"]
           .every((key) => Number.isInteger(event[key]) && event[key] >= -1 && event[key] <= 599) &&
           typeof event.headingVisibleLater === "boolean" &&
           ["javascript", "html", "other", "unavailable"].includes(event.moduleMime) &&
-          ["none", "module_mime", "module_resolution", "csp", "fetch", "http_status", "other"].includes(event.consoleCategory)) {
+          ["none", "module_mime", "module_resolution", "csp", "fetch", "http_status", "other"].includes(event.consoleCategory) &&
+          (event.badScriptPath === "none" || event.badScriptPath === "other" ||
+           /^\/[a-zA-Z0-9_./@:%-]{1,150}$/.test(event.badScriptPath))) {
           diagnostic = { rootStatus: event.rootStatus, staffStatus: event.staffStatus,
             moduleStatus: event.moduleStatus, pageErrorCount: event.pageErrorCount,
             staffCount: event.staffCount, headingVisibleLater: event.headingVisibleLater,
             consoleErrorCount: event.consoleErrorCount, failedRequestCount: event.failedRequestCount,
             rootChildCount: event.rootChildCount, moduleMime: event.moduleMime,
-            consoleCategory: event.consoleCategory };
+            consoleCategory: event.consoleCategory, badScriptPath: event.badScriptPath,
+            badScriptStatus: event.badScriptStatus };
         }
       } catch { /* No safe bootstrap diagnostic was recorded. */ }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"

@@ -111,7 +111,8 @@ function Run-PlaywrightTests {
       $later = if ($report.diagnostic.headingVisibleLater -eq $true) { 'ja' } else { 'nej' }
       $mime = if (@('javascript','html','other','unavailable') -contains [string]$report.diagnostic.moduleMime) { [string]$report.diagnostic.moduleMime } else { 'okänd' }
       $consoleType = if (@('none','module_mime','module_resolution','csp','fetch','http_status','other') -contains [string]$report.diagnostic.consoleCategory) { [string]$report.diagnostic.consoleCategory } else { 'okänd' }
-      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), modul=$mime, konsoltyp=$consoleType, demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
+      $badPath = if ([string]$report.diagnostic.badScriptPath -match '^/[a-zA-Z0-9_./@:%-]{1,150}$') { [string]$report.diagnostic.badScriptPath } else { 'okänd' }
+      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), modul=$mime, konsoltyp=$consoleType, felmodul=$badPath, demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
     }
   }
   Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."

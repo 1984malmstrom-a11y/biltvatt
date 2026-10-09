@@ -13,7 +13,21 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
   let consoleErrorCount = 0;
   let consoleCategory = "none";
   let failedRequestCount = 0;
+  let badScriptPath = "none";
+  let badScriptStatus = -1;
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("response", (response) => {
+    if (badScriptPath !== "none" || response.request().resourceType() !== "script" ||
+        !/text\/html/i.test(response.headers()["content-type"] ?? "")) return;
+    try {
+      const url = new URL(response.url());
+      const path = url.pathname;
+      badScriptPath = url.hostname === "127.0.0.1" &&
+        /^\/[a-zA-Z0-9_./@:%-]{1,150}$/.test(path)
+        ? path : "other";
+      badScriptStatus = response.status();
+    } catch { badScriptPath = "other"; }
+  });
   page.on("console", (message) => {
     if (message.type() !== "error") return;
     consoleErrorCount++;
@@ -60,6 +74,8 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
         staffCount,
         moduleStatus,
         moduleMime,
+        badScriptPath,
+        badScriptStatus,
         pageErrorCount: errors.length,
         consoleErrorCount,
         consoleCategory,
