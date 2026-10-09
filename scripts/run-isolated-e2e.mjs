@@ -121,10 +121,21 @@ try {
               assertion: firstFailed?.assertion ?? "timeout", source: "" }];
         } catch { /* No test began; startup, browser launch or server may be waiting. */ }
       }
+      let diagnostic;
+      try {
+        const events = readFileSync(progressPath, "utf8").trim().split("\n")
+          .map((line) => JSON.parse(line));
+        const event = events.find((item) => item.event === "bootstrap_diagnostic");
+        if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount"]
+          .every((key) => Number.isInteger(event[key]) && event[key] >= -1 && event[key] <= 599)) {
+          diagnostic = { rootStatus: event.rootStatus, staffStatus: event.staffStatus,
+            moduleStatus: event.moduleStatus, pageErrorCount: event.pageErrorCount };
+        }
+      } catch { /* No safe bootstrap diagnostic was recorded. */ }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
         ? "isolated_playwright_timeout"
         : failures.length ? "assertion" : "webserver_browser_or_runner",
-        exitCode: result.status, failures };
+        exitCode: result.status, failures, ...(diagnostic ? { diagnostic } : {}) };
     }
   }
 } catch {

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { appendFileSync, readFileSync } from "node:fs";
 const localPin = () =>
   readFileSync(new URL("../.dev.vars", import.meta.url), "utf8").match(
     /^ADMIN_PIN=(\d+)$/m,
@@ -11,10 +11,30 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "Välj ditt namn" }),
-  ).toBeVisible();
+  const initialResponse = await page.goto("/");
+  try {
+    await expect(
+      page.getByRole("heading", { name: "Välj ditt namn" }),
+    ).toBeVisible();
+  } catch (error) {
+    // Test-only status diagnostics. The journal never contains response bodies,
+    // browser storage, PINs or page text.
+    const journal = process.env.STATION_V2_E2E_PROGRESS_FILE;
+    if (journal) {
+      const status = async (path: string) => {
+        try { return (await page.request.get(path, { timeout: 5000 })).status(); }
+        catch { return -1; }
+      };
+      appendFileSync(journal, `${JSON.stringify({
+        event: "bootstrap_diagnostic",
+        rootStatus: initialResponse?.status() ?? -1,
+        staffStatus: await status("/api/staff"),
+        moduleStatus: await status("/src/main.tsx"),
+        pageErrorCount: errors.length,
+      })}\n`);
+    }
+    throw error;
+  }
   for (const name of ["Peter", "Emma", "Johan", "Lisa", "Kalle"])
     await expect(
       page.getByRole("button", { name: `${name} Välj` }),

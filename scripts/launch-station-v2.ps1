@@ -104,7 +104,14 @@ function Run-PlaywrightTests {
     $safeFailures += "$file`:$line ($assertion) $source"
   }
   $detail = if ($safeFailures.Count) { " Påstående: $($safeFailures -join '; ')." } else { ' Ingen testspecifik felrad gavs; kontrollera start av lokal server eller Chromium.' }
-  Stop-Launch "Playwright stoppade i steg $stage.$detail PIN, tokens och testutdata visas inte."
+  $diagnostic = ''
+  if ($report.PSObject.Properties['diagnostic'] -and $report.diagnostic) {
+    $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount)
+    if (@($values | Where-Object { [int]$_ -lt -1 -or [int]$_ -gt 599 }).Count -eq 0) {
+      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), JS-fel=$($values[3])."
+    }
+  }
+  Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."
 }
 function Command-Path([string]$Name) {
   $found = Get-Command $Name -ErrorAction SilentlyContinue
