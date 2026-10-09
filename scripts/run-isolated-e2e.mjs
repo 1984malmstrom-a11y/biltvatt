@@ -10,6 +10,7 @@ import { safeFailures } from "./playwright-safe-failures.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const reply = (value) => process.stdout.write(`${JSON.stringify(value)}\n`);
+const progress = (stage) => process.stderr.write(`isolated_e2e_stage=${stage}\n`);
 const baseEnv = { ...process.env, CI: "1", WRANGLER_SEND_METRICS: "false",
   npm_config_cache: join(tmpdir(), "station-v2-e2e-npm-cache") };
 for (const key of [
@@ -20,8 +21,7 @@ for (const key of [
 
 function run(program, args, cwd, env = baseEnv, timeout = 180_000) {
   return spawnSync(program, args, {
-    cwd, env, encoding: "utf8", windowsHide: true,
-    timeout, maxBuffer: 8 * 1024 * 1024,
+    cwd, env, stdio: "ignore", windowsHide: true, timeout,
   });
 }
 function npmCli() {
@@ -74,21 +74,25 @@ try {
   mkdirSync(configHome, { recursive: true });
   const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome,
     ...(process.platform === "win32" ? { APPDATA: configHome } : {}) };
+  progress("npm_ci");
   let result = run(process.execPath, [cli, "ci", "--no-audit", "--no-fund"], directory, localEnv, 240_000);
   if (result.status !== 0) outcome = { ok: false,
     stage: result.error?.code === "ETIMEDOUT" ? "isolated_npm_ci_timeout" : "isolated_npm_ci",
     exitCode: result.status };
   if (!outcome) {
+    progress("local_secret");
     result = run(process.execPath, ["scripts/local-secret.mjs"], directory, localEnv, 15_000);
     if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
   }
   if (!outcome) {
     // This is the exact local migration from npm run setup, with --local fixed.
+    progress("local_migrations");
     result = run(process.execPath, ["node_modules/wrangler/wrangler-dist/cli.js",
       "d1", "migrations", "apply", "tvattligan", "--local"], directory, localEnv, 120_000);
     if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
   }
   if (!outcome) {
+    progress("playwright");
     const port = await freePort();
     const reportPath = join(directory, "playwright-result.json");
     const env = { ...localEnv, STATION_V2_E2E_ISOLATED: "1",
