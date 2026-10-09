@@ -48,13 +48,13 @@ describe("Stationsdashboard", () => {
     expect(change(150, 0)).toEqual({ difference_ore: 150, percent: null });
     expect(change(150, null)).toEqual({ difference_ore: null, percent: null });
   });
-  it("kräver separat visningssession och låter aldrig den skriva", async () => {
+  it("kräver admin- eller visningssession och låter aldrig visningssessionen skriva", async () => {
     const f = fixture();
     const admin = await f.login();
     expect((await f.call("/station/dashboard")).status).toBe(401);
     expect(
       (await f.call("/station/dashboard", "GET", undefined, admin)).status,
-    ).toBe(401);
+    ).toBe(200);
     const made = await f.call(
       "/admin/station/activation-codes",
       "POST",

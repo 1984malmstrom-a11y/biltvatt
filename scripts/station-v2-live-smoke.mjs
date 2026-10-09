@@ -17,20 +17,31 @@ try {
   const context = await browser.newContext();
   await context.addCookies([{
     name: "tvattligan_session", value: input.sessionCookie,
-    url: `${origin.origin}/api/station/dashboard`, httpOnly: true,
+    domain: origin.hostname, path: "/api", httpOnly: true,
     secure: true, sameSite: "Lax",
   }]);
   const page = await context.newPage();
   const seen = [];
+  const apiStatuses = new Map();
   page.on("request", (request) => {
     const path = new URL(request.url()).pathname;
     if (path.startsWith("/api/")) seen.push(path);
+  });
+  page.on("response", (response) => {
+    const path = new URL(response.url()).pathname;
+    if (path === "/api/station/dashboard" || path === "/api/station/v2") {
+      apiStatuses.set(path, response.status());
+    }
   });
   const pageResponse = await page.goto(`${origin.origin}/station`, { waitUntil: "networkidle", timeout: 30000 });
   if (pageResponse?.status() !== 200) throw new Error("dashboard page status");
   await page.getByRole("heading", { name: "PREEM TINGSRYD" }).waitFor({ timeout: 15000 });
   if (!seen.includes("/api/station/dashboard") || !seen.includes("/api/station/v2")) {
     throw new Error("dashboard API was not requested");
+  }
+  if (apiStatuses.get("/api/station/dashboard") !== 200 ||
+      apiStatuses.get("/api/station/v2") !== 200) {
+    throw new Error("dashboard API status");
   }
   await page.waitForTimeout(1500);
   if (seen.some((path) => path === "/api/station/weather")) {
@@ -40,7 +51,7 @@ try {
 } catch (error) {
   const known = new Set([
     "invalid smoke input", "dashboard page status", "dashboard API was not requested",
-    "automatic weather request detected",
+    "dashboard API status", "automatic weather request detected",
   ]);
   process.stderr.write(`Webbläsarkontrollen misslyckades: ${known.has(error.message) ? error.message : error.name}.\n`);
   process.exitCode = 1;

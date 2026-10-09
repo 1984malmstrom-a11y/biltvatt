@@ -6,6 +6,23 @@ const localPin = () =>
     /^ADMIN_PIN=(\d+)$/m,
   )![1];
 
+test("adminsession läser båda riktiga dashboard-API:erna i webbläsaren", async ({ page }) => {
+  const login = await page.request.post("/api/admin/login", {
+    data: { pin: localPin() },
+  });
+  expect(login.status()).toBe(200);
+  const dashboard = page.waitForResponse((response) =>
+    new URL(response.url()).pathname === "/api/station/dashboard",
+  );
+  const overview = page.waitForResponse((response) =>
+    new URL(response.url()).pathname === "/api/station/v2",
+  );
+  await page.goto("/station");
+  expect((await dashboard).status()).toBe(200);
+  expect((await overview).status()).toBe(200);
+  await expect(page.getByRole("heading", { name: "PREEM TINGSRYD" })).toBeVisible();
+});
+
 test("stationsvisning kräver aktivering; admin kan skapa kod och återkalla enheten", async ({
   page,
   browser,

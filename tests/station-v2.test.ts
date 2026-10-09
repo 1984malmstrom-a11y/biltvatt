@@ -413,7 +413,7 @@ describe("Stationsdashboard V2", () => {
     expect(adminOverview.status).toBe(200);
     const overview = await (await f.call("/station/v2","GET",undefined,viewer)).json() as {tasks:{text:string}[]};
     expect(overview.tasks.map((item)=>item.text)).toEqual(["Adminuppgift"]);
-    expect((await f.call("/station/dashboard","GET",undefined,admin)).status).toBe(401);
+    expect((await f.call("/station/dashboard","GET",undefined,admin)).status).toBe(200);
     expect((await f.call("/station/v2/tasks","POST",{text:"   "},viewer)).status).toBe(400);
     expect((await f.call("/station/v2/tasks","POST",{text:"x".repeat(181)},viewer)).status).toBe(400);
     f.db.close();

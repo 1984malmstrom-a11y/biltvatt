@@ -151,7 +151,7 @@ export async function stationApi(
     });
   }
   if (path === "/api/station/dashboard" && method === "GET") {
-    await viewer(request, env);
+    await viewerOrAdmin(request, env);
     const day = addDays(stockholmDay(), -1),
       previousDay = comparisonDay(day);
     const weekStart = addDays(day, -6);
