@@ -375,7 +375,7 @@ test("Admin/Notiser: säker status, inställningar, serverdata och mobil layout 
     await expect(page.getByLabel("Pushnotiser globalt")).toBeDisabled();
     await page.getByLabel("Tvättar kvar till målet").fill("4");
     await page.getByRole("button", { name: "Spara notisinställningar" }).click();
-    await expect(page.getByRole("status")).toContainText(
+    await expect(page.locator(".notifications-admin").getByRole("status")).toContainText(
       "Notisinställningarna är sparade",
     );
     expect(
