@@ -41,7 +41,8 @@ jobs:
           if ($LASTEXITCODE -ne 0 -or -not $result.ok -or $result.passed -ne 1) {
             $failures = @($result.failures | ForEach-Object { "$($_.file):$($_.line) $($_.assertion)" })
             $diagnostic = if ($result.diagnostic) { "HTTP /=$($result.diagnostic.rootStatus), /api/staff=$($result.diagnostic.staffStatus), /src/main.tsx=$($result.diagnostic.moduleStatus), modul=$($result.diagnostic.moduleMime), konsoltyp=$($result.diagnostic.consoleCategory), felmodul=$($result.diagnostic.badScriptPath), modulstatus=$($result.diagnostic.badScriptStatus), demoantal=$($result.diagnostic.staffCount), rotbarn=$($result.diagnostic.rootChildCount), konsolfel=$($result.diagnostic.consoleErrorCount)" } else { 'ingen säker startdiagnostik' }
-            throw "Isolated Windows bootstrap failed at $($result.stage): $($failures -join '; '); $diagnostic"
+            $buildDetail = if ($result.buildDetail) { "Byggfel: $($result.buildDetail)" } else { '' }
+            throw "Isolated Windows bootstrap failed at $($result.stage): $($failures -join '; '); $diagnostic; $buildDetail"
           }
       - name: Run all Playwright tests twice in isolated Windows environments
         shell: powershell

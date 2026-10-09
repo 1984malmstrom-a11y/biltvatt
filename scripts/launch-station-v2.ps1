@@ -104,6 +104,11 @@ function Run-PlaywrightTests {
     $safeFailures += "$file`:$line ($assertion) $source"
   }
   $detail = if ($safeFailures.Count) { " Påstående: $($safeFailures -join '; ')." } else { ' Ingen testspecifik felrad gavs; kontrollera start av lokal server eller Chromium.' }
+  $buildDetail = ''
+  if ($report.PSObject.Properties['buildDetail']) {
+    $candidate = [string]$report.buildDetail
+    if ($candidate.Length -le 240 -and $candidate -match '^[a-zA-Z0-9 .,:;()_<>|\-]+$') { $buildDetail = " Byggfel: $candidate." }
+  }
   $diagnostic = ''
   if ($report.PSObject.Properties['diagnostic'] -and $report.diagnostic) {
     $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount,$report.diagnostic.staffCount,$report.diagnostic.rootChildCount,$report.diagnostic.consoleErrorCount,$report.diagnostic.failedRequestCount)
@@ -115,7 +120,7 @@ function Run-PlaywrightTests {
       $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), modul=$mime, konsoltyp=$consoleType, felmodul=$badPath, demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
     }
   }
-  Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."
+  Stop-Launch "Playwright stoppade i steg $stage.$detail$buildDetail$diagnostic PIN, tokens och testutdata visas inte."
 }
 function Command-Path([string]$Name) {
   $found = Get-Command $Name -ErrorAction SilentlyContinue

@@ -2,7 +2,7 @@
 // server, local D1, .dev.vars, browser origin or service worker from a prior run.
 // stdout is a small safe JSON status; npm/Playwright output is never forwarded.
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { closeSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, resolve, sep } from "node:path";
 import { createServer } from "node:net";
@@ -22,10 +22,33 @@ for (const key of [
   "CF_ACCOUNT_ID", "PLAYWRIGHT_JSON_OUTPUT_FILE",
 ]) delete baseEnv[key];
 
-function run(program, args, cwd, env = baseEnv, timeout = 180_000) {
-  return spawnSync(program, args, {
-    cwd, env, stdio: "ignore", windowsHide: true, timeout,
-  });
+function run(program, args, cwd, env = baseEnv, timeout = 180_000, logPath) {
+  const fd = logPath ? openSync(logPath, "w", 0o600) : undefined;
+  try {
+    return spawnSync(program, args, {
+      cwd, env, stdio: fd === undefined ? "ignore" : ["ignore", fd, fd],
+      windowsHide: true, timeout,
+    });
+  } finally { if (fd !== undefined) closeSync(fd); }
+}
+function safeBuildDetail(path) {
+  try {
+    const output = readFileSync(path, "utf8").slice(-24_000).replace(/\x1b\[[0-9;]*m/g, "");
+    const lines = output.split(/\r?\n/)
+      .filter((line) => /error|failed|cannot|could not|ERR_|TS\d{4}/i.test(line))
+      .filter((line) => !/PIN|TOKEN|COOKIE|SECRET|VAPID|PASSWORD|PRIVATE_KEY/i.test(line))
+      .slice(-2)
+      .map((line) => line
+        .replace(/(['"`])[^'"`]*\1/g, "<quoted>")
+        .replace(/[A-Za-z]:\\[^\s)]+/g, "<path>")
+        .replace(/(?:\/[A-Za-z0-9_.@-]+){2,}/g, "<path>")
+        .replace(/[A-Za-z0-9_-]{24,}/g, "<value>")
+        .replace(/\b\d{5,}\b/g, "<number>")
+        .replace(/[^A-Za-z0-9 .,:;()_<>\-]/g, " ")
+        .trim().slice(0, 120))
+      .filter(Boolean);
+    return lines.join(" | ").slice(0, 240) || "no_safe_error_line";
+  } catch { return "build_log_unavailable"; }
 }
 function npmCli() {
   const locations = [
@@ -100,9 +123,11 @@ try {
     // Build only inside the disposable copy, with its synthetic local secret.
     // Wrangler dev then serves these assets and the Worker strictly locally.
     progress("local_build");
-    result = run(process.execPath, [cli, "run", "build"], directory, localEnv, 120_000);
+    const buildLog = join(directory, "isolated-build.log");
+    result = run(process.execPath, [cli, "run", "build"], directory, localEnv, 120_000, buildLog);
     if (result.status !== 0) outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
-      ? "isolated_local_build_timeout" : "isolated_local_build", exitCode: result.status };
+      ? "isolated_local_build_timeout" : "isolated_local_build", exitCode: result.status,
+      buildDetail: safeBuildDetail(buildLog) };
   }
   if (!outcome) {
     progress(bootstrapOnly ? "playwright_bootstrap" : "playwright");
