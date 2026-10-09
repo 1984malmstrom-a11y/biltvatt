@@ -41,14 +41,6 @@ import {
   StationLogo,
 } from "./components";
 
-const descriptions: Record<string, string> = {
-  preemium: "Vår mest kompletta tvätt",
-  "finast-plus": "Extra ren och extra glans",
-  hosttvatt: "Tar hand om bilen i tuffa tider",
-  finast: "En riktigt bra tvätt",
-  fin: "Ren och fräsch",
-  borstlos: "Skonsam och effektiv",
-};
 const programImages: Record<string, string> = {
   preemium: "/wash-programs/preemium",
   "finast-plus": "/wash-programs/finast-plus",
@@ -116,6 +108,10 @@ export default function App() {
   const [medalStats, setMedalStats] = useState<Stats | null>(null);
   const [calendarMonth, setCalendarMonth] = useState(() => today().slice(0, 7));
   const medalSequence = useRef(0);
+  const [monthlyStats, setMonthlyStats] = useState<Stats | null>(null);
+  const [monthlyMonth, setMonthlyMonth] = useState(() => today().slice(0, 7));
+  const [monthlyError, setMonthlyError] = useState(false);
+  const monthlySequence = useRef(0);
   const [admin, setAdmin] = useState(false),
     [adminTab, setAdminTab] = useState<AdminTab>("overview");
   const [pin, setPin] = useState("");
@@ -203,6 +199,43 @@ export default function App() {
     }, 30000);
     return () => window.clearInterval(timer);
   }, [page, loadMedals]);
+  useEffect(() => {
+    if (page !== "stats") return;
+    let activeMonth = today().slice(0, 7);
+    let mounted = true;
+    setMonthlyMonth(activeMonth);
+    setMonthlyStats(null);
+    const refresh = async () => {
+      const month = today().slice(0, 7);
+      if (month !== activeMonth) {
+        activeMonth = month;
+        setMonthlyMonth(month);
+        setMonthlyStats(null);
+      }
+      const sequence = ++monthlySequence.current;
+      try {
+        const result = await api<Stats>("/stats?period=month");
+        if (mounted && sequence === monthlySequence.current && result.range.start.slice(0, 7) === activeMonth) {
+          setMonthlyStats(result);
+          setMonthlyError(false);
+        }
+      } catch {
+        if (mounted && sequence === monthlySequence.current) {
+          setMonthlyStats(null);
+          setMonthlyError(true);
+        }
+      }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 30000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      mounted = false;
+      monthlySequence.current++;
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [page]);
   const medals = medalPlacements(medalStats, calendarMonth);
   useEffect(() => {
     if (page !== "admin") return;
@@ -417,6 +450,10 @@ export default function App() {
           )}
           primary={page === "stats"}
           compareTeam={!(page === "stats" && scope !== "team")}
+          monthlyStats={monthlyStats}
+          monthlyMonth={monthlyMonth}
+          monthlyError={monthlyError}
+          team={staff}
         />
       )}
     </>
@@ -502,7 +539,20 @@ export default function App() {
               Starkare team
             </div>
           )}
-          <StationLogo />
+          <a
+            className="station-link"
+            href="/station"
+            aria-label="Till stationsdashboard"
+            aria-disabled={busy || !!pending}
+            onClick={(event) => {
+              if (busyRef.current || pending) {
+                event.preventDefault();
+                setNotice("Slutför den aktuella registreringen innan du öppnar stationsdashboarden.");
+              }
+            }}
+          >
+            <StationLogo />
+          </a>
         </div>
       </header>
       <nav className="main-nav" aria-label="Huvudmeny">
@@ -650,13 +700,6 @@ export default function App() {
                         <CarArt tone={program.id} />
                       )}
                     </span>
-                    <div className="wash-copy">
-                      <strong>{program.name}</strong>
-                      <span>
-                        {descriptions[program.id] ?? "En renare vardag"}
-                      </span>
-                      <b>{sek(program.price_sek)}</b>
-                    </div>
                   </button>
                 ))}
               </div>

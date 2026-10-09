@@ -47,17 +47,20 @@ test("visuell layout: sex vyer, verklig statistik, 3×2-program och 44-pixels tr
   await page.getByRole("button", { name: "Emma Välj" }).click();
   const cards = page.locator(".wash-card");
   await expect(cards).toHaveCount(6);
-  await expect(page.locator(".wash-copy strong")).toHaveText([
-    "Preemium",
-    "Finast Plus",
-    "Hösttvätt",
-    "Finast",
-    "Fin",
-    "Borstlös",
-  ]);
-  await expect(page.locator(".wash-copy b")).toHaveText(
-    [389, 329, 259, 219, 179, 199].map(sek),
-  );
+  const programNames = ["Preemium", "Finast Plus", "Hösttvätt", "Finast", "Fin", "Borstlös"];
+  const programPrices = [389, 329, 259, 219, 179, 199];
+  for (let i = 0; i < 6; i++) {
+    await expect(cards.nth(i)).toHaveAttribute("aria-label", `Registrera ${programNames[i]}, ${sek(programPrices[i])}`);
+    await expect(cards.nth(i)).toHaveText("");
+  }
+  expect(await cards.evaluateAll((elements) => elements.every((card) => {
+    const image = card.querySelector("img")!;
+    const frame = card.querySelector(".wash-image")!;
+    const box = frame.getBoundingClientRect();
+    return image.complete && image.naturalWidth > 0 &&
+      getComputedStyle(image).objectFit === "contain" &&
+      Math.abs(box.width / box.height - image.naturalWidth / image.naturalHeight) < 0.02;
+  }))).toBe(true);
   await page.mouse.move(0, 0);
   // Wait for the existing hover transition to settle before measuring row alignment.
   await expect
@@ -132,7 +135,7 @@ test("visuell layout: sex vyer, verklig statistik, 3×2-program och 44-pixels tr
   await checkLayout(page, "statistics-mobile");
   expect(
     await page
-      .locator(".leader-grid")
+      .locator(".dashboard-grid")
       .evaluate(
         (element) =>
           getComputedStyle(element).gridTemplateColumns.split(" ").length,

@@ -50,12 +50,14 @@ async function dimensions(page: Page) {
 }
 for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
   test(`station, Registrera och Statistik ryms på ${width}×${height}`, async ({ page }) => {
+    await page.clock.install({ time: new Date("2026-10-09T09:00:00Z") });
     await page.setViewportSize({ width, height });
     await syntheticData(page);
     await page.goto("/station");
     await expect(page.getByText("38 450")).toBeVisible();
     await expect(page.getByRole("button", { name: /Förra månadens siffror/i })).toBeVisible();
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
+    if (width === 1366 || width === 1920) await page.screenshot({ path: `test-results/v21-station-${width}.png` });
 
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Välj ditt namn" })).toBeVisible();
@@ -64,26 +66,32 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     expect(await page.locator(".wash-card img").count()).toBe(6);
     expect(await page.locator(".wash-card img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
+    if (width === 1366) await page.screenshot({ path: "test-results/v21-washes-desktop.png" });
 
     await page.getByRole("button", { name: /Statistik/ }).first().click();
     await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Snittköpsligan" })).toBeVisible();
-    await expect(page.locator(".leader-list li")).toHaveCount(15);
+    await expect(page.getByRole("region", { name: "Topplista snittköp", exact: true })).toBeVisible();
+    await expect(page.getByRole("region", { name: /Topplista snittköp i/ })).toBeVisible();
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
+    if (width === 1366) await page.screenshot({ path: "test-results/v21-stats-desktop.png" });
   });
 }
 
 test("mobilvyer har inga horisontella överflöden", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-09T09:00:00Z") });
   await page.setViewportSize({ width: 390, height: 844 });
   await syntheticData(page);
   await page.goto("/station");
   await expect(page.getByRole("heading", { name: "IDAG JOBBAR" })).toBeVisible();
   expect((await dimensions(page)).scrollWidth).toBe(390);
+  await page.screenshot({ path: "test-results/v21-station-mobile.png", fullPage: true });
   await page.goto("/");
   await page.locator(".staff-card").first().click();
   await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
   expect((await dimensions(page)).scrollWidth).toBe(390);
+  await page.screenshot({ path: "test-results/v21-washes-mobile.png", fullPage: true });
   await page.getByRole("button", { name: /Statistik/ }).first().click();
   await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
   expect((await dimensions(page)).scrollWidth).toBe(390);
+  await page.screenshot({ path: "test-results/v21-stats-mobile.png", fullPage: true });
 });

@@ -15,6 +15,7 @@ import {
   ClipboardCheck,
   Info,
   Plus,
+  Settings,
   Sun,
   Trophy,
   Users,
@@ -416,6 +417,9 @@ export default function StationDashboardV2() {
               <span>Tillsammans<br />skapar vi en bättre resa</span>
             </span>
           )}
+          <a className="v2-admin-link" href="/station/admin">
+            <Settings size={17} aria-hidden="true" /> Stationsadmin
+          </a>
         </div>
       </header>
       <main className="v2-layout">
@@ -524,7 +528,10 @@ export default function StationDashboardV2() {
                   </div>
                 ))
               ) : (
-                <p>Diagram visas när fler dagsvärden finns.</p>
+                <p className="v2-chart-empty">
+                  Veckodiagrammet visas när minst tre dagsvärden har registrerats.
+                  <span>{bars.filter((bar) => bar.net_sales_ore !== null).length} av 3 dagar</span>
+                </p>
               )}
             </div>
             <small>Framåt tillsammans ♡</small>

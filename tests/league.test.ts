@@ -178,15 +178,10 @@ describe("Snittköpsligans kanoniska D1-statistik", () => {
     const primary = renderToStaticMarkup(
       createElement(Dashboard, { stats: s, primary: true }),
     );
-    expect(primary).toContain("Snittköpsligan");
+    expect(primary).toContain("Topplista snittköp");
     expect(primary).not.toContain("Sålda tvättprogram");
-    expect(primary).not.toContain("Högst snittköp");
-    for (const text of [
-      "Flest sålda tvättar",
-      "Högst omsättning",
-      "Högst Preemium-andel",
-    ])
-      expect(primary).toContain(text);
+    expect(primary).toContain("Mer statistik");
+    expect(primary).not.toContain("Flest sålda tvättar");
     const admin = renderToStaticMarkup(
       createElement(Dashboard, { stats: s, primary: false }),
     );

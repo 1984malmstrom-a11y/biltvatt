@@ -454,11 +454,11 @@ test("Snittköpsligan: verkliga registreringar, 3-tvättarsgräns, benchmark och
     await page.clock.install();
     await page.goto("/?view=stats");
     const league = page.getByRole("region", {
-      name: "Snittköpsligan",
+      name: "Topplista snittköp",
       exact: true,
     });
     await expect(league).toBeVisible();
-    await expect(league).toContainText("Snittköpsligan · Idag");
+    await expect(league).toContainText("Topplista snittköp · Idag");
     await expect(league).toContainText("+79 kr · +31,6 %");
     await expect(league).toContainText("2/3 tvättar");
     const ownOrder = () =>
@@ -506,13 +506,13 @@ test("Snittköpsligan: verkliga registreringar, 3-tvättarsgräns, benchmark och
       fullPage: true,
     });
     await page.getByRole("button", { name: "Vecka", exact: true }).click();
-    await expect(league).toContainText("Snittköpsligan · Vecka");
+    await expect(league).toContainText("Topplista snittköp · Vecka");
     await page.getByRole("button", { name: "Månad", exact: true }).click();
-    await expect(league).toContainText("Snittköpsligan · Månad");
+    await expect(league).toContainText("Topplista snittköp · Månad");
     await page
       .getByRole("button", { name: "Valfri period", exact: true })
       .click();
-    await expect(league).toContainText("Snittköpsligan");
+    await expect(league).toContainText("Topplista snittköp");
     await expect(
       page.getByText("mot jan–sep 2026 (250 kr)", { exact: true }),
     ).toBeVisible();

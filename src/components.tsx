@@ -12,6 +12,7 @@ import type { CSSProperties } from "react";
 import type { Staff, Stats } from "./types";
 import { percent, sek } from "./api";
 import { AverageLeague, BenchmarkDelta } from "./AverageLeague";
+import { MonthlyLeaderboard } from "./MonthlyLeaderboard";
 
 export function StationLogo() {
   return (
@@ -243,11 +244,19 @@ export function Dashboard({
   periodLabel = "Idag",
   primary = true,
   compareTeam = true,
+  monthlyStats = null,
+  monthlyMonth = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm", year: "numeric", month: "2-digit" }).format(new Date()).slice(0, 7),
+  monthlyError = false,
+  team = [],
 }: {
   stats: Stats;
   periodLabel?: string;
   primary?: boolean;
   compareTeam?: boolean;
+  monthlyStats?: Stats | null;
+  monthlyMonth?: string;
+  monthlyError?: boolean;
+  team?: Staff[];
 }) {
   const kpis = [
     ["Antal tvättar", String(stats.count), "blue", CarFront],
@@ -313,7 +322,9 @@ export function Dashboard({
             )}
           </section>
         )}
-        <section className="subpanel">
+        {primary ? (
+          <MonthlyLeaderboard stats={monthlyStats} month={monthlyMonth} team={team} error={monthlyError} />
+        ) : <section className="subpanel">
           <h3>
             Topplista <span className="tag">Säljare</span>
           </h3>
@@ -347,7 +358,7 @@ export function Dashboard({
               </div>
             ))}
           </div>
-        </section>
+        </section>}
       </div>
     </>
   );

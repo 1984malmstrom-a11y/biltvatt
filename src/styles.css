@@ -182,6 +182,17 @@ p {
   font-size: 8px;
   border: 1px solid #f7dfa0;
 }
+.station-link {
+  display: block;
+  flex: none;
+  border-radius: 11px;
+  text-decoration: none;
+}
+.station-link:focus-visible {
+  outline: 3px solid #0877ee;
+  outline-offset: 3px;
+}
+.station-link[aria-disabled="true"] { cursor: not-allowed; }
 .main-nav {
   display: flex;
   align-items: center;
@@ -524,9 +535,8 @@ p {
   gap: 14px;
 }
 .wash-card {
-  display: flex;
-  flex-direction: column;
-  min-height: 220px;
+  display: block;
+  min-height: 0;
   text-align: left;
   border-radius: 13px;
   color: var(--navy);
@@ -569,7 +579,7 @@ p {
 .wash-image {
   display: block;
   width: 100%;
-  aspect-ratio: 2.25;
+  aspect-ratio: 1200 / 529;
   overflow: hidden;
   background: linear-gradient(140deg, var(--card1), var(--card2));
 }
@@ -580,8 +590,8 @@ p {
   height: 100%;
 }
 .wash-image img {
-  object-fit: cover;
-  object-position: center bottom;
+  object-fit: contain;
+  object-position: center;
 }
 .wash-card:hover:not(:disabled) {
   box-shadow: 0 8px 18px #27476536;
@@ -589,30 +599,6 @@ p {
 }
 .wash-card:disabled {
   opacity: 0.65;
-}
-.wash-copy {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 12px 17px 15px;
-}
-.wash-copy strong {
-  font-size: 23px;
-  font-weight: 750;
-  line-height: 1.1;
-  letter-spacing: -0.4px;
-}
-.wash-copy span {
-  font-size: 13px;
-  margin-top: 5px;
-  color: var(--muted);
-}
-.wash-copy b {
-  font-size: 22px;
-  margin-top: auto;
-  padding-top: 7px;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
 }
 .sale-footer {
   display: flex;
@@ -1532,18 +1518,13 @@ td {
   color: #916442;
 }
 .league-person {
-  display: grid;
-  grid-template-columns: 22px 1fr;
-  gap: 3px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   min-width: 0;
 }
-.league-person .avatar {
-  width: 22px;
-  height: 22px;
-  grid-row: span 2;
-  align-self: center;
-}
-.league-person strong {
+.league-person strong,
+.league-person > span {
   font-size: 13px;
   overflow-wrap: anywhere;
 }
@@ -1581,6 +1562,83 @@ td {
 }
 .league-progress strong {
   font-weight: 600;
+}
+.league-shortfall {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 7px 0 0;
+}
+.monthly-league {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.monthly-league h3 { margin-bottom: 4px; }
+.monthly-leader-list {
+  list-style: none;
+  margin: 9px 0 0;
+  padding: 0;
+}
+.monthly-leader-list li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 4px 7px;
+  margin: 3px 0;
+  border: 1px solid #e3edf7;
+  border-radius: 8px;
+  background: #f7faff;
+  font-size: 13px;
+}
+.monthly-rank { width: 26px; flex: none; text-align: center; font-size: 18px; }
+.monthly-name { min-width: 0; overflow-wrap: anywhere; }
+.monthly-value { margin-left: auto; font-weight: 700; white-space: nowrap; }
+.monthly-empty { color: var(--muted); font-size: 13px; margin: 15px 0; }
+.monthly-more {
+  align-self: flex-start;
+  min-height: 44px;
+  margin-top: auto;
+  padding: 8px 13px;
+  border: 1px solid #c9def3;
+  border-radius: 9px;
+  background: #eef6ff;
+  color: #165b9d;
+  font-weight: 700;
+}
+.monthly-more:disabled { opacity: .55; }
+.monthly-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #061d43a8;
+}
+.monthly-modal {
+  width: min(920px, 100%);
+  max-height: min(88vh, 850px);
+  overflow: auto;
+  padding: clamp(18px, 2.5vw, 32px);
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 24px 75px #071b4555;
+}
+.monthly-modal > header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.monthly-modal h2 { margin: 0 0 4px; color: var(--navy); }
+.monthly-modal header p { margin: 0; color: var(--muted); font-size: 13px; }
+.monthly-modal header button { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 50%; background: #eaf3fc; color: #145caa; }
+.monthly-modal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
+.monthly-modal-grid > section { min-width: 0; padding: 15px; border: 1px solid #e0ebf6; border-radius: 11px; }
+.monthly-modal-grid h3, .monthly-unqualified h3 { margin: 0 0 8px; font-size: 17px; }
+.monthly-unqualified { margin-top: 18px; padding: 15px; border-radius: 11px; background: #f5f9fe; }
+.monthly-unqualified ul { margin: 0; padding: 0; list-style: none; }
+.monthly-unqualified li { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: 13px; }
+.monthly-unqualified li span:last-child { color: var(--muted); white-space: nowrap; }
+@media (max-width: 760px) {
+  .monthly-modal-grid { grid-template-columns: 1fr; }
+  .monthly-modal-backdrop { padding: 10px; }
 }
 .device-push-panel {
   margin: 18px 5px 0;
@@ -1753,9 +1811,6 @@ td {
   .welcome-content {
     padding-top: 65px;
   }
-  .wash-card {
-    min-height: 255px;
-  }
 }
 @media (max-width: 1100px) {
   .header-motto {
@@ -1776,12 +1831,6 @@ td {
   }
   .staff-card strong {
     font-size: 18px;
-  }
-  .wash-card {
-    min-height: 215px;
-  }
-  .wash-copy strong {
-    font-size: 22px;
   }
   .kpi {
     padding: 17px 11px;
@@ -1822,7 +1871,11 @@ td {
   .app-header {
     padding: 15px;
     gap: 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
   }
+  .brand-button { grid-column: 1; grid-row: 1; min-width: 0; }
   .brand {
     gap: 9px;
   }
@@ -1846,14 +1899,16 @@ td {
     max-width: 195px;
   }
   .header-right {
-    gap: 8px;
+    display: contents;
   }
-  .header-right > .station-logo {
-    display: none;
-  }
+  .header-right .station-link { grid-column: 2; grid-row: 1; justify-self: end; }
+  .header-right .station-link .station-logo { width: 44px; height: 44px; font-size: 7px; }
+  .header-right .station-link svg { width: 18px; height: 18px; }
   .header-right .seller-pill {
     font-size: 11px;
     gap: 5px;
+    grid-column: 1;
+    grid-row: 2;
   }
   .header-right .seller-pill .avatar {
     display: none;
@@ -1862,6 +1917,8 @@ td {
     padding: 8px;
     font-size: 11px;
     min-height: 44px;
+    grid-column: 2;
+    grid-row: 2;
   }
   .header-right .button svg {
     display: none;
@@ -1934,23 +1991,6 @@ td {
   .wash-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-  }
-  .wash-card {
-    min-height: 216px;
-  }
-  .wash-copy {
-    padding: 10px 12px 13px;
-  }
-  .wash-copy strong {
-    font-size: 21px;
-  }
-  .wash-copy span {
-    font-size: 12px;
-    min-height: 32px;
-    line-height: 1.3;
-  }
-  .wash-copy b {
-    font-size: 21px;
   }
   .sale-footer {
     gap: 10px;
@@ -2115,12 +2155,7 @@ td {
   .sales-panel .section-heading { margin-bottom: 10px; }
   .wash-grid { gap: 10px; }
   .wash-card { min-height: 0; }
-  .wash-image { height: clamp(95px, 12.5vh, 130px); aspect-ratio: auto; }
-  .wash-image img { object-position: center center; }
-  .wash-copy { padding: 7px 12px 9px; }
-  .wash-copy strong { font-size: 21px; }
-  .wash-copy span { font-size: 12px; margin-top: 2px; }
-  .wash-copy b { font-size: 20px; padding-top: 4px; }
+  .wash-image { height: auto; aspect-ratio: 1200 / 529; }
   .sale-footer { margin-top: 10px; }
   .device-push-panel { margin-top: 0; }
   .undo-button, .last-sale { min-height: 45px; }
@@ -2141,7 +2176,7 @@ td {
   .average-league h3 { margin-bottom: 2px; }
   .league-caption { line-height: 1.1; }
   .average-league-list { margin-top: 5px; }
-  .average-league-list { max-height: 180px; overflow-y: auto; scrollbar-width: thin; }
+  .average-league-list { max-height: none; overflow: visible; }
   .average-league-list li { padding: 1px 7px; margin: 2px 0; gap: 6px; }
   .league-rank { width: 22px; height: 22px; }
   .league-person { line-height: 1.1; }
@@ -2158,6 +2193,15 @@ td {
 @media (min-width: 761px) and (max-width: 1100px) {
   .statistics-panel .leader-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
+@media (min-width: 761px) and (max-height: 820px) {
+  .monthly-league { padding-top: 8px; padding-bottom: 8px; }
+  .monthly-league h3 { margin-bottom: 0; }
+  .monthly-leader-list { margin-top: 3px; }
+  .monthly-leader-list li { min-height: 23px; margin: 1px 0; padding: 1px 5px; font-size: 12px; line-height: 1; }
+  .monthly-rank { font-size: 16px; }
+}
+.monthly-modal .monthly-leader-list li { min-height: 28px; margin: 2px 0; padding: 2px 6px; font-size: 13px; line-height: 1.2; }
+.monthly-modal .monthly-rank { font-size: 18px; }
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
