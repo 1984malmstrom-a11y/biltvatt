@@ -48,6 +48,26 @@ async function dimensions(page: Page) {
     scrollWidth: document.documentElement.scrollWidth,
   }));
 }
+async function washImages(page: Page) {
+  return page.locator(".wash-card").evaluateAll((cards) => cards.map((card) => {
+    const image = card.querySelector("img") as HTMLImageElement;
+    const box = card.getBoundingClientRect();
+    const picture = image.getBoundingClientRect();
+    return {
+      naturalWidth: image.naturalWidth,
+      naturalHeight: image.naturalHeight,
+      width: picture.width,
+      height: picture.height,
+      cardHeight: box.height,
+      left: box.left,
+      top: box.top,
+      layoutTop: (card as HTMLElement).offsetTop,
+      contained: picture.left >= box.left && picture.right <= box.right &&
+        picture.top >= box.top && picture.bottom <= box.bottom,
+      fit: getComputedStyle(image).objectFit,
+    };
+  }));
+}
 for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
   test(`station, Registrera och Statistik ryms på ${width}×${height}`, async ({ page }) => {
     await page.clock.install({ time: new Date("2026-10-09T09:00:00Z") });
@@ -65,8 +85,17 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
     expect(await page.locator(".wash-card img").count()).toBe(6);
     expect(await page.locator(".wash-card img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+    const images = await washImages(page);
+    expect(images).toHaveLength(6);
+    expect(images.every((image) => image.contained && image.fit === "contain" &&
+      Math.abs(image.height - image.width * image.naturalHeight / image.naturalWidth) < 1)).toBe(true);
+    expect(images.slice(0, 3).every((image) => image.layoutTop === images[0].layoutTop)).toBe(true);
+    expect(images.slice(3).every((image) => image.layoutTop === images[3].layoutTop)).toBe(true);
+    expect(images[3].layoutTop).toBeGreaterThan(images[0].layoutTop);
+    expect(images[0].cardHeight).toBeLessThan(175);
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
     if (width === 1366) await page.screenshot({ path: "test-results/v21-washes-desktop.png" });
+    if (width === 1366 || width === 1920) await page.screenshot({ path: `test-results/v21-washes-layoutfix-${width}.png` });
 
     await page.getByRole("button", { name: /Statistik/ }).first().click();
     await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
@@ -88,8 +117,13 @@ test("mobilvyer har inga horisontella överflöden", async ({ page }) => {
   await page.goto("/");
   await page.locator(".staff-card").first().click();
   await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
+  const mobileImages = await washImages(page);
+  expect(mobileImages).toHaveLength(6);
+  expect(mobileImages.every((image) => image.contained && image.fit === "contain" &&
+    Math.abs(image.height - image.width * image.naturalHeight / image.naturalWidth) < 1)).toBe(true);
   expect((await dimensions(page)).scrollWidth).toBe(390);
   await page.screenshot({ path: "test-results/v21-washes-mobile.png", fullPage: true });
+  await page.screenshot({ path: "test-results/v21-washes-layoutfix-mobile.png", fullPage: true });
   await page.getByRole("button", { name: /Statistik/ }).first().click();
   await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
   expect((await dimensions(page)).scrollWidth).toBe(390);

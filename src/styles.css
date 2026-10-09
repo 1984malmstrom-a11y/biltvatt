@@ -525,6 +525,7 @@ p {
 }
 .sales-panel {
   padding: 27px;
+  margin-bottom: 12px;
 }
 .sales-panel .section-heading {
   margin-bottom: 18px;
@@ -580,16 +581,17 @@ p {
   display: block;
   width: 100%;
   aspect-ratio: 1200 / 529;
-  overflow: hidden;
   background: linear-gradient(140deg, var(--card1), var(--card2));
 }
-.wash-image img,
 .wash-image .car-art {
   display: block;
   width: 100%;
   height: 100%;
 }
 .wash-image img {
+  display: block;
+  width: 100%;
+  height: auto;
   object-fit: contain;
   object-position: center;
 }
@@ -604,7 +606,7 @@ p {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 18px;
+  margin-top: 12px;
   flex-wrap: wrap;
 }
 .undo-button {
@@ -2151,12 +2153,14 @@ td {
   .main-nav { padding: 0 20px; margin-bottom: 5px; }
   .app-footer { padding-bottom: 0; }
   .sales-panel, .statistics-panel { padding: 18px 22px; }
+  .sales-panel { padding-bottom: 12px; margin-bottom: 8px; }
   .statistics-panel { padding-bottom: 16px; }
   .sales-panel .section-heading { margin-bottom: 10px; }
   .wash-grid { gap: 10px; }
+  .sales-panel .wash-grid { width: min(100%, 1170px); margin-inline: auto; }
   .wash-card { min-height: 0; }
-  .wash-image { height: auto; aspect-ratio: 1200 / 529; }
-  .sale-footer { margin-top: 10px; }
+  .wash-image { aspect-ratio: 1200 / 529; }
+  .sale-footer { margin-top: 8px; }
   .device-push-panel { margin-top: 0; }
   .undo-button, .last-sale { min-height: 45px; }
   .statistics-panel .section-heading { margin-bottom: 9px; }
