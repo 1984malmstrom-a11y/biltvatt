@@ -112,9 +112,13 @@ try {
         try {
           const events = readFileSync(progressPath, "utf8").trim().split("\n")
             .map((line) => JSON.parse(line));
-          const last = events.at(-1);
-          if (last?.event === "begin" && /^e2e\/[a-z0-9-]+\.spec\.ts$/.test(last.file))
-            failures = [{ file: last.file, line: last.line, assertion: "timeout", source: "" }];
+          const firstFailed = events.find((event) => event.event === "end" &&
+            ["failed", "timedOut"].includes(event.status));
+          const active = events.at(-1)?.event === "begin" ? events.at(-1) : undefined;
+          const stalled = firstFailed ?? active;
+          if (stalled && /^e2e\/[a-z0-9-]+\.spec\.ts$/.test(stalled.file))
+            failures = [{ file: stalled.file, line: stalled.line,
+              assertion: firstFailed?.assertion ?? "timeout", source: "" }];
         } catch { /* No test began; startup, browser launch or server may be waiting. */ }
       }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
