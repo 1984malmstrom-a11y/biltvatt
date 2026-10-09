@@ -64,14 +64,15 @@ function freePort() {
   });
 }
 let directory;
+let configHome;
 let outcome;
 try {
   directory = mkdtempSync(join(tmpdir(), "station-v2-e2e-"));
   copyTracked(directory);
   const cli = npmCli();
   if (!cli) throw new Error("npm_cli_not_found");
-  const configHome = join(directory, "config");
-  mkdirSync(configHome, { recursive: true });
+  // Keep Wrangler configuration and logs outside the Vite watch tree.
+  configHome = mkdtempSync(join(tmpdir(), "station-v2-e2e-config-"));
   const localEnv = { ...baseEnv, XDG_CONFIG_HOME: configHome,
     ...(process.platform === "win32" ? { APPDATA: configHome } : {}) };
   progress("npm_ci");
@@ -144,6 +145,10 @@ try {
   if (directory) {
     try { rmSync(directory, { recursive: true, force: true, maxRetries: 8, retryDelay: 500 }); }
     catch { /* No production data or credentials were copied into this directory. */ }
+  }
+  if (configHome) {
+    try { rmSync(configHome, { recursive: true, force: true, maxRetries: 8, retryDelay: 500 }); }
+    catch { /* Only isolated local test configuration was stored here. */ }
   }
 }
 reply(outcome);
