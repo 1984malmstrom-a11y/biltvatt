@@ -106,10 +106,10 @@ function Run-PlaywrightTests {
   $detail = if ($safeFailures.Count) { " Påstående: $($safeFailures -join '; ')." } else { ' Ingen testspecifik felrad gavs; kontrollera start av lokal server eller Chromium.' }
   $diagnostic = ''
   if ($report.PSObject.Properties['diagnostic'] -and $report.diagnostic) {
-    $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount,$report.diagnostic.staffCount)
+    $values = @($report.diagnostic.rootStatus,$report.diagnostic.staffStatus,$report.diagnostic.moduleStatus,$report.diagnostic.pageErrorCount,$report.diagnostic.staffCount,$report.diagnostic.rootChildCount,$report.diagnostic.consoleErrorCount,$report.diagnostic.failedRequestCount)
     if (@($values | Where-Object { [int]$_ -lt -1 -or [int]$_ -gt 599 }).Count -eq 0) {
       $later = if ($report.diagnostic.headingVisibleLater -eq $true) { 'ja' } else { 'nej' }
-      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), demoantal=$($values[4]), rubrik senare=$later, JS-fel=$($values[3])."
+      $diagnostic = " HTTP /=$($values[0]), /api/staff=$($values[1]), /src/main.tsx=$($values[2]), demoantal=$($values[4]), rubrik senare=$later, rotbarn=$($values[5]), JS-fel=$($values[3]), konsolfel=$($values[6]), nätverksfel=$($values[7])."
     }
   }
   Stop-Launch "Playwright stoppade i steg $stage.$detail$diagnostic PIN, tokens och testutdata visas inte."

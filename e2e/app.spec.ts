@@ -10,7 +10,11 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
   request,
 }) => {
   const errors: string[] = [];
+  let consoleErrorCount = 0;
+  let failedRequestCount = 0;
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (message) => { if (message.type() === "error") consoleErrorCount++; });
+  page.on("requestfailed", () => { failedRequestCount++; });
   const initialResponse = await page.goto("/");
   try {
     await expect(
@@ -40,6 +44,9 @@ test("säljflöde, dubbelklicksskydd, statistik, makulering och responsiv vy", a
         staffCount,
         moduleStatus: await status("/src/main.tsx"),
         pageErrorCount: errors.length,
+        consoleErrorCount,
+        failedRequestCount,
+        rootChildCount: await page.locator("#root").evaluate((root) => root.childElementCount).catch(() => -1),
         headingVisibleLater: await page.getByRole("heading", { name: "Välj ditt namn" }).isVisible(),
       })}\n`);
     }

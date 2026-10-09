@@ -127,12 +127,14 @@ try {
         const events = readFileSync(progressPath, "utf8").trim().split("\n")
           .map((line) => JSON.parse(line));
         const event = events.find((item) => item.event === "bootstrap_diagnostic");
-        if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount", "staffCount"]
+        if (event && ["rootStatus", "staffStatus", "moduleStatus", "pageErrorCount", "staffCount", "consoleErrorCount", "failedRequestCount", "rootChildCount"]
           .every((key) => Number.isInteger(event[key]) && event[key] >= -1 && event[key] <= 599) &&
           typeof event.headingVisibleLater === "boolean") {
           diagnostic = { rootStatus: event.rootStatus, staffStatus: event.staffStatus,
             moduleStatus: event.moduleStatus, pageErrorCount: event.pageErrorCount,
-            staffCount: event.staffCount, headingVisibleLater: event.headingVisibleLater };
+            staffCount: event.staffCount, headingVisibleLater: event.headingVisibleLater,
+            consoleErrorCount: event.consoleErrorCount, failedRequestCount: event.failedRequestCount,
+            rootChildCount: event.rootChildCount };
         }
       } catch { /* No safe bootstrap diagnostic was recorded. */ }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
