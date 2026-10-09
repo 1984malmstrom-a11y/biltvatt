@@ -9,6 +9,8 @@ import { createServer } from "node:net";
 import { safeFailures } from "./playwright-safe-failures.mjs";
 
 const root = resolve(import.meta.dirname, "..");
+const bootstrapOnly = process.argv.length === 3 && process.argv[2] === "--bootstrap-only";
+if (process.argv.length > 2 && !bootstrapOnly) throw new Error("invalid_test_mode");
 const reply = (value) => process.stdout.write(`${JSON.stringify(value)}\n`);
 const progress = (stage) => process.stderr.write(`isolated_e2e_stage=${stage}\n`);
 const baseEnv = { ...process.env, CI: "1", WRANGLER_SEND_METRICS: "false",
@@ -95,7 +97,7 @@ try {
     if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
   }
   if (!outcome) {
-    progress("playwright");
+    progress(bootstrapOnly ? "playwright_bootstrap" : "playwright");
     const port = await freePort();
     const reportPath = join(directory, "playwright-result.json");
     const progressPath = join(directory, "playwright-progress.jsonl");
@@ -103,7 +105,9 @@ try {
       STATION_V2_E2E_PORT: String(port), PLAYWRIGHT_JSON_OUTPUT_FILE: reportPath,
       STATION_V2_E2E_PROGRESS_FILE: progressPath };
     result = run(process.execPath, ["node_modules/@playwright/test/cli.js", "test",
-      "--reporter=json,./scripts/playwright-progress-reporter.mjs"], directory, env, 300_000);
+      ...(bootstrapOnly ? ["e2e/app.spec.ts", "--grep", "säljflöde, dubbelklicksskydd"] : []),
+      "--reporter=json,./scripts/playwright-progress-reporter.mjs"], directory, env,
+    bootstrapOnly ? 90_000 : 300_000);
     if (result.status === 0) {
       const report = JSON.parse(readFileSync(reportPath, "utf8"));
       outcome = { ok: true, stage: "isolated_playwright", passed: report.stats?.expected ?? null };

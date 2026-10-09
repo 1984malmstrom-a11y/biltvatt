@@ -33,6 +33,15 @@ jobs:
         run: npm run typecheck
       - name: Install Playwright Chromium
         run: npx playwright install chromium
+      - name: Check isolated Windows app bootstrap before full suite
+        shell: powershell
+        run: |
+          $result = node .\scripts\run-isolated-e2e.mjs --bootstrap-only | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0 -or -not $result.ok -or $result.passed -ne 1) {
+            $failures = @($result.failures | ForEach-Object { "$($_.file):$($_.line) $($_.assertion)" })
+            $diagnostic = if ($result.diagnostic) { "HTTP /=$($result.diagnostic.rootStatus), /api/staff=$($result.diagnostic.staffStatus), /src/main.tsx=$($result.diagnostic.moduleStatus), modul=$($result.diagnostic.moduleMime), konsoltyp=$($result.diagnostic.consoleCategory), demoantal=$($result.diagnostic.staffCount), rotbarn=$($result.diagnostic.rootChildCount), konsolfel=$($result.diagnostic.consoleErrorCount)" } else { 'ingen säker startdiagnostik' }
+            throw "Isolated Windows bootstrap failed at $($result.stage): $($failures -join '; '); $diagnostic"
+          }
       - name: Run all Playwright tests twice in isolated Windows environments
         shell: powershell
         run: |
