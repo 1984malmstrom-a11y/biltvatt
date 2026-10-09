@@ -580,7 +580,7 @@ p {
 .wash-image {
   display: block;
   width: 100%;
-  aspect-ratio: 1200 / 529;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(140deg, var(--card1), var(--card2));
 }
 .wash-image .car-art {
@@ -591,7 +591,7 @@ p {
 .wash-image img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   object-position: center;
 }
@@ -2159,7 +2159,7 @@ td {
   .wash-grid { gap: 10px; }
   .sales-panel .wash-grid { width: min(100%, 1170px); margin-inline: auto; }
   .wash-card { min-height: 0; }
-  .wash-image { aspect-ratio: 1200 / 529; }
+  .wash-image { aspect-ratio: auto; height: 195px; }
   .sale-footer { margin-top: 8px; }
   .device-push-panel { margin-top: 0; }
   .undo-button, .last-sale { min-height: 45px; }

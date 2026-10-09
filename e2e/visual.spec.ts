@@ -57,9 +57,12 @@ test("visuell layout: sex vyer, verklig statistik, 3×2-program och 44-pixels tr
     const image = card.querySelector("img")!;
     const frame = card.querySelector(".wash-image")!;
     const box = frame.getBoundingClientRect();
+    const imageBox = image.getBoundingClientRect();
     return image.complete && image.naturalWidth > 0 &&
       getComputedStyle(image).objectFit === "contain" &&
-      Math.abs(box.width / box.height - image.naturalWidth / image.naturalHeight) < 0.02;
+      Math.abs(image.naturalWidth / image.naturalHeight - 4 / 3) < 0.01 &&
+      Math.abs(imageBox.width - box.width) < 1 &&
+      Math.abs(imageBox.height - box.height) < 1;
   }))).toBe(true);
   await page.mouse.move(0, 0);
   // Wait for the existing hover transition to settle before measuring row alignment.

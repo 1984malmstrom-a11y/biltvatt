@@ -689,10 +689,10 @@ export default function App() {
                         <img
                           src={`${programImages[program.id]}-600.webp`}
                           srcSet={`${programImages[program.id]}-600.webp 600w, ${programImages[program.id]}-1200.webp 1200w`}
-                          sizes="(max-width: 760px) 45vw, (max-width: 1100px) 30vw, 410px"
+                          sizes="(max-width: 760px) 45vw, 260px"
                           alt=""
                           width={1200}
-                          height={529}
+                          height={900}
                           loading="lazy"
                           decoding="async"
                         />

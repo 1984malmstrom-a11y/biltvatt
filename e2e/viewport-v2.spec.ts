@@ -94,14 +94,17 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     const images = await washImages(page);
     expect(images).toHaveLength(6);
     expect(images.every((image) => image.contained && image.fit === "contain" &&
-      Math.abs(image.height - image.width * image.naturalHeight / image.naturalWidth) < 1)).toBe(true);
+      Math.abs(image.naturalWidth / image.naturalHeight - 4 / 3) < 0.01)).toBe(true);
+    expect(await page.locator(".wash-card").evaluateAll((cards) =>
+      cards.every((card) => !card.textContent?.trim()))).toBe(true);
     expect(images.slice(0, 3).every((image) => image.layoutTop === images[0].layoutTop)).toBe(true);
     expect(images.slice(3).every((image) => image.layoutTop === images[3].layoutTop)).toBe(true);
     expect(images[3].layoutTop).toBeGreaterThan(images[0].layoutTop);
-    expect(images[0].cardHeight).toBeLessThan(175);
+    expect(images[0].cardHeight).toBeLessThan(205);
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
     if (width === 1366) await page.screenshot({ path: "test-results/v21-washes-desktop.png" });
     if (width === 1366 || width === 1920) await page.screenshot({ path: `test-results/v21-washes-layoutfix-${width}.png` });
+    if (width === 1366 || width === 1920) await page.screenshot({ path: `test-results/full-originals-${width}.png` });
 
     await page.getByRole("button", { name: /Statistik/ }).first().click();
     await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
@@ -127,10 +130,11 @@ test("mobilvyer har inga horisontella överflöden", async ({ page }) => {
   const mobileImages = await washImages(page);
   expect(mobileImages).toHaveLength(6);
   expect(mobileImages.every((image) => image.contained && image.fit === "contain" &&
-    Math.abs(image.height - image.width * image.naturalHeight / image.naturalWidth) < 1)).toBe(true);
+    Math.abs(image.naturalWidth / image.naturalHeight - 4 / 3) < 0.01)).toBe(true);
   expect((await dimensions(page)).scrollWidth).toBe(390);
   await page.screenshot({ path: "test-results/v21-washes-mobile.png", fullPage: true });
   await page.screenshot({ path: "test-results/v21-washes-layoutfix-mobile.png", fullPage: true });
+  await page.screenshot({ path: "test-results/full-originals-mobile.png", fullPage: true });
   await page.getByRole("button", { name: /Statistik/ }).first().click();
   await expect(page.getByRole("heading", { name: "Statistik" })).toBeVisible();
   expect((await dimensions(page)).scrollWidth).toBe(390);
