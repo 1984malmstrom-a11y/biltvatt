@@ -95,9 +95,12 @@ try {
     progress("playwright");
     const port = await freePort();
     const reportPath = join(directory, "playwright-result.json");
+    const progressPath = join(directory, "playwright-progress.jsonl");
     const env = { ...localEnv, STATION_V2_E2E_ISOLATED: "1",
-      STATION_V2_E2E_PORT: String(port), PLAYWRIGHT_JSON_OUTPUT_FILE: reportPath };
-    result = run(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--reporter=json"], directory, env, 300_000);
+      STATION_V2_E2E_PORT: String(port), PLAYWRIGHT_JSON_OUTPUT_FILE: reportPath,
+      STATION_V2_E2E_PROGRESS_FILE: progressPath };
+    result = run(process.execPath, ["node_modules/@playwright/test/cli.js", "test",
+      "--reporter=json,./scripts/playwright-progress-reporter.mjs"], directory, env, 300_000);
     if (result.status === 0) {
       const report = JSON.parse(readFileSync(reportPath, "utf8"));
       outcome = { ok: true, stage: "isolated_playwright", passed: report.stats?.expected ?? null };
@@ -105,6 +108,15 @@ try {
       let failures = [];
       try { failures = safeFailures(JSON.parse(readFileSync(reportPath, "utf8")), directory); }
       catch { /* A missing report points to browser or webserver startup. */ }
+      if (result.error?.code === "ETIMEDOUT" && !failures.length) {
+        try {
+          const events = readFileSync(progressPath, "utf8").trim().split("\n")
+            .map((line) => JSON.parse(line));
+          const last = events.at(-1);
+          if (last?.event === "begin" && /^e2e\/[a-z0-9-]+\.spec\.ts$/.test(last.file))
+            failures = [{ file: last.file, line: last.line, assertion: "timeout", source: "" }];
+        } catch { /* No test began; startup, browser launch or server may be waiting. */ }
+      }
       outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
         ? "isolated_playwright_timeout"
         : failures.length ? "assertion" : "webserver_browser_or_runner",
