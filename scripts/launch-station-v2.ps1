@@ -90,7 +90,7 @@ function Run-PlaywrightTests {
     Info "Playwright passerade i en ny lokal testmiljö ($($report.passed) test)."
     return
   }
-  $stages = @('isolated_npm_ci','isolated_npm_ci_timeout','isolated_local_setup','assertion','webserver_browser_or_runner','isolated_playwright_timeout','isolated_runner')
+  $stages = @('isolated_npm_ci','isolated_npm_ci_timeout','isolated_local_setup','isolated_local_build','isolated_local_build_timeout','assertion','webserver_browser_or_runner','isolated_playwright_timeout','isolated_runner')
   $stage = if ($stages -contains [string]$report.stage) { [string]$report.stage } else { 'okänt steg' }
   $safeFailures = @()
   foreach ($failure in @($report.failures)) {

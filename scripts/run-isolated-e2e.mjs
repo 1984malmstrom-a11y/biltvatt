@@ -97,6 +97,14 @@ try {
     if (result.status !== 0) outcome = { ok: false, stage: "isolated_local_setup", exitCode: result.status };
   }
   if (!outcome) {
+    // Build only inside the disposable copy, with its synthetic local secret.
+    // Wrangler dev then serves these assets and the Worker strictly locally.
+    progress("local_build");
+    result = run(process.execPath, ["node_modules/vite/bin/vite.js", "build"], directory, localEnv, 120_000);
+    if (result.status !== 0) outcome = { ok: false, stage: result.error?.code === "ETIMEDOUT"
+      ? "isolated_local_build_timeout" : "isolated_local_build", exitCode: result.status };
+  }
+  if (!outcome) {
     progress(bootstrapOnly ? "playwright_bootstrap" : "playwright");
     const port = await freePort();
     const reportPath = join(directory, "playwright-result.json");

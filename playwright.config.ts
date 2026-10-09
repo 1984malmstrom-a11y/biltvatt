@@ -15,7 +15,9 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${port} --strictPort`,
+    command: isolated
+      ? `node node_modules/wrangler/wrangler-dist/cli.js dev --local --ip 127.0.0.1 --port ${port}`
+      : `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${port} --strictPort`,
     url: `http://127.0.0.1:${port}/api/staff`,
     reuseExistingServer: !isolated && !process.env.CI,
     timeout: 60000,
