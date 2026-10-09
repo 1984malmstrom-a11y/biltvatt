@@ -34,11 +34,14 @@ function run(program, args, cwd, env = baseEnv, timeout = 180_000, logPath) {
 function safeBuildDetail(path) {
   try {
     const output = readFileSync(path, "utf8").slice(-24_000).replace(/\x1b\[[0-9;]*m/g, "");
-    const lines = output.split(/\r?\n/)
-      .filter((line) => /error|failed|cannot|could not|ERR_|TS\d{4}/i.test(line))
+    const allLines = output.split(/\r?\n/);
+    const marker = allLines.findLastIndex((line) => /error during build:/i.test(line));
+    const selected = marker >= 0 ? allLines.slice(marker + 1, marker + 4)
+      : allLines.filter((line) => /error|failed|cannot|could not|ERR_|TS\d{4}/i.test(line)).slice(-3);
+    const lines = selected
       .filter((line) => !/PIN|TOKEN|COOKIE|SECRET|VAPID|PASSWORD|PRIVATE_KEY/i.test(line))
       .filter((line) => !/^\s*at\s|\bgetRollupError\b|\bError\s*\(file:/i.test(line))
-      .slice(-2)
+      .slice(0, 2)
       .map((line) => line
         .replace(/(['"`])[^'"`]*\1/g, "<quoted>")
         .replace(/[A-Za-z]:\\[^\s)]+/g, "<path>")
