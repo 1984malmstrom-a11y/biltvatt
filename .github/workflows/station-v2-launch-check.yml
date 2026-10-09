@@ -31,12 +31,19 @@ jobs:
         run: npm test
       - name: Check TypeScript on Windows
         run: npm run typecheck
-      - name: Prepare local-only Playwright D1 and PIN
-        run: npm run setup
       - name: Install Playwright Chromium
         run: npx playwright install chromium
-      - name: Run all Playwright tests on Windows
-        run: npm run test:e2e
+      - name: Run all Playwright tests twice in isolated Windows environments
+        shell: powershell
+        run: |
+          for ($i = 1; $i -le 2; $i++) {
+            $result = node .\scripts\run-isolated-e2e.mjs | ConvertFrom-Json
+            if ($LASTEXITCODE -ne 0 -or -not $result.ok -or $result.passed -lt 25) {
+              $failures = @($result.failures | ForEach-Object { "$($_.file):$($_.line) $($_.assertion) $($_.source)" })
+              throw "Isolated Playwright pass $i failed at $($result.stage): $($failures -join '; ')"
+            }
+            Write-Host "Isolated Playwright pass $i passed: $($result.passed) tests."
+          }
       - name: Build production bundle on Windows
         run: npm run build
       - name: Parse script with Windows PowerShell 5.1

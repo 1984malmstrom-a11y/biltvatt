@@ -82,44 +82,29 @@ function Run-UnitTests {
     Remove-Item -LiteralPath $reportPath -ErrorAction SilentlyContinue
   }
 }
-function Find-PlaywrightFailures($Suite, [string[]]$KnownFiles, [System.Collections.Generic.List[string]]$Failures) {
-  $file = [IO.Path]::GetFileName([string]$Suite.file)
-  $specs = @(); if ($Suite.PSObject.Properties['specs']) { $specs = @($Suite.specs) }
-  foreach ($spec in $specs) {
-    if ($KnownFiles -notcontains $file) { continue }
-    $bad = @($spec.tests | Where-Object { $_.status -ne 'expected' -or @($_.results | Where-Object { $_.status -eq 'failed' }).Count -gt 0 })
-    if ($bad.Count -eq 0) { continue }
-    $title = ([string]$spec.title -replace '[\r\n\t]', ' ').Trim()
-    if ($title.Length -gt 140) { $title = $title.Substring(0, 140) + '…' }
-    if ($title -and $Failures.Count -lt 5) { $Failures.Add("$file`: $title") }
-  }
-  if ($Suite.PSObject.Properties['suites']) {
-    foreach ($child in @($Suite.suites)) { Find-PlaywrightFailures $child $KnownFiles $Failures }
-  }
-}
 function Run-PlaywrightTests {
-  $reportPath = Join-Path ([IO.Path]::GetTempPath()) ("station-v2-playwright-" + [guid]::NewGuid().ToString('N') + '.json')
-  $previous = $env:PLAYWRIGHT_JSON_OUTPUT_FILE
-  try {
-    $env:PLAYWRIGHT_JSON_OUTPUT_FILE = $reportPath
-    try { $null = Run $script:npm @('run','test:e2e','--','--reporter=json') 'Playwright-tester' }
-    catch {
-      $runFailure = $_.Exception.Message
-      $failedNames = [System.Collections.Generic.List[string]]::new()
-      if (Test-Path -LiteralPath $reportPath -PathType Leaf) {
-        try {
-          $report = Get-Content -LiteralPath $reportPath -Raw -Encoding UTF8 | ConvertFrom-Json
-          $known = @(Get-ChildItem -LiteralPath (Join-Path $root 'e2e') -Filter '*.spec.ts' -File | ForEach-Object { $_.Name })
-          foreach ($suite in @($report.suites)) { Find-PlaywrightFailures $suite $known $failedNames }
-        } catch { $failedNames.Clear() }
-      }
-      if ($failedNames.Count -gt 0) { Stop-Launch "$runFailure Misslyckade test: $($failedNames -join '; '). Privata felutskrifter visas inte." }
-      Stop-Launch "$runFailure Inget enskilt test rapporterades; kontrollera lokal webbserver, Chromium eller teststart. Privata felutskrifter visas inte."
-    }
-  } finally {
-    $env:PLAYWRIGHT_JSON_OUTPUT_FILE = $previous
-    Remove-Item -LiteralPath $reportPath -ErrorAction SilentlyContinue
+  $raw = Run $script:node @('scripts/run-isolated-e2e.mjs') 'Isolerade Playwright-tester'
+  try { $report = ConvertFrom-Json -InputObject $raw }
+  catch { Stop-Launch 'Playwright-körningen gav inte giltig, begränsad JSON-diagnostik.' }
+  if ($report.ok -eq $true -and [int]$report.passed -ge 25) {
+    Info "Playwright passerade i en ny lokal testmiljö ($($report.passed) test)."
+    return
   }
+  $stages = @('isolated_npm_ci','isolated_local_setup','assertion','webserver_browser_or_runner','isolated_runner')
+  $stage = if ($stages -contains [string]$report.stage) { [string]$report.stage } else { 'okänt steg' }
+  $safeFailures = @()
+  foreach ($failure in @($report.failures)) {
+    $file = [string]$failure.file
+    if ($file -notmatch '^e2e/[a-z0-9-]+\.spec\.ts$') { continue }
+    $line = [int]$failure.line
+    $assertion = [string]$failure.assertion
+    if ($assertion -notmatch '^(toBeVisible|toBeDisabled|toHaveValue|toContainText|toBe|toEqual|toHaveText|toHaveCount|timeout|locator|test_failure)$') { $assertion = 'test_failure' }
+    $source = ([string]$failure.source -replace '[\r\n\t]', ' ').Trim()
+    if ($source.Length -gt 140 -or $source -notmatch '^(await\s+)?expect\b|^\)\.(to|not\.)|^\.(to|not\.)') { $source = '' }
+    $safeFailures += "$file`:$line ($assertion) $source"
+  }
+  $detail = if ($safeFailures.Count) { " Påstående: $($safeFailures -join '; ')." } else { ' Ingen testspecifik felrad gavs; kontrollera start av lokal server eller Chromium.' }
+  Stop-Launch "Playwright stoppade i steg $stage.$detail PIN, tokens och testutdata visas inte."
 }
 function Command-Path([string]$Name) {
   $found = Get-Command $Name -ErrorAction SilentlyContinue
@@ -430,8 +415,6 @@ try {
   $SchedulePath = Check-PrivateFile $SchedulePath 'Oktober-CSV'
   Check-Schedule
   Info 'Kör lokala tester och produktionsbuild före publicering.'
-  # setup writes only ignored .dev.vars and applies D1 migrations with --local.
-  $null = Run $npm @('run','setup') 'Lokal testmiljö för Playwright'
   $null = Run $npx @('playwright','install','chromium') 'Installation av Chromium för test'
   $null = Run $npm @('run','typecheck') 'TypeScript-kontroll'
   Run-UnitTests

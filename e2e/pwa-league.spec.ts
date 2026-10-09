@@ -367,42 +367,50 @@ test("Admin/Notiser: säker status, inställningar, serverdata och mobil layout 
   const baseline = await (
     await page.request.get("/api/admin/notifications")
   ).json();
-  await expect(page.getByText("VAPID saknas", { exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Skicka notis", exact: true }),
-  ).toBeDisabled();
-  await expect(page.getByLabel("Pushnotiser globalt")).toBeDisabled();
-  await page.getByLabel("Tvättar kvar till målet").fill("4");
-  await page.getByRole("button", { name: "Spara notisinställningar" }).click();
-  await expect(page.getByRole("status")).toContainText(
-    "Notisinställningarna är sparade",
-  );
-  expect(
-    (await (await page.request.get("/api/admin/notifications")).json()).settings
-      .push_goal_close_threshold,
-  ).toBe(4);
-  await page.request.put("/api/admin/notifications/settings", {
-    data: baseline.settings,
-  });
-  await page.getByRole("button", { name: "Uppdatera pushstatus" }).click();
-  await expect(page.getByLabel("Tvättar kvar till målet")).toHaveValue(
-    String(baseline.settings.push_goal_close_threshold),
-  );
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.screenshot({
-    path: "test-results/notiser-desktop.png",
-    fullPage: true,
-  });
-  await page.setViewportSize({ width: 390, height: 844 });
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true);
-  await page.screenshot({
-    path: "test-results/notiser-mobile.png",
-    fullPage: true,
-  });
+  try {
+    await expect(page.getByText("VAPID saknas", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Skicka notis", exact: true }),
+    ).toBeDisabled();
+    await expect(page.getByLabel("Pushnotiser globalt")).toBeDisabled();
+    await page.getByLabel("Tvättar kvar till målet").fill("4");
+    await page.getByRole("button", { name: "Spara notisinställningar" }).click();
+    await expect(page.getByRole("status")).toContainText(
+      "Notisinställningarna är sparade",
+    );
+    expect(
+      (await (await page.request.get("/api/admin/notifications")).json()).settings
+        .push_goal_close_threshold,
+    ).toBe(4);
+    await page.request.put("/api/admin/notifications/settings", {
+      data: baseline.settings,
+    });
+    await page.getByRole("button", { name: "Uppdatera pushstatus" }).click();
+    await expect(page.getByLabel("Tvättar kvar till målet")).toHaveValue(
+      String(baseline.settings.push_goal_close_threshold),
+    );
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.screenshot({
+      path: "test-results/notiser-desktop.png",
+      fullPage: true,
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: "test-results/notiser-mobile.png",
+      fullPage: true,
+    });
+  } finally {
+    // A failed assertion must not leave local notification settings changed
+    // for a later developer test run.
+    await page.request.put("/api/admin/notifications/settings", {
+      data: baseline.settings,
+    });
+  }
 });
 test("Snittköpsligan: verkliga registreringar, 3-tvättarsgräns, benchmark och automatisk 30s-uppdatering", async ({
   page,
