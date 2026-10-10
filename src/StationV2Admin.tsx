@@ -35,7 +35,7 @@ type Monthly = { month: string; metrics: FixedMonthlyMetrics | null; legacy: boo
 const monthlyDraft = (metrics: FixedMonthlyMetrics | null) => {
   const source = metrics ?? emptyMonthlyMetrics();
   return Object.fromEntries(MONTHLY_CATEGORIES.flatMap(({ key, fields }) =>
-    fields.map((field) => [`${key}.${field}`, inputNumber((source[key] as Record<string, number | null>)[field])]),
+    fields.map((field) => [`${key}.${field}`, inputNumber((source[key] as Record<string, number | null>)[field] ?? null)]),
   )) as Record<string, string>;
 };
 const parseMonthlyDraft = (draft: Record<string, string>): FixedMonthlyMetrics => {
@@ -134,6 +134,7 @@ export default function StationV2Admin() {
   const [month, setMonth] = useState(previousMonth),
     [metrics, setMetrics] = useState<Record<string, string>>(() => monthlyDraft(null)),
     [legacyMonth, setLegacyMonth] = useState(false),
+    [monthLoading, setMonthLoading] = useState(false),
     [monthlyVersion, setMonthlyVersion] = useState<number | null>(null);
   const monthlyInitialized = useRef(false);
   const monthRequest = useRef(0);
@@ -335,7 +336,12 @@ export default function StationV2Admin() {
     const request = ++monthRequest.current;
     setMonth(value);
     setError("");
+    setMessage("");
+    setMetrics(monthlyDraft(null));
+    setLegacyMonth(false);
+    setMonthlyVersion(null);
     if (!value) return;
+    setMonthLoading(true);
     try {
       const row = await api<Monthly>(`/admin/station/v2/monthly/${value}`);
       if (request !== monthRequest.current) return;
@@ -343,6 +349,7 @@ export default function StationV2Admin() {
       setLegacyMonth(row.legacy);
       setMonthlyVersion(row.revision);
     } catch (e) { if (request === monthRequest.current) setError((e as Error).message); }
+    finally { if (request === monthRequest.current) setMonthLoading(false); }
   }
   async function saveMonthly(e: React.FormEvent) {
     e.preventDefault();
@@ -727,11 +734,11 @@ export default function StationV2Admin() {
           {legacyMonth && <p className="v25-legacy" role="status">Denna månad innehåller äldre fria värden. De är bevarade och kan inte skrivas över av det nya formuläret.</p>}
           <div className="v25-admin-grid">
             {MONTHLY_CATEGORIES.map(({ key, label, unit, fields }) => (
-              <fieldset key={key} className={key === "economic_result" ? "v25-result-editor" : "v25-category-editor"} disabled={legacyMonth}>
+              <fieldset key={key} className={key === "economic_result" ? "v25-result-editor" : "v25-category-editor"} disabled={legacyMonth || monthLoading}>
                 <legend>{label}</legend>
                 <div className="v25-field-grid">
                   {fields.map((field) => {
-                    const fieldLabel = field === "current" ? "Aktuellt värde" : field === "previous" ? "Föregående år" : field === "percent" ? "Förändring" : "Ekonomiskt resultat";
+                    const fieldLabel = field === "current" ? "Aktuellt värde" : field === "percent" ? "Förändring" : field === "total_ytd" ? "Totalt i år" : "Ekonomiskt resultat";
                     const suffix = field === "percent" ? "%" : unit === "antal" ? "antal" : unit;
                     const percentage = field === "percent" ? parseSwedishNumber(metrics[`${key}.${field}`] ?? "") : null;
                     return <label key={field}>{fieldLabel}
@@ -745,7 +752,7 @@ export default function StationV2Admin() {
             ))}
           </div>
           <div className="v2-monthly-actions">
-            <button className="station-primary" disabled={busy || !month || legacyMonth}>
+            <button className="station-primary" disabled={busy || !month || legacyMonth || monthLoading}>
               Spara månad
             </button>
           </div>

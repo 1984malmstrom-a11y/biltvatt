@@ -783,13 +783,18 @@ export default function StationDashboardV2() {
           ) : monthly ? (
             <div className="v25-monthly">
               <p className="v2-monthly-month">{monthLabel(monthly.month)}</p>
-              <h3>Månadens nyckeltal</h3>
               {monthly.legacy && <p className="v25-legacy">Äldre fria månadsvärden är bevarade i databasen. De visas inte i det fasta nyckeltalsformatet.</p>}
               <section className="v25-result" aria-label="Ekonomiskt resultat">
                 <span>EKONOMISKT RESULTAT</span>
                 <strong className={monthlyTone(monthly.metrics?.economic_result.value ?? null)}>
                   {formatMonthlyNumber(monthly.metrics?.economic_result.value ?? null, "kr", true)}
                 </strong>
+                <div className="v26-ytd">
+                  <span>Totalt i år</span>
+                  <strong className={monthlyTone(monthly.metrics?.economic_result.total_ytd ?? null)}>
+                    {formatMonthlyNumber(monthly.metrics?.economic_result.total_ytd ?? null, "kr", true)}
+                  </strong>
+                </div>
               </section>
               <div className="v25-metric-grid">
                 {MONTHLY_CATEGORIES.filter(({ key }) => key !== "economic_result").map(({ key, label, unit }) => {
@@ -799,9 +804,8 @@ export default function StationDashboardV2() {
                     <h4>{label}</h4>
                     {item && "current" in item && <dl>
                       <div><dt>Aktuellt</dt><dd>{formatMonthlyNumber(item.current, unit as "antal" | "liter" | "kr")}</dd></div>
-                      <div><dt>Föregående år</dt><dd>{formatMonthlyNumber(item.previous, unit as "antal" | "liter" | "kr")}</dd></div>
                     </dl>}
-                    {key !== "sales" && !item && <dl><div><dt>Aktuellt</dt><dd>Saknas</dd></div><div><dt>Föregående år</dt><dd>Saknas</dd></div></dl>}
+                    {key !== "sales" && !item && <dl><div><dt>Aktuellt</dt><dd>Saknas</dd></div></dl>}
                     <div className="v25-percent"><span>Förändring</span><strong className={monthlyTone(percent)}>{formatMonthlyNumber(percent, "%", true)}</strong></div>
                   </section>;
                 })}

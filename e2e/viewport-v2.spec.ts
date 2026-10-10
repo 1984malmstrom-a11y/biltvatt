@@ -1,4 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
+import { mkdirSync } from "node:fs";
+
+const v26PreviewDir = process.env.V26_PREVIEW_DIR;
+if (v26PreviewDir) mkdirSync(v26PreviewDir, { recursive: true });
 
 const people = Array.from({ length: 5 }, (_, i) => ({
   id: `demo-${i}`, name: `Demo ${String.fromCharCode(65 + i)}`,
@@ -22,7 +26,7 @@ const stationWeek = [
   { date: "2026-10-06", net_sales_ore: 3420000, comparison_sales_ore: 3100000, percent: 10.3 },
   { date: "2026-10-07", net_sales_ore: 3845000, comparison_sales_ore: 3408700, percent: 12.8 },
 ];
-async function syntheticData(page: Page, saleOre = 3845000) {
+async function syntheticData(page: Page, saleOre = 3845000, noticeMessage = "Syntetiskt innehåll.") {
   await page.route("**/api/station/weather", (route) => route.fulfill({ json: {
     source: "SMHI SNOW1gv1", kind: "forecast",
     now: { time: "2026-10-08T10:00:00Z", temperature: 12, symbol: 3 },
@@ -50,7 +54,7 @@ async function syntheticData(page: Page, saleOre = 3845000) {
     today: "2026-10-08", updated_at: null,
     shifts: people.slice(0, 3).map((person, index) => ({ id: person.id, first_name: person.name, starts_at: `0${6 + index}:00`, ends_at: `${14 + index}:00` })),
     tasks: [0, 1, 2, 3].map((index) => ({ id: String(index), text: `Demouppgift ${index + 1}`, done: index % 2, revision: 0, created_at: "" })),
-    notices: [{ id: "demo", title: "Demomeddelande", message: "Syntetiskt innehåll.", updated_at: "" }],
+    notices: [{ id: "demo", title: "Demomeddelande", message: noticeMessage, updated_at: "" }],
   } }));
 }
 async function dimensions(page: Page) {
@@ -136,6 +140,29 @@ async function waitForWashImages(page: Page) {
     (item as HTMLImageElement).complete && (item as HTMLImageElement).naturalWidth > 0)),
   { timeout: 10_000 }).toBe(true);
 }
+test("V2.6 startsida visar lugn stapelruta och större obeskuren Ferrari-bild", async ({ page }) => {
+  await page.setViewportSize({ width: 1536, height: 864 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await syntheticData(page, 3845000,
+    "Kontrollera kampanjskyltarna vid entrén och fyll på materialet inför helgens aktiviteter i stationen.");
+  await page.goto("/station");
+  await expect(page.locator(".v2-chart-detail")).toContainText("Välj en stapel för att se resultatet för den dagen.");
+  await expect(page.locator(".v2-info p")).toHaveCSS("-webkit-line-clamp", "2");
+  const artwork = await ferrariArtwork(page);
+  expect(artwork.source).toBe("/ferrari-campaign-original.png");
+  expect(artwork.fit).toBe("contain");
+  const ratio = await page.evaluate(() => {
+    const image = document.querySelector(".v2-ferrari-art")!.getBoundingClientRect();
+    const card = document.querySelector(".v2-station-image")!.getBoundingClientRect();
+    return image.width / card.width;
+  });
+  expect(ratio).toBeGreaterThanOrEqual(0.63);
+  expect(await dimensions(page)).toMatchObject({ scrollWidth: 1536, scrollHeight: 864 });
+  if (v26PreviewDir) {
+    await page.locator(".v2-station-image").screenshot({ path: `${v26PreviewDir}/ferrari-desktop.png` });
+    await page.screenshot({ path: `${v26PreviewDir}/dashboard-desktop.png`, fullPage: true });
+  }
+});
 for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
   test(`station, Registrera och Statistik ryms på ${width}×${height}`, async ({ page }) => {
     await page.clock.install({ time: new Date("2026-10-08T09:00:00Z") });

@@ -1,13 +1,14 @@
 import { test, expect } from "@playwright/test";
 import { mkdirSync, readFileSync } from "node:fs";
 
-const previewDir = process.env.V25_PREVIEW_DIR;
+const previewDir = process.env.V26_PREVIEW_DIR;
 if (previewDir) mkdirSync(previewDir, { recursive: true });
 
 test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord och detaljpaneler", async ({
   page,
 }) => {
   let economicResult = 10000;
+  let yearResult = 185000;
   let tasks = [
     {
       id: "00000000-0000-4000-8000-000000000001",
@@ -70,7 +71,7 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
     }),
   );
   await page.route("**/api/station/v2/monthly", (r) =>
-    r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({month:"2026-09",metrics:{kind:"fixed-v25",customers_per_day:{current:420,previous:398,percent:5.5},average_purchase:{current:85.4,previous:81.2,percent:5.2},fuel_per_day:{current:12500,previous:13100,percent:-4.6},car_wash_average:{current:275,previous:250,percent:10},sales:{percent:7.8},economic_result:{value:economicResult}},legacy:false,updated_at:null})}),
+    r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({month:"2026-09",metrics:{kind:"fixed-v25",customers_per_day:{current:420,previous:398,percent:5.5},average_purchase:{current:85.4,previous:81.2,percent:5.2},fuel_per_day:{current:12500,previous:13100,percent:-4.6},car_wash_average:{current:275,previous:250,percent:10},sales:{percent:7.8},economic_result:{value:economicResult,total_ytd:yearResult}},legacy:false,updated_at:null})}),
   );
   await page.route("**/api/station/v2/tasks/**", async (r) => {
     const body = r.request().postDataJSON();
@@ -126,35 +127,65 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
       .getByText("Kontrollera lagret"),
   ).toBeVisible();
   await page.keyboard.press("Escape");
+  await page.setViewportSize({ width: 1366, height: 768 });
   const monthlyButton=page.getByRole("button",{name:/Förra månadens siffror/i});
   await monthlyButton.click();
   const monthlyDialog=page.getByRole("dialog",{name:"Förra månadens siffror"});
-  await expect(monthlyDialog.getByRole("heading",{name:"Månadens nyckeltal"})).toBeVisible();
   await expect(monthlyDialog.getByLabel("Ekonomiskt resultat")).toContainText(/\+10\s000 kr/);
+  await expect(monthlyDialog.locator(".v26-ytd")).toContainText(/\+185\s000 kr/);
+  await expect(monthlyDialog.getByText("Föregående år")).toHaveCount(0);
   await expect(monthlyDialog.locator(".v25-metric-card")).toHaveCount(5);
-  await expect(monthlyDialog.locator(".v25-result strong")).toHaveClass(/positive/);
+  await expect(monthlyDialog.locator(".v25-result > strong")).toHaveClass(/positive/);
+  await expect(monthlyDialog.locator(".v26-ytd strong")).toHaveClass(/positive/);
+  for (const viewport of [
+    { width: 1920, height: 1080 }, { width: 1536, height: 864 },
+    { width: 1440, height: 900 }, { width: 1366, height: 768 },
+    { width: 1536, height: 700 },
+  ]) {
+    await page.setViewportSize(viewport);
+    const bounds = await monthlyDialog.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return { heightFits: el.scrollHeight <= el.clientHeight + 1,
+        widthFits: el.scrollWidth <= el.clientWidth + 1,
+        inViewport: box.top >= 0 && box.bottom <= innerHeight,
+        pageFits: document.documentElement.scrollWidth <= innerWidth };
+    });
+    expect(bounds, `Månadsmodalen måste rymmas på ${viewport.width}×${viewport.height}`)
+      .toEqual({ heightFits: true, widthFits: true, inViewport: true, pageFits: true });
+  }
+  await page.setViewportSize({ width: 1366, height: 768 });
   if (previewDir) {
-    await page.setViewportSize({ width: 1280, height: 1100 });
-    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
     await monthlyDialog.screenshot({ path: `${previewDir}/modal-positive.png` });
   }
   await page.keyboard.press("Escape");
   economicResult = -8000;
   await monthlyButton.click();
   await expect(monthlyDialog.getByLabel("Ekonomiskt resultat")).toContainText(/−8\s000 kr/);
-  await expect(monthlyDialog.locator(".v25-result strong")).toHaveClass(/negative/);
+  await expect(monthlyDialog.locator(".v25-result > strong")).toHaveClass(/negative/);
+  await expect(monthlyDialog.locator(".v26-ytd strong")).toHaveClass(/positive/);
   if (previewDir) {
-    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
     await monthlyDialog.screenshot({ path: `${previewDir}/modal-negative.png` });
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(monthlyDialog.locator(".v25-metric-card")).toHaveCount(5);
-  expect(await monthlyDialog.evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  expect(await monthlyDialog.evaluate((el) => el.scrollWidth <= el.clientWidth + 1 &&
+    document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (previewDir) {
-    await page.setViewportSize({ width: 390, height: 2000 });
-    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
+    await page.setViewportSize({ width: 390, height: 1200 });
     await monthlyDialog.screenshot({ path: `${previewDir}/modal-mobile.png` });
   }
+  await page.keyboard.press("Escape");
+  economicResult = 0;
+  yearResult = -45000;
+  await monthlyButton.click();
+  await expect(monthlyDialog.locator(".v25-result > strong")).toHaveClass(/neutral/);
+  await expect(monthlyDialog.locator(".v26-ytd strong")).toHaveClass(/negative/);
+  await expect(monthlyDialog.locator(".v26-ytd")).toContainText(/−45\s000 kr/);
+  await page.keyboard.press("Escape");
+  yearResult = 0;
+  await monthlyButton.click();
+  await expect(monthlyDialog.locator(".v26-ytd strong")).toHaveClass(/neutral/);
+  await expect(monthlyDialog.locator(".v26-ytd")).toContainText("0 kr");
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.keyboard.press("Escape");
   await expect(monthlyButton).toBeFocused();
@@ -199,11 +230,16 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   let imports = 0,
     messages = 0,
     months = 0;
+  let conflictNext = false;
   let storedMonth: {month:string;metrics:unknown;legacy:boolean;revision:number;updated_at:string} | null = null;
   await page.route("**/api/admin/station/v2/monthly",(r)=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(storedMonth?[storedMonth]:[])}));
   await page.route("**/api/admin/station/v2/monthly/*",(r)=>{
     const selected=r.request().url().split("/").at(-1)!;
     if (r.request().method() === "PUT") {
+      if (conflictNext) {
+        conflictNext = false;
+        return r.fulfill({status:409,contentType:"application/json",body:JSON.stringify({error:"Månadens siffror har ändrats. Uppdatera sidan."})});
+      }
       const data=r.request().postDataJSON() as {metrics:unknown;expected_revision:number|null};
       expect(data.expected_revision).toBe(storedMonth?.revision??null);
       months++;
@@ -277,13 +313,17 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   expect(messages).toBe(1);
   const monthSection=page.locator("#station-monthly");
   await expect(monthSection.locator("fieldset")).toHaveCount(6);
+  await expect(monthSection.getByText("Föregående år")).toHaveCount(0);
+  await expect(monthSection.locator("fieldset").evaluateAll((fields) => fields.map((field) => field.querySelectorAll("input").length)))
+    .resolves.toEqual([2,2,2,2,1,2]);
   await monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"}).fill("420");
   await monthSection.getByRole("textbox",{name:"Försäljning – Förändring"}).fill("7,8");
   await expect(monthSection.locator("fieldset").filter({has:page.getByText("Försäljning",{exact:true})}).locator("output")).toHaveText("+7,8 %");
   await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Ekonomiskt resultat"}).fill("+10000");
+  await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Totalt i år"}).fill("+125000");
   await expect(monthSection.getByText("%",{exact:true})).toHaveCount(5);
   if (previewDir) {
-    await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Ekonomiskt resultat"}).evaluate((el: HTMLElement) => el.blur());
+    await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Totalt i år"}).evaluate((el: HTMLElement) => el.blur());
     await monthSection.screenshot({ path: `${previewDir}/admin-form.png` });
   }
   await monthSection.getByRole("button",{name:"Spara månad"}).click();
@@ -294,7 +334,13 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   await monthInput.fill("2025-01");
   await monthInput.fill(savedMonth);
   await expect(monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"})).toHaveValue("420");
+  await expect(monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Totalt i år"})).toHaveValue("125000");
   await monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"}).fill("421");
   await monthSection.getByRole("button",{name:"Spara månad"}).click();
+  expect(months).toBe(2);
+  await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Totalt i år"}).fill("-45000");
+  conflictNext = true;
+  await monthSection.getByRole("button",{name:"Spara månad"}).click();
+  await expect(page.getByRole("alert")).toContainText("ändrats");
   expect(months).toBe(2);
 });

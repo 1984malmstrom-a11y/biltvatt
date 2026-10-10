@@ -739,3 +739,6 @@ td { background: #fff; border-color: var(--preem-line); }
     width: 120px;
   }
 }
+@media (min-width: 1300px) and (min-height: 780px) {
+  .v2-info p { -webkit-line-clamp: 2; }
+}

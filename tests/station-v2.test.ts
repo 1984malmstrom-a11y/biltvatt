@@ -4,7 +4,7 @@ import { addDays, stockholmDay } from "../worker/stats";
 import { parseScheduleCsv } from "../src/StationV2Admin";
 import { findScheduleConflicts } from "../shared/schedule";
 import { msUntilNextStockholmDay } from "../src/StationDashboardV2";
-import { emptyMonthlyMetrics, formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, parseSwedishNumber } from "../shared/monthly";
+import { emptyMonthlyMetrics, formatMonthlyNumber, isFixedMonthlyMetrics, MONTHLY_CATEGORIES, monthlyTone, parseSwedishNumber } from "../shared/monthly";
 
 async function sessions(f: ReturnType<typeof fixture>) {
   const admin = await f.login();
@@ -428,8 +428,9 @@ describe("Stationsdashboard V2", () => {
     metrics.customers_per_day={current:420,previous:398,percent:5.5};
     metrics.sales.percent=7.8;
     metrics.economic_result.value=10000;
+    metrics.economic_result.total_ytd=-45000;
     expect(MONTHLY_CATEGORIES).toHaveLength(6);
-    expect(MONTHLY_CATEGORIES.map(({fields})=>fields.length)).toEqual([3,3,3,3,1,1]);
+    expect(MONTHLY_CATEGORIES.map(({fields})=>fields.length)).toEqual([2,2,2,2,1,2]);
     expect(MONTHLY_CATEGORIES.map(({unit})=>unit)).toEqual(["antal","kr","liter","kr","%","kr"]);
     expect((await f.call("/station/v2/monthly")).status).toBe(401);
     expect((await f.call(path,"PUT",{metrics,expected_revision:null},viewer)).status).toBe(401);
@@ -443,15 +444,50 @@ describe("Stationsdashboard V2", () => {
     expect(read.metrics).toEqual(metrics);
     expect((await f.call(path,"PUT",{metrics,expected_revision:3},admin)).status).toBe(409);
     metrics.economic_result.value=-8000;
+    metrics.economic_result.total_ytd=125000;
     metrics.sales.percent=0;
+    metrics.customers_per_day.previous=999;
     expect((await f.call(path,"PUT",{metrics,expected_revision:0},admin)).status).toBe(200);
-    expect((await (await f.call(path,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics).toEqual(metrics);
+    const corrected=(await (await f.call(path,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics;
+    expect(corrected.economic_result).toEqual({value:-8000,total_ytd:125000});
+    expect(corrected.customers_per_day.previous).toBe(398);
+    const olderClient=structuredClone(corrected);
+    delete olderClient.economic_result.total_ytd;
+    expect((await f.call(path,"PUT",{metrics:olderClient,expected_revision:1},admin)).status).toBe(200);
+    const afterOlderClient=(await (await f.call(path,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics;
+    expect(afterOlderClient.economic_result.total_ytd).toBe(125000);
+    metrics.customers_per_day.previous=398;
     expect((await f.call("/admin/station/v2/monthly","GET",undefined,viewer)).status).toBe(401);
     const all=await (await f.call("/admin/station/v2/monthly","GET",undefined,admin)).json() as {month:string;revision:number}[];
-    expect(all[0]).toMatchObject({month:previous,revision:1});
+    expect(all[0]).toMatchObject({month:previous,revision:2});
     const old="2024-01";
-    expect((await f.call(`/admin/station/v2/monthly/${old}`,"PUT",{metrics,expected_revision:null},admin)).status).toBe(201);
-    expect((await (await f.call(`/admin/station/v2/monthly/${old}`,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics).toEqual(metrics);
+    const historical=structuredClone(metrics);
+    historical.economic_result.total_ytd=-45000;
+    expect((await f.call(`/admin/station/v2/monthly/${old}`,"PUT",{metrics:historical,expected_revision:null},admin)).status).toBe(201);
+    expect((await (await f.call(`/admin/station/v2/monthly/${old}`,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics).toEqual(historical);
+    expect((await (await f.call(path,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics.economic_result.total_ytd).toBe(125000);
+    f.db.close();
+  });
+  it("läser V2.5-månader utan årsresultat och behåller dolda jämförelsevärden vid korrigering", async () => {
+    const f=fixture(), {admin,viewer}=await sessions(f);
+    const month=addDays(`${stockholmDay().slice(0,7)}-01`,-1).slice(0,7);
+    const old=emptyMonthlyMetrics();
+    old.customers_per_day={current:410,previous:390,percent:5.1};
+    delete old.economic_result.total_ytd;
+    expect(isFixedMonthlyMetrics(old)).toBe(true);
+    f.db.prepare("INSERT INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)")
+      .run("tingsryd",month,JSON.stringify(old),"2026-01-01","2026-01-01");
+    const read=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {legacy:boolean;metrics:typeof old};
+    expect(read.legacy).toBe(false);
+    expect(read.metrics.economic_result.total_ytd).toBeUndefined();
+    const edited=emptyMonthlyMetrics();
+    edited.customers_per_day.current=420;
+    edited.customers_per_day.previous=null;
+    edited.economic_result.total_ytd=185000;
+    expect((await f.call(`/admin/station/v2/monthly/${month}`,"PUT",{metrics:edited,expected_revision:0},admin)).status).toBe(200);
+    const saved=(await (await f.call(`/admin/station/v2/monthly/${month}`,"GET",undefined,admin)).json() as {metrics:typeof old}).metrics;
+    expect(saved.customers_per_day).toMatchObject({current:420,previous:390});
+    expect(saved.economic_result.total_ytd).toBe(185000);
     f.db.close();
   });
   it("bevarar äldre fria månadsvärden utan omtolkning eller överskrivning", async () => {
@@ -473,6 +509,8 @@ describe("Stationsdashboard V2", () => {
     expect(formatMonthlyNumber(0,"%",true)).toBe("0 %");
     expect(formatMonthlyNumber(10000,"kr",true).replace(/\u00a0|\u202f/g," ")).toBe("+10 000 kr");
     expect(formatMonthlyNumber(-8000,"kr",true).replace(/\u00a0|\u202f/g," ")).toBe("−8 000 kr");
+    expect(emptyMonthlyMetrics().economic_result.total_ytd).toBeNull();
+    expect(formatMonthlyNumber(null,"kr",true)).toBe("Saknas");
     expect([monthlyTone(1),monthlyTone(-1),monthlyTone(0)]).toEqual(["positive","negative","neutral"]);
   });
   it("byter föregående avslutade månad vid midnatt i Stockholm", async () => {

@@ -1,10 +1,10 @@
 export const MONTHLY_CATEGORIES = [
-  { key: "customers_per_day", label: "Kunder/dag", unit: "antal", fields: ["current", "previous", "percent"] },
-  { key: "average_purchase", label: "Snittköp (TB)", unit: "kr", fields: ["current", "previous", "percent"] },
-  { key: "fuel_per_day", label: "Drivmedel/dag", unit: "liter", fields: ["current", "previous", "percent"] },
-  { key: "car_wash_average", label: "Biltvättssnitt", unit: "kr", fields: ["current", "previous", "percent"] },
+  { key: "customers_per_day", label: "Kunder/dag", unit: "antal", fields: ["current", "percent"] },
+  { key: "average_purchase", label: "Snittköp (TB)", unit: "kr", fields: ["current", "percent"] },
+  { key: "fuel_per_day", label: "Drivmedel/dag", unit: "liter", fields: ["current", "percent"] },
+  { key: "car_wash_average", label: "Biltvättssnitt", unit: "kr", fields: ["current", "percent"] },
   { key: "sales", label: "Försäljning", unit: "%", fields: ["percent"] },
-  { key: "economic_result", label: "Ekonomiskt resultat", unit: "kr", fields: ["value"] },
+  { key: "economic_result", label: "Ekonomiskt resultat", unit: "kr", fields: ["value", "total_ytd"] },
 ] as const;
 
 export type Comparison = { current: number | null; previous: number | null; percent: number | null };
@@ -15,7 +15,7 @@ export type FixedMonthlyMetrics = {
   fuel_per_day: Comparison;
   car_wash_average: Comparison;
   sales: { percent: number | null };
-  economic_result: { value: number | null };
+  economic_result: { value: number | null; total_ytd?: number | null };
 };
 
 export const emptyMonthlyMetrics = (): FixedMonthlyMetrics => ({
@@ -25,18 +25,21 @@ export const emptyMonthlyMetrics = (): FixedMonthlyMetrics => ({
   fuel_per_day: { current: null, previous: null, percent: null },
   car_wash_average: { current: null, previous: null, percent: null },
   sales: { percent: null },
-  economic_result: { value: null },
+  economic_result: { value: null, total_ytd: null },
 });
 
 export function isFixedMonthlyMetrics(value: unknown): value is FixedMonthlyMetrics {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const row = value as Record<string, unknown>;
   if (Object.keys(row).sort().join() !== ["kind", ...MONTHLY_CATEGORIES.map((item) => item.key)].sort().join() || row.kind !== "fixed-v25") return false;
-  return MONTHLY_CATEGORIES.every(({ key, fields }) => {
+  return MONTHLY_CATEGORIES.every(({ key }) => {
     const metric = row[key];
     if (!metric || typeof metric !== "object" || Array.isArray(metric)) return false;
     const data = metric as Record<string, unknown>;
-    return Object.keys(data).sort().join() === [...fields].sort().join() &&
+    const fields = key === "economic_result"
+      ? ("total_ytd" in data ? ["value", "total_ytd"] : ["value"])
+      : key === "sales" ? ["percent"] : ["current", "previous", "percent"];
+    return Object.keys(data).sort().join() === fields.sort().join() &&
       fields.every((field) => data[field] === null || (typeof data[field] === "number" && Number.isFinite(data[field])));
   });
 }

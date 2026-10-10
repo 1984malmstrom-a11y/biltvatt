@@ -3,7 +3,7 @@ import { stockholmDay } from "./stats";
 import { addDays } from "./stats";
 import { body, checkFields, fail, json, text } from "./http";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
-import { isFixedMonthlyMetrics } from "../shared/monthly";
+import { isFixedMonthlyMetrics, type FixedMonthlyMetrics } from "../shared/monthly";
 
 const STATION = "tingsryd";
 const isoDay = (value: unknown): value is string =>
@@ -158,8 +158,9 @@ export async function stationV2Api(
     const data = await body(request);
     checkFields(data, ["metrics", "expected_revision"]);
     if (!isFixedMonthlyMetrics(data.metrics)) fail(400, "Ange endast de sex fasta nyckeltalen.");
-    const payload = JSON.stringify(data.metrics);
+    const metrics = data.metrics as FixedMonthlyMetrics;
     if (data.expected_revision === null) {
+      const payload = JSON.stringify(metrics);
       const result = await env.DB.prepare(
         "INSERT OR IGNORE INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)",
       )
@@ -175,6 +176,14 @@ export async function stationV2Api(
     ).bind(STATION, month).first<{ metrics_json: string }>();
     if (existing && monthlyRecord(existing.metrics_json).legacy)
       fail(409, "Äldre fria månadsvärden är bevarade och kan inte skrivas över.");
+    if (existing) {
+      const saved = JSON.parse(existing.metrics_json) as FixedMonthlyMetrics;
+      for (const key of ["customers_per_day", "average_purchase", "fuel_per_day", "car_wash_average"] as const)
+        metrics[key].previous = saved[key].previous;
+      if (metrics.economic_result.total_ytd === undefined)
+        metrics.economic_result.total_ytd = saved.economic_result.total_ytd ?? null;
+    }
+    const payload = JSON.stringify(metrics);
     const result = await env.DB.prepare(
       "UPDATE station_monthly_figures SET metrics_json=?,revision=revision+1,updated_at=? WHERE station_id=? AND month=? AND revision=? AND json_extract(metrics_json,'$.kind')='fixed-v25'",
     )
