@@ -49,6 +49,39 @@ const programImages: Record<string, string> = {
   fin: "/wash-programs/fin",
   borstlos: "/wash-programs/borstlos",
 };
+const victoryImages = Array.from({ length: 5 }, (_, index) =>
+  `/celebrations/victory-${index + 1}.webp`,
+);
+type Celebration = {
+  saleId: string;
+  sellerName: string;
+  programName: string;
+  priceSek: number;
+  imageSrc: string;
+};
+
+function VictoryPopup({ celebration }: { celebration: Celebration }) {
+  return (
+    <div className="victory-overlay" role="status" aria-live="polite" aria-atomic="true">
+      <div className="victory-confetti" aria-hidden="true">
+        {Array.from({ length: 120 }, (_, index) => (
+          <i key={index} style={{
+            left: `${2 + (index * 37) % 96}%`,
+            animationDelay: `${(index % 6) * 40}ms`,
+            animationDuration: `${1500 + ((index * 3) % 8) * 65}ms`,
+          }} />
+        ))}
+      </div>
+      <div className="victory-popup">
+        <img src={celebration.imageSrc} alt="" aria-hidden="true" />
+        <span className="victory-details">
+          {celebration.sellerName} <b>·</b> {celebration.programName} <b>·</b> {sek(celebration.priceSek)}
+        </span>
+        <span className="sr-only">{celebration.sellerName} registrerade en {celebration.programName} för {sek(celebration.priceSek)}.</span>
+      </div>
+    </div>
+  );
+}
 const today = () =>
   new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(
     new Date(),
@@ -91,6 +124,8 @@ export default function App() {
   const [last, setLast] = useState<(Sale & { program_name: string }) | null>(
     null,
   );
+  const [celebration, setCelebration] = useState<Celebration | null>(null);
+  const celebratedSales = useRef(new Set<string>());
   const [pending, setPending] = useState<{
     staff_id: string;
     wash_program_id: string;
@@ -98,6 +133,13 @@ export default function App() {
   } | null>(null);
   const busyRef = useRef(false);
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (!celebration) return;
+    const timer = window.setTimeout(() => {
+      setCelebration((current) => current?.saleId === celebration.saleId ? null : current);
+    }, 2200);
+    return () => window.clearTimeout(timer);
+  }, [celebration]);
   const [period, setPeriod] = useState("today"),
     [start, setStart] = useState(today()),
     [end, setEnd] = useState(today());
@@ -130,9 +172,9 @@ export default function App() {
     ...(period === "custom" ? { start, end } : {}),
   }).toString();
 
-  const loadCatalog = useCallback(async () => {
+  const loadCatalog = useCallback(async (preserveError = false) => {
     setLoading(true);
-    setError("");
+    if (!preserveError) setError("");
     try {
       const [people, washes] = await Promise.all([
         api<Staff[]>("/staff"),
@@ -301,6 +343,7 @@ export default function App() {
   const chooseStaff = (person: Staff) => {
     setSelected(person);
     setLast(null);
+    setCelebration(null);
     setError("");
     setNotice("");
     setPage("sale");
@@ -323,6 +366,18 @@ export default function App() {
       const sale = await api<Sale>("/sales", send("POST", payload));
       setLast({ ...sale, program_name: program.name });
       setPending(null);
+      if (!sale.voided_at && sale.staff_id === payload.staff_id &&
+          sale.wash_program_id === payload.wash_program_id &&
+          !celebratedSales.current.has(sale.id)) {
+        celebratedSales.current.add(sale.id);
+        setCelebration({
+          saleId: sale.id,
+          sellerName: selected.name,
+          programName: program.name,
+          priceSek: sale.price_sek,
+          imageSrc: victoryImages[Math.floor(Math.random() * victoryImages.length)],
+        });
+      }
       setNotice(
         sale.voided_at
           ? "Den här registreringen har redan ångrats."
@@ -338,7 +393,7 @@ export default function App() {
       } else {
         setPending(null);
         setError(e.message);
-        if (e.status === 400) void loadCatalog();
+        if (e.status === 400) void loadCatalog(true);
       }
     } finally {
       // Keep the click lock through a double tap, including very fast local responses.
@@ -359,6 +414,7 @@ export default function App() {
         send("POST", { request_id: last.request_id }),
       );
       setLast({ ...last, voided_at: new Date().toISOString() });
+      setCelebration(null);
       setNotice("Senaste tvätten har ångrats.");
       void loadMedals();
     } catch (e) {
@@ -759,6 +815,7 @@ export default function App() {
           )}
         </main>
       )}
+      {page === "sale" && celebration && <VictoryPopup key={celebration.saleId} celebration={celebration} />}
       {page === "stats" && (
         <main className="panel statistics-panel">
           <div className="section-heading">

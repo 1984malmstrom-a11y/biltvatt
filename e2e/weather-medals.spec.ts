@@ -136,7 +136,8 @@ test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop",
   if (screenshotDir) mkdirSync(screenshotDir, { recursive: true });
   for (const viewport of [
     { width: 1920, height: 1080 }, { width: 1366, height: 768 },
-    { width: 1280, height: 1024 }, { width: 390, height: 844 },
+    { width: 1280, height: 1024 }, { width: 1024, height: 768 },
+    { width: 390, height: 844 },
   ]) {
     await page.setViewportSize(viewport);
     await page.goto("/station?weather-demo=1");
@@ -150,6 +151,22 @@ test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop",
         header.top <= weather.top && weather.bottom <= header.bottom &&
         document.documentElement.scrollWidth <= innerWidth;
     })).toBe(true);
+    if (viewport.width >= 1024) {
+      const spacing = await page.evaluate(() => {
+        const brand = document.querySelector(".v2-brand")!.getBoundingClientRect();
+        const weather = document.querySelector(".v2-weather")!.getBoundingClientRect();
+        const admin = document.querySelector(".v2-admin-link")!.getBoundingClientRect();
+        const header = document.querySelector(".v2-header")!.getBoundingClientRect();
+        return { brandGap: weather.left - brand.right, adminGap: admin.left - weather.right,
+          adminRight: header.right - admin.right };
+      });
+      expect(spacing.brandGap).toBeGreaterThanOrEqual(8);
+      expect(spacing.adminGap).toBeGreaterThanOrEqual(40);
+      expect(spacing.adminRight).toBeGreaterThanOrEqual(0);
+    } else {
+      expect(await page.locator(".v2-admin-link").evaluate((element) => getComputedStyle(element).marginLeft))
+        .toBe("0px");
+    }
     if (screenshotDir) {
       await page.screenshot({ path: join(screenshotDir, `weather-demo-${viewport.width}x${viewport.height}.png`) });
     }

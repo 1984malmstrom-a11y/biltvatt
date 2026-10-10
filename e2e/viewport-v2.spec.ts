@@ -118,6 +118,7 @@ async function washImages(page: Page) {
       naturalHeight: image.naturalHeight,
       width: picture.width,
       height: picture.height,
+      cardWidth: box.width,
       cardHeight: box.height,
       left: box.left,
       top: box.top,
@@ -185,7 +186,9 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     expect(images.slice(0, 3).every((image) => image.layoutTop === images[0].layoutTop)).toBe(true);
     expect(images.slice(3).every((image) => image.layoutTop === images[3].layoutTop)).toBe(true);
     expect(images[3].layoutTop).toBeGreaterThan(images[0].layoutTop);
-    expect(images[0].cardHeight).toBeLessThan(205);
+    expect(images.every((image) => Math.abs(image.cardWidth - image.width) <= 2.1 &&
+      Math.abs(image.cardHeight - image.height) <= 2.1 &&
+      Math.abs(image.width / image.height - 4 / 3) < 0.01)).toBe(true);
     expect(await dimensions(page)).toMatchObject({ viewportHeight: height, scrollHeight: height, viewportWidth: width, scrollWidth: width });
     if (width === 1366) await page.screenshot({ path: "test-results/v21-washes-desktop.png" });
     if (width === 1366) await page.screenshot({ path: "test-results/v23-register.png" });

@@ -534,9 +534,12 @@ p {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  justify-items: center;
 }
 .wash-card {
   display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   min-height: 0;
   text-align: left;
   border-radius: 13px;
@@ -2158,8 +2161,8 @@ td {
   .sales-panel .section-heading { margin-bottom: 10px; }
   .wash-grid { gap: 10px; }
   .sales-panel .wash-grid { width: min(100%, 1170px); margin-inline: auto; }
-  .wash-card { min-height: 0; }
-  .wash-image { aspect-ratio: auto; height: 195px; }
+  .wash-card { min-height: 0; width: min(100%, clamp(250px, 33.5vh, 350px)); }
+  .wash-image { aspect-ratio: 4 / 3; height: auto; }
   .sale-footer { margin-top: 8px; }
   .device-push-panel { margin-top: 0; }
   .undo-button, .last-sale { min-height: 45px; }
