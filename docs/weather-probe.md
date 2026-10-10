@@ -16,13 +16,15 @@ Kör i ett **andra** PowerShell-fönster med den lokala adress Wrangler visar (v
 curl.exe --silent --show-error --include http://127.0.0.1:8787/probe
 ```
 
-Svaret innehåller `stage`, `attempts` och `signalCheck` utan API-kropp, cookies, tokenvärden eller råa felmeddelanden. Anropsordningen är `example-basic` (enbart URL), `smhi-basic` (enbart URL), `smhi-redirect-manual`, `smhi-with-signal`, `smhi-cache-only` och `app-fetch` (exakt V2-anrop). `signalCheck` testar separat om `AbortSignal.timeout(8000)` kan skapas. `httpStatus` är status från externa anrop; `errorCategory` och den fasta `errorDescription` är bara ledtrådar utifrån feltextens kända ord, inte säkra diagnoser. `redirectHost` innehåller bara målvärdens namn. `shape` visar endast fälttyper och antal tidssteg. Ignorera `elapsedMs` vid orsaksbedömning på Cloudflare.
+Svaret innehåller `stage`, `attempts` och `signalCheck` utan API-kropp, cookies, tokenvärden eller råa felmeddelanden. Anropsordningen är `example-basic` (enbart URL), `smhi-basic` (enbart URL), `smhi-redirect-manual`, `smhi-redirect-error`, `smhi-with-signal`, `smhi-headers-only`, `smhi-cache-only`, `smhi-combined-no-cache` och `app-fetch` (exakt V2-anrop). `signalCheck` testar separat om `AbortSignal.timeout(8000)` kan skapas. `httpStatus` är status från externa anrop; `errorCategory` och den fasta `errorDescription` är bara ledtrådar utifrån feltextens kända ord, inte säkra diagnoser. `redirectHost` och `finalHost` innehåller endast värdnamn; `redirected` visar om en lyckad fetch följde en omdirigering. `shape` visar endast fälttyper och antal tidssteg. Ignorera `elapsedMs` vid orsaksbedömning på Cloudflare.
 
 - `example-basic` och `smhi-basic` misslyckas: kontrollera om felkategorierna pekar mot en bred nätverksbegränsning; jämför även HTTP-status.
 - `example-basic` lyckas men `smhi-basic` misslyckas: SMHI-nätvägen behöver undersökas, oberoende av V2:s cache och signal.
 - `smhi-basic` lyckas men `smhi-with-signal` misslyckas: signaltillägget är en konkret felkandidat. `signalCheck.supported: false` visar att redan skapandet misslyckas.
 - `smhi-basic` och `smhi-with-signal` lyckas men `smhi-cache-only` misslyckas: cacheinställningen är en konkret felkandidat.
 - `smhi-redirect-manual` ger 3xx: kontrollera `redirectHost`; V2:s `redirect: "error"` kan då kasta.
+- `smhi-redirect-error` misslyckas medan `smhi-basic` och `smhi-redirect-manual` lyckas: omdirigering eller redirectinställningen är en konkret felkandidat.
+- `smhi-headers-only` och `smhi-combined-no-cache` skiljer headers/redirect/signal från cachekonfigurationen. Jämför dem innan V2-anropet ändras.
 - Endast `app-fetch` misslyckas: granska den kvarvarande kombinationen av headers, redirect, signal och cache. Ändra inte V2 utifrån enbart en felkategori.
 - `stage: "json"`, `"schema"` eller `"selection"`: V2-hämtningen lyckades men svarstexten, datamodellen eller prognostiderna behöver granskas.
 

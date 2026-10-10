@@ -12,6 +12,8 @@ type Attempt = {
   contentType?: string | null;
   cacheStatus?: string | null;
   redirectHost?: string | null;
+  finalHost?: string | null;
+  redirected?: boolean;
 };
 
 const reply = (data: unknown, status = 200) => Response.json(data, {
@@ -61,6 +63,12 @@ function redirectHost(response: Response): string | null {
   catch { return "invalid-location"; }
 }
 
+function finalHost(response: Response): string | null {
+  if (!response.url) return null;
+  try { return new URL(response.url).hostname.slice(0, 120); }
+  catch { return "invalid-response-url"; }
+}
+
 function safeContentType(response: Response): string | null {
   const value = response.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase();
   if (!value) return null;
@@ -84,6 +92,8 @@ async function attempt(mode: string, action: () => Promise<Response>) {
       contentType: safeContentType(response),
       cacheStatus: safeCacheStatus(response),
       redirectHost: redirectHost(response),
+      finalHost: finalHost(response),
+      redirected: response.redirected,
     };
     return { report, response };
   } catch (error) {
@@ -128,6 +138,7 @@ export async function probeSmhi(request: Request, fetcher: typeof fetch = fetch)
   await run("example-basic", () => fetcher("https://example.com"));
   await run("smhi-basic", () => fetcher(SMHI_POINT_URL));
   await run("smhi-redirect-manual", () => fetcher(SMHI_POINT_URL, { redirect: "manual" }));
+  await run("smhi-redirect-error", () => fetcher(SMHI_POINT_URL, { redirect: "error" }));
 
   let signal: AbortSignal | undefined;
   let signalCheck: { supported: boolean; initiallyAborted?: boolean; errorType?: string;
@@ -140,9 +151,17 @@ export async function probeSmhi(request: Request, fetcher: typeof fetch = fetch)
   }
   if (signal) await run("smhi-with-signal", () => fetcher(SMHI_POINT_URL, { signal }));
 
+  await run("smhi-headers-only", () => fetcher(SMHI_POINT_URL, {
+    method: "GET", headers: { Accept: "application/json" },
+  }));
+
   // Same cache options as V2, isolated from its headers, redirect policy and signal.
   await run("smhi-cache-only", () => fetcher(SMHI_POINT_URL, {
     cf: { cacheEverything: true, cacheTtlByStatus: { "200": 1800, "201-599": -1 } },
+  }));
+  await run("smhi-combined-no-cache", () => fetcher(SMHI_POINT_URL, {
+    method: "GET", headers: { Accept: "application/json" },
+    redirect: "error", signal: AbortSignal.timeout(8000),
   }));
   const normal = await attempt("app-fetch", () => fetchSmhiForecast(fetcher));
   attempts.push(normal.report);

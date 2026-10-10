@@ -1,4 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
 
 const people = ["Ada", "Bo", "Cia", "Dan"].map((name) => ({
   id: `demo-${name.toLowerCase()}`, name: `Demo ${name}`, color: "#1679c7", active: 1,
@@ -71,4 +73,62 @@ test("pausat väder hämtas aldrig och sidhuvudet ryms utan desktop-scroll", asy
   await page.clock.fastForward(31 * 60 * 1000);
   expect(weatherRequests).toBe(0);
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(768);
+});
+
+test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop", async ({ page }) => {
+  let weatherRequests = 0;
+  await page.route("**/api/station/weather", (route) => {
+    weatherRequests++;
+    return route.abort();
+  });
+  await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: {
+    business_date: "2026-10-07", comparison_date: "2025-10-08", net_sales_ore: 3845000,
+    comparison_sales_ore: 3408700, difference_ore: 436300, percent: 12.8,
+    updated_at: null, week: [
+      { date: "2026-10-01", net_sales_ore: 3120000, comparison_sales_ore: 3000000, percent: 4 },
+      { date: "2026-10-02", net_sales_ore: 3310000, comparison_sales_ore: 3050000, percent: 8.5 },
+      { date: "2026-10-03", net_sales_ore: 2940000, comparison_sales_ore: 3010000, percent: -2.3 },
+      { date: "2026-10-04", net_sales_ore: 3650000, comparison_sales_ore: 3360000, percent: 8.6 },
+      { date: "2026-10-05", net_sales_ore: 3420000, comparison_sales_ore: 3090000, percent: 10.7 },
+      { date: "2026-10-06", net_sales_ore: 3710000, comparison_sales_ore: 3350000, percent: 10.7 },
+      { date: "2026-10-07", net_sales_ore: 3845000, comparison_sales_ore: 3408700, percent: 12.8 },
+    ],
+  } }));
+  await page.route("**/api/station/v2", (route) => route.fulfill({ json: {
+    today: "2026-10-08", updated_at: null,
+    shifts: [
+      { id: "demo-1", first_name: "Ada", starts_at: "05:30", ends_at: "13:30" },
+      { id: "demo-2", first_name: "Bo", starts_at: "07:00", ends_at: "15:00" },
+      { id: "demo-3", first_name: "Cia", starts_at: "13:30", ends_at: "20:30" },
+    ],
+    tasks: [
+      { id: "demo-t1", text: "Fyll på kylar", done: 1, revision: 0, created_at: "" },
+      { id: "demo-t2", text: "Se över kaffe", done: 0, revision: 0, created_at: "" },
+      { id: "demo-t3", text: "Städa entré", done: 0, revision: 0, created_at: "" },
+    ],
+    notices: [{ id: "demo-note", title: "Demomeddelande", message: "Syntetisk information för layoutgranskning.", updated_at: "" }],
+  } }));
+  const screenshotDir = process.env.STATION_WEATHER_SCREENSHOTS_DIR;
+  if (screenshotDir) mkdirSync(screenshotDir, { recursive: true });
+  for (const viewport of [
+    { width: 1920, height: 1080 }, { width: 1366, height: 768 },
+    { width: 1280, height: 1024 }, { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/station?weather-demo=1");
+    await expect(page.getByText("DEMO · TESTVÄRDEN")).toBeVisible();
+    await expect(page.getByText("TINGSRYD · JUST NU")).toBeVisible();
+    await expect(page.getByText("IMORGON CA 12")).toBeVisible();
+    expect(await page.evaluate(() => {
+      const header = document.querySelector(".v2-header")!.getBoundingClientRect();
+      const weather = document.querySelector(".v2-weather")!.getBoundingClientRect();
+      return header.left <= weather.left && weather.right <= header.right &&
+        header.top <= weather.top && weather.bottom <= header.bottom &&
+        document.documentElement.scrollWidth <= innerWidth;
+    })).toBe(true);
+    if (screenshotDir) {
+      await page.screenshot({ path: join(screenshotDir, `weather-demo-${viewport.width}x${viewport.height}.png`) });
+    }
+  }
+  expect(weatherRequests).toBe(0);
 });

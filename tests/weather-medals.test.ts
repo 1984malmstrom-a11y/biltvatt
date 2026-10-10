@@ -53,6 +53,19 @@ describe("SMHI SNOW1gv1 prognos", () => {
     await expect(getWeather(new Date(), (async () => new Response("", { status: 500 })) as typeof fetch)).rejects.toThrow("500");
     await expect(getWeather(new Date(), (async () => new Response("{}")) as typeof fetch)).rejects.toThrow("Ogiltig prognos");
   });
+  it("hanterar timeout, ogiltig JSON och saknade prognosvärden utan uppfunna temperaturer", async () => {
+    const now = new Date("2026-10-08T10:00:00Z");
+    const timedOut = (async () => { throw new DOMException("Timeout", "TimeoutError"); }) as typeof fetch;
+    await expect(getWeather(now, timedOut)).rejects.toMatchObject({ name: "TimeoutError" });
+    await expect(getWeather(now, (async () => new Response("{bad json")) as typeof fetch))
+      .rejects.toMatchObject({ name: "SyntaxError" });
+    const incomplete = await getWeather(now, (async () => Response.json({ timeSeries: [
+      { time: "2026-10-08T10:00:00Z", data: { air_temperature: 9999, symbol_code: 2 } },
+      { time: "2026-10-09T10:00:00Z", data: { air_temperature: 9 } },
+    ] })) as typeof fetch);
+    expect(incomplete.now).toBeNull();
+    expect(incomplete.tomorrow).toBeNull();
+  });
   it("kräver stationsbehörighet och skickar aldrig cachebara API-svar", async () => {
     const f = fixture();
     try {

@@ -34,16 +34,23 @@ describe("isolerat SMHI-prov", () => {
       supported: true, initiallyAborted: false,
     } });
     expect(data.attempts.map((a) => a.mode)).toEqual([
-      "example-basic", "smhi-basic", "smhi-redirect-manual", "smhi-with-signal", "smhi-cache-only", "app-fetch",
+      "example-basic", "smhi-basic", "smhi-redirect-manual", "smhi-redirect-error",
+      "smhi-with-signal", "smhi-headers-only", "smhi-cache-only",
+      "smhi-combined-no-cache", "app-fetch",
     ]);
     expect(calls[0]).toEqual({ input: "https://example.com", init: undefined });
     expect(calls[1]).toEqual({ input: SMHI_POINT_URL, init: undefined });
     expect(calls[2].init).toEqual({ redirect: "manual" });
-    expect(calls[3].init?.signal).toBeInstanceOf(AbortSignal);
-    expect(calls[4].init).toEqual({ cf: {
+    expect(calls[3].init).toEqual({ redirect: "error" });
+    expect(calls[4].init?.signal).toBeInstanceOf(AbortSignal);
+    expect(calls[5].init).toEqual({ method: "GET", headers: { Accept: "application/json" } });
+    expect(calls[6].init).toEqual({ cf: {
       cacheEverything: true, cacheTtlByStatus: { "200": 1800, "201-599": -1 },
     } });
-    expect(calls[5].init).toMatchObject({ method: "GET", redirect: "error", cf: calls[4].init?.cf });
+    expect(calls[7].init).toMatchObject({ method: "GET", redirect: "error" });
+    expect(calls[7].init?.signal).toBeInstanceOf(AbortSignal);
+    expect(calls[7].init?.cf).toBeUndefined();
+    expect(calls[8].init).toMatchObject({ method: "GET", redirect: "error", cf: calls[6].init?.cf });
     expect(JSON.stringify(calls)).not.toContain("private");
     expect(JSON.stringify(data)).not.toContain("private");
   });
@@ -109,6 +116,21 @@ describe("isolerat SMHI-prov", () => {
     });
     expect(JSON.stringify(data)).not.toContain("secret-path");
     expect(JSON.stringify(data)).not.toContain("token=private");
+  });
+
+  it("isolerar redirect:error och redovisar bara en säker felkategori", async () => {
+    const fetcher = (async (_input: string | URL | Request, init?: RequestInit) => {
+      if (init?.redirect === "error") throw new TypeError("Redirect to private.example/secret-token");
+      return Response.json(forecast);
+    }) as typeof fetch;
+    const data = await (await probeSmhi(incoming(), fetcher)).json() as ProbeBody;
+    expect(data.attempts.find((a) => a.mode === "smhi-basic")?.httpStatus).toBe(200);
+    expect(data.attempts.find((a) => a.mode === "smhi-redirect-error")).toMatchObject({
+      errorType: "TypeError", errorCategory: "redirect",
+    });
+    expect(data.attempts.find((a) => a.mode === "smhi-with-signal")?.httpStatus).toBe(200);
+    expect(JSON.stringify(data)).not.toContain("private.example");
+    expect(JSON.stringify(data)).not.toContain("secret-token");
   });
 
   it("skiljer DNS-hint från oklassificerat TypeError utan att läcka feltext", async () => {

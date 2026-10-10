@@ -566,3 +566,44 @@ td { background: #fff; border-color: var(--preem-line); }
   .station-v2-shell { height: auto; min-height: 100vh; }
   .v2-layout { grid-template-rows: minmax(330px, auto) minmax(230px, auto) minmax(120px, auto); }
 }
+
+/* Weather is visible only in the explicitly requested local demo until the
+   isolated Cloudflare probe has verified the upstream fetch. */
+.v2-header.has-weather .v2-header-right { gap: clamp(10px, 1vw, 18px); padding-top: 0; }
+.v2-header.has-weather .v2-weather {
+  gap: clamp(10px, 1vw, 18px);
+  padding-bottom: 13px;
+}
+.v2-header.has-weather .v2-weather-label {
+  color: #ffbb58;
+  font-size: clamp(10px, .68vw, 12px);
+  letter-spacing: .055em;
+}
+.v2-header.has-weather .v2-weather-value { color: #fff; font-size: clamp(17px, 1.15vw, 22px); }
+.v2-header.has-weather .v2-weather-value svg { color: #ffbb58; width: 21px; height: 21px; }
+.v2-header.has-weather .v2-weather-value small { color: #fff; font-size: clamp(11px, .78vw, 14px); }
+.v2-header.has-weather .v2-weather-source { color: #fff; opacity: .85; letter-spacing: .075em; }
+@media (min-width: 701px) and (max-width: 1299px) {
+  .v2-header.has-weather .v2-updated { display: none; }
+  .v2-header.has-weather .v2-weather-value small { font-size: 10px; }
+}
+@media (max-width: 700px) {
+  .v2-header.has-weather {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    row-gap: 9px;
+  }
+  .v2-header.has-weather .v2-header-right { display: contents; }
+  .v2-header.has-weather .v2-admin-link { grid-column: 2; grid-row: 1; }
+  .v2-header.has-weather .v2-weather {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    justify-content: space-between;
+    padding-bottom: 12px;
+  }
+  .v2-header.has-weather .v2-weather-value { font-size: 18px; }
+  .v2-header.has-weather .v2-weather-value svg { width: 19px; height: 19px; }
+  .v2-header.has-weather .v2-weather-value small { font-size: 11px; }
+}

@@ -27,6 +27,9 @@ import PreemResultRibbon from "./PreemResultRibbon";
 // Paused until the external Cloudflare fetch has been verified. Keep the
 // client component and API code for a later, separately reviewed reactivation.
 const WEATHER_ENABLED = false;
+// A local visual preview. Vite replaces DEV with false in production builds.
+const WEATHER_DEMO = import.meta.env.DEV && typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("weather-demo") === "1";
 
 type Summary = {
   business_date: string;
@@ -80,6 +83,11 @@ type Weather = {
   kind: "forecast";
   now: WeatherPeriod | null;
   tomorrow: WeatherPeriod | null;
+};
+const demoWeather: Weather = {
+  source: "SMHI SNOW1gv1", kind: "forecast",
+  now: { time: "2026-10-08T10:00:00Z", temperature: 12, symbol: 3 },
+  tomorrow: { time: "2026-10-09T10:00:00Z", temperature: 9, symbol: 6 },
 };
 function weatherDisplay(symbol: number) {
   if (symbol === 1) return { label: "Klart", Icon: Sun };
@@ -237,7 +245,7 @@ export default function StationDashboardV2() {
   const [selection, setSelection] = useState<{ businessDate: string; date: string } | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState("");
-  const [weather, setWeather] = useState<Weather | null>(null);
+  const [weather, setWeather] = useState<Weather | null>(WEATHER_DEMO ? demoWeather : null);
   const [modal, setModal] = useState<
     "shifts" | "tasks" | "notices" | "monthly" | null
   >(null);
@@ -402,9 +410,10 @@ export default function StationDashboardV2() {
   const selectedTone = selected?.percent == null
     ? "neutral" : selected.percent < 0 ? "negative" : "positive";
   const maximum = Math.max(1, ...bars.map((b) => b.net_sales_ore ?? 0));
+  const showWeather = (WEATHER_ENABLED || WEATHER_DEMO) && Boolean(weather?.now || weather?.tomorrow);
   return (
     <div className="station-v2-shell">
-      <header className="v2-header">
+      <header className={`v2-header${showWeather ? " has-weather" : ""}`}>
         <div className="v2-brand">
           <img className="v2-logo-slot" src="/preem-logo-review.png" alt="Preem" />
           <div>
@@ -418,11 +427,13 @@ export default function StationDashboardV2() {
             {last ? `Uppdaterad ${time(last)}` : "Uppdatering saknas"}
           </span>
           <i />
-          {WEATHER_ENABLED ? (
-            <div className="v2-weather" aria-label="SMHI väderprognos för Tingsryd">
-              <WeatherItem label="PROGNOS JUST NU" period={weather?.now ?? null} />
-              <WeatherItem label="IMORGON CA 12" period={weather?.tomorrow ?? null} />
-              <span className="v2-weather-source">SMHI · prognos</span>
+          {showWeather ? (
+            <div className="v2-weather" aria-label="Väderprognos för Tingsryd">
+              {weather?.now && <WeatherItem label="TINGSRYD · JUST NU" period={weather.now} />}
+              {weather?.tomorrow && <WeatherItem label="IMORGON CA 12" period={weather.tomorrow} />}
+              <span className="v2-weather-source">
+                {WEATHER_DEMO ? "DEMO · TESTVÄRDEN" : "SMHI · PROGNOS"}
+              </span>
             </div>
           ) : (
             <span className="v2-motto">
