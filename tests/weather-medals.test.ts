@@ -76,13 +76,22 @@ describe("SMHI SNOW1gv1 prognos", () => {
       expect(unauthenticated.status).toBe(401);
       expect(unauthenticated.headers.get("Cache-Control")).toBe("no-store");
       const admin = await f.login();
-      const upstream = vi.fn(async () => new Response(JSON.stringify(series)));
+      const upstream = vi.fn(async (_url: string | URL | Request) => new Response(JSON.stringify(series)));
       vi.stubGlobal("fetch", upstream);
       const weather = await f.call("/station/weather", "GET", undefined, admin);
       expect(weather.status).toBe(200);
       expect(weather.headers.get("Cache-Control")).toBe("no-store");
       expect(weather.headers.get("Set-Cookie")).toBeNull();
       expect(upstream).toHaveBeenCalledOnce();
+      expect(await weather.json()).toMatchObject({ source: "SMHI SNOW1gv1", kind: "forecast" });
+      expect(upstream.mock.calls[0]?.[0]).toBe(SMHI_POINT_URL);
+      vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("SMHI unavailable"); }));
+      const unavailable = await f.call("/station/weather", "GET", undefined, admin);
+      expect(unavailable.status).toBe(503);
+      expect(unavailable.headers.get("Cache-Control")).toBe("no-store");
+      expect(await unavailable.json()).toEqual({ error: "Väderprognosen är tillfälligt otillgänglig." });
+      const dashboard = await f.call("/station/dashboard", "GET", undefined, admin);
+      expect(dashboard.status).toBe(200);
     } finally {
       vi.unstubAllGlobals();
       await f.finish();

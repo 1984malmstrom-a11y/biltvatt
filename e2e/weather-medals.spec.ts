@@ -51,10 +51,7 @@ test("månadsskifte och statistikfel ger neutrala klickbara kort", async ({ page
   await expect(page.getByRole("heading", { name: "Välj tvättprogram" })).toBeVisible();
 });
 
-test("pausat väder hämtas aldrig och sidhuvudet ryms utan desktop-scroll", async ({ page }) => {
-  await page.setViewportSize({ width: 1366, height: 768 });
-  await page.clock.install();
-  let weatherRequests = 0;
+async function stationWeatherData(page: Page) {
   await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: {
     business_date: "2026-10-07", comparison_date: "2025-10-08", net_sales_ore: 3845000,
     comparison_sales_ore: 3408700, difference_ore: 436300, percent: 12.8,
@@ -63,16 +60,43 @@ test("pausat väder hämtas aldrig och sidhuvudet ryms utan desktop-scroll", asy
   await page.route("**/api/station/v2", (route) => route.fulfill({ json: {
     today: "2026-10-08", shifts: [], tasks: [], notices: [], updated_at: null,
   } }));
+}
+
+test("riktig väderväg visar API-prognos i godkänd header utan desktop-scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.clock.install();
+  let weatherRequests = 0;
+  await stationWeatherData(page);
   await page.route("**/api/station/weather", (route) => {
     weatherRequests++;
-    return route.abort();
+    return route.fulfill({ json: {
+      source: "SMHI SNOW1gv1", kind: "forecast",
+      now: { time: "2026-10-10T12:00:00Z", temperature: 11.5, symbol: 9 },
+      tomorrow: { time: "2026-10-11T10:00:00Z", temperature: 10, symbol: 4 },
+    } });
   });
   await page.goto("/station");
-  await expect(page.locator(".v2-motto")).toContainText("Tillsammans");
-  await expect(page.getByText("PROGNOS JUST NU")).toHaveCount(0);
+  await expect(page.getByText("SMHI · PROGNOS")).toBeVisible();
+  await expect(page.getByText("TINGSRYD · JUST NU")).toBeVisible();
+  await expect(page.getByText("IMORGON CA 12")).toBeVisible();
+  await expect(page.locator(".v2-weather-value")).toContainText(["12°", "10°"]);
+  await expect(page.getByText("DEMO · TESTVÄRDEN")).toHaveCount(0);
+  const initialRequests = weatherRequests;
+  expect(initialRequests).toBeGreaterThanOrEqual(1);
   await page.clock.fastForward(31 * 60 * 1000);
-  expect(weatherRequests).toBe(0);
+  await expect.poll(() => weatherRequests).toBeGreaterThan(initialRequests);
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(768);
+});
+
+test("SMHI-fel döljer prognosen utan att störa försäljningskortet", async ({ page }) => {
+  await stationWeatherData(page);
+  await page.route("**/api/station/weather", (route) => route.fulfill({
+    status: 503, json: { error: "Väderprognosen är tillfälligt otillgänglig." },
+  }));
+  await page.goto("/station");
+  await expect(page.locator(".v2-motto")).toContainText("Tillsammans");
+  await expect(page.locator(".v2-weather")).toHaveCount(0);
+  await expect(page.locator(".v2-sales-card")).toContainText("38 450");
 });
 
 test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop", async ({ page }) => {

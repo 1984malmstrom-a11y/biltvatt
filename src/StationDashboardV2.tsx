@@ -24,9 +24,8 @@ import {
 import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
 
-// Paused until the external Cloudflare fetch has been verified. Keep the
-// client component and API code for a later, separately reviewed reactivation.
-const WEATHER_ENABLED = false;
+// The isolated Cloudflare Worker verified the SMHI request and public-only cache.
+const WEATHER_ENABLED = true;
 // A local visual preview. Vite replaces DEV with false in production builds.
 const WEATHER_DEMO = import.meta.env.DEV && typeof window !== "undefined" &&
   new URLSearchParams(window.location.search).get("weather-demo") === "1";
@@ -303,7 +302,7 @@ export default function StationDashboardV2() {
     }
   }, []);
   useEffect(() => {
-    if (!WEATHER_ENABLED) return;
+    if (!WEATHER_ENABLED || WEATHER_DEMO) return;
     void loadWeather();
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") void loadWeather();
