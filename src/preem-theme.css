@@ -568,7 +568,7 @@ td { background: #fff; border-color: var(--preem-line); }
 @media (min-width: 1300px) {
   /* The promotional artwork uses its full original aspect ratio without
      clipping; the overlaid information card remains unobstructed. */
-  .v2-ferrari-art { height: 100%; }
+  .v2-ferrari-art { width: 64%; height: 100%; }
   .v2-change { margin-top: 2px; }
   .v2-change-caption { margin-top: 2px !important; }
   .v2-comparison { margin-top: 3px; }
