@@ -456,6 +456,18 @@ td { background: #fff; border-color: var(--preem-line); }
   box-shadow: none;
 }
 .v2-chart-detail strong { color: var(--preem-ink); font-size: clamp(19px, 1.45vw, 26px); }
+.v2-chart-detail.is-hint {
+  justify-content: center;
+  background: #f8f8f4;
+  border-style: dashed;
+}
+.v2-chart-hint {
+  margin: 0;
+  color: var(--preem-muted);
+  font-size: clamp(12px, .9vw, 16px);
+  font-weight: 600;
+  line-height: 1.35;
+}
 .station-v2-shell .v2-bar-column { color: var(--preem-muted); }
 .station-v2-shell .v2-bar-column.selected {
   color: var(--preem-forest-dark);
@@ -554,6 +566,9 @@ td { background: #fff; border-color: var(--preem-line); }
   flex: none;
 }
 @media (min-width: 1300px) {
+  /* The promotional artwork uses its full original aspect ratio without
+     clipping; the overlaid information card remains unobstructed. */
+  .v2-ferrari-art { height: 100%; }
   .v2-change { margin-top: 2px; }
   .v2-change-caption { margin-top: 2px !important; }
   .v2-comparison { margin-top: 3px; }
@@ -561,6 +576,13 @@ td { background: #fff; border-color: var(--preem-line); }
 }
 @media (min-width: 1300px) and (max-height: 820px) {
   .v2-sales-card { padding-block: 15px; }
+}
+@media (min-width: 1300px) and (min-height: 780px) {
+  /* Two lines of preview fit on normal desktop heights. Keep the existing
+     compact one-line treatment on short screens and all cashier/mobile views. */
+  .v2-info .v2-panel-head { margin-bottom: 6px; }
+  .v2-info h3 { margin-bottom: 4px; line-height: 1.2; }
+  .v2-info p { -webkit-line-clamp: 2; font-size: clamp(12px, .88vw, 15px); line-height: 1.3; }
 }
 @media (min-width: 701px) and (max-width: 1299px) {
   .v2-ferrari-art { width: 100%; }
