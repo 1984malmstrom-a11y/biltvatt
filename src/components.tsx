@@ -16,10 +16,7 @@ import { MonthlyLeaderboard } from "./MonthlyLeaderboard";
 
 export function StationLogo() {
   return (
-    <div className="station-logo" aria-label="Stationslogotyp, platshållare">
-      <Droplets size={22} />
-      <span>STATION</span>
-    </div>
+    <img className="station-logo" src="/preem-logo-review.png" alt="Preem" />
   );
 }
 export function Brand() {
@@ -48,7 +45,7 @@ export function Avatar({
       className={`avatar ${small ? "small" : ""}`}
       style={{ "--accent": person.color } as CSSProperties}
     >
-      <UserRound fill="currentColor" strokeWidth={1.8} />
+      <UserRound strokeWidth={1.8} />
     </span>
   );
 }

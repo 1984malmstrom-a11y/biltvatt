@@ -22,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { api, HttpError, send } from "./api";
+import PreemResultRibbon from "./PreemResultRibbon";
 
 // Paused until the external Cloudflare fetch has been verified. Keep the
 // client component and API code for a later, separately reviewed reactivation.
@@ -35,7 +36,12 @@ type Summary = {
   difference_ore: number | null;
   percent: number | null;
   updated_at: string | null;
-  week: { date: string; net_sales_ore: number | null }[];
+  week: {
+    date: string;
+    net_sales_ore: number | null;
+    comparison_sales_ore: number | null;
+    percent: number | null;
+  }[];
 };
 type Shift = {
   id: string;
@@ -228,6 +234,7 @@ function Modal({
 
 export default function StationDashboardV2() {
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [selection, setSelection] = useState<{ businessDate: string; date: string } | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState("");
   const [weather, setWeather] = useState<Weather | null>(null);
@@ -387,13 +394,19 @@ export default function StationDashboardV2() {
     .sort()
     .at(-1);
   const bars = summary?.week ?? [];
-  const chart = bars.filter((b) => b.net_sales_ore !== null).length >= 3;
+  const chart = bars.some((bar) => bar.net_sales_ore !== null);
+  const selected = bars.find((bar) =>
+    selection?.businessDate === summary?.business_date &&
+    bar.date === selection?.date && bar.net_sales_ore !== null,
+  ) ?? [...bars].reverse().find((bar) => bar.net_sales_ore !== null);
+  const selectedTone = selected?.percent == null
+    ? "neutral" : selected.percent < 0 ? "negative" : "positive";
   const maximum = Math.max(1, ...bars.map((b) => b.net_sales_ore ?? 0));
   return (
     <div className="station-v2-shell">
       <header className="v2-header">
         <div className="v2-brand">
-          <span className="v2-logo-slot v2-logo-placeholder" aria-hidden="true">✦</span>
+          <img className="v2-logo-slot" src="/preem-logo-review.png" alt="Preem" />
           <div>
             <h1>PREEM TINGSRYD</h1>
             <p>Stationsdashboard</p>
@@ -427,20 +440,20 @@ export default function StationDashboardV2() {
           className="v2-sales-card"
           aria-label="Gårdagens butiksförsäljning"
         >
-          <div className="v2-sales-copy">
+          <div className={`v2-sales-copy ${summary?.net_sales_ore === null ? "is-empty" : ""}`}>
             <p className="v2-eyebrow">
               GÅRDAGENS BUTIKSFÖRSÄLJNING · EXKL. MOMS
             </p>
             <p className="v2-business-date">
               {summary ? `Igår · ${date(summary.business_date)}` : ""}
             </p>
-            <div className="v2-amount" aria-live="polite">
-              {summary
+            <PreemResultRibbon
+              value={summary
                 ? summary.net_sales_ore === null
                   ? "—"
                   : kronor(summary.net_sales_ore)
                 : "Hämtar…"}
-            </div>
+            />
             {summary?.net_sales_ore === null && (
               <p className="v2-empty-sale">
                 Gårdagens försäljning är ännu inte registrerad.
@@ -481,6 +494,11 @@ export default function StationDashboardV2() {
                 </dd>
               </div>
             </dl>
+            <button className="v2-monthly-cta" onClick={() => void openMonthly()}>
+              <CalendarDays size={16} aria-hidden="true" />
+              Förra månadens siffror
+              <ChevronRight size={16} aria-hidden="true" />
+            </button>
             <p className="v2-message">
               <span className="v2-trophy">
                 <Trophy aria-hidden="true" />
@@ -489,48 +507,45 @@ export default function StationDashboardV2() {
             </p>
           </div>
           <div className="v2-sales-visual">
-            <div
-              className={`v2-result-ring ${tone}`}
-              aria-label="Resultatindikator, bågen är dekorativ och visar ingen skala"
-            >
-              <svg viewBox="0 0 120 120" aria-hidden="true">
-                <circle className="v2-ring-track" cx="60" cy="60" r="51" />
-                <circle className="v2-ring-fill" cx="60" cy="60" r="51" />
-              </svg>
-              <div>
-                <strong>
-                  {summary?.percent === null || !summary
-                    ? "—"
-                    : pct(summary.percent)}
-                </strong>
-                <span>MOT 52 VECKOR TIDIGARE</span>
+            {chart && selected && (
+              <div className="v2-chart-detail" aria-live="polite" aria-atomic="true">
+                <div key={selected.date} className="v2-chart-detail-body">
+                  <span className="v2-detail-date">{date(selected.date)} · EXKL. MOMS</span>
+                  <strong>{kronor(selected.net_sales_ore!)}</strong>
+                  <span className={`v2-detail-change ${selectedTone}`}>
+                    {selected.percent == null
+                      ? "Ingen jämförelse tillgänglig"
+                      : `${pct(selected.percent)} mot samma veckodag 52 veckor tidigare`}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
             <div className="v2-chart">
               {chart ? (
-                bars.map((bar, i) => (
-                  <div key={bar.date} className="v2-bar-column">
-                    <div
-                      className={`v2-bar ${i === bars.length - 1 ? "current" : ""} ${bar.net_sales_ore === null ? "missing" : ""}`}
-                      style={{
-                        height:
-                          bar.net_sales_ore === null
-                            ? 0
-                            : `${Math.max(6, Math.round((bar.net_sales_ore / maximum) * 100))}%`,
-                      }}
-                      title={
-                        bar.net_sales_ore === null
-                          ? `${bar.date}: saknas`
-                          : `${bar.date}: ${kronor(bar.net_sales_ore)}`
-                      }
-                    />
+                bars.map((bar) => (
+                  <button
+                    type="button"
+                    key={bar.date}
+                    className={`v2-bar-column ${selected?.date === bar.date ? "selected" : ""}`}
+                    aria-label={`${date(bar.date)}: ${bar.net_sales_ore === null ? "försäljning saknas" : kronor(bar.net_sales_ore)}`}
+                    aria-pressed={selected?.date === bar.date}
+                    disabled={bar.net_sales_ore === null}
+                    onClick={() => setSelection({ businessDate: summary!.business_date, date: bar.date })}
+                  >
+                    <span className="v2-bar-track">
+                      <span
+                        className={`v2-bar ${bar.net_sales_ore === null ? "missing" : ""}`}
+                        style={{ height: bar.net_sales_ore === null
+                          ? "0%"
+                          : `${Math.max(6, Math.round((bar.net_sales_ore / maximum) * 100))}%` }}
+                      />
+                    </span>
                     <span>{weekday(bar.date)}</span>
-                  </div>
+                  </button>
                 ))
               ) : (
                 <p className="v2-chart-empty">
-                  Veckodiagrammet visas när minst tre dagsvärden har registrerats.
-                  <span>{bars.filter((bar) => bar.net_sales_ore !== null).length} av 3 dagar</span>
+                  Veckodiagrammet visas när en dagsförsäljning har registrerats.
                 </p>
               )}
             </div>
@@ -619,14 +634,12 @@ export default function StationDashboardV2() {
           </section>
         </div>
         <div className="v2-station-image">
-          <button className="v2-monthly-cta" onClick={() => void openMonthly()}>
-            Förra månadens siffror <ChevronRight size={17} aria-hidden="true" />
-          </button>
-          <em>
-            Mer än
-            <br />
-            en tankstation
-          </em>
+          <img
+            className="v2-ferrari-art"
+            src="/ferrari-campaign-original.png"
+            alt="Tanka bil, få en påse Ferrari-godis när du laddar eller tankar."
+            decoding="async"
+          />
         </div>
         <section className="v2-info v2-panel">
           <div className="v2-panel-head">

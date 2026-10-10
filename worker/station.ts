@@ -155,25 +155,33 @@ export async function stationApi(
     const day = addDays(stockholmDay(), -1),
       previousDay = comparisonDay(day);
     const weekStart = addDays(day, -6);
+    const previousWeekStart = comparisonDay(weekStart);
     const rows = await env.DB.prepare(
-      "SELECT business_date,net_sales_ore,updated_at FROM station_store_daily_sales WHERE station_id=? AND (business_date BETWEEN ? AND ? OR business_date=?)",
+      "SELECT business_date,net_sales_ore,updated_at FROM station_store_daily_sales WHERE station_id=? AND (business_date BETWEEN ? AND ? OR business_date BETWEEN ? AND ?)",
     )
-      .bind(STATION, weekStart, day, previousDay)
+      .bind(STATION, weekStart, day, previousWeekStart, previousDay)
       .all<{ business_date: string; net_sales_ore: number; updated_at: string }>();
+    const byDate = new Map(rows.results.map((row) => [row.business_date, row]));
     const current =
-      rows.results.find((r) => r.business_date === day)?.net_sales_ore ?? null;
+      byDate.get(day)?.net_sales_ore ?? null;
     const previous =
-      rows.results.find((r) => r.business_date === previousDay)
-        ?.net_sales_ore ?? null;
+      byDate.get(previousDay)?.net_sales_ore ?? null;
     return json({
       business_date: day,
       comparison_date: previousDay,
       net_sales_ore: current,
       comparison_sales_ore: previous,
-      updated_at: rows.results.find((r) => r.business_date === day)?.updated_at ?? null,
+      updated_at: byDate.get(day)?.updated_at ?? null,
       week: Array.from({ length: 7 }, (_, i) => {
         const date = addDays(weekStart, i);
-        return { date, net_sales_ore: rows.results.find((r) => r.business_date === date)?.net_sales_ore ?? null };
+        const net_sales_ore = byDate.get(date)?.net_sales_ore ?? null;
+        const comparison_sales_ore = byDate.get(comparisonDay(date))?.net_sales_ore ?? null;
+        return {
+          date,
+          net_sales_ore,
+          comparison_sales_ore,
+          percent: net_sales_ore === null ? null : change(net_sales_ore, comparison_sales_ore).percent,
+        };
       }),
       ...(current === null
         ? { difference_ore: null, percent: null }

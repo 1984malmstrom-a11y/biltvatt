@@ -129,10 +129,7 @@ test("stationskortets pepptext, meddelande och ärliga diagramtomläge ryms på 
     business_date: "2026-10-08", comparison_date: "2025-10-09",
     net_sales_ore: null, comparison_sales_ore: null, difference_ore: null,
     percent: null, updated_at: null,
-    week: [
-      { date: "2026-10-07", net_sales_ore: 100000 },
-      { date: "2026-10-08", net_sales_ore: 120000 },
-    ],
+    week: [],
   } }));
   const message = "Detta är ett långt syntetiskt meddelande som kan läsas i sin helhet. ".repeat(6);
   await page.route("**/api/station/v2", (route) => route.fulfill({ json: {
@@ -142,7 +139,7 @@ test("stationskortets pepptext, meddelande och ärliga diagramtomläge ryms på 
   for (const [width, height] of [[1920, 1080], [1366, 768], [390, 844]]) {
     await page.setViewportSize({ width, height });
     await page.goto("/station");
-    await expect(page.getByText("Veckodiagrammet visas när minst tre dagsvärden har registrerats.")).toBeVisible();
+    await expect(page.getByText("Veckodiagrammet visas när en dagsförsäljning har registrerats.")).toBeVisible();
     await expect(page.locator(".v2-bar")).toHaveCount(0);
     const bounds = await page.evaluate(() => {
       const rect = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();

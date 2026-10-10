@@ -48,6 +48,45 @@ describe("Stationsdashboard", () => {
     expect(change(150, 0)).toEqual({ difference_ore: 150, percent: null });
     expect(change(150, null)).toEqual({ difference_ore: null, percent: null });
   });
+  it("ger varje veckostapel en egen jämförelse exakt 364 dagar bakåt", async () => {
+    const f = fixture();
+    const admin = await f.login();
+    const yesterday = addDays(stockholmDay(), -1);
+    const missingComparison = addDays(yesterday, -3);
+    const positive = addDays(yesterday, -2);
+    const zeroComparison = addDays(yesterday, -1);
+    const insert = (businessDate: string, netSalesOre: number) => f.db.prepare(
+      "INSERT INTO station_store_daily_sales(station_id,business_date,net_sales_ore,source,created_at,updated_at,actor) VALUES('tingsryd',?,?,'manual',?,?, 'TEST')",
+    ).run(businessDate, netSalesOre, "2026-01-01T00:00:00Z", "2026-01-01T00:00:00Z");
+    insert(missingComparison, 3000);
+    insert(positive, 10000);
+    insert(comparisonDay(positive), 8000);
+    insert(zeroComparison, 5000);
+    insert(comparisonDay(zeroComparison), 0);
+    insert(yesterday, 0);
+    insert(comparisonDay(yesterday), 10000);
+    const response = await f.call("/station/dashboard", "GET", undefined, admin);
+    expect(response.status).toBe(200);
+    const result = await response.json() as {
+      comparison_date: string;
+      week: { date: string; net_sales_ore: number | null; comparison_sales_ore: number | null; percent: number | null }[];
+    };
+    expect(result.comparison_date).toBe(comparisonDay(yesterday));
+    expect(result.week).toHaveLength(7);
+    expect(result.week.find((bar) => bar.date === missingComparison)).toMatchObject({
+      net_sales_ore: 3000, comparison_sales_ore: null, percent: null,
+    });
+    expect(result.week.find((bar) => bar.date === positive)).toMatchObject({
+      net_sales_ore: 10000, comparison_sales_ore: 8000, percent: 25,
+    });
+    expect(result.week.find((bar) => bar.date === zeroComparison)).toMatchObject({
+      net_sales_ore: 5000, comparison_sales_ore: 0, percent: null,
+    });
+    expect(result.week.find((bar) => bar.date === yesterday)).toMatchObject({
+      net_sales_ore: 0, comparison_sales_ore: 10000, percent: -100,
+    });
+    f.db.close();
+  });
   it("kräver admin- eller visningssession och låter aldrig visningssessionen skriva", async () => {
     const f = fixture();
     const admin = await f.login();
