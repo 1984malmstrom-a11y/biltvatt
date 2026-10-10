@@ -545,10 +545,10 @@ p {
   border-radius: 13px;
   color: var(--navy);
   overflow: hidden;
-  border: 1px solid #dbe7f2;
+  border: 0;
   box-shadow: 0 3px 10px #182f4912;
   padding: 0;
-  background: #fff;
+  background: transparent;
 }
 .preemium {
   --card1: #f8c93b;
@@ -584,6 +584,9 @@ p {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
+  background: transparent;
+}
+.wash-image:has(.car-art) {
   background: linear-gradient(140deg, var(--card1), var(--card2));
 }
 .wash-image .car-art {

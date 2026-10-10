@@ -218,6 +218,14 @@ describe("Försäljning och dataintegritet", () => {
         .map((x) => x.price_sek),
     ).toEqual([389, 449]);
   });
+  it("ändrar Borstlös till 219 kr via skyddad admin utan att ändra gamla kvitton", async () => {
+    expect((await sale("emma", "borstlos")).status).toBe(201);
+    const cookie = await login();
+    expect((await call("/admin/wash-programs/borstlos", "PATCH", { price_sek: 219 }, cookie)).status).toBe(200);
+    const updated = (await (await sale("emma", "borstlos")).json()) as Sale;
+    expect(updated.price_sek).toBe(219);
+    expect(db.prepare("SELECT price_sek FROM sales ORDER BY rowid").all().map((row) => row.price_sek)).toEqual([199, 219]);
+  });
   it("döljer inaktiv personal och avvisar försäljning för inaktiva poster", async () => {
     const cookie = await login();
     await call("/admin/staff/emma", "PATCH", { active: 0 }, cookie);

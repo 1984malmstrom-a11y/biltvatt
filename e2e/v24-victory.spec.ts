@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { sek } from "../src/api";
 
 const programs = [
   { id: "preemium", name: "Preemium", price_sek: 389 },
@@ -8,7 +9,7 @@ const programs = [
   { id: "hosttvatt", name: "Hösttvätt", price_sek: 259 },
   { id: "finast", name: "Finast", price_sek: 219 },
   { id: "fin", name: "Fin", price_sek: 179 },
-  { id: "borstlos", name: "Borstlös", price_sek: 199 },
+  { id: "borstlos", name: "Borstlös", price_sek: 219 },
 ].map((program, sort_order) => ({ ...program, sort_order, active: 1 }));
 
 async function catalog(page: Page) {
@@ -41,12 +42,18 @@ async function assertFullImageButtons(page: Page, mobile: boolean) {
       naturalRatio: image.naturalWidth / image.naturalHeight,
       loaded: image.complete && image.naturalWidth > 0,
       fit: getComputedStyle(image).objectFit,
+      borderWidth: getComputedStyle(card).borderWidth,
+      cardBackground: getComputedStyle(card).backgroundColor,
+      imageBackground: getComputedStyle(card.querySelector(".wash-image")!).backgroundColor,
     };
   }));
   expect(boxes).toHaveLength(6);
   for (const box of boxes) {
     expect(box.loaded).toBe(true);
     expect(box.fit).toBe("contain");
+    expect(box.borderWidth).toBe("0px");
+    expect(box.cardBackground).toBe("rgba(0, 0, 0, 0)");
+    expect(box.imageBackground).toBe("rgba(0, 0, 0, 0)");
     expect(Math.abs(box.width / box.height - box.naturalRatio)).toBeLessThan(.02);
     expect(Math.abs(box.width - box.imageWidth)).toBeLessThan(3);
     expect(Math.abs(box.height - box.imageHeight)).toBeLessThan(3);
@@ -68,8 +75,18 @@ test("sex hela bildknappar i 3 × 2 på desktop och två kolumner på mobil", as
   await page.setViewportSize({ width: 1366, height: 768 });
   await catalog(page);
   await assertFullImageButtons(page, false);
+  for (const [index, program] of programs.entries()) {
+    await expect(page.locator(".wash-card").nth(index)).toHaveAttribute(
+      "aria-label", `Registrera ${program.name}, ${sek(program.price_sek)}`,
+    );
+    const source = await page.locator(".wash-card img").nth(index).getAttribute("src");
+    expect(source).toBe(`/wash-programs/${program.id}-600.webp`);
+  }
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
   await screenshot(page, "wash-cards-desktop-1366x768");
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await assertFullImageButtons(page, false);
+  await screenshot(page, "wash-cards-desktop-1920x1080");
   await page.setViewportSize({ width: 390, height: 844 });
   await assertFullImageButtons(page, true);
   await screenshot(page, "wash-cards-mobile-390x844");

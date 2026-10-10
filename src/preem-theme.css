@@ -160,16 +160,14 @@ p { color: var(--preem-muted); }
 .handwritten { color: var(--preem-forest-dark); }
 .handwritten i { background: var(--preem-orange); }
 .wash-card {
-  background: var(--preem-cream);
-  border-color: var(--preem-line);
+  background: transparent;
   border-radius: 12px;
   box-shadow: 0 4px 13px #00463119;
 }
 .wash-card:hover:not(:disabled) {
-  border-color: #77a383;
   box-shadow: 0 9px 20px #0046312b;
 }
-.wash-image { background: var(--preem-cream); }
+.wash-image { background: transparent; }
 .wash-image img { object-fit: contain; }
 .victory-overlay {
   position: fixed;
