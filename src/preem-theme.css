@@ -616,6 +616,11 @@ td { background: #fff; border-color: var(--preem-line); }
   .v2-layout { grid-template-rows: minmax(0, 1fr) clamp(138px, 19vh, 170px); }
   .v2-sales-card { padding-block: 14px 18px; }
   .v2-result-ribbon { height: clamp(96px, 14vh, 126px); }
+  .v2-ribbon-brush {
+    transform-box: view-box;
+    transform-origin: center;
+    transform: translateY(4%) scale(1.05, 1.32);
+  }
   .v2-change { font-size: clamp(42px, 5.8vh, 52px); }
   .v2-change-caption { font-size: clamp(13px, 1.12vw, 17px); }
   .v2-comparison { font-size: clamp(13px, 1.05vw, 17px); line-height: 1.25; }
@@ -635,7 +640,7 @@ td { background: #fff; border-color: var(--preem-line); }
   .v2-task-preview { height: auto; overflow: visible; }
   .station-v2-shell .v2-task-row { height: 28px; min-height: 28px; }
   .v2-task-manage { margin-top: 2px; }
-  .v2-result-ribbon { height: 84px; }
+  .v2-result-ribbon { height: 92px; }
   .v2-result-ribbon .v2-amount { font-size: clamp(66px, 6vw, 88px); }
   .v2-comparison { font-size: 15px; line-height: 1.17; }
   .v2-sales-copy .v2-monthly-cta { min-height: 27px; margin-top: 0; padding-block: 2px; }
