@@ -71,7 +71,7 @@ describe("isolerat SMHI-prov", () => {
     expect(calls[7].init).toMatchObject({ method: "GET", redirect: "error" });
     expect(calls[7].init?.signal).toBeInstanceOf(AbortSignal);
     expect(calls[7].init?.cf).toBeUndefined();
-    expect(calls[8].init).toMatchObject({ method: "GET", redirect: "error", cf: calls[6].init?.cf });
+    expect(calls[8].init).toMatchObject({ method: "GET", redirect: "manual", cf: calls[6].init?.cf });
     expect(JSON.stringify(calls)).not.toContain("private");
     expect(JSON.stringify(data)).not.toContain("private");
   });
@@ -144,12 +144,16 @@ describe("isolerat SMHI-prov", () => {
       if (init?.redirect === "error") throw new TypeError("Redirect to private.example/secret-token");
       return Response.json(forecast);
     }) as typeof fetch;
-    const data = await (await probeSmhi(incoming(), fetcher)).json() as ProbeBody;
+    const response = await probeSmhi(incoming(), fetcher);
+    const data = await response.json() as ProbeBody;
+    expect(response.status).toBe(200);
+    expect(data.stage).toBe("complete");
     expect(data.attempts.find((a) => a.mode === "smhi-basic")?.httpStatus).toBe(200);
     expect(data.attempts.find((a) => a.mode === "smhi-redirect-error")).toMatchObject({
       errorType: "TypeError", errorCategory: "redirect",
     });
     expect(data.attempts.find((a) => a.mode === "smhi-with-signal")?.httpStatus).toBe(200);
+    expect(data.attempts.find((a) => a.mode === "app-fetch")?.httpStatus).toBe(200);
     expect(JSON.stringify(data)).not.toContain("private.example");
     expect(JSON.stringify(data)).not.toContain("secret-token");
   });

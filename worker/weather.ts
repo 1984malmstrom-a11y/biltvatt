@@ -72,7 +72,10 @@ export function fetchSmhiForecast(fetcher: typeof fetch = fetch): Promise<Respon
   return fetcher(SMHI_POINT_URL, {
     method: "GET",
     headers: { Accept: "application/json" },
-    redirect: "error",
+    // Workers threw TypeError for redirect:"error" even when SMHI returned
+    // 200 without a redirect. Manual mode was verified from Cloudflare and
+    // keeps redirects visible for the status check in getWeather.
+    redirect: "manual",
     signal: AbortSignal.timeout(8000),
     cf: {
       // Scope the override to this one GET; never cache redirects or errors.

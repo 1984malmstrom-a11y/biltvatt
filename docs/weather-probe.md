@@ -4,6 +4,8 @@
 
 Den här versionen är avsedd för den redan driftsatta `tvattligan-smhi-probe-20261008`: alla fyra tidigare anrop kastade `TypeError` även utan preview-token. Alla fyra skapade en `AbortSignal.timeout(8000)`, så deras resultat avgör ännu inte om orsaken ligger i signalen, SMHI-nätvägen eller andra anropsinställningar. `elapsedMs: 0` är inte bevis för att inget nätverksförsök skedde; Cloudflare kan frysa `Date.now()` mellan I/O-operationer.
 
+Ett senare test från den driftsatta prov-Workern gav HTTP 200 för `example-basic`, `smhi-basic`, `smhi-redirect-manual`, `smhi-with-signal`, `smhi-headers-only` och `smhi-cache-only`. Endast försöken med `redirect: "error"` kastade `TypeError`; de lyckade SMHI-svaren rapporterade ingen omdirigering. V2:s SMHI-anrop använder därför nu `redirect: "manual"` och avvisar svar med icke lyckad HTTP-status. Testet har ännu inte verifierat JSON-modellen eller den sammanlagda V2-fetchens cacheträff efter ändringen. Prov-Workern behåller `smhi-redirect-error` och `smhi-combined-no-cache` som jämförelse med det gamla felet.
+
 Kör följande i PowerShell från projektroten, på `feat/station-dashboard-v2`, efter att grenen hämtats och `npm ci` har körts. Kontrollera först att `wrangler.jsonc` i provkatalogen fortfarande saknar `d1_databases` och `vars`. Det första kommandot använder en tillfällig Cloudflare-preview för att prova verklig SMHI-hämtning. Öppna den lokala adress Wrangler visar med `/probe` och stoppa sedan processen med Ctrl+C. Preview kan inte bevisa att cache fungerar.
 
 ```powershell
@@ -22,8 +24,8 @@ Svaret innehåller `stage`, `attempts` och `signalCheck` utan API-kropp, cookies
 - `example-basic` lyckas men `smhi-basic` misslyckas: SMHI-nätvägen behöver undersökas, oberoende av V2:s cache och signal.
 - `smhi-basic` lyckas men `smhi-with-signal` misslyckas: signaltillägget är en konkret felkandidat. `signalCheck.supported: false` visar att redan skapandet misslyckas.
 - `smhi-basic` och `smhi-with-signal` lyckas men `smhi-cache-only` misslyckas: cacheinställningen är en konkret felkandidat.
-- `smhi-redirect-manual` ger 3xx: kontrollera `redirectHost`; V2:s `redirect: "error"` kan då kasta.
-- `smhi-redirect-error` misslyckas medan `smhi-basic` och `smhi-redirect-manual` lyckas: omdirigering eller redirectinställningen är en konkret felkandidat.
+- `smhi-redirect-manual` ger 3xx: kontrollera `redirectHost`; V2 avvisar statusen utan att följa omdirigeringen.
+- `smhi-redirect-error` misslyckas medan `smhi-basic` och `smhi-redirect-manual` lyckas: redirectinställningen är felkandidat. Om de lyckade svaren har `redirected: false` och status 200 finns inget belägg för en faktisk HTTP-omdirigering.
 - `smhi-headers-only` och `smhi-combined-no-cache` skiljer headers/redirect/signal från cachekonfigurationen. Jämför dem innan V2-anropet ändras.
 - Endast `app-fetch` misslyckas: granska den kvarvarande kombinationen av headers, redirect, signal och cache. Ändra inte V2 utifrån enbart en felkategori.
 - `stage: "json"`, `"schema"` eller `"selection"`: V2-hämtningen lyckades men svarstexten, datamodellen eller prognostiderna behöver granskas.

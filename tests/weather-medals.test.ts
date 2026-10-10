@@ -46,11 +46,14 @@ describe("SMHI SNOW1gv1 prognos", () => {
     });
     expect(calls[0].init.headers).toEqual({ Accept: "application/json" });
     expect(calls[0].init.method).toBe("GET");
-    expect(calls[0].init.redirect).toBe("error");
+    expect(calls[0].init.redirect).toBe("manual");
     expect(second.tomorrow?.time).toBe("2026-11-02T11:00:00Z");
   });
   it("avvisar tjänstefel och felaktigt API-svar", async () => {
     await expect(getWeather(new Date(), (async () => new Response("", { status: 500 })) as typeof fetch)).rejects.toThrow("500");
+    await expect(getWeather(new Date(), (async () => new Response(null, {
+      status: 302, headers: { Location: "https://example.invalid/forecast" },
+    })) as typeof fetch)).rejects.toThrow("302");
     await expect(getWeather(new Date(), (async () => new Response("{}")) as typeof fetch)).rejects.toThrow("Ogiltig prognos");
   });
   it("hanterar timeout, ogiltig JSON och saknade prognosvärden utan uppfunna temperaturer", async () => {
