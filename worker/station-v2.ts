@@ -4,6 +4,7 @@ import { addDays } from "./stats";
 import { body, checkFields, fail, json, text } from "./http";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 import { isFixedMonthlyMetrics, type FixedMonthlyMetrics } from "../shared/monthly";
+import { isRecurringTaskId, recurringTaskForDay } from "../shared/recurring-tasks";
 
 const STATION = "tingsryd";
 const isoDay = (value: unknown): value is string =>
@@ -195,17 +196,23 @@ export async function stationV2Api(
   }
 
   if (path === "/api/station/v2" && method === "GET") {
-    const [shifts, tasks, notices, latest] = await Promise.all([
+    const recurring = recurringTaskForDay(today);
+    const [shifts, tasks, recurringStatus, notices, latest] = await Promise.all([
       env.DB.prepare(
         "SELECT id,first_name,starts_at,ends_at FROM station_shifts WHERE status='active' AND (work_date=? OR (work_date=? AND ends_at<starts_at AND ends_at>?)) ORDER BY work_date,starts_at,first_name,id",
       )
         .bind(today, addDays(today, -1), localTime)
         .all(),
       env.DB.prepare(
-        "SELECT id,text,done,revision,created_at FROM station_tasks WHERE station_id=? AND task_date=? AND deleted_at IS NULL ORDER BY created_at,id LIMIT 100",
+        "SELECT id,text,done,revision,created_at FROM station_tasks WHERE station_id=? AND task_date=? AND id<>? AND deleted_at IS NULL ORDER BY created_at,id LIMIT 100",
       )
-        .bind(STATION, today)
+        .bind(STATION, today, recurring?.id ?? "")
         .all(),
+      recurring
+        ? env.DB.prepare(
+          "SELECT done,revision,created_at FROM station_tasks WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL",
+        ).bind(recurring.id, STATION, today).first<{ done: number; revision: number; created_at: string }>()
+        : Promise.resolve(null),
       env.DB.prepare(
         "SELECT id,title,message,updated_at FROM station_notices WHERE station_id=? AND published=1 AND (expires_on IS NULL OR expires_on>? OR (expires_on=? AND (expires_time IS NULL OR expires_time>=?))) ORDER BY updated_at DESC,id DESC LIMIT 20",
       )
@@ -220,7 +227,16 @@ export async function stationV2Api(
     return json({
       today,
       shifts: shifts.results,
-      tasks: tasks.results,
+      tasks: [
+        ...(recurring ? [{
+          ...recurring,
+          recurring: true,
+          done: recurringStatus?.done ?? 0,
+          revision: recurringStatus?.revision ?? 0,
+          created_at: recurringStatus?.created_at ?? `${today}T00:00:00`,
+        }] : []),
+        ...tasks.results,
+      ],
       notices: notices.results,
       updated_at: latest?.updated_at ?? null,
     });
@@ -229,16 +245,44 @@ export async function stationV2Api(
     await limitTaskWrites(request, env);
     const data = await body(request);
     checkFields(data, ["text"]);
+    const taskText = taskFields(data);
+    if (taskText === recurringTaskForDay(today)?.text)
+      fail(409, "Den återkommande uppgiften finns redan idag.");
     const id = crypto.randomUUID();
     await env.DB.prepare(
       "INSERT INTO station_tasks(id,station_id,task_date,text,created_at,updated_at) VALUES(?,?,?,?,?,?)",
     )
-      .bind(id, STATION, today, taskFields(data), now, now)
+      .bind(id, STATION, today, taskText, now, now)
       .run();
     return json({ id }, 201);
   }
   const taskId = path.match(/^\/api\/station\/v2\/tasks\/([0-9a-f-]{36})$/);
   if (taskId && (method === "PUT" || method === "DELETE")) {
+    const recurring = recurringTaskForDay(today);
+    if (isRecurringTaskId(taskId[1])) {
+      if (method === "DELETE") fail(403, "Återkommande uppgifter kan inte tas bort.");
+      if (!recurring) return fail(409, "Uppgiften hör till en annan dag. Uppdatera listan.");
+      if (taskId[1] !== recurring.id)
+        fail(409, "Uppgiften hör till en annan dag. Uppdatera listan.");
+      await limitTaskWrites(request, env);
+      const data = await body(request);
+      checkFields(data, ["text", "done", "expected_revision"]);
+      if (data.text !== recurring.text)
+        fail(403, "Återkommande uppgifter kan inte ändras.");
+      if (typeof data.done !== "boolean")
+        fail(400, "Ogiltig status för uppgiften.");
+      const expected = version(data.expected_revision);
+      const result = expected === 0
+        ? await env.DB.prepare(
+          "INSERT OR IGNORE INTO station_tasks(id,station_id,task_date,text,done,revision,created_at,updated_at) VALUES(?,?,?,?,?,1,?,?)",
+        ).bind(recurring.id, STATION, today, recurring.text, data.done ? 1 : 0, now, now).run()
+        : await env.DB.prepare(
+          "UPDATE station_tasks SET text=?,done=?,revision=revision+1,updated_at=? WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL AND revision=?",
+        ).bind(recurring.text, data.done ? 1 : 0, now, recurring.id, STATION, today, expected).run();
+      if (result.meta.changes !== 1)
+        fail(409, "Uppgiften har ändrats på en annan enhet. Uppdatera listan.");
+      return json({ ok: true });
+    }
     await limitTaskWrites(request, env);
     const data = await body(request);
     checkFields(
@@ -258,11 +302,14 @@ export async function stationV2Api(
     } else {
       if (typeof data.done !== "boolean")
         fail(400, "Ogiltig status för uppgiften.");
+      const taskText = taskFields(data);
+      if (taskText === recurringTaskForDay(today)?.text)
+        fail(409, "Den återkommande uppgiften finns redan idag.");
       result = await env.DB.prepare(
         "UPDATE station_tasks SET text=?,done=?,updated_at=?,revision=revision+1 WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL AND revision=?",
       )
         .bind(
-          taskFields(data),
+          taskText,
           data.done ? 1 : 0,
           now,
           taskId[1],

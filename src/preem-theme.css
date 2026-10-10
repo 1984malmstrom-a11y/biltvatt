@@ -683,6 +683,9 @@ td { background: #fff; border-color: var(--preem-line); }
 
 /* Keep the approved weather header compact across desktop and mobile. */
 .v2-header.has-weather .v2-header-right { gap: clamp(10px, 1vw, 18px); padding-top: 0; }
+@media (min-width: 1400px) {
+  .v2-header.has-weather .v2-lovable-link { margin-right: 24px; }
+}
 @media (min-width: 1024px) {
   .v2-header.has-weather .v2-admin-link { margin-left: 30px; }
 }

@@ -601,6 +601,14 @@
   height: 80%;
   stroke-width: 3;
 }
+.v2-task-row .v2-recurring-icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  margin-left: auto;
+  color: #27724e;
+  stroke-width: 1.8;
+}
 .v2-task-manage {
   display: flex;
   align-items: center;
@@ -809,6 +817,13 @@
   display: flex;
   gap: 8px;
   white-space: nowrap;
+}
+.v2-detail-row .v2-recurring-icon {
+  width: 15px;
+  height: 15px;
+  margin-left: 7px;
+  color: #27724e;
+  vertical-align: -2px;
 }
 .v2-add-task {
   display: flex;

@@ -170,10 +170,10 @@ describe("Stationsdashboard V2", () => {
     const first = (await (
       await f.call("/station/v2", "GET", undefined, viewer)
     ).json()) as {
-      tasks: { id: string; text: string; revision: number; done: number }[];
+      tasks: { id: string; text: string; revision: number; done: number; recurring?: boolean }[];
     };
-    expect(first.tasks).toHaveLength(1);
-    const task = first.tasks[0];
+    expect(first.tasks.filter((item) => !item.recurring)).toHaveLength(1);
+    const task = first.tasks.find((item) => !item.recurring)!;
     expect(
       (
         await f.call(
@@ -216,8 +216,8 @@ describe("Stationsdashboard V2", () => {
     ).toBe(200);
     const last = (await (
       await f.call("/station/v2", "GET", undefined, viewer)
-    ).json()) as { tasks: unknown[] };
-    expect(last.tasks).toEqual([]);
+    ).json()) as { tasks: { recurring?: boolean }[] };
+    expect(last.tasks.filter((item) => !item.recurring)).toEqual([]);
     expect(
       (await f.call("/admin/station/v2/notices", "GET", undefined, viewer))
         .status,
@@ -412,8 +412,8 @@ describe("Stationsdashboard V2", () => {
     expect((await f.call("/station/v2/tasks","POST",{text:"Adminuppgift"},admin)).status).toBe(201);
     const adminOverview = await f.call("/station/v2","GET",undefined,admin);
     expect(adminOverview.status).toBe(200);
-    const overview = await (await f.call("/station/v2","GET",undefined,viewer)).json() as {tasks:{text:string}[]};
-    expect(overview.tasks.map((item)=>item.text)).toEqual(["Adminuppgift"]);
+    const overview = await (await f.call("/station/v2","GET",undefined,viewer)).json() as {tasks:{text:string;recurring?:boolean}[]};
+    expect(overview.tasks.filter((item)=>!item.recurring).map((item)=>item.text)).toEqual(["Adminuppgift"]);
     expect((await f.call("/station/dashboard","GET",undefined,admin)).status).toBe(200);
     expect((await f.call("/station/v2/tasks","POST",{text:"   "},viewer)).status).toBe(400);
     expect((await f.call("/station/v2/tasks","POST",{text:"x".repeat(181)},viewer)).status).toBe(400);

@@ -58,6 +58,7 @@ type Task = {
   done: number;
   revision: number;
   created_at: string;
+  recurring?: boolean;
 };
 type Notice = {
   id: string;
@@ -327,6 +328,7 @@ export default function StationDashboardV2() {
     }
   }
   async function updateTask(task: Task, action: "toggle" | "edit" | "delete") {
+    if (task.recurring && action !== "toggle") return;
     let updated = task.text;
     if (action === "edit") {
       const answer = window.prompt("Ändra uppgift", task.text);
@@ -635,6 +637,7 @@ export default function StationDashboardV2() {
                       {t.done ? <Check /> : null}
                     </span>
                     <span>{t.text}</span>
+                    {t.recurring && <CalendarDays className="v2-recurring-icon" aria-label="Återkommande uppgift" />}
                   </button>
                 ))
               ) : (
@@ -742,8 +745,9 @@ export default function StationDashboardV2() {
                 onClick={() => void updateTask(t, "toggle")}
               >
                 {t.done ? "✓" : "○"} {t.text}
+                {t.recurring && <CalendarDays className="v2-recurring-icon" aria-label="Återkommande uppgift" />}
               </button>
-              <div>
+              {!t.recurring && <div>
                 <button
                   disabled={busy}
                   onClick={() => void updateTask(t, "edit")}
@@ -756,7 +760,7 @@ export default function StationDashboardV2() {
                 >
                   Ta bort
                 </button>
-              </div>
+              </div>}
             </div>
           ))}
         </Modal>
