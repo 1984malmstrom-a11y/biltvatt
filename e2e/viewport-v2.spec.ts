@@ -143,7 +143,7 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
     await syntheticData(page);
     await page.goto("/station");
     await expect(page.locator(".v2-amount")).toContainText("38 450");
-    await expect(page.locator(".v2-chart-detail")).toContainText("38 450");
+    await expect(page.locator(".v2-chart-detail.is-hint")).toContainText("Välj en stapel");
     await expect(page.locator(".v2-result-ring")).toHaveCount(0);
     expect(await dashboardSurfaces(page)).toEqual({
       sales: "rgb(255, 255, 255)", shifts: "rgb(255, 255, 255)",
@@ -154,6 +154,13 @@ for (const [width, height] of [[1366, 768], [1440, 900], [1920, 1080]]) {
       source: "/ferrari-campaign-original.png", naturalSize: [2172, 724],
       fit: "contain", buttonBelowComparison: true, buttonInSalesCard: true, promoHasButton: false,
     });
+    if (width >= 1300) {
+      const promoArt = await page.locator(".v2-ferrari-art").boundingBox();
+      const promoCard = await page.locator(".v2-station-image").boundingBox();
+      expect(promoArt).not.toBeNull();
+      expect(promoCard).not.toBeNull();
+      expect(promoArt!.height).toBeGreaterThanOrEqual(promoCard!.height * .95);
+    }
     const salesLayout = await cashierLayout(page);
     expect(salesLayout.boxes[".v2-message"]!.bottom).toBeLessThanOrEqual(salesLayout.boxes[".v2-sales-card"]!.bottom);
     expect(salesLayout.boxes[".v2-monthly-cta"]!.bottom).toBeLessThanOrEqual(salesLayout.boxes[".v2-sales-card"]!.bottom);
@@ -360,7 +367,8 @@ test("veckostaplarna byter dagsvärde med klick, tangentbord och saknad jämför
   const detail = page.locator(".v2-chart-detail");
   await expect(bars).toHaveCount(7);
   await expect(bars.nth(6)).toHaveAttribute("aria-pressed", "true");
-  await expect(detail).toContainText("38 450");
+  await expect(detail).toContainText("Välj en stapel");
+  await expect(detail).not.toContainText("38 450");
   await bars.nth(1).click();
   await expect(bars.nth(1)).toHaveAttribute("aria-pressed", "true");
   await expect(bars.nth(6)).toHaveAttribute("aria-pressed", "false");
