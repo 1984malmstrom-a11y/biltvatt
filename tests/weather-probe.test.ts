@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { probeSmhi } from "../scripts/weather-probe/worker";
+import probeWorker, { probeSmhi } from "../scripts/weather-probe/worker";
 import { SMHI_POINT_URL } from "../worker/weather";
 
 const forecast = { timeSeries: [
@@ -17,7 +17,28 @@ type ProbeBody = { attempts: { mode: string; httpStatus?: number; errorType?: st
 
 describe("isolerat SMHI-prov", () => {
   beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-08T10:00:00Z")); });
-  afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
+  afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.useRealTimers(); });
+
+  it("Cloudflares tre handlerargument binder inte env som fetch-funktion", async () => {
+    const upstream = vi.fn(async (input: string | URL | Request) => input === "https://example.com"
+      ? new Response("example", { status: 200 })
+      : Response.json(forecast));
+    vi.stubGlobal("fetch", upstream);
+    const env = { marker: "cloudflare-env-is-not-a-fetcher" };
+    const context = {
+      waitUntil: vi.fn(), passThroughOnException: vi.fn(),
+    } as unknown as ExecutionContext;
+
+    const response = await probeWorker.fetch(incoming(), env, context);
+    const data = await response.json() as ProbeBody;
+    expect(response.status).toBe(200);
+    expect(data).toMatchObject({ ok: true, stage: "complete" });
+    expect(data.attempts).toHaveLength(9);
+    expect(data.attempts.every((attempt) => attempt.httpStatus === 200)).toBe(true);
+    expect(upstream).toHaveBeenCalledTimes(9);
+    expect(upstream.mock.calls[0][0]).toBe("https://example.com");
+    expect(JSON.stringify(data)).not.toContain(env.marker);
+  });
 
   it("jämför minimal GET, signal, cache och ordinarie anrop utan att vidarebefordra inkommande headers", async () => {
     const calls: { input: string | URL | Request; init?: RequestInit }[] = [];

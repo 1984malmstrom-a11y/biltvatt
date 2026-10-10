@@ -190,4 +190,10 @@ export async function probeSmhi(request: Request, fetcher: typeof fetch = fetch)
   });
 }
 
-export default { fetch: probeSmhi };
+// Cloudflare passes (request, env, context). Keep the injectable fetcher on
+// probeSmhi itself, but never bind the Worker's env to that test seam.
+export default {
+  fetch(request: Request, _env: unknown, _context: ExecutionContext): Promise<Response> {
+    return probeSmhi(request);
+  },
+};
