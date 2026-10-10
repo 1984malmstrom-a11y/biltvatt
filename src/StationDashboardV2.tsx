@@ -398,6 +398,11 @@ export default function StationDashboardV2() {
     selection?.businessDate === summary?.business_date &&
     bar.date === selection?.date && bar.net_sales_ore !== null,
   ) ?? [...bars].reverse().find((bar) => bar.net_sales_ore !== null);
+  const hasExplicitSelection = Boolean(
+    selection && summary &&
+    selection.businessDate === summary.business_date &&
+    selected?.date === selection.date,
+  );
   const selectedTone = selected?.percent == null
     ? "neutral" : selected.percent < 0 ? "negative" : "positive";
   const maximum = Math.max(1, ...bars.map((b) => b.net_sales_ore ?? 0));
@@ -514,16 +519,24 @@ export default function StationDashboardV2() {
           </div>
           <div className="v2-sales-visual">
             {chart && selected && (
-              <div className="v2-chart-detail" aria-live="polite" aria-atomic="true">
-                <div key={selected.date} className="v2-chart-detail-body">
-                  <span className="v2-detail-date">{date(selected.date)} · EXKL. MOMS</span>
-                  <strong>{kronor(selected.net_sales_ore!)}</strong>
-                  <span className={`v2-detail-change ${selectedTone}`}>
-                    {selected.percent == null
-                      ? "Ingen jämförelse tillgänglig"
-                      : `${pct(selected.percent)} mot samma veckodag 52 veckor tidigare`}
-                  </span>
-                </div>
+              <div
+                className={`v2-chart-detail${hasExplicitSelection ? "" : " is-hint"}`}
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {hasExplicitSelection ? (
+                  <div key={selected.date} className="v2-chart-detail-body">
+                    <span className="v2-detail-date">{date(selected.date)} · EXKL. MOMS</span>
+                    <strong>{kronor(selected.net_sales_ore!)}</strong>
+                    <span className={`v2-detail-change ${selectedTone}`}>
+                      {selected.percent == null
+                        ? "Ingen jämförelse tillgänglig"
+                        : `${pct(selected.percent)} mot samma veckodag 52 veckor tidigare`}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="v2-chart-hint">Välj en stapel för att se resultatet för den dagen.</p>
+                )}
               </div>
             )}
             <div className="v2-chart">
