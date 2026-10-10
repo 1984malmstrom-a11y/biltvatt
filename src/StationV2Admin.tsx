@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, send } from "./api";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
+import { emptyMonthlyMetrics, formatMonthlyNumber, inputNumber, MONTHLY_CATEGORIES, monthlyTone, parseSwedishNumber, type FixedMonthlyMetrics } from "../shared/monthly";
 type Shift = {
   id: string;
   period_id: string;
@@ -30,8 +31,22 @@ type Notice = {
   updated_at: string;
 };
 type Row = ScheduleRow;
-type Metric = { label: string; value: string; unit: string; order: number };
-type Monthly = { month: string; metrics: Metric[]; revision: number; updated_at: string };
+type Monthly = { month: string; metrics: FixedMonthlyMetrics | null; legacy: boolean; revision: number | null; updated_at: string | null };
+const monthlyDraft = (metrics: FixedMonthlyMetrics | null) => {
+  const source = metrics ?? emptyMonthlyMetrics();
+  return Object.fromEntries(MONTHLY_CATEGORIES.flatMap(({ key, fields }) =>
+    fields.map((field) => [`${key}.${field}`, inputNumber((source[key] as Record<string, number | null>)[field])]),
+  )) as Record<string, string>;
+};
+const parseMonthlyDraft = (draft: Record<string, string>): FixedMonthlyMetrics => {
+  const result = emptyMonthlyMetrics();
+  for (const { key, fields } of MONTHLY_CATEGORIES) for (const field of fields) {
+    const value = parseSwedishNumber(draft[`${key}.${field}`] ?? "");
+    if (value !== null && !Number.isFinite(value)) throw new Error("Ange giltiga tal med komma som decimaltecken.");
+    (result[key] as Record<string, number | null>)[field] = value;
+  }
+  return result;
+};
 const blank = {
   title: "", message: "", published: false, expires_on: "", expires_time: "",
 };
@@ -117,9 +132,11 @@ export default function StationV2Admin() {
     [notices, setNotices] = useState<Notice[]>([]),
     [monthly, setMonthly] = useState<Monthly[]>([]);
   const [month, setMonth] = useState(previousMonth),
-    [metrics, setMetrics] = useState<Metric[]>([]),
+    [metrics, setMetrics] = useState<Record<string, string>>(() => monthlyDraft(null)),
+    [legacyMonth, setLegacyMonth] = useState(false),
     [monthlyVersion, setMonthlyVersion] = useState<number | null>(null);
   const monthlyInitialized = useRef(false);
+  const monthRequest = useRef(0);
   const [label, setLabel] = useState(""),
     [starts, setStarts] = useState(""),
     [ends, setEnds] = useState(""),
@@ -157,7 +174,8 @@ export default function StationV2Admin() {
       if (!monthlyInitialized.current) {
         const latest = figures.find((row) => row.month === previousMonth());
         if (latest) {
-          setMetrics(latest.metrics);
+          setMetrics(monthlyDraft(latest.metrics));
+          setLegacyMonth(latest.legacy);
           setMonthlyVersion(latest.revision);
         }
         monthlyInitialized.current = true;
@@ -313,11 +331,18 @@ export default function StationV2Admin() {
       await load();
     }
   }
-  function chooseMonth(value: string) {
-    const row = monthly.find((item) => item.month === value);
+  async function chooseMonth(value: string) {
+    const request = ++monthRequest.current;
     setMonth(value);
-    setMetrics(row?.metrics ?? []);
-    setMonthlyVersion(row?.revision ?? null);
+    setError("");
+    if (!value) return;
+    try {
+      const row = await api<Monthly>(`/admin/station/v2/monthly/${value}`);
+      if (request !== monthRequest.current) return;
+      setMetrics(monthlyDraft(row.metrics));
+      setLegacyMonth(row.legacy);
+      setMonthlyVersion(row.revision);
+    } catch (e) { if (request === monthRequest.current) setError((e as Error).message); }
   }
   async function saveMonthly(e: React.FormEvent) {
     e.preventDefault();
@@ -327,7 +352,7 @@ export default function StationV2Admin() {
       const result = await api<{ revision: number }>(
         `/admin/station/v2/monthly/${month}`,
         send("PUT", {
-          metrics: metrics.map((row, index) => ({ ...row, order: index })),
+          metrics: parseMonthlyDraft(metrics),
           expected_revision: monthlyVersion,
         }),
       );
@@ -340,17 +365,6 @@ export default function StationV2Admin() {
     } finally {
       setBusy(false);
     }
-  }
-  function moveMetric(index: number, direction: number) {
-    const next = [...metrics], target = index + direction;
-    if (target < 0 || target >= next.length) return;
-    [next[index], next[target]] = [next[target], next[index]];
-    setMetrics(next.map((row, i) => ({ ...row, order: i })));
-  }
-  function editMetric(index: number, field: "label" | "value" | "unit", value: string) {
-    setMetrics((current) => current.map((row, i) =>
-      i === index ? { ...row, [field]: value } : row,
-    ));
   }
   const previewConflicts = preview.length ? findScheduleConflicts(preview, shifts) : [];
   return (
@@ -703,50 +717,35 @@ export default function StationV2Admin() {
       <section className="station-admin-card v2-monthly-admin" id="station-monthly">
         <span className="station-card-index">06 / MÅNADSSIFFROR</span>
         <h2>Förra månadens siffror</h2>
-        <p>
-          Välj en avslutad månad och fyll i raderna från stationens månadskort.
-          Rubriker och värden visas precis som du anger dem.
-        </p>
+        <p>Välj en avslutad månad. Alla procentsatser matas in manuellt. Lämna ett fält tomt om värdet saknas.</p>
         <form onSubmit={(e) => void saveMonthly(e)}>
           <label>
             Månad
             <input type="month" value={month} max={previousMonth()} required
-              onChange={(e) => chooseMonth(e.target.value)} />
+              onChange={(e) => void chooseMonth(e.target.value)} />
           </label>
-          {metrics.map((row, index) => (
-            <div className="v2-monthly-editor" key={index}>
-              <label>
-                Rubrik
-                <input value={row.label} maxLength={80} required
-                  onChange={(e) => editMetric(index, "label", e.target.value)} />
-              </label>
-              <label>
-                Värde
-                <input value={row.value} maxLength={80} required
-                  onChange={(e) => editMetric(index, "value", e.target.value)} />
-              </label>
-              <label>
-                Enhet (valfri)
-                <input value={row.unit} maxLength={24}
-                  onChange={(e) => editMetric(index, "unit", e.target.value)} />
-              </label>
-              <div className="v2-monthly-controls">
-                <button type="button" aria-label={`Flytta ${row.label || `rad ${index + 1}`} upp`}
-                  disabled={index === 0} onClick={() => moveMetric(index, -1)}>↑</button>
-                <button type="button" aria-label={`Flytta ${row.label || `rad ${index + 1}`} ned`}
-                  disabled={index === metrics.length - 1} onClick={() => moveMetric(index, 1)}>↓</button>
-                <button type="button" onClick={() => setMetrics(metrics.filter((_, i) => i !== index))}>
-                  Ta bort
-                </button>
-              </div>
-            </div>
-          ))}
+          {legacyMonth && <p className="v25-legacy" role="status">Denna månad innehåller äldre fria värden. De är bevarade och kan inte skrivas över av det nya formuläret.</p>}
+          <div className="v25-admin-grid">
+            {MONTHLY_CATEGORIES.map(({ key, label, unit, fields }) => (
+              <fieldset key={key} className={key === "economic_result" ? "v25-result-editor" : "v25-category-editor"} disabled={legacyMonth}>
+                <legend>{label}</legend>
+                <div className="v25-field-grid">
+                  {fields.map((field) => {
+                    const fieldLabel = field === "current" ? "Aktuellt värde" : field === "previous" ? "Föregående år" : field === "percent" ? "Förändring" : "Ekonomiskt resultat";
+                    const suffix = field === "percent" ? "%" : unit === "antal" ? "antal" : unit;
+                    const percentage = field === "percent" ? parseSwedishNumber(metrics[`${key}.${field}`] ?? "") : null;
+                    return <label key={field}>{fieldLabel}
+                      <span className="v25-input-wrap"><input inputMode="decimal" type="text" value={metrics[`${key}.${field}`] ?? ""} aria-label={`${label} – ${fieldLabel}`}
+                        onChange={(e) => setMetrics((current) => ({ ...current, [`${key}.${field}`]: e.target.value }))} /><span>{suffix}</span></span>
+                      {percentage !== null && Number.isFinite(percentage) && <output className={monthlyTone(percentage)}>{formatMonthlyNumber(percentage, "%", true)}</output>}
+                    </label>;
+                  })}
+                </div>
+              </fieldset>
+            ))}
+          </div>
           <div className="v2-monthly-actions">
-            <button type="button" disabled={metrics.length >= 24}
-              onClick={() => setMetrics([...metrics, { label: "", value: "", unit: "", order: metrics.length }])}>
-              Lägg till rad
-            </button>
-            <button className="station-primary" disabled={busy || !month}>
+            <button className="station-primary" disabled={busy || !month || legacyMonth}>
               Spara månad
             </button>
           </div>
@@ -755,8 +754,8 @@ export default function StationV2Admin() {
           <div className="v2-monthly-list">
             <h3>Registrerade månader</h3>
             {monthly.map((row) => (
-              <button key={row.month} onClick={() => chooseMonth(row.month)}>
-                {row.month} · {row.metrics.length} rader
+              <button key={row.month} onClick={() => void chooseMonth(row.month)}>
+                {row.month}{row.legacy ? " · äldre format" : ""}
               </button>
             ))}
           </div>

@@ -3,6 +3,7 @@ import { stockholmDay } from "./stats";
 import { addDays } from "./stats";
 import { body, checkFields, fail, json, text } from "./http";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
+import { isFixedMonthlyMetrics } from "../shared/monthly";
 
 const STATION = "tingsryd";
 const isoDay = (value: unknown): value is string =>
@@ -57,32 +58,9 @@ const validMonth = (value: unknown): value is string =>
   typeof value === "string" &&
   /^\d{4}-(0[1-9]|1[0-2])$/.test(value) &&
   Number(value.slice(0, 4)) >= 2000;
-const monthlyMetrics = (value: unknown) => {
-  if (!Array.isArray(value) || value.length > 24)
-    return fail(400, "Ange högst 24 månadsvärden.");
-  const rows = value.map((entry: unknown) => {
-    if (!entry || typeof entry !== "object" || Array.isArray(entry))
-      fail(400, "Ogiltigt månadsvärde.");
-    const row = entry as Record<string, unknown>;
-    checkFields(row, ["label", "value", "unit", "order"]);
-    if (
-      !Number.isSafeInteger(row.order) ||
-      (row.order as number) < 0 ||
-      (row.order as number) > 999 ||
-      (row.unit !== undefined &&
-        (typeof row.unit !== "string" || row.unit.length > 24))
-    )
-      fail(400, "Ogiltig ordning eller enhet.");
-    return {
-      label: text(row.label, "Rubrik", 80),
-      value: text(row.value, "Värde", 80),
-      unit: (row.unit as string | undefined)?.trim() ?? "",
-      order: row.order as number,
-    };
-  });
-  if (new Set(rows.map((row) => row.order)).size !== rows.length)
-    fail(400, "Varje månadsvärde behöver en egen plats i ordningen.");
-  return rows.sort((a, b) => a.order - b.order);
+const monthlyRecord = (metrics_json: string) => {
+  const data: unknown = JSON.parse(metrics_json);
+  return { metrics: isFixedMonthlyMetrics(data) ? data : null, legacy: !isFixedMonthlyMetrics(data) };
 };
 async function limitTaskWrites(request: Request, env: Env) {
   const token = request.headers
@@ -144,7 +122,7 @@ export async function stationV2Api(
       .first<{ month: string; metrics_json: string; updated_at: string }>();
     return json({
       month,
-      metrics: row ? JSON.parse(row.metrics_json) : [],
+      ...(row ? monthlyRecord(row.metrics_json) : { metrics: null, legacy: false }),
       updated_at: row?.updated_at ?? null,
     });
   }
@@ -156,7 +134,7 @@ export async function stationV2Api(
       .all<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
     return json(rows.results.map((row) => ({
       month: row.month,
-      metrics: JSON.parse(row.metrics_json),
+      ...monthlyRecord(row.metrics_json),
       revision: row.revision,
       updated_at: row.updated_at,
     })));
@@ -164,14 +142,23 @@ export async function stationV2Api(
   const monthlyId = path.match(
     /^\/api\/admin\/station\/v2\/monthly\/(\d{4}-\d{2})$/,
   );
+  if (monthlyId && method === "GET") {
+    const month = monthlyId[1];
+    if (!validMonth(month) || month >= today.slice(0, 7)) fail(400, "Välj en avslutad månad.");
+    const row = await env.DB.prepare(
+      "SELECT month,metrics_json,revision,updated_at FROM station_monthly_figures WHERE station_id=? AND month=?",
+    ).bind(STATION, month).first<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
+    return json(row ? { month, ...monthlyRecord(row.metrics_json), revision: row.revision, updated_at: row.updated_at } :
+      { month, metrics: null, legacy: false, revision: null, updated_at: null });
+  }
   if (monthlyId && method === "PUT") {
     const month = monthlyId[1];
     if (!validMonth(month) || month >= today.slice(0, 7))
       fail(400, "Välj en avslutad månad.");
     const data = await body(request);
     checkFields(data, ["metrics", "expected_revision"]);
-    const metrics = monthlyMetrics(data.metrics);
-    const payload = JSON.stringify(metrics);
+    if (!isFixedMonthlyMetrics(data.metrics)) fail(400, "Ange endast de sex fasta nyckeltalen.");
+    const payload = JSON.stringify(data.metrics);
     if (data.expected_revision === null) {
       const result = await env.DB.prepare(
         "INSERT OR IGNORE INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)",
@@ -183,8 +170,13 @@ export async function stationV2Api(
       return json({ month, revision: 0 }, 201);
     }
     const expected = version(data.expected_revision);
+    const existing = await env.DB.prepare(
+      "SELECT metrics_json FROM station_monthly_figures WHERE station_id=? AND month=?",
+    ).bind(STATION, month).first<{ metrics_json: string }>();
+    if (existing && monthlyRecord(existing.metrics_json).legacy)
+      fail(409, "Äldre fria månadsvärden är bevarade och kan inte skrivas över.");
     const result = await env.DB.prepare(
-      "UPDATE station_monthly_figures SET metrics_json=?,revision=revision+1,updated_at=? WHERE station_id=? AND month=? AND revision=?",
+      "UPDATE station_monthly_figures SET metrics_json=?,revision=revision+1,updated_at=? WHERE station_id=? AND month=? AND revision=? AND json_extract(metrics_json,'$.kind')='fixed-v25'",
     )
       .bind(payload, now, STATION, month, expected)
       .run();

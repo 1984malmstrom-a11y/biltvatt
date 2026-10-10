@@ -1,9 +1,13 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
+
+const previewDir = process.env.V25_PREVIEW_DIR;
+if (previewDir) mkdirSync(previewDir, { recursive: true });
 
 test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord och detaljpaneler", async ({
   page,
 }) => {
+  let economicResult = 10000;
   let tasks = [
     {
       id: "00000000-0000-4000-8000-000000000001",
@@ -66,7 +70,7 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
     }),
   );
   await page.route("**/api/station/v2/monthly", (r) =>
-    r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({month:"2026-09",metrics:[{label:"Demovärde",value:"123",unit:"st",order:0}],updated_at:null})}),
+    r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({month:"2026-09",metrics:{kind:"fixed-v25",customers_per_day:{current:420,previous:398,percent:5.5},average_purchase:{current:85.4,previous:81.2,percent:5.2},fuel_per_day:{current:12500,previous:13100,percent:-4.6},car_wash_average:{current:275,previous:250,percent:10},sales:{percent:7.8},economic_result:{value:economicResult}},legacy:false,updated_at:null})}),
   );
   await page.route("**/api/station/v2/tasks/**", async (r) => {
     const body = r.request().postDataJSON();
@@ -124,7 +128,34 @@ test("dashboardens uppgifter, schema och viktig info fungerar med tangentbord oc
   await page.keyboard.press("Escape");
   const monthlyButton=page.getByRole("button",{name:/Förra månadens siffror/i});
   await monthlyButton.click();
-  await expect(page.getByRole("dialog",{name:"Förra månadens siffror"}).getByText("Demovärde")).toBeVisible();
+  const monthlyDialog=page.getByRole("dialog",{name:"Förra månadens siffror"});
+  await expect(monthlyDialog.getByRole("heading",{name:"Månadens nyckeltal"})).toBeVisible();
+  await expect(monthlyDialog.getByLabel("Ekonomiskt resultat")).toContainText(/\+10\s000 kr/);
+  await expect(monthlyDialog.locator(".v25-metric-card")).toHaveCount(5);
+  await expect(monthlyDialog.locator(".v25-result strong")).toHaveClass(/positive/);
+  if (previewDir) {
+    await page.setViewportSize({ width: 1280, height: 1100 });
+    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
+    await monthlyDialog.screenshot({ path: `${previewDir}/modal-positive.png` });
+  }
+  await page.keyboard.press("Escape");
+  economicResult = -8000;
+  await monthlyButton.click();
+  await expect(monthlyDialog.getByLabel("Ekonomiskt resultat")).toContainText(/−8\s000 kr/);
+  await expect(monthlyDialog.locator(".v25-result strong")).toHaveClass(/negative/);
+  if (previewDir) {
+    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
+    await monthlyDialog.screenshot({ path: `${previewDir}/modal-negative.png` });
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(monthlyDialog.locator(".v25-metric-card")).toHaveCount(5);
+  expect(await monthlyDialog.evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  if (previewDir) {
+    await page.setViewportSize({ width: 390, height: 2000 });
+    await monthlyDialog.evaluate((el) => { el.style.maxHeight = "none"; el.style.overflow = "visible"; });
+    await monthlyDialog.screenshot({ path: `${previewDir}/modal-mobile.png` });
+  }
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.keyboard.press("Escape");
   await expect(monthlyButton).toBeFocused();
   await page.getByRole("button", { name: "Fylla på kylar" }).click();
@@ -168,10 +199,18 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   let imports = 0,
     messages = 0,
     months = 0;
-  await page.route("**/api/admin/station/v2/monthly",(r)=>r.fulfill({status:200,contentType:"application/json",body:"[]"}));
+  let storedMonth: {month:string;metrics:unknown;legacy:boolean;revision:number;updated_at:string} | null = null;
+  await page.route("**/api/admin/station/v2/monthly",(r)=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(storedMonth?[storedMonth]:[])}));
   await page.route("**/api/admin/station/v2/monthly/*",(r)=>{
-    months++;
-    return r.fulfill({status:201,contentType:"application/json",body:'{"revision":0}'});
+    const selected=r.request().url().split("/").at(-1)!;
+    if (r.request().method() === "PUT") {
+      const data=r.request().postDataJSON() as {metrics:unknown;expected_revision:number|null};
+      expect(data.expected_revision).toBe(storedMonth?.revision??null);
+      months++;
+      storedMonth={month:selected,metrics:data.metrics,legacy:false,revision:months-1,updated_at:"2026-10-10T00:00:00Z"};
+      return r.fulfill({status:months===1?201:200,contentType:"application/json",body:JSON.stringify({revision:months-1})});
+    }
+    return r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(storedMonth?.month===selected?storedMonth:{month:selected,metrics:null,legacy:false,revision:null,updated_at:null})});
   });
   await page.route("**/api/admin/station/v2/schedule/import", async (r) => {
     imports++;
@@ -237,11 +276,25 @@ test("admin kan förhandsgranska CSV innan schemat sparas och skapa viktigt medd
   await expect(page.getByText("Meddelandet sparades.")).toBeVisible();
   expect(messages).toBe(1);
   const monthSection=page.locator("#station-monthly");
-  await monthSection.getByRole("button",{name:"Lägg till rad"}).click();
-  await monthSection.getByLabel("Rubrik").fill("Demovärde");
-  await monthSection.getByLabel("Värde",{exact:true}).fill("123");
-  await monthSection.getByLabel("Enhet (valfri)").fill("st");
+  await expect(monthSection.locator("fieldset")).toHaveCount(6);
+  await monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"}).fill("420");
+  await monthSection.getByRole("textbox",{name:"Försäljning – Förändring"}).fill("7,8");
+  await expect(monthSection.locator("fieldset").filter({has:page.getByText("Försäljning",{exact:true})}).locator("output")).toHaveText("+7,8 %");
+  await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Ekonomiskt resultat"}).fill("+10000");
+  await expect(monthSection.getByText("%",{exact:true})).toHaveCount(5);
+  if (previewDir) {
+    await monthSection.getByRole("textbox",{name:"Ekonomiskt resultat – Ekonomiskt resultat"}).evaluate((el: HTMLElement) => el.blur());
+    await monthSection.screenshot({ path: `${previewDir}/admin-form.png` });
+  }
   await monthSection.getByRole("button",{name:"Spara månad"}).click();
   await expect(page.getByText("Månadens siffror sparades.")).toBeVisible();
   expect(months).toBe(1);
+  const monthInput=monthSection.locator('input[type="month"]');
+  const savedMonth=await monthInput.inputValue();
+  await monthInput.fill("2025-01");
+  await monthInput.fill(savedMonth);
+  await expect(monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"})).toHaveValue("420");
+  await monthSection.getByRole("textbox",{name:"Kunder/dag – Aktuellt värde"}).fill("421");
+  await monthSection.getByRole("button",{name:"Spara månad"}).click();
+  expect(months).toBe(2);
 });

@@ -678,7 +678,6 @@ td { background: #fff; border-color: var(--preem-line); }
 .v2-header.has-weather .v2-weather-value small { color: #fff; font-size: clamp(11px, .78vw, 14px); }
 .v2-header.has-weather .v2-weather-source { color: #fff; opacity: .85; letter-spacing: .075em; }
 @media (min-width: 701px) and (max-width: 1299px) {
-  .v2-header.has-weather .v2-updated { display: none; }
   .v2-header.has-weather .v2-weather-value small { font-size: 10px; }
 }
 @media (max-width: 700px) {
@@ -690,9 +689,14 @@ td { background: #fff; border-color: var(--preem-line); }
   }
   .v2-header.has-weather .v2-header-right { display: contents; }
   .v2-header.has-weather .v2-admin-link { grid-column: 2; grid-row: 1; }
+  .v2-header.has-weather .v2-lovable-link {
+    grid-column: 1;
+    grid-row: 2;
+    width: 120px;
+  }
   .v2-header.has-weather .v2-weather {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
     width: 100%;
     justify-content: space-between;
     padding-bottom: 12px;
@@ -700,4 +704,16 @@ td { background: #fff; border-color: var(--preem-line); }
   .v2-header.has-weather .v2-weather-value { font-size: 18px; }
   .v2-header.has-weather .v2-weather-value svg { width: 19px; height: 19px; }
   .v2-header.has-weather .v2-weather-value small { font-size: 11px; }
+  .v2-header:not(.has-weather) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 9px;
+  }
+  .v2-header:not(.has-weather) .v2-header-right { display: contents; }
+  .v2-header:not(.has-weather) .v2-admin-link { grid-column: 2; grid-row: 1; }
+  .v2-header:not(.has-weather) .v2-lovable-link {
+    grid-column: 1;
+    grid-row: 2;
+    width: 120px;
+  }
 }

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
+import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
 const WEATHER_ENABLED = true;
@@ -73,7 +74,8 @@ type Overview = {
 };
 type Monthly = {
   month: string;
-  metrics: { label: string; value: string; unit: string; order: number }[];
+  metrics: FixedMonthlyMetrics | null;
+  legacy: boolean;
   updated_at: string | null;
 };
 type WeatherPeriod = { time: string; temperature: number; symbol: number };
@@ -132,12 +134,6 @@ const date = (day: string) =>
     year: "numeric",
     timeZone: "Europe/Stockholm",
   }).format(new Date(`${day}T12:00:00Z`));
-const time = (value: string) =>
-  new Intl.DateTimeFormat("sv-SE", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/Stockholm",
-  }).format(new Date(value));
 const weekday = (day: string) =>
   new Intl.DateTimeFormat("sv-SE", {
     weekday: "short",
@@ -396,10 +392,6 @@ export default function StationDashboardV2() {
         : summary.percent < 0
           ? "Ny dag, nya möjligheter för team Tingsryd."
           : "Starkt jobbat, team Tingsryd!";
-  const last = [summary?.updated_at, overview?.updated_at]
-    .filter(Boolean)
-    .sort()
-    .at(-1);
   const bars = summary?.week ?? [];
   const chart = bars.some((bar) => bar.net_sales_ore !== null);
   const selected = bars.find((bar) =>
@@ -421,11 +413,15 @@ export default function StationDashboardV2() {
           </div>
         </div>
         <div className="v2-header-right">
-          <span className="v2-updated">
-            <CalendarDays aria-hidden="true" />{" "}
-            {last ? `Uppdaterad ${time(last)}` : "Uppdatering saknas"}
-          </span>
-          <i />
+          <a
+            className="v2-lovable-link"
+            href="https://what-can-i-do-183.lovable.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Öppna Lovable"
+          >
+            <img src="/loveable.png" alt="" />
+          </a>
           {showWeather ? (
             <div className="v2-weather" aria-label="Väderprognos för Tingsryd">
               {weather?.now && <WeatherItem label="TINGSRYD · JUST NU" period={weather.now} />}
@@ -772,21 +768,32 @@ export default function StationDashboardV2() {
               <button onClick={() => void openMonthly()}>Försök igen</button>
             </p>
           ) : monthly ? (
-            <>
+            <div className="v25-monthly">
               <p className="v2-monthly-month">{monthLabel(monthly.month)}</p>
-              {monthly.metrics.length ? (
-                <dl className="v2-monthly-metrics">
-                  {monthly.metrics.map((item, index) => (
-                    <div key={index}>
-                      <dt>{item.label}</dt>
-                      <dd>{item.value}{item.unit ? ` ${item.unit}` : ""}</dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <p>Inga månadssiffror har registrerats ännu.</p>
-              )}
-            </>
+              <h3>Månadens nyckeltal</h3>
+              {monthly.legacy && <p className="v25-legacy">Äldre fria månadsvärden är bevarade i databasen. De visas inte i det fasta nyckeltalsformatet.</p>}
+              <section className="v25-result" aria-label="Ekonomiskt resultat">
+                <span>EKONOMISKT RESULTAT</span>
+                <strong className={monthlyTone(monthly.metrics?.economic_result.value ?? null)}>
+                  {formatMonthlyNumber(monthly.metrics?.economic_result.value ?? null, "kr", true)}
+                </strong>
+              </section>
+              <div className="v25-metric-grid">
+                {MONTHLY_CATEGORIES.filter(({ key }) => key !== "economic_result").map(({ key, label, unit }) => {
+                  const item = monthly.metrics?.[key];
+                  const percent = item && "percent" in item ? item.percent : null;
+                  return <section className="v25-metric-card" key={key} aria-label={label}>
+                    <h4>{label}</h4>
+                    {item && "current" in item && <dl>
+                      <div><dt>Aktuellt</dt><dd>{formatMonthlyNumber(item.current, unit as "antal" | "liter" | "kr")}</dd></div>
+                      <div><dt>Föregående år</dt><dd>{formatMonthlyNumber(item.previous, unit as "antal" | "liter" | "kr")}</dd></div>
+                    </dl>}
+                    {key !== "sales" && !item && <dl><div><dt>Aktuellt</dt><dd>Saknas</dd></div><div><dt>Föregående år</dt><dd>Saknas</dd></div></dl>}
+                    <div className="v25-percent"><span>Förändring</span><strong className={monthlyTone(percent)}>{formatMonthlyNumber(percent, "%", true)}</strong></div>
+                  </section>;
+                })}
+              </div>
+            </div>
           ) : null}
         </Modal>
       )}

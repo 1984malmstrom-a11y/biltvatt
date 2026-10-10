@@ -4,6 +4,7 @@ import { addDays, stockholmDay } from "../worker/stats";
 import { parseScheduleCsv } from "../src/StationV2Admin";
 import { findScheduleConflicts } from "../shared/schedule";
 import { msUntilNextStockholmDay } from "../src/StationDashboardV2";
+import { emptyMonthlyMetrics, formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, parseSwedishNumber } from "../shared/monthly";
 
 async function sessions(f: ReturnType<typeof fixture>) {
   const admin = await f.login();
@@ -418,30 +419,74 @@ describe("Stationsdashboard V2", () => {
     expect((await f.call("/station/v2/tasks","POST",{text:"x".repeat(181)},viewer)).status).toBe(400);
     f.db.close();
   });
-  it("lagrar fria månadsrader i ordning med endast adminskrivning och rätt månad", async () => {
+  it("lagrar sex fasta nyckeltal, rättar äldre månad och skyddar revisioner", async () => {
     const f = fixture(), {admin,viewer} = await sessions(f);
     const current=stockholmDay().slice(0,7);
     const previous=addDays(`${current}-01`,-1).slice(0,7);
     const path=`/admin/station/v2/monthly/${previous}`;
-    const metrics=[
-      {label:"Rad B",value:"12,4",unit:"%",order:1},
-      {label:"Rad A",value:"123",unit:"st",order:0},
-    ];
+    const metrics=emptyMonthlyMetrics();
+    metrics.customers_per_day={current:420,previous:398,percent:5.5};
+    metrics.sales.percent=7.8;
+    metrics.economic_result.value=10000;
+    expect(MONTHLY_CATEGORIES).toHaveLength(6);
+    expect(MONTHLY_CATEGORIES.map(({fields})=>fields.length)).toEqual([3,3,3,3,1,1]);
+    expect(MONTHLY_CATEGORIES.map(({unit})=>unit)).toEqual(["antal","kr","liter","kr","%","kr"]);
     expect((await f.call("/station/v2/monthly")).status).toBe(401);
     expect((await f.call(path,"PUT",{metrics,expected_revision:null},viewer)).status).toBe(401);
     expect((await f.call(`/admin/station/v2/monthly/${current}`,"PUT",{metrics,expected_revision:null},admin)).status).toBe(400);
-    expect((await f.call(path,"PUT",{metrics:[{...metrics[0],label:""}],expected_revision:null},admin)).status).toBe(400);
+    expect((await f.call(path,"PUT",{metrics:[{label:"Fri rad",value:"12",unit:"kr",order:0}],expected_revision:null},admin)).status).toBe(400);
+    expect((await f.call(path,"PUT",{metrics:{...metrics,sales:{percent:7.8,current:100}},expected_revision:null},admin)).status).toBe(400);
     expect((await f.call(path,"PUT",{metrics,expected_revision:null},admin)).status).toBe(201);
     expect((await f.call(path,"PUT",{metrics,expected_revision:null},admin)).status).toBe(409);
     const read=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {month:string;metrics:typeof metrics};
     expect(read.month).toBe(previous);
-    expect(read.metrics.map((row)=>row.label)).toEqual(["Rad A","Rad B"]);
-    expect((await f.call(path,"PUT",{metrics:[],expected_revision:3},admin)).status).toBe(409);
-    expect((await f.call(path,"PUT",{metrics:[],expected_revision:0},admin)).status).toBe(200);
+    expect(read.metrics).toEqual(metrics);
+    expect((await f.call(path,"PUT",{metrics,expected_revision:3},admin)).status).toBe(409);
+    metrics.economic_result.value=-8000;
+    metrics.sales.percent=0;
+    expect((await f.call(path,"PUT",{metrics,expected_revision:0},admin)).status).toBe(200);
+    expect((await (await f.call(path,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics).toEqual(metrics);
     expect((await f.call("/admin/station/v2/monthly","GET",undefined,viewer)).status).toBe(401);
     const all=await (await f.call("/admin/station/v2/monthly","GET",undefined,admin)).json() as {month:string;revision:number}[];
     expect(all[0]).toMatchObject({month:previous,revision:1});
+    const old="2024-01";
+    expect((await f.call(`/admin/station/v2/monthly/${old}`,"PUT",{metrics,expected_revision:null},admin)).status).toBe(201);
+    expect((await (await f.call(`/admin/station/v2/monthly/${old}`,"GET",undefined,admin)).json() as {metrics:typeof metrics}).metrics).toEqual(metrics);
     f.db.close();
+  });
+  it("bevarar äldre fria månadsvärden utan omtolkning eller överskrivning", async () => {
+    const f=fixture(), {admin,viewer}=await sessions(f);
+    const previous=addDays(`${stockholmDay().slice(0,7)}-01`,-1).slice(0,7);
+    const old='[{"label":"Historisk rad","value":"42","unit":"st","order":0}]';
+    f.db.prepare("INSERT INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)").run("tingsryd",previous,old,"2026-01-01","2026-01-01");
+    const result=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {metrics:unknown;legacy:boolean};
+    expect(result).toMatchObject({metrics:null,legacy:true});
+    expect((await f.call(`/admin/station/v2/monthly/${previous}`,"PUT",{metrics:emptyMonthlyMetrics(),expected_revision:0},admin)).status).toBe(409);
+    expect(f.db.prepare("SELECT metrics_json FROM station_monthly_figures WHERE month=?").get(previous)).toMatchObject({metrics_json:old});
+    f.db.close();
+  });
+  it("formaterar manuella procenttal och ekonomiskt resultat", () => {
+    expect(parseSwedishNumber("12 500,25")).toBe(12500.25);
+    expect(parseSwedishNumber(" ")).toBeNull();
+    expect(formatMonthlyNumber(5.5,"%",true)).toBe("+5,5 %");
+    expect(formatMonthlyNumber(-3.5,"%",true)).toBe("−3,5 %");
+    expect(formatMonthlyNumber(0,"%",true)).toBe("0 %");
+    expect(formatMonthlyNumber(10000,"kr",true).replace(/\u00a0|\u202f/g," ")).toBe("+10 000 kr");
+    expect(formatMonthlyNumber(-8000,"kr",true).replace(/\u00a0|\u202f/g," ")).toBe("−8 000 kr");
+    expect([monthlyTone(1),monthlyTone(-1),monthlyTone(0)]).toEqual(["positive","negative","neutral"]);
+  });
+  it("byter föregående avslutade månad vid midnatt i Stockholm", async () => {
+    vi.useFakeTimers({toFake:["Date"]});
+    vi.setSystemTime(new Date("2026-10-31T22:59:59Z"));
+    const f=fixture();
+    try {
+      const {viewer}=await sessions(f);
+      const september=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {month:string;metrics:unknown};
+      expect(september).toMatchObject({month:"2026-09",metrics:null});
+      vi.setSystemTime(new Date("2026-10-31T23:00:00Z"));
+      const october=await (await f.call("/station/v2/monthly","GET",undefined,viewer)).json() as {month:string;metrics:unknown};
+      expect(october).toMatchObject({month:"2026-10",metrics:null});
+    } finally { f.db.close(); vi.useRealTimers(); }
   });
   it("döljer viktigt meddelande när sluttiden i Stockholm passerat", async () => {
     vi.useFakeTimers({toFake:["Date"]});

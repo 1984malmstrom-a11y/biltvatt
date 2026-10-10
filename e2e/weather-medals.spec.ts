@@ -173,3 +173,61 @@ test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop",
   }
   expect(weatherRequests).toBe(0);
 });
+
+test("Lovable-knappen är synlig, responsiv och öppnar rätt adress i ny flik", async ({ page, context }) => {
+  await stationWeatherData(page);
+  await page.route("**/api/station/weather", (route) => route.fulfill({ json: {
+    source: "SMHI SNOW1gv1", kind: "forecast",
+    now: { time: "2026-10-10T12:00:00Z", temperature: 12, symbol: 9 },
+    tomorrow: { time: "2026-10-11T10:00:00Z", temperature: 10, symbol: 4 },
+  } }));
+  const screenshotDir = process.env.STATION_LOVABLE_SCREENSHOTS_DIR;
+  if (screenshotDir) mkdirSync(screenshotDir, { recursive: true });
+  for (const viewport of [
+    { width: 1920, height: 1080 }, { width: 1536, height: 700 },
+    { width: 1366, height: 768 }, { width: 1280, height: 1024 },
+    { width: 1024, height: 768 }, { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/station");
+    const link = page.getByRole("link", { name: "Öppna Lovable" });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", "https://what-can-i-do-183.lovable.app/");
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(link.locator("img")).toHaveJSProperty("complete", true);
+    await expect(page.locator(".v2-updated")).toHaveCount(0);
+    await expect(page.getByText(/Uppdaterad|Uppdatering saknas/)).toHaveCount(0);
+    expect(await page.evaluate(() => {
+      const box = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();
+      const header = box(".v2-header");
+      const brand = box(".v2-brand");
+      const lovable = box(".v2-lovable-link");
+      const weather = box(".v2-weather");
+      const admin = box(".v2-admin-link");
+      const within = (r: DOMRect) => r.left >= header.left && r.right <= header.right &&
+        r.top >= header.top && r.bottom <= header.bottom;
+      const separated = (a: DOMRect, b: DOMRect) => a.right <= b.left || b.right <= a.left ||
+        a.bottom <= b.top || b.bottom <= a.top;
+      return document.documentElement.scrollWidth <= innerWidth &&
+        [brand, lovable, weather, admin].every(within) &&
+        [brand, weather, admin].every((item) => separated(lovable, item));
+    })).toBe(true);
+    if (screenshotDir && (viewport.width === 1366 || viewport.width === 390)) {
+      await page.locator(".v2-header").screenshot({
+        path: join(screenshotDir, `header-${viewport.width}x${viewport.height}.png`),
+      });
+    }
+  }
+  await context.route("https://what-can-i-do-183.lovable.app/**", (route) =>
+    route.fulfill({ contentType: "text/html", body: "<title>Lovable</title>" }));
+  const link = page.getByRole("link", { name: "Öppna Lovable" });
+  await link.focus();
+  await expect(link).toBeFocused();
+  const popupPromise = context.waitForEvent("page");
+  await page.keyboard.press("Enter");
+  const popup = await popupPromise;
+  await popup.waitForLoadState();
+  expect(popup.url()).toBe("https://what-can-i-do-183.lovable.app/");
+  await expect(page).toHaveURL(/\/station$/);
+});
