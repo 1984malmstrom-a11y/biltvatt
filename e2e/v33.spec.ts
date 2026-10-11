@@ -5,6 +5,8 @@ import type { Issue, IssueEvent } from "../shared/issues";
 
 const previewDir = process.env.V33_PREVIEW_DIR;
 if (previewDir) mkdirSync(previewDir, { recursive: true });
+const pulsePreviewDir = process.env.ISSUES_PULSE_PREVIEW_DIR;
+if (pulsePreviewDir) mkdirSync(pulsePreviewDir, { recursive: true });
 const createdAt = ["2026-10-11T07:05:00Z", "2026-10-11T08:25:00Z", "2026-10-11T09:15:00Z"];
 
 async function mock(page: Page) {
@@ -132,6 +134,57 @@ test("kassaskärmar, mobil, reducerad rörelse och noll olösta", async ({ page 
   issues.forEach((issue) => { issue.completed = 1; issue.completed_at = "2026-10-11T13:20:00Z"; });
   await page.reload();
   await expect(page.getByRole("button", { name: /Fel & åtgärder, 0 ej slutförda/ }).locator(".issues-count")).toHaveCSS("animation-name", "none");
+});
+
+test("orange badge glöder ensam var 4,8 sekund och stannar vid noll", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-11T12:00:00Z") });
+  const issues = await mock(page);
+  issues.slice(0, 2).forEach((issue) => { issue.completed = 1; issue.completed_at = "2026-10-11T11:00:00Z"; });
+  for (const [width, height] of [[1920, 1080], [1366, 768], [1024, 768], [390, 844]]) {
+    await page.setViewportSize({ width, height });
+    await page.goto("/station?weather-demo=1");
+    const trigger = page.locator(".issues-trigger");
+    const badge = trigger.locator(".issues-count");
+    await expect(badge).toHaveText("1");
+    await expect(badge).toHaveCSS("background-color", "rgb(255, 196, 119)");
+    await expect(badge).toHaveCSS("animation-name", "issues-count-pulse");
+    await expect(badge).toHaveCSS("animation-duration", "4.8s");
+    await expect(trigger).toHaveCSS("animation-name", "none");
+    await expect(trigger.locator("svg")).toHaveCSS("animation-name", "none");
+    await expect(trigger.locator(".issues-trigger-label")).toHaveCSS("animation-name", "none");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    const bounds = await trigger.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    if (pulsePreviewDir && (width === 1366 || width === 390)) {
+      await badge.evaluate((element) => {
+        const pulse = element.getAnimations().find((animation) => animation.effect instanceof KeyframeEffect);
+        if (!pulse) throw new Error("Sifferrutans CSS-animation saknas.");
+        pulse.pause();
+        pulse.currentTime = 336;
+      });
+      await page.locator(".v2-header").screenshot({
+        path: join(pulsePreviewDir, width === 1366 ? "badge-glow-desktop.png" : "badge-glow-mobile.png"),
+        animations: "allow",
+      });
+    }
+  }
+  const trigger = page.locator(".issues-trigger");
+  const badge = trigger.locator(".issues-count");
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Fel & åtgärder" });
+  await dialog.getByRole("button", { name: /Kortterminalen tappar anslutningen/ }).click();
+  await dialog.getByRole("button", { name: "Slutfört" }).click();
+  await expect(badge).toHaveText("0");
+  await expect(badge).toHaveCSS("animation-name", "none");
+  await expect(badge).toHaveCSS("background-color", "rgb(229, 238, 227)");
+  await dialog.getByRole("button", { name: "Ångra slutförande" }).click();
+  await expect(badge).toHaveText("1");
+  await expect(badge).toHaveCSS("animation-name", "issues-count-pulse");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(badge).toHaveCSS("animation-name", "none");
+  await expect(badge).toHaveCSS("background-color", "rgb(255, 196, 119)");
 });
 
 test("nyregistrering, korrigering, revisionskonflikt och synk från annan enhet", async ({ page }) => {
