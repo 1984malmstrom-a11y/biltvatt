@@ -674,15 +674,15 @@ export default function StationDashboardV2() {
             <>
               <h3>{notices[0].title}</h3>
               <p>{notices[0].message}</p>
-              <button onClick={() => setModal("notices")}>
+              <div className="v2-info-actions"><button onClick={() => setModal("notices")}>
                 {notices.length > 1
                   ? "Visa alla meddelanden"
                   : "Läs hela meddelandet"}{" "}
                 <ChevronRight size={15} />
-              </button>
+              </button><a href="/station/handbook">PERSONALPÄRM <ChevronRight size={14} /></a></div>
             </>
           ) : (
-            <p className="v2-panel-empty">Inga aktuella meddelanden.</p>
+            <><p className="v2-panel-empty">Inga aktuella meddelanden.</p><a className="v2-handbook-solo" href="/station/handbook">PERSONALPÄRM <ChevronRight size={14} /></a></>
           )}
         </section>
         <a className="v2-wash" href="/">

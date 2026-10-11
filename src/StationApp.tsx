@@ -10,6 +10,8 @@ import {
 import { api, HttpError, send } from "./api";
 import StationDashboardV2 from "./StationDashboardV2";
 import StationV2Admin from "./StationV2Admin";
+import StationHandbook from "./StationHandbook";
+import StationHandbookAdmin from "./StationHandbookAdmin";
 
 type Summary = {
   business_date: string;
@@ -542,6 +544,7 @@ function StationAdmin() {
               </div>
             </section>
             <StationV2Admin />
+            <StationHandbookAdmin />
           </>
         )}
         {error && (
@@ -566,12 +569,16 @@ export default function StationApp() {
     document.title =
       path === "/station/admin"
         ? "Administration · Preem Tingsryd"
+        : path === "/station/handbook"
+          ? "Personalpärmen · Preem Tingsryd"
         : path === "/station/login"
           ? "Aktivera visning · Preem Tingsryd"
           : "Butiksförsäljning · Preem Tingsryd";
   }, [path]);
   return path === "/station/admin" ? (
     <StationAdmin />
+  ) : path === "/station/handbook" ? (
+    <StationHandbook />
   ) : path === "/station/login" ? (
     <StationLogin />
   ) : (
