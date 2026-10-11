@@ -493,6 +493,7 @@ td { background: #fff; border-color: var(--preem-line); }
 .v2-progress { background: #dce8d7; }
 .v2-progress span { background: var(--preem-forest); }
 .v2-tasks { position:relative; }
+.v2-tasks.is-celebrating { box-shadow:0 0 0 2px #49a86b,0 0 24px #5abc8280; }
 .v32-task-celebration {
   position:absolute;
   inset:45px 0 0;
@@ -521,6 +522,15 @@ td { background: #fff; border-color: var(--preem-line); }
 .v32-task-celebration svg,.v32-task-celebration strong { position:relative; z-index:1; }
 .v32-task-celebration svg { width:30px; height:30px; stroke-width:3; }
 .v32-task-celebration strong { font-size:clamp(16px,1.35vw,22px); line-height:1.2; }
+.v32-task-celebration-modal {
+  position:relative;
+  inset:auto;
+  min-height:72px;
+  margin:0 0 14px;
+  border:1px solid #93cca5;
+  border-radius:12px;
+  box-shadow:0 0 18px #5abc8259;
+}
 @keyframes v32-task-sweep { from { transform:translateX(0) skewX(-22deg); } to { transform:translateX(380%) skewX(-22deg); } }
 @media (prefers-reduced-motion:reduce) { .v32-task-celebration::before { animation:none; display:none; } }
 .v32-history-link { margin-top:16px; padding:8px 4px; border:0; background:transparent; color:#17633f; font:inherit; font-weight:750; cursor:pointer; }

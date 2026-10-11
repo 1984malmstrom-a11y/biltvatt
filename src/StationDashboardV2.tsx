@@ -274,23 +274,20 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     if (window.location.pathname === "/station/handbook") window.history.replaceState(null, "", "/station");
   }, []);
   const load = useCallback(async () => {
-    try {
-      const [sales, other] = await Promise.all([
-        api<Summary>("/station/dashboard"),
-        api<Overview>("/station/v2"),
-      ]);
-      setSummary(sales);
-      setOverview(other);
-      setError("");
-      return other;
-    } catch (e) {
-      if (e instanceof HttpError && e.status === 401) {
-        window.location.replace("/station/login");
-        return null;
-      }
-      setError("Kunde inte hämta stationsuppgifterna. Försök igen.");
+    const [sales, other] = await Promise.allSettled([
+      api<Summary>("/station/dashboard"),
+      api<Overview>("/station/v2"),
+    ]);
+    if (sales.status === "fulfilled") setSummary(sales.value);
+    if (other.status === "fulfilled") setOverview(other.value);
+    if ([sales, other].some((result) => result.status === "rejected" &&
+        result.reason instanceof HttpError && result.reason.status === 401)) {
+      window.location.replace("/station/login");
       return null;
     }
+    setError(sales.status === "fulfilled" && other.status === "fulfilled"
+      ? "" : "Kunde inte hämta stationsuppgifterna. Försök igen.");
+    return other.status === "fulfilled" ? other.value : null;
   }, []);
   useEffect(() => {
     void load();
@@ -402,18 +399,30 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               },
         ),
       );
-      const latest = await load();
-      if (action === "toggle" && !task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
-          latest && latest.today === overview.today &&
-          latest.tasks.length > 0 && latest.tasks.every((item) => Boolean(item.done))) {
-        if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
-        setCelebratingTasks(false);
-        window.requestAnimationFrame(() => setCelebratingTasks(true));
-        celebrationTimer.current = window.setTimeout(() => setCelebratingTasks(false), 1500);
-      }
     } catch (e) {
       setError("Ändringen kunde inte sparas. Listan har uppdaterats.");
       await load();
+      setBusy(false);
+      return;
+    }
+    try {
+      // A confirmed task update must not wait for the unrelated sales dashboard.
+      const latest = await api<Overview>("/station/v2");
+      setOverview(latest);
+      setError("");
+      if (action === "toggle" && !task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
+          latest.today === overview.today && latest.tasks.length > 0 &&
+          latest.tasks.every((item) => Boolean(item.done))) {
+        if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+        setCelebratingTasks(true);
+        celebrationTimer.current = window.setTimeout(() => {
+          setCelebratingTasks(false);
+          celebrationTimer.current = null;
+        }, 1500);
+      }
+    } catch (e) {
+      if (e instanceof HttpError && e.status === 401) window.location.replace("/station/login");
+      else setError("Uppgiften sparades, men dagens lista kunde inte hämtas. Försök igen.");
     } finally {
       setBusy(false);
     }
@@ -690,7 +699,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <ChevronRight aria-hidden="true" />
           </a>
           </div>
-          <section className="v2-panel v2-tasks">
+          <section className={`v2-panel v2-tasks${celebratingTasks ? " is-celebrating" : ""}`}>
             {celebratingTasks && <div className="v32-task-celebration" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
             <div className="v2-panel-head">
               <h2>
@@ -813,6 +822,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       )}
       {modal === "tasks" && (
         <Modal title="Dagens to-do" onClose={() => { setModal(null); setTaskHistoryOpen(false); }}>
+          {celebratingTasks && <div className="v32-task-celebration v32-task-celebration-modal" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
           {taskHistoryOpen ? <div className="v32-history-view">
             <button ref={taskHistoryBack} className="v32-history-back" onClick={() => setTaskHistoryOpen(false)}><ArrowLeft size={17} /> Till dagens uppgifter</button>
             <div className="v32-history-heading"><h3>Händelsehistorik</h3><label>Välj dag<input type="date" value={taskHistoryDay} max={overview?.today} onChange={(event) => { setTaskHistoryDay(event.target.value); setTaskHistoryEvents([]); setTaskHistoryCursor(null); if (event.target.value) void loadTaskHistory(event.target.value); }} /></label></div>
