@@ -3,6 +3,8 @@ import { mkdirSync } from "node:fs";
 
 const v26PreviewDir = process.env.V26_PREVIEW_DIR;
 if (v26PreviewDir) mkdirSync(v26PreviewDir, { recursive: true });
+const ferrariPreviewDir = process.env.FERRARI_PREVIEW_DIR;
+if (ferrariPreviewDir) mkdirSync(ferrariPreviewDir, { recursive: true });
 
 const people = Array.from({ length: 5 }, (_, i) => ({
   id: `demo-${i}`, name: `Demo ${String.fromCharCode(65 + i)}`,
@@ -260,6 +262,16 @@ for (const [width, height] of [[1024, 768], [1280, 1024], [1024, 650], [1280, 85
       tasks: "rgb(251, 244, 233)", info: "rgb(255, 255, 255)",
     });
     const layout = await cashierLayout(page);
+    const artworkCoverage = await page.locator(".v2-ferrari-art").evaluate((image: HTMLImageElement) => {
+      const box = image.getBoundingClientRect();
+      const card = image.parentElement!.getBoundingClientRect();
+      const scale = Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight);
+      return image.naturalWidth * scale * image.naturalHeight * scale / (card.width * card.height);
+    });
+    expect(artworkCoverage, "Ferrari-motivet ska fylla kampanjrutan").toBeGreaterThan(0.75);
+    if (ferrariPreviewDir && width === 1024) {
+      await page.screenshot({ path: `${ferrariPreviewDir}/kassa-${width}x${height}.png` });
+    }
     expect(layout.scrollWidth, JSON.stringify(layout)).toBe(width);
     expect(layout.scrollHeight, JSON.stringify(layout)).toBe(height);
     for (const [selector, box] of Object.entries(layout.boxes)) {
