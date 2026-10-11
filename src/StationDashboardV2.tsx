@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
   BookOpen,
@@ -27,6 +27,7 @@ import PreemResultRibbon from "./PreemResultRibbon";
 import StationHandbook from "./StationHandbook";
 import StationWaste from "./StationWaste";
 import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
+import { prioritizeTasks } from "../shared/task-priority";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
 const WEATHER_ENABLED = true;
@@ -253,6 +254,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
   const [monthlyError, setMonthlyError] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
+  const [ferrariVisit, setFerrariVisit] = useState(0);
   const [handbookOpen, setHandbookOpen] = useState(initialHandbookOpen);
   const closeHandbook = useCallback(() => {
     setHandbookOpen(false);
@@ -321,6 +323,23 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       document.removeEventListener("visibilitychange", visible);
     };
   }, [loadWeather]);
+  useEffect(() => {
+    let lastStart = performance.now();
+    const replay = () => {
+      const now = performance.now();
+      if (now - lastStart < 900) return;
+      lastStart = now;
+      setFerrariVisit((visit) => visit + 1);
+    };
+    const onVisible = () => { if (document.visibilityState === "visible") replay(); };
+    const onPageShow = (event: PageTransitionEvent) => { if (event.persisted) replay(); };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pageshow", onPageShow);
+    };
+  }, []);
   async function addTask(e: React.FormEvent) {
     e.preventDefault();
     if (!newTask.trim()) return;
@@ -384,7 +403,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       setMonthlyLoading(false);
     }
   }
-  const tasks = overview?.tasks ?? [];
+  const tasks = useMemo(() => prioritizeTasks(overview?.tasks ?? []), [overview?.tasks]);
   const shifts = overview?.shifts ?? [];
   const notices = overview?.notices ?? [];
   const done = tasks.filter((t) => t.done).length;
@@ -680,6 +699,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         <StationWaste />
         <div className="v2-station-image">
           <img
+            key={ferrariVisit}
             className="v2-ferrari-art"
             src="/ferrari-campaign-original.png"
             alt="Tanka bil, få en påse Ferrari-godis när du laddar eller tankar."

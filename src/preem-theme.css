@@ -550,7 +550,8 @@ td { background: #fff; border-color: var(--preem-line); }
 }
 .v2-station-image {
   border-radius: var(--preem-radius);
-  background: var(--preem-cream);
+  background: radial-gradient(ellipse at 24% 25%, #fcf8f0 0%, #fbf4e9 62%, #f9f0e4 100%);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -564,6 +565,11 @@ td { background: #fff; border-color: var(--preem-line); }
   object-fit: contain;
   object-position: center;
   flex: none;
+  animation: ferrari-sweep-in 680ms cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes ferrari-sweep-in {
+  from { opacity: 0; transform: translateX(26%); }
+  to { opacity: 1; transform: translateX(0); }
 }
 @media (min-width: 1300px) {
   /* The promotional artwork uses its full original aspect ratio without
@@ -628,6 +634,7 @@ td { background: #fff; border-color: var(--preem-line); }
 }
 @media (prefers-reduced-motion: reduce) {
   .v2-result-ribbon .v2-amount { animation: none; }
+  .v2-ferrari-art { animation: none; }
 }
 
 /* Keep the approved wide layout, but size its contents to the browser's
