@@ -140,6 +140,7 @@ test("stationskortets pepptext, meddelande och ärliga diagramtomläge ryms på 
     await page.setViewportSize({ width, height });
     await page.goto("/station");
     await expect(page.getByText("Veckodiagrammet visas när en dagsförsäljning har registrerats.")).toBeVisible();
+    await expect(page.locator(".v2-info button")).toBeVisible();
     await expect(page.locator(".v2-bar")).toHaveCount(0);
     const bounds = await page.evaluate(() => {
       const rect = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();

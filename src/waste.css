@@ -40,4 +40,7 @@
 .waste-list .waste-row time { font-size:13px; }
 .waste-row-actions { display:flex; gap:3px; }
 .waste-row-actions button { display:grid; place-items:center; width:34px; height:34px; border:0; border-radius:6px; background:#eef4ed; color:#225b3d; }
+.waste-events-button { display:inline-flex; align-items:center; gap:7px; margin-top:16px; padding:8px 0; border:0; background:transparent; color:#17633f; font:inherit; font-weight:750; cursor:pointer; }
+.waste-events-button:hover { text-decoration:underline; }
+.waste-dialog button:focus-visible { outline:3px solid #f4b04f; outline-offset:2px; }
 @media(max-width:700px) { .waste-overlay { padding:5px; } .waste-dialog { width:100%; height:calc(100dvh - 10px); max-height:none; border-radius:14px; } .waste-dialog header { padding:13px 16px; } .waste-body { padding:16px; } .waste-form { grid-template-columns:1fr 1fr; } .waste-form label:first-child { grid-column:1/-1; } .waste-list .waste-row { grid-template-columns:24px minmax(0,1fr) auto; } .waste-list .waste-row-actions { grid-column:2/-1; justify-self:end; } }

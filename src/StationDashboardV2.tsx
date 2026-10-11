@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  ArrowLeft,
   BookOpen,
   CalendarDays,
   CarFront,
@@ -26,8 +27,10 @@ import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
 import StationHandbook from "./StationHandbook";
 import StationWaste from "./StationWaste";
+import StationIssues from "./StationIssues";
 import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
 import { prioritizeTasks } from "../shared/task-priority";
+import { historyDay, historyTime, taskHistoryDescription, type HistoryPage, type TaskHistoryEvent } from "../shared/station-history";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
 const WEATHER_ENABLED = true;
@@ -254,6 +257,16 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
   const [monthlyError, setMonthlyError] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
+  const [celebratingTasks, setCelebratingTasks] = useState(false);
+  const celebrationTimer = useRef<number | null>(null);
+  const [taskHistoryOpen, setTaskHistoryOpen] = useState(false);
+  const [taskHistoryDay, setTaskHistoryDay] = useState("");
+  const [taskHistoryEvents, setTaskHistoryEvents] = useState<TaskHistoryEvent[]>([]);
+  const [taskHistoryCursor, setTaskHistoryCursor] = useState<number | null>(null);
+  const [taskHistoryLoading, setTaskHistoryLoading] = useState(false);
+  const [taskHistoryError, setTaskHistoryError] = useState("");
+  const taskHistoryRequest = useRef(0);
+  const taskHistoryBack = useRef<HTMLButtonElement>(null);
   const [ferrariVisit, setFerrariVisit] = useState(0);
   const [handbookOpen, setHandbookOpen] = useState(initialHandbookOpen);
   const closeHandbook = useCallback(() => {
@@ -269,12 +282,14 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       setSummary(sales);
       setOverview(other);
       setError("");
+      return other;
     } catch (e) {
       if (e instanceof HttpError && e.status === 401) {
         window.location.replace("/station/login");
-        return;
+        return null;
       }
       setError("Kunde inte hämta stationsuppgifterna. Försök igen.");
+      return null;
     }
   }, []);
   useEffect(() => {
@@ -300,6 +315,10 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       document.removeEventListener("visibilitychange", visible);
     };
   }, [load]);
+  useEffect(() => () => {
+    if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+  }, []);
+  useEffect(() => { if (taskHistoryOpen) taskHistoryBack.current?.focus(); }, [taskHistoryOpen]);
   const loadWeather = useCallback(async () => {
     try {
       const result = await api<Weather>("/station/weather");
@@ -383,7 +402,15 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               },
         ),
       );
-      await load();
+      const latest = await load();
+      if (action === "toggle" && !task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
+          latest && latest.today === overview.today &&
+          latest.tasks.length > 0 && latest.tasks.every((item) => Boolean(item.done))) {
+        if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+        setCelebratingTasks(false);
+        window.requestAnimationFrame(() => setCelebratingTasks(true));
+        celebrationTimer.current = window.setTimeout(() => setCelebratingTasks(false), 1500);
+      }
     } catch (e) {
       setError("Ändringen kunde inte sparas. Listan har uppdaterats.");
       await load();
@@ -402,6 +429,28 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     } finally {
       setMonthlyLoading(false);
     }
+  }
+  async function loadTaskHistory(day: string, before?: number) {
+    const requestId = ++taskHistoryRequest.current;
+    setTaskHistoryLoading(true);
+    setTaskHistoryError("");
+    try {
+      const suffix = before ? `&before=${before}` : "";
+      const page = await api<HistoryPage<TaskHistoryEvent>>(`/station/v2/tasks/history?day=${encodeURIComponent(day)}${suffix}`);
+      if (requestId !== taskHistoryRequest.current) return;
+      setTaskHistoryEvents((current) => before ? [...current, ...page.events] : page.events);
+      setTaskHistoryCursor(page.next_cursor);
+    } catch (cause) {
+      if (requestId === taskHistoryRequest.current) setTaskHistoryError((cause as Error).message);
+    } finally {
+      if (requestId === taskHistoryRequest.current) setTaskHistoryLoading(false);
+    }
+  }
+  function openTaskHistory() {
+    const day = overview?.today ?? "";
+    setTaskHistoryDay(day);
+    setTaskHistoryOpen(true);
+    if (day) void loadTaskHistory(day);
   }
   const tasks = useMemo(() => prioritizeTasks(overview?.tasks ?? []), [overview?.tasks]);
   const shifts = overview?.shifts ?? [];
@@ -460,6 +509,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <BookOpen size={18} aria-hidden="true" />
             <span>Personalpärm</span>
           </button>
+          <StationIssues />
         </nav>
         <div className="v2-header-right">
           {showWeather ? (
@@ -641,6 +691,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
           </a>
           </div>
           <section className="v2-panel v2-tasks">
+            {celebratingTasks && <div className="v32-task-celebration" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
             <div className="v2-panel-head">
               <h2>
                 <ClipboardCheck /> DAGENS TO-DO
@@ -761,7 +812,17 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         </Modal>
       )}
       {modal === "tasks" && (
-        <Modal title="Dagens to-do" onClose={() => setModal(null)}>
+        <Modal title="Dagens to-do" onClose={() => { setModal(null); setTaskHistoryOpen(false); }}>
+          {taskHistoryOpen ? <div className="v32-history-view">
+            <button ref={taskHistoryBack} className="v32-history-back" onClick={() => setTaskHistoryOpen(false)}><ArrowLeft size={17} /> Till dagens uppgifter</button>
+            <div className="v32-history-heading"><h3>Händelsehistorik</h3><label>Välj dag<input type="date" value={taskHistoryDay} max={overview?.today} onChange={(event) => { setTaskHistoryDay(event.target.value); setTaskHistoryEvents([]); setTaskHistoryCursor(null); if (event.target.value) void loadTaskHistory(event.target.value); }} /></label></div>
+            {taskHistoryDay && <p className="v32-history-day">{historyDay(`${taskHistoryDay}T12:00:00Z`)}</p>}
+            <ol className="v32-history-list">{taskHistoryEvents.map((event) => <li key={event.id}><time dateTime={event.occurred_at}>{historyTime(event.occurred_at)}</time><span>{taskHistoryDescription(event)}</span></li>)}</ol>
+            {!taskHistoryLoading && !taskHistoryEvents.length && !taskHistoryError && <p>Inga händelser registrerade denna dag.</p>}
+            {taskHistoryError && <p role="alert">{taskHistoryError}</p>}
+            {taskHistoryLoading && <p role="status">Hämtar historik…</p>}
+            {taskHistoryCursor && <button className="v32-history-more" disabled={taskHistoryLoading} onClick={() => void loadTaskHistory(taskHistoryDay, taskHistoryCursor)}>Visa äldre händelser</button>}
+          </div> : <>
           <form className="v2-add-task" onSubmit={(e) => void addTask(e)}>
             <input
               aria-label="Ny uppgift"
@@ -798,6 +859,8 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               </div>}
             </div>
           ))}
+          <button className="v32-history-link" onClick={openTaskHistory}>Visa historik</button>
+          </>}
         </Modal>
       )}
       {modal === "notices" && (

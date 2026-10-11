@@ -4,6 +4,7 @@ import { ApiError, body, checkFields, fail, json, text } from "./http";
 import { stationV2Api } from "./station-v2";
 import { handbookApi } from "./handbook";
 import { wasteApi } from "./waste";
+import { issuesApi } from "./issues";
 import { getWeather } from "./weather";
 
 const STATION = "tingsryd";
@@ -103,6 +104,8 @@ export async function stationApi(
     return handbookApi(request, env, viewerOrAdmin, requireAdmin);
   if (path === "/api/station/waste" || path.startsWith("/api/station/waste/"))
     return wasteApi(request, env, viewerOrAdmin);
+  if (path === "/api/station/issues" || path.startsWith("/api/station/issues/"))
+    return issuesApi(request, env, viewerOrAdmin);
   if (
     path.startsWith("/api/station/v2") ||
     path.startsWith("/api/admin/station/v2")

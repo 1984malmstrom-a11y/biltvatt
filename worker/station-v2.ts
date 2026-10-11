@@ -5,6 +5,7 @@ import { body, checkFields, fail, json, text } from "./http";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 import { isFixedMonthlyMetrics, type FixedMonthlyMetrics } from "../shared/monthly";
 import { isRecurringTaskId, recurringTaskForDay } from "../shared/recurring-tasks";
+import { safeHistoryLabel, type TaskHistoryEvent } from "../shared/station-history";
 
 const STATION = "tingsryd";
 const isoDay = (value: unknown): value is string =>
@@ -240,6 +241,19 @@ export async function stationV2Api(
       notices: notices.results,
       updated_at: latest?.updated_at ?? null,
     });
+  }
+  if (path === "/api/station/v2/tasks/history" && method === "GET") {
+    const params = new URL(request.url).searchParams;
+    const day = params.get("day") ?? today;
+    const rawBefore = params.get("before");
+    if (!isoDay(day) || day > today || (rawBefore !== null && !/^[1-9]\d{0,14}$/.test(rawBefore)))
+      fail(400, "Ogiltigt datum eller historikmarkör.");
+    const before = rawBefore === null ? Number.MAX_SAFE_INTEGER : Number(rawBefore);
+    const rows = (await env.DB.prepare(
+      "SELECT e.id,e.task_date,e.action,e.occurred_at,t.text AS label FROM station_task_events e LEFT JOIN station_tasks t ON t.id=e.task_id AND t.station_id=e.station_id WHERE e.station_id=? AND e.task_date=? AND e.id<? ORDER BY e.id DESC LIMIT 31",
+    ).bind(STATION, day, before).all<TaskHistoryEvent>()).results;
+    return json({ day, events: rows.slice(0, 30).map((row) => ({ ...row, label: safeHistoryLabel(row.label) })),
+      next_cursor: rows.length > 30 ? rows[29].id : null });
   }
   if (path === "/api/station/v2/tasks" && method === "POST") {
     await limitTaskWrites(request, env);
