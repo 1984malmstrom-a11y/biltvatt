@@ -1,6 +1,7 @@
 import type { Env } from "./index";
 import { body, checkFields, fail, json, text } from "./http";
 import { HANDBOOK_KINDS, isHandbookContent, isHandbookKind, preserveUnchangedChecks, stockholmToday, type HandbookContent, type HandbookKind } from "../shared/handbook";
+import { containsSensitiveAccessText, contentHasSensitiveAccessText, contentHasUnredactedAccessText } from "../shared/handbook-security";
 
 const STATION = "tingsryd";
 type Head = {
@@ -74,14 +75,14 @@ export async function handbookApi(
     }));
     return json({ documents });
   }
-  const read = path.match(/^\/api\/station\/handbook\/(bakeoff|opening|closing)$/);
+  const read = path.match(/^\/api\/station\/handbook\/(bakeoff|opening|closing|freshfood)$/);
   if (read && method === "GET") {
     const kind = read[1] as HandbookKind;
     const live = await documentFor(env, kind);
     if (!live) fail(404, "Dokumentet är inte publicerat.");
     const day = stockholmToday();
     const content = parseContent(live!.content_json);
-    const checks = kind === "bakeoff" ? [] : (await env.DB.prepare(
+    const checks = kind === "bakeoff" || kind === "freshfood" ? [] : (await env.DB.prepare(
       "SELECT item_id,done,revision FROM station_handbook_checks WHERE station_id=? AND kind=? AND task_date=?",
     ).bind(STATION, kind, day).all<{item_id:string;done:number;revision:number}>()).results;
     return json({ kind, id: live!.id, title: live!.title, description: live!.description, content, day, checks });
@@ -110,7 +111,7 @@ export async function handbookApi(
     if (result.meta.changes !== 1) fail(409, "Checklistan har ändrats på en annan enhet. Uppdatera vyn.");
     return json({ ok: true, revision: expected + 1, day });
   }
-  const manage = path.match(/^\/api\/admin\/station\/handbook\/(bakeoff|opening|closing)\/(draft|publish|unpublish)$/);
+  const manage = path.match(/^\/api\/admin\/station\/handbook\/(bakeoff|opening|closing|freshfood)\/(draft|publish|unpublish)$/);
   if (!manage) return fail(404, "Okänd personalpärmsåtgärd.");
   const kind = manage[1] as HandbookKind, action = manage[2];
   if (!isHandbookKind(kind)) fail(404, "Okänd dokumenttyp.");
@@ -121,6 +122,8 @@ export async function handbookApi(
     const description = typeof data.description === "string" && data.description.length <= 300 ? data.description.trim() : fail(400, "Ogiltig beskrivning.");
     if (typeof data.reviewed !== "boolean" || !isHandbookContent(data.content, kind)) fail(400, "Kontrollera dokumentets innehåll.");
     const validContent = data.content as HandbookContent;
+    if (containsSensitiveAccessText(title) || containsSensitiveAccessText(description) || contentHasUnredactedAccessText(validContent))
+      fail(400, "Ta bort känsliga åtkomstuppgifter före lagring.");
     const expected = version(data.expected_revision);
     const now = new Date().toISOString();
     await env.DB.prepare("INSERT OR IGNORE INTO station_handbook_heads(station_id,kind,updated_at) VALUES(?,?,?)")
@@ -128,6 +131,10 @@ export async function handbookApi(
     const head = await readHead(env, kind);
     const previous = await published(env, head?.published_version_id ?? null);
     const content = preserveUnchangedChecks(validContent, previous ? parseContent(previous.content_json) : null);
+    if (kind === "bakeoff" && !content.weekend) {
+      const earlier = head?.draft_json ? parseContent(head.draft_json) : previous ? parseContent(previous.content_json) : null;
+      if (earlier?.weekend) content.weekend = earlier.weekend;
+    }
     const result = await env.DB.prepare("UPDATE station_handbook_heads SET draft_title=?,draft_description=?,draft_json=?,draft_reviewed=?,revision=revision+1,updated_at=? WHERE station_id=? AND kind=? AND revision=?")
       .bind(title, description, JSON.stringify(content), data.reviewed ? 1 : 0, now, STATION, kind, expected).run();
     if (result.meta.changes !== 1) fail(409, "Dokumentet har ändrats. Uppdatera adminvyn.");
@@ -150,8 +157,15 @@ export async function handbookApi(
     if (!currentHead.draft_json || !currentHead.draft_title || currentHead.draft_description === null) fail(400, "Spara ett utkast först.");
     if (kind === "bakeoff" && !currentHead.draft_reviewed) fail(400, "Granska alla sju veckodagar och mängder före publicering.");
     const content = parseContent(currentHead.draft_json!);
-    if (kind !== "bakeoff" && !content.blocks.some((block) => block.type === "check")) fail(400, "Rutinen behöver minst ett checklistemoment.");
-    if (kind === "bakeoff" && !Object.values(content.days).some((rows) => rows.length)) fail(400, "Upplockningsschemat saknar produkter.");
+    if (kind === "bakeoff" && content.weekend && Object.values(content.weekend).some((rows) => rows.some((row) => !row.product.trim() || !row.quantity.trim())))
+      fail(400, "Komplettera helgens produktnamn och antal före publicering.");
+    if (containsSensitiveAccessText(currentHead.draft_title!) || containsSensitiveAccessText(currentHead.draft_description!) || contentHasSensitiveAccessText(content))
+      fail(400, "Ersätt säkerhetsmarkeringar och känsliga åtkomstuppgifter före publicering.");
+    if ((kind === "opening" || kind === "closing") && !content.blocks.some((block) => block.type === "check")) fail(400, "Rutinen behöver minst ett checklistemoment.");
+    if (kind === "bakeoff" && !Object.values(content.days).some((rows) => rows.length) && !content.blocks.some((block) => block.type === "table" && block.rows.length > 1))
+      fail(400, "Upplockningsschemat saknar granskade produkter och mängder.");
+    if (kind === "freshfood" && !content.blocks.some((block) => block.type === "paragraph" || block.type === "table" || block.type === "list"))
+      fail(400, "FreshFood-guiden saknar innehåll.");
     const id = crypto.randomUUID();
     await env.DB.prepare("INSERT INTO station_handbook_versions(id,station_id,kind,title,description,content_json,published_at) VALUES(?,?,?,?,?,?,?)")
       .bind(id, STATION, kind, currentHead.draft_title, currentHead.draft_description, currentHead.draft_json, now).run();

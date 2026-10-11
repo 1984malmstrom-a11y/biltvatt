@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  BookOpen,
   CalendarDays,
   CarFront,
   Check,
@@ -24,6 +25,7 @@ import {
 import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
 import StationHandbook from "./StationHandbook";
+import StationWaste from "./StationWaste";
 import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
@@ -425,7 +427,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <p>Stationsdashboard</p>
           </div>
         </div>
-        <div className="v2-header-right">
+        <nav className="v2-header-shortcuts" aria-label="Genvägar">
           <a
             className="v2-lovable-link"
             href="https://what-can-i-do-183.lovable.app/"
@@ -435,6 +437,12 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
           >
             <img src="/loveable.png" alt="" />
           </a>
+          <button type="button" className="v2-handbook-trigger" onClick={() => setHandbookOpen(true)}>
+            <BookOpen size={18} aria-hidden="true" />
+            <span>Personalpärm</span>
+          </button>
+        </nav>
+        <div className="v2-header-right">
           {showWeather ? (
             <div className="v2-weather" aria-label="Väderprognos för Tingsryd">
               {weather?.now && <WeatherItem label="TINGSRYD · JUST NU" period={weather.now} />}
@@ -580,6 +588,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
           </div>
         </section>
         <div className="v2-side">
+          <div className="v30-top-pair">
           <section className="v2-panel v2-shifts">
             <div className="v2-panel-head">
               <h2>
@@ -606,6 +615,12 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               </button>
             )}
           </section>
+          <a className="v2-wash" href="/">
+            <CarFront aria-hidden="true" />
+            <span>ÖPPNA<br />TVÄTTLIGAN</span>
+            <ChevronRight aria-hidden="true" />
+          </a>
+          </div>
           <section className="v2-panel v2-tasks">
             <div className="v2-panel-head">
               <h2>
@@ -661,6 +676,8 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             </button>
           </section>
         </div>
+        <div className="v30-bottom">
+        <StationWaste />
         <div className="v2-station-image">
           <img
             className="v2-ferrari-art"
@@ -680,26 +697,18 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <>
               <h3>{notices[0].title}</h3>
               <p>{notices[0].message}</p>
-              <div className="v2-info-actions"><button onClick={() => setModal("notices")}>
+              <button onClick={() => setModal("notices")}>
                 {notices.length > 1
                   ? "Visa alla meddelanden"
                   : "Läs hela meddelandet"}{" "}
                 <ChevronRight size={15} />
-              </button><button type="button" className="v2-handbook-trigger" onClick={() => setHandbookOpen(true)}>PERSONALPÄRM <ChevronRight size={14} /></button></div>
+              </button>
             </>
           ) : (
-            <><p className="v2-panel-empty">Inga aktuella meddelanden.</p><button type="button" className="v2-handbook-solo v2-handbook-trigger" onClick={() => setHandbookOpen(true)}>PERSONALPÄRM <ChevronRight size={14} /></button></>
+            <p className="v2-panel-empty">Inga aktuella meddelanden.</p>
           )}
         </section>
-        <a className="v2-wash" href="/">
-          <CarFront aria-hidden="true" />
-          <span>
-            ÖPPNA
-            <br />
-            TVÄTTLIGAN
-          </span>
-          <ChevronRight aria-hidden="true" />
-        </a>
+        </div>
       </main>
       <footer className="v2-footer">
         <span>RENARE RESOR. LJUSARE MORGONDAGAR.</span>

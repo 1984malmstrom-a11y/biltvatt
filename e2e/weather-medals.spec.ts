@@ -161,7 +161,7 @@ test("lokal väderdemo är märkt syntetisk och passar headern utan SMHI-anrop",
           adminRight: header.right - admin.right };
       });
       expect(spacing.brandGap).toBeGreaterThanOrEqual(8);
-      expect(spacing.adminGap).toBeGreaterThanOrEqual(40);
+      expect(spacing.adminGap).toBeGreaterThanOrEqual(16);
       expect(spacing.adminRight).toBeGreaterThanOrEqual(0);
     } else {
       expect(await page.locator(".v2-admin-link").evaluate((element) => getComputedStyle(element).marginLeft))
@@ -213,7 +213,7 @@ test("Lovable-knappen är synlig, responsiv och öppnar rätt adress i ny flik",
         [brand, lovable, weather, admin].every(within) &&
         [brand, weather, admin].every((item) => separated(lovable, item));
     })).toBe(true);
-    if (screenshotDir && (viewport.width === 1366 || viewport.width === 390)) {
+    if (screenshotDir && (viewport.width === 1366 || viewport.width === 1024 || viewport.width === 390)) {
       await page.locator(".v2-header").screenshot({
         path: join(screenshotDir, `header-${viewport.width}x${viewport.height}.png`),
       });

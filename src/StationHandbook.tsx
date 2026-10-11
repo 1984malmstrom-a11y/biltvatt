@@ -1,19 +1,62 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronRight, ClipboardCheck, Croissant, LockKeyhole, X } from "lucide-react";
+import { ArrowLeft, ChevronRight, ClipboardCheck, Croissant, LockKeyhole, Sandwich, X } from "lucide-react";
 import { api, send, HttpError } from "./api";
-import { HANDBOOK_KINDS, HANDBOOK_LABELS, WEEKDAYS, WEEKDAY_LABELS, stockholmWeekday, type HandbookContent, type HandbookKind, type Weekday } from "../shared/handbook";
+import { BAKEOFF_GROUPS, HANDBOOK_KINDS, HANDBOOK_LABELS, WEEKDAYS, WEEKDAY_LABELS, stockholmWeekday, type HandbookBlock, type HandbookContent, type HandbookKind, type Weekday } from "../shared/handbook";
 
 export type LiveHandbook = { kind: HandbookKind; id: string; title: string; description: string; content: HandbookContent; day: string; checks: { item_id: string; done: number; revision: number }[] };
 type Summary = { kind: HandbookKind; title: string | null; description: string | null; available: boolean };
-const icon = { bakeoff: Croissant, opening: ClipboardCheck, closing: LockKeyhole };
+const icon = { bakeoff: Croissant, opening: ClipboardCheck, closing: LockKeyhole, freshfood: Sandwich };
 
-export function HandbookDocumentView({ document, preview = false }: { document: LiveHandbook; preview?: boolean }) {
-  const [selectedDay, setSelectedDay] = useState<Weekday>(() => stockholmWeekday());
+function InfoBlock({ block }: { block: HandbookBlock }) {
+  if (block.type === "heading") return <h3>{block.text}</h3>;
+  if (block.type === "paragraph") return <p>{block.text}</p>;
+  if (block.type === "list") return <ul>{block.items.map((item, index) => <li key={index}>{item}</li>)}</ul>;
+  if (block.type === "table") {
+    const hasHeader = block.rows[0]?.[0] === "Produkt" && block.rows[0]?.[1] === "Antal";
+    return <div className="hb-table-scroll"><table>{hasHeader && <thead><tr>{block.rows[0].map((cell, index) => <th key={index}>{cell}</th>)}</tr></thead>}<tbody>{block.rows.slice(hasHeader ? 1 : 0).map((row, index) => <tr key={index}>{row.map((cell, column) => <td key={column}>{cell}</td>)}</tr>)}</tbody></table></div>;
+  }
+  return null;
+}
+
+function BakeoffGroups({ blocks }: { blocks: HandbookBlock[] }) {
+  const groups: { heading: string; blocks: HandbookBlock[] }[] = [];
+  for (const block of blocks) {
+    if (block.type === "heading") groups.push({ heading: block.text, blocks: [] });
+    else if (groups.length) groups[groups.length - 1].blocks.push(block);
+    else groups.push({ heading: "Information", blocks: [block] });
+  }
+  return <div className="hb-bakeoff-groups">{groups.map((group, index) => <section className="hb-bakeoff-group" key={`${group.heading}-${index}`}><h3>{group.heading}</h3>{group.blocks.map((block, position) => <Fragment key={position}><InfoBlock block={block} /></Fragment>)}</section>)}</div>;
+}
+
+function FreshFoodGuide({ blocks }: { blocks: HandbookBlock[] }) {
+  const intro: HandbookBlock[] = [];
+  const groups: { heading: string; blocks: HandbookBlock[] }[] = [];
+  const notes: HandbookBlock[] = [];
+  let repeatedHeading = false;
+  for (const block of blocks) {
+    if (block.type === "heading") {
+      repeatedHeading = groups.some((group) => group.heading === block.text);
+      if (!repeatedHeading) groups.push({ heading: block.text, blocks: [] });
+    }
+    else if (repeatedHeading) notes.push(block);
+    else if (groups.length) groups[groups.length - 1].blocks.push(block);
+    else intro.push(block);
+  }
+  return <div className="hb-freshfood-guide">
+    {intro.map((block, index) => <div className="hb-guide-lead" key={index}><InfoBlock block={block} /></div>)}
+    <div className="hb-guide-grid">{groups.map((group, index) => <section className="hb-guide-card" key={`${group.heading}-${index}`}><h3>{group.heading}</h3>{group.blocks.map((block, position) => <div className="hb-guide-entry" key={position}>{block.type === "paragraph" && /datumet som skrivs|du skriver då/i.test(block.text) && <strong>Datummärkning</strong>}{block.type === "paragraph" && /får säljas|kastas|slängs/i.test(block.text) && <strong>Försäljning och kassering</strong>}<InfoBlock block={block} /></div>)}</section>)}</div>
+    {notes.length > 0 && <div className="hb-guide-note">{notes.map((block, index) => <Fragment key={index}><InfoBlock block={block} /></Fragment>)}</div>}
+  </div>;
+}
+
+export function HandbookDocumentView({ document, preview = false, initialBakeoffTab }: { document: LiveHandbook; preview?: boolean; initialBakeoffTab?: "weekday" | "weekend" }) {
+  const [selectedDay, setSelectedDay] = useState<Weekday>(() => ["saturday", "sunday"].includes(stockholmWeekday()) ? "monday" : stockholmWeekday());
+  const [bakeoffTab, setBakeoffTab] = useState<"weekday" | "weekend">(() => ["saturday", "sunday"].includes(stockholmWeekday()) ? "weekend" : "weekday");
   const [snapshot, setSnapshot] = useState(document);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState<string | null>(null);
-  useEffect(() => { setSnapshot(document); setSelectedDay(stockholmWeekday()); }, [document]);
+  useEffect(() => { setSnapshot(document); setSelectedDay(["saturday", "sunday"].includes(stockholmWeekday()) ? "monday" : stockholmWeekday()); setBakeoffTab(initialBakeoffTab ?? (["saturday", "sunday"].includes(stockholmWeekday()) ? "weekend" : "weekday")); }, [document, initialBakeoffTab]);
   const refresh = useCallback(async () => {
     if (preview) return;
     try { setSnapshot(await api<LiveHandbook>(`/station/handbook/${document.kind}`)); }
@@ -28,6 +71,7 @@ export function HandbookDocumentView({ document, preview = false }: { document: 
   const checks = new Map(snapshot.checks.map((row) => [row.item_id, row]));
   const items = snapshot.content.blocks.filter((block) => block.type === "check");
   const done = items.filter((block) => checks.get(block.id)?.done).length;
+  const hasWeekSchedule = Object.values(snapshot.content.days).some((rows) => rows.length > 0);
   async function toggle(id: string) {
     if (preview || saving) return;
     setError("");
@@ -45,11 +89,11 @@ export function HandbookDocumentView({ document, preview = false }: { document: 
   }
   return <div className="hb-document">
     <div className="hb-document-intro"><span className="hb-eyebrow">PERSONALPÄRMEN</span><h2>{snapshot.title}</h2>{snapshot.description && <p>{snapshot.description}</p>}</div>
-    {snapshot.kind === "bakeoff" ? <>
-      <div className="hb-days" role="tablist" aria-label="Veckodag">{WEEKDAYS.map((day, index) => <button key={day} role="tab" aria-selected={selectedDay === day} onClick={() => setSelectedDay(day)}>{WEEKDAY_LABELS[index]}</button>)}</div>
+    {snapshot.kind === "bakeoff" ? <><div className="hb-days hb-bakeoff-tabs" role="tablist" aria-label="Bakeoff-schema"><button role="tab" aria-selected={bakeoffTab === "weekday"} onClick={() => setBakeoffTab("weekday")}>VARDAGAR</button><button role="tab" aria-selected={bakeoffTab === "weekend"} onClick={() => setBakeoffTab("weekend")}>HELG</button></div>{bakeoffTab === "weekend" ? BAKEOFF_GROUPS.some((group) => snapshot.content.weekend?.[group]?.length) ? <div className="hb-bakeoff-groups">{BAKEOFF_GROUPS.map((group) => <section className="hb-bakeoff-group" key={group}><h3>{group}</h3>{snapshot.content.weekend?.[group]?.length ? <table><thead><tr><th>Produkt</th><th>Antal</th></tr></thead><tbody>{snapshot.content.weekend[group].map((row, index) => <tr key={index}><td>{row.product}</td><td>{row.quantity}</td></tr>)}</tbody></table> : <p>Inga produkter inlagda.</p>}</section>)}</div> : <p className="hb-weekend-empty">Helgens upplockningsschema är ännu inte inlagt.</p> : hasWeekSchedule ? <>
+      <div className="hb-days" role="tablist" aria-label="Veckodag">{WEEKDAYS.slice(0, 5).map((day, index) => <button key={day} role="tab" aria-selected={selectedDay === day} onClick={() => setSelectedDay(day)}>{WEEKDAY_LABELS[index]}</button>)}</div>
       <div className="hb-day-table" role="tabpanel"><h3>{WEEKDAY_LABELS[WEEKDAYS.indexOf(selectedDay)]}</h3>{snapshot.content.days[selectedDay].length ? <table><thead><tr><th>Produkt</th><th>Antal</th></tr></thead><tbody>{snapshot.content.days[selectedDay].map((row, index) => <tr key={`${row.product}-${index}`}><td>{row.product}</td><td>{row.quantity}</td></tr>)}</tbody></table> : <p>Inga produkter angivna för denna dag.</p>}</div>
-      {snapshot.content.blocks.some((block) => block.type !== "table" || !block.schedule) && <div className="hb-supporting"><h3>Mer information</h3>{snapshot.content.blocks.map((block, index) => block.type === "heading" ? <h4 key={index}>{block.text}</h4> : block.type === "paragraph" ? <p key={index}>{block.text}</p> : block.type === "list" ? <ul key={index}>{block.items.map((item, i) => <li key={i}>{item}</li>)}</ul> : block.type === "table" && !block.schedule ? <div className="hb-table-scroll" key={index}><table><tbody>{block.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div> : null)}</div>}
-    </> : <>
+      {snapshot.content.blocks.some((block) => block.type !== "table" || !block.schedule) && <div className="hb-supporting"><h3>Mer information</h3>{snapshot.content.blocks.filter((block) => block.type !== "table" || !block.schedule).map((block, index) => <Fragment key={index}><InfoBlock block={block} /></Fragment>)}</div>}
+    </> : <BakeoffGroups blocks={snapshot.content.blocks} />}</> : snapshot.kind === "freshfood" ? <FreshFoodGuide blocks={snapshot.content.blocks} /> : <>
       <div className="hb-progress"><span>{new Intl.DateTimeFormat("sv-SE", { dateStyle: "full", timeZone: "Europe/Stockholm" }).format(new Date(`${snapshot.day}T12:00:00Z`))}</span><strong>{done} av {items.length} klara</strong><div role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={items.length} aria-label="Klarmarkerade moment"><span style={{ width: `${items.length ? done / items.length * 100 : 0}%` }} /></div></div>
       <div className="hb-blocks">{snapshot.content.blocks.map((block, index) => block.type === "check" ? <label key={block.id} className={`hb-check ${checks.get(block.id)?.done ? "is-done" : ""}`}><input type="checkbox" checked={Boolean(checks.get(block.id)?.done)} disabled={preview || Boolean(saving)} onChange={() => void toggle(block.id)} /><span>{block.text}</span></label> : block.type === "heading" ? <h3 key={index}>{block.text}</h3> : block.type === "paragraph" ? <p key={index}>{block.text}</p> : block.type === "list" ? <ul key={index}>{block.items.map((item, i) => <li key={i}>{item}</li>)}</ul> : <div className="hb-table-scroll" key={index}><table><tbody>{block.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div>)}</div>
     </>}

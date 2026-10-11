@@ -19,9 +19,11 @@ function docs() {
   opening.blocks = [{ type: "heading", text: "Innan butiken öppnar", level: 2 }, { type: "check", id: id1, text: "Starta kaffe och kontrollera frukostytan" }, { type: "check", id: "4231c370-a7c9-43fd-9760-cf6867b3c900", text: "Fyll på kylda drycker och smörgåsar" }, { type: "check", id: "60da6430-9171-4693-b163-35861212351e", text: "Kontrollera entré och kassayta" }];
   const closing = emptyHandbookContent();
   closing.blocks = [{ type: "heading", text: "När dagen avslutas", level: 2 }, { type: "check", id: id2, text: "Stäng av kaffemaskinen och rengör ytorna" }, { type: "check", id: "79913d7e-8e88-4264-a9b0-e75ed0dd6ae5", text: "Kontrollera att dörrar är låsta" }, { type: "check", id: "a7e5bcef-1957-4c1b-b843-387ffb53c86a", text: "Lämna över viktig information till nästa pass" }];
-  return { bakeoff, opening, closing };
+  const freshfood = emptyHandbookContent();
+  freshfood.blocks = [{ type: "heading", text: "Tas upp på dagen", level: 2 }, { type: "paragraph", text: "Syntetiskt exempel för hållbarhet." }];
+  return { bakeoff, opening, closing, freshfood };
 }
-const titles = { bakeoff: "Bakeoff – Upplockningsschema", opening: "Öppningsrutiner", closing: "Stängningsrutiner" };
+const titles = { bakeoff: "Bakeoff – Upplockningsschema", opening: "Öppningsrutiner", closing: "Stängningsrutiner", freshfood: "FreshFood" };
 function live(kind: HandbookKind, content: HandbookContent, checks: {item_id:string;done:number;revision:number}[] = []) {
   return { kind, id: `synthetic-${kind}`, title: titles[kind], description: kind === "bakeoff" ? "Dagens produkter och antal i ett tydligt veckoschema." : "Gemensam daglig checklista för hela stationen.", content, day: stockholmToday(), checks };
 }
@@ -42,7 +44,7 @@ async function mockReader(page: Page) {
       else checks.push({ item_id: item, done: Number(data.done), revision: 1 });
       return route.fulfill({ json: { ok: true } });
     }
-    return route.fulfill({ json: live(kind, content[kind], kind === "bakeoff" ? [] : state[kind]) });
+    return route.fulfill({ json: live(kind, content[kind], kind === "opening" || kind === "closing" ? state[kind] : []) });
   });
 }
 async function mockDashboard(page: Page) {
@@ -85,13 +87,13 @@ test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistes
     await mockReader(page);
     await page.setViewportSize(viewport);
     await page.goto("/station?weather-demo=1");
-    await expect(page.locator(".v2-info")).toContainText("PERSONALPÄRM");
+    await expect(page.locator(".v2-info").getByRole("button", { name: "Personalpärm" })).toHaveCount(0);
     await page.evaluate(() => { document.querySelector<HTMLElement>(".station-v2-shell")!.dataset.popupTestMarker = "kept"; });
-    const trigger = page.getByRole("button", { name: "PERSONALPÄRM" });
+    const trigger = page.getByRole("button", { name: "Personalpärm", exact: true });
     await trigger.click();
     const dialog = page.getByRole("dialog", { name: "Personalpärmen" });
     await expect(dialog).toBeVisible();
-    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(dialog.locator(".hb-card")).toHaveCount(4);
     await expect(page).toHaveURL(/\/station\?weather-demo=1$/);
     expect(await page.evaluate(() => document.getElementById("root")?.inert && document.body.style.overflow === "hidden" && document.activeElement?.closest("[role=dialog]") !== null)).toBe(true);
     expect(await page.evaluate(() => {
@@ -106,20 +108,22 @@ test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistes
     expect(await page.evaluate(() => document.activeElement?.closest("[role=dialog]") !== null)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await dialog.getByRole("button", { name: /Bakeoff – Upplockningsschema/ }).click();
+    await expect(dialog.getByRole("tab", { name: "HELG" })).toHaveAttribute("aria-selected", "true");
+    await dialog.getByRole("tab", { name: "VARDAGAR" }).click();
     await expect(dialog).toContainText("Kanelbulle");
-    await expect(dialog.getByRole("button", { name: "Till Personalpärmen" })).toBeFocused();
+    await expect(dialog.getByRole("button", { name: "Till Personalpärmen" })).toBeVisible();
     await expect(page.getByRole("dialog")).toHaveCount(1);
     await expect(dialog.getByRole("button", { name: "Till Personalpärmen" })).toBeVisible();
-    await expect(dialog.getByRole("tab", { name: WEEKDAY_LABELS[WEEKDAYS.indexOf(stockholmWeekday())] })).toHaveAttribute("aria-selected", "true");
+    await expect(dialog.getByRole("tab", { name: "Måndag" })).toHaveAttribute("aria-selected", "true");
     if (viewport.width === 390) expect(await page.evaluate(() => {
       const tabs = [...document.querySelectorAll<HTMLElement>(".hb-dialog .hb-days button")];
-      return tabs[0].getBoundingClientRect().left >= 0 && tabs[6].getBoundingClientRect().right <= innerWidth && tabs[6].getBoundingClientRect().top > tabs[0].getBoundingClientRect().top;
+      return tabs.every((tab) => tab.getBoundingClientRect().left >= 0 && tab.getBoundingClientRect().right <= innerWidth);
     })).toBe(true);
-    await dialog.getByRole("tab", { name: "Söndag" }).click();
+    await dialog.getByRole("tab", { name: "Tisdag" }).click();
     await expect(dialog.getByRole("tabpanel")).toContainText("Croissant");
     if (previewDir && viewport.width === 1440) await page.screenshot({ path: `${previewDir}/02-popup-bakeoff.png` });
     await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
-    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(dialog.locator(".hb-card")).toHaveCount(4);
     await expect(dialog.getByRole("button", { name: /Bakeoff – Upplockningsschema/ })).toBeFocused();
     await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
     await expect(dialog.getByText("1 av 3 klara")).toBeVisible();
@@ -147,7 +151,7 @@ test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistes
     await expect(trigger).toBeFocused();
     expect(await page.evaluate(() => !document.getElementById("root")?.inert && document.body.style.overflow === "" && document.querySelector<HTMLElement>(".station-v2-shell")?.dataset.popupTestMarker === "kept")).toBe(true);
     await trigger.click();
-    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(dialog.locator(".hb-card")).toHaveCount(4);
     await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
     await expect(dialog.getByText("2 av 3 klara")).toBeVisible();
     await page.keyboard.press("Escape");
@@ -155,7 +159,7 @@ test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistes
     await expect(trigger).toBeFocused();
     if (viewport.width === 1024 && viewport.height === 768) {
       await page.reload();
-      await page.getByRole("button", { name: "PERSONALPÄRM" }).click();
+      await page.getByRole("button", { name: "Personalpärm", exact: true }).click();
       await page.getByRole("dialog").getByRole("button", { name: /Öppningsrutiner/ }).click();
       await expect(page.getByRole("dialog").getByText("2 av 3 klara")).toBeVisible();
     }
@@ -176,7 +180,7 @@ test("Båda rutinerna visar långa checklistor i två kolumner på större skär
   for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 1024, height: 650 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     await page.goto("/station?weather-demo=1");
-    await page.getByRole("button", { name: "PERSONALPÄRM" }).click();
+    await page.getByRole("button", { name: "Personalpärm", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "Personalpärmen" });
     await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
     await expect(dialog.getByText("8 av 24 klara")).toBeVisible();
@@ -192,7 +196,7 @@ test("Båda rutinerna visar långa checklistor i två kolumner på större skär
     await expect(dialog.getByRole("button", { name: "Stäng Personalpärmen" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.body.style.overflow === "hidden")).toBe(true);
     await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
-    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(dialog.locator(".hb-card")).toHaveCount(4);
     expect(await dialog.locator(".hb-dialog-body").evaluate((element) => element.scrollTop)).toBe(0);
     await dialog.getByRole("button", { name: /Stängningsrutiner/ }).click();
     await expect(dialog.getByText("3 av 24 klara")).toBeVisible();
@@ -224,6 +228,7 @@ test("Word-import av syntetisk tabell förhandsgranskas och kan sparas som utkas
   await expect(admin.getByRole("textbox", { name: "Produkt 1" })).toHaveValue("Fralla");
   await expect(admin.getByRole("textbox", { name: "Antal 1" })).toHaveValue("12 st");
   await admin.getByRole("button", { name: "Förhandsgranska" }).click();
+  await admin.locator(".hb-admin-preview").getByRole("tab", { name: "VARDAGAR" }).click();
   await admin.locator(".hb-admin-preview").getByRole("tab", { name: "Måndag" }).click();
   await expect(admin.locator(".hb-admin-preview")).toContainText("Fralla");
   await admin.getByRole("button", { name: "Spara utkast" }).click();
@@ -234,19 +239,30 @@ test("Word-import av syntetisk tabell förhandsgranskas och kan sparas som utkas
   await expect(admin.locator(".hb-change-summary")).toContainText("Ändrat: Starta kaffe och kontrollera frukostytan → Starta kaffe och kontrollera frukostytan noga");
 });
 
-test("Personalpärm-knappen ryms i Viktig info på kassaskärm och mobil", async ({ page }) => {
+test("Personalpärm-knappen har egen plats i headern på kassaskärm, surfplatta och mobil", async ({ page }) => {
   await mockDashboard(page);
-  for (const viewport of [{width:1366,height:768},{width:1024,height:768},{width:1024,height:650},{width:390,height:844}]) {
+  await mockReader(page);
+  for (const viewport of [{width:1920,height:1080},{width:1366,height:768},{width:1024,height:768},{width:1024,height:650},{width:768,height:1024},{width:390,height:844}]) {
     await page.setViewportSize(viewport);
     await page.goto("/station?weather-demo=1");
-    const link = page.getByRole("button", { name: "PERSONALPÄRM" });
-    await expect(link).toBeVisible();
+    const trigger = page.getByRole("button", { name: "Personalpärm", exact: true });
+    await expect(trigger).toBeVisible();
+    await expect(trigger.locator("svg")).toHaveCount(1);
+    await trigger.focus();
+    await expect(trigger).toBeFocused();
     await expect(page.locator(".v2-info h3")).toHaveText("Tävling – måndag");
+    await expect(page.locator(".v2-info").getByRole("button", { name: "Personalpärm" })).toHaveCount(0);
     expect(await page.evaluate(() => {
-      const panel = document.querySelector(".v2-info")!.getBoundingClientRect();
-      const link = document.querySelector(".v2-info-actions .v2-handbook-trigger")!.getBoundingClientRect();
-      const button = document.querySelector(".v2-info-actions button:not(.v2-handbook-trigger)")!.getBoundingClientRect();
-      return document.documentElement.scrollWidth <= innerWidth && link.left >= panel.left && link.right <= panel.right && link.top >= panel.top && link.bottom <= panel.bottom && (link.left >= button.right || link.top >= button.bottom);
+      const header = document.querySelector(".v2-header")!.getBoundingClientRect();
+      const boxes = [".v2-brand", ".v2-header-shortcuts", ".v2-lovable-link", ".v2-handbook-trigger", ".v2-weather", ".v2-admin-link"].map((selector) => document.querySelector(selector)!.getBoundingClientRect());
+      const within = (box: DOMRect) => box.left >= header.left && box.right <= header.right && box.top >= header.top && box.bottom <= header.bottom;
+      const apart = (a: DOMRect, b: DOMRect) => a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;
+      return document.documentElement.scrollWidth <= innerWidth && boxes.every(within) &&
+        apart(boxes[0], boxes[1]) && apart(boxes[1], boxes[4]) && apart(boxes[1], boxes[5]) && apart(boxes[4], boxes[5]);
     })).toBe(true);
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("dialog", { name: "Personalpärmen" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
   }
 });

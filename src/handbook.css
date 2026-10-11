@@ -1,32 +1,3 @@
-.v2-info-actions {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-top:auto;
-  min-width:0
-}
-.v2-info-actions button {
-  margin-top:0!important;
-  white-space:nowrap
-}
-.v2-info-actions a,.v2-handbook-solo {
-  display:inline-flex;
-  align-items:center;
-  gap:2px;
-  color:#18583e!important;
-  font-size:clamp(10px,.76vw,12px);
-  font-weight:850;
-  letter-spacing:.045em;
-  text-decoration:none;
-  white-space:nowrap
-}
-.v2-info-actions a:hover,.v2-handbook-solo:hover {
-  text-decoration:underline
-}
-.v2-handbook-solo {
-  margin-top:auto
-}
 .hb-page {
   min-height:100vh;
   background:#f5f7f3;
@@ -84,7 +55,7 @@
 }
 .hb-cards {
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:20px
 }
 .hb-card {
@@ -239,6 +210,54 @@
   padding:16px 19px;
   color:#657569
 }
+.hb-bakeoff-groups {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-top:22px
+}
+.hb-bakeoff-group,.hb-guide-card {
+  min-width:0;
+  padding:18px;
+  border:1px solid #dce9de;
+  border-radius:15px;
+  background:#f9fcf8;
+  box-shadow:0 8px 25px #173c2b0b
+}
+.hb-bakeoff-group h3,.hb-guide-card h3 {
+  margin:0 0 13px;
+  color:#175339;
+  font-size:18px
+}
+.hb-bakeoff-group .hb-table-scroll { overflow-x:auto; }
+.hb-bakeoff-group table { width:100%; border-collapse:collapse; }
+.hb-bakeoff-group th,.hb-bakeoff-group td {
+  padding:9px 4px;
+  text-align:left;
+  border-bottom:1px solid #dfebe0;
+  font-size:13px
+}
+.hb-bakeoff-group th { color:#617568; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+.hb-bakeoff-group td:last-child { font-weight:750; white-space:nowrap; text-align:right; }
+.hb-freshfood-guide { margin-top:20px; }
+.hb-guide-lead {
+  padding:13px 17px;
+  border-radius:11px;
+  color:#175339;
+  background:#e8f3e7;
+  font-weight:750;
+  margin-bottom:15px
+}
+.hb-guide-lead p,.hb-guide-entry p { margin:0; }
+.hb-guide-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.hb-guide-card h3 { border-bottom:1px solid #dce9de; padding-bottom:11px; }
+.hb-guide-entry { color:#354e3f; line-height:1.5; margin-top:12px; overflow-wrap:anywhere; }
+.hb-guide-entry strong { display:block; color:#a15c15; font-size:11px; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+.hb-guide-note { margin-top:15px; padding:13px 17px; border-radius:11px; background:#f0f6ef; color:#315c41; }
+.hb-guide-note p { margin:0; }
+.hb-security-warning { background:#fff0ec; border-color:#e8b7a7; color:#6a2d20; }
+.hb-security-warning p { margin:6px 0 0; }
+.hb-week-toggle { border:0; background:transparent; color:#17633f; font-weight:750; padding:0; text-decoration:underline; }
 .hb-supporting {
   margin-top:25px;
   color:#53665a;
@@ -299,9 +318,9 @@
 .hb-check {
   display:flex;
   align-items:center;
-  gap:15px;
+  gap:11px;
   min-width:0;
-  padding:14px 17px;
+  padding:9px 12px;
   border:1px solid #e5ebe4;
   border-radius:11px;
   background:#fff;
@@ -313,9 +332,13 @@
 }
 .hb-check input {
   appearance:none;
+  box-sizing:border-box;
   flex:none;
-  width:26px;
-  height:26px;
+  width:24px;
+  height:24px;
+  min-width:24px;
+  min-height:24px;
+  padding:0;
   border:2px solid #a9c2ad;
   border-radius:7px;
   cursor:pointer
@@ -329,11 +352,11 @@
   display:block;
   color:#fff;
   text-align:center;
-  font-size:19px;
-  line-height:21px
+  font-size:17px;
+  line-height:20px
 }
 .hb-check.is-done {
-  background:#f0f9f1;
+  background:#fff;
   border-color:#c7e6ce
 }
 .hb-check.is-done span {
@@ -571,15 +594,6 @@
   overflow:auto
 }
 @media(max-width:1100px) {
-  .v2-info-actions a {
-    font-size:10px
-  }
-  .v2-info-actions {
-    gap:3px
-  }
-  .v2-info-actions button {
-    font-size:11px!important
-  }
   .hb-cards {
     gap:12px
   }
@@ -594,6 +608,9 @@
     justify-self:start
   }
 }
+@media(min-width:701px) and (max-width:900px) {
+  .hb-bakeoff-groups { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 @media(max-width:700px) {
   .hb-header {
     height:62px
@@ -607,6 +624,7 @@
   .hb-cards {
     grid-template-columns:1fr
   }
+  .hb-bakeoff-groups,.hb-guide-grid { grid-template-columns:1fr; }
   .hb-card {
     min-height:125px;
     display:grid;
@@ -665,29 +683,6 @@
   .hb-admin-types button {
     flex:1
   }
-}
-.v2-info-actions .v2-handbook-trigger,.v2-handbook-solo.v2-handbook-trigger {
-  display:inline-flex;
-  align-items:center;
-  gap:2px;
-  width:auto;
-  min-height:0;
-  margin-top:0;
-  padding:0;
-  border:0;
-  background:transparent;
-  color:#18583e!important;
-  font-size:clamp(10px,.76vw,12px);
-  font-weight:850;
-  letter-spacing:.045em;
-  white-space:nowrap;
-  cursor:pointer
-}
-.v2-info-actions .v2-handbook-trigger:hover,.v2-handbook-solo.v2-handbook-trigger:hover {
-  text-decoration:underline
-}
-.v2-handbook-solo.v2-handbook-trigger {
-  margin-top:auto
 }
 .hb-overlay {
   padding:18px;
@@ -775,11 +770,6 @@
 }
 .hb-loading,.hb-dialog-error {
   margin:12px clamp(22px,3vw,38px) 22px
-}
-@media(max-width:1100px) {
-  .v2-info-actions .v2-handbook-trigger {
-    font-size:10px
-  }
 }
 @media(max-width:700px) {
   .hb-overlay {

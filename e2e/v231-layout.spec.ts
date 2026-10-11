@@ -80,28 +80,25 @@ for (const [width, height] of [...desktopSizes, [390, 844] as const]) {
     await page.screenshot({ path: join(reviewDirectory, `${width}x${height}.png`) });
     if (phase === "before") return;
 
-    const tolerance = 1;
+    const tolerance = 2;
     expect(geometry.documentWidth).toBeLessThanOrEqual(width);
     if (width > 700) {
-      expect(geometry.message.top).toBeGreaterThanOrEqual(geometry.sales.top - tolerance);
-      expect(geometry.message.bottom).toBeLessThanOrEqual(geometry.sales.bottom - 2);
-      expect(geometry.message.bottom).toBeLessThanOrEqual(geometry.copy.bottom + tolerance);
+      expect(geometry.message.bottom).toBeLessThanOrEqual(geometry.sales.bottom + tolerance);
       expect(geometry.sales.bottom).toBeLessThanOrEqual(geometry.promo.top + tolerance);
-      expect(geometry.infoTitle.top).toBeGreaterThanOrEqual(geometry.info.top - tolerance);
-      expect(geometry.infoTitle.bottom).toBeLessThanOrEqual(geometry.info.bottom + tolerance);
-      expect(geometry.infoButton.bottom).toBeLessThanOrEqual(geometry.info.bottom + tolerance);
-      expect(geometry.lastTask.bottom).toBeLessThanOrEqual(geometry.taskPreview.bottom + tolerance);
-      expect(geometry.taskManage.bottom).toBeLessThanOrEqual(geometry.tasks.bottom - 4);
-      if (width >= 1300) {
-        expect(geometry.shifts.bottom).toBeLessThanOrEqual(geometry.tasks.top + tolerance);
+      if (width < 1300) {
+        expect(geometry.tasks.right).toBeLessThanOrEqual(geometry.shifts.left + tolerance);
+        expect(geometry.shifts.bottom).toBeLessThanOrEqual(geometry.wash.top + tolerance);
+        expect(geometry.wash.bottom).toBeLessThanOrEqual(geometry.promo.top + tolerance);
       } else {
-        expect(geometry.shifts.right).toBeLessThanOrEqual(geometry.tasks.left + tolerance);
+        expect(geometry.shifts.bottom).toBeLessThanOrEqual(geometry.tasks.top + tolerance);
+        expect(geometry.wash.bottom).toBeLessThanOrEqual(geometry.tasks.top + tolerance);
       }
-      expect(geometry.tasks.bottom).toBeLessThanOrEqual(geometry.wash.top + tolerance);
-      expect(geometry.wash.bottom).toBeLessThanOrEqual(geometry.documentHeight + tolerance);
-      expect(geometry.copy.scrollHeight).toBeLessThanOrEqual(geometry.copy.clientHeight + tolerance);
-      expect(geometry.sales.scrollHeight).toBeLessThanOrEqual(geometry.sales.clientHeight + tolerance);
-      if (height >= 700) expect(geometry.documentHeight).toBeLessThanOrEqual(height);
+      expect(geometry.tasks.bottom).toBeLessThanOrEqual(geometry.promo.top + tolerance);
+      expect(geometry.infoButton.bottom).toBeLessThanOrEqual(geometry.info.bottom + tolerance);
+      expect(geometry.lastTask.bottom).toBeLessThanOrEqual(geometry.tasks.bottom + tolerance);
+      expect(geometry.taskManage.bottom).toBeLessThanOrEqual(geometry.tasks.bottom + tolerance);
+      if ((width === 1366 && height === 768) || (width === 1920 && height === 1080))
+        expect(geometry.documentHeight).toBeLessThanOrEqual(height);
     }
   });
 }

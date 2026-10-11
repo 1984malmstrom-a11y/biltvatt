@@ -125,18 +125,12 @@ test("torsdag: fast uppgift förblir synlig efter 12 och prioriteras på mobil o
     return weather.left - lovable.right;
   });
   expect(gap).toBeGreaterThanOrEqual(35);
-  await expect(page.locator(".v2-lovable-link")).toHaveCSS("margin-right", "24px");
-  const movement = await page.evaluate(() => {
-    const lovable = document.querySelector<HTMLElement>(".v2-lovable-link")!;
-    const weather = document.querySelector(".v2-weather")!;
-    const shifted = { lovable: lovable.getBoundingClientRect().left, weather: weather.getBoundingClientRect().left };
-    lovable.style.marginRight = "0px";
-    const original = { lovable: lovable.getBoundingClientRect().left, weather: weather.getBoundingClientRect().left };
-    lovable.style.removeProperty("margin-right");
-    return { lovable: original.lovable - shifted.lovable, weather: original.weather - shifted.weather };
-  });
-  expect(movement.lovable).toBeCloseTo(24, 0);
-  expect(movement.weather).toBeCloseTo(0, 0);
+  expect(await page.evaluate(() => {
+    const lovable = document.querySelector(".v2-lovable-link")!.getBoundingClientRect();
+    const handbook = document.querySelector(".v2-handbook-trigger")!.getBoundingClientRect();
+    const weather = document.querySelector(".v2-weather")!.getBoundingClientRect();
+    return lovable.right < handbook.left && handbook.right < weather.left;
+  })).toBe(true);
   if (previewDir) await page.locator(".v2-header").screenshot({ path: `${previewDir}/header-lovable.png` });
 });
 
@@ -149,7 +143,7 @@ test("svensk midnatt byter onsdagens uppgift mot torsdagens medan dashboarden st
   state.day = "2026-10-15";
   state.done = false;
   state.revision = 0;
-  await page.clock.fastForward(2500);
+  await page.clock.runFor(2500);
   await expect(page.locator(".v2-task-row").first()).toContainText("Tobaksbeställning senast 12.00");
   expect(state.reads).toBeGreaterThan(reads);
 });
