@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
+import StationHandbook from "./StationHandbook";
 import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
@@ -236,7 +237,7 @@ function Modal({
   );
 }
 
-export default function StationDashboardV2() {
+export default function StationDashboardV2({ initialHandbookOpen = false }: { initialHandbookOpen?: boolean } = {}) {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [selection, setSelection] = useState<{ businessDate: string; date: string } | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
@@ -250,6 +251,11 @@ export default function StationDashboardV2() {
   const [monthlyError, setMonthlyError] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
+  const [handbookOpen, setHandbookOpen] = useState(initialHandbookOpen);
+  const closeHandbook = useCallback(() => {
+    setHandbookOpen(false);
+    if (window.location.pathname === "/station/handbook") window.history.replaceState(null, "", "/station");
+  }, []);
   const load = useCallback(async () => {
     try {
       const [sales, other] = await Promise.all([
@@ -679,10 +685,10 @@ export default function StationDashboardV2() {
                   ? "Visa alla meddelanden"
                   : "Läs hela meddelandet"}{" "}
                 <ChevronRight size={15} />
-              </button><a href="/station/handbook">PERSONALPÄRM <ChevronRight size={14} /></a></div>
+              </button><button type="button" className="v2-handbook-trigger" onClick={() => setHandbookOpen(true)}>PERSONALPÄRM <ChevronRight size={14} /></button></div>
             </>
           ) : (
-            <><p className="v2-panel-empty">Inga aktuella meddelanden.</p><a className="v2-handbook-solo" href="/station/handbook">PERSONALPÄRM <ChevronRight size={14} /></a></>
+            <><p className="v2-panel-empty">Inga aktuella meddelanden.</p><button type="button" className="v2-handbook-solo v2-handbook-trigger" onClick={() => setHandbookOpen(true)}>PERSONALPÄRM <ChevronRight size={14} /></button></>
           )}
         </section>
         <a className="v2-wash" href="/">
@@ -818,6 +824,7 @@ export default function StationDashboardV2() {
           ) : null}
         </Modal>
       )}
+      {handbookOpen && <StationHandbook onClose={closeHandbook} />}
     </div>
   );
 }

@@ -252,7 +252,7 @@ for (const [width, height] of [[1024, 768], [1280, 1024], [1024, 650], [1280, 85
     await syntheticData(page);
     await page.goto("/station");
     await expect(page.locator(".v2-amount")).toContainText("38 450");
-    await expect(page.locator(".v2-info button")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Läs hela meddelandet" })).toBeVisible();
     expect(await ferrariArtwork(page)).toEqual({
       source: "/ferrari-campaign-original.png", naturalSize: [2172, 724],
       fit: "contain", buttonBelowComparison: true, buttonInSalesCard: true, promoHasButton: false,

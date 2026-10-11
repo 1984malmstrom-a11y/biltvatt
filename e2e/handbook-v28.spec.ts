@@ -1,10 +1,12 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import JSZip from "jszip";
 import { mkdirSync } from "node:fs";
-import { emptyHandbookContent, HANDBOOK_KINDS, stockholmToday, type HandbookContent, type HandbookKind } from "../shared/handbook";
+import { emptyHandbookContent, HANDBOOK_KINDS, stockholmToday, stockholmWeekday, WEEKDAYS, WEEKDAY_LABELS, type HandbookContent, type HandbookKind } from "../shared/handbook";
 
 const previewDir = process.env.V28_PREVIEW_DIR;
 if (previewDir) mkdirSync(previewDir, { recursive: true });
+const gridPreviewDir = process.env.V28_GRID_PREVIEW_DIR;
+if (gridPreviewDir) mkdirSync(gridPreviewDir, { recursive: true });
 const id1 = "f8a39c1b-6b73-4fe3-9c3e-d45a785b6221";
 const id2 = "02a99ce6-57e0-49fc-a634-7551dfa61654";
 function docs() {
@@ -43,6 +45,10 @@ async function mockReader(page: Page) {
     return route.fulfill({ json: live(kind, content[kind], kind === "bakeoff" ? [] : state[kind]) });
   });
 }
+async function mockDashboard(page: Page) {
+  await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: { business_date: "2026-10-10", comparison_date: "2025-10-11", net_sales_ore: 2850000, comparison_sales_ore: 2600000, difference_ore: 250000, percent: 9.6, updated_at: null, week: [] } }));
+  await page.route("**/api/station/v2", (route) => route.fulfill({ json: { today: "2026-10-11", shifts: [], tasks: [], notices: [{ id: "synthetic-notice", title: "Tävling – måndag", message: "Läs mer i personalpärmen om dagens rutiner.", updated_at: "2026-10-11T07:00:00Z" }], updated_at: null } }));
+}
 function syntheticDocx() {
   const zip = new JSZip();
   zip.file("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
@@ -51,38 +57,150 @@ function syntheticDocx() {
   return zip.generateAsync({ type: "nodebuffer" });
 }
 
-test("Personalpärmen visar tre dokument med separata checklistor och passar kassaskärm och mobil", async ({ page }) => {
-  for (const viewport of [{width:1440,height:900},{width:1024,height:768},{width:1024,height:650},{width:390,height:844}]) {
+async function expectChecklistColumns(dialog: Locator, width: number) {
+  const geometry = await dialog.locator(".hb-blocks").evaluate((grid) => ({
+    columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+    positions: [...grid.querySelectorAll<HTMLElement>(".hb-check")].slice(0, 3).map((item) => {
+      const box = item.getBoundingClientRect();
+      return { left: box.left, top: box.top, right: box.right };
+    }),
+  }));
+  expect(geometry.positions).toHaveLength(3);
+  if (width <= 700) {
+    expect(geometry.columns).toBe(1);
+    expect(geometry.positions[1].left).toBeCloseTo(geometry.positions[0].left, 0);
+    expect(geometry.positions[1].top).toBeGreaterThan(geometry.positions[0].top);
+  } else {
+    expect(geometry.columns).toBe(2);
+    expect(geometry.positions[1].left).toBeGreaterThan(geometry.positions[0].right);
+    expect(geometry.positions[1].top).toBeCloseTo(geometry.positions[0].top, 0);
+    expect(geometry.positions[2].top).toBeGreaterThan(geometry.positions[0].top);
+  }
+}
+
+test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistestatus", async ({ page }) => {
+  await mockDashboard(page);
+  for (const viewport of [{width:1920,height:1080},{width:1440,height:900},{width:1366,height:768},{width:1024,height:768},{width:1024,height:650},{width:390,height:844}]) {
     await page.unroute("**/api/station/handbook**");
     await mockReader(page);
     await page.setViewportSize(viewport);
-    await page.goto("/station/handbook");
-    await expect(page.getByRole("heading", { name: "Personalpärmen" })).toBeVisible();
-    await expect(page.locator(".hb-card")).toHaveCount(3);
+    await page.goto("/station?weather-demo=1");
+    await expect(page.locator(".v2-info")).toContainText("PERSONALPÄRM");
+    await page.evaluate(() => { document.querySelector<HTMLElement>(".station-v2-shell")!.dataset.popupTestMarker = "kept"; });
+    const trigger = page.getByRole("button", { name: "PERSONALPÄRM" });
+    await trigger.click();
+    const dialog = page.getByRole("dialog", { name: "Personalpärmen" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(page).toHaveURL(/\/station\?weather-demo=1$/);
+    expect(await page.evaluate(() => document.getElementById("root")?.inert && document.body.style.overflow === "hidden" && document.activeElement?.closest("[role=dialog]") !== null)).toBe(true);
+    expect(await page.evaluate(() => {
+      const panel = document.querySelector(".hb-dialog")!.getBoundingClientRect();
+      const toolbar = document.querySelector(".hb-dialog-toolbar")!.getBoundingClientRect();
+      return document.documentElement.scrollWidth <= innerWidth && panel.left >= 0 && panel.right <= innerWidth && panel.top >= 0 && panel.bottom <= innerHeight && toolbar.bottom <= panel.bottom;
+    })).toBe(true);
+    if (previewDir && viewport.width === 1440) await page.screenshot({ path: `${previewDir}/01-dashboard-popup-desktop.png` });
+    if (previewDir && viewport.width === 1024 && viewport.height === 768) await page.screenshot({ path: `${previewDir}/04-popup-cashier-1024x768.png` });
+    if (previewDir && viewport.width === 390) await page.screenshot({ path: `${previewDir}/05-popup-mobile.png` });
+    await page.keyboard.press("Shift+Tab");
+    expect(await page.evaluate(() => document.activeElement?.closest("[role=dialog]") !== null)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    if (previewDir && viewport.width === 1440) await page.screenshot({ path: `${previewDir}/01-personalparm-start.png` });
-    await page.getByRole("button", { name: /Bakeoff – Upplockningsschema/ }).click();
-    await expect(page.getByRole("dialog")).toContainText("Kanelbulle");
+    await dialog.getByRole("button", { name: /Bakeoff – Upplockningsschema/ }).click();
+    await expect(dialog).toContainText("Kanelbulle");
+    await expect(dialog.getByRole("button", { name: "Till Personalpärmen" })).toBeFocused();
+    await expect(page.getByRole("dialog")).toHaveCount(1);
+    await expect(dialog.getByRole("button", { name: "Till Personalpärmen" })).toBeVisible();
+    await expect(dialog.getByRole("tab", { name: WEEKDAY_LABELS[WEEKDAYS.indexOf(stockholmWeekday())] })).toHaveAttribute("aria-selected", "true");
     if (viewport.width === 390) expect(await page.evaluate(() => {
       const tabs = [...document.querySelectorAll<HTMLElement>(".hb-dialog .hb-days button")];
       return tabs[0].getBoundingClientRect().left >= 0 && tabs[6].getBoundingClientRect().right <= innerWidth && tabs[6].getBoundingClientRect().top > tabs[0].getBoundingClientRect().top;
     })).toBe(true);
-    await page.getByRole("tab", { name: "Söndag" }).click();
-    await expect(page.getByRole("tabpanel")).toContainText("Croissant");
-    if (previewDir && viewport.width === 1024 && viewport.height === 768) await page.screenshot({ path: `${previewDir}/02-bakeoff-kassaskarm.png` });
-    await page.getByRole("button", { name: "Stäng", exact: true }).click();
-    await page.getByRole("button", { name: /Öppningsrutiner/ }).click();
-    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("tab", { name: "Söndag" }).click();
+    await expect(dialog.getByRole("tabpanel")).toContainText("Croissant");
+    if (previewDir && viewport.width === 1440) await page.screenshot({ path: `${previewDir}/02-popup-bakeoff.png` });
+    await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
+    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await expect(dialog.getByRole("button", { name: /Bakeoff – Upplockningsschema/ })).toBeFocused();
+    await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
     await expect(dialog.getByText("1 av 3 klara")).toBeVisible();
-    if (previewDir && viewport.width === 1024 && viewport.height === 768) await page.screenshot({ path: `${previewDir}/03-oppningsrutiner-kassaskarm.png` });
+    await expectChecklistColumns(dialog, viewport.width);
+    await dialog.getByRole("checkbox").first().focus();
+    await page.keyboard.press("Tab");
+    await expect(dialog.getByRole("checkbox").nth(1)).toBeFocused();
     await dialog.getByRole("checkbox").nth(1).click();
     await expect(dialog.getByText("2 av 3 klara")).toBeVisible();
-    await page.getByRole("button", { name: "Stäng", exact: true }).click();
-    await page.getByRole("button", { name: /Stängningsrutiner/ }).click();
-    await expect(page.getByRole("dialog").getByText("0 av 3 klara")).toBeVisible();
-    if (previewDir && viewport.width === 390) await page.screenshot({ path: `${previewDir}/04-stangningsrutiner-mobil.png` });
+    if (previewDir && viewport.width === 1440) await page.screenshot({ path: `${previewDir}/03-popup-opening-checked.png` });
+    await dialog.getByRole("checkbox").nth(1).click();
+    await expect(dialog.getByText("1 av 3 klara")).toBeVisible();
+    await dialog.getByRole("checkbox").nth(1).click();
+    await expect(dialog.getByText("2 av 3 klara")).toBeVisible();
+    await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
+    await dialog.getByRole("button", { name: /Stängningsrutiner/ }).click();
+    await expect(dialog.getByText("0 av 3 klara")).toBeVisible();
+    await expectChecklistColumns(dialog, viewport.width);
+    await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
+    await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
+    await expect(dialog.getByText("2 av 3 klara")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.getByRole("button", { name: "Stäng", exact: true }).click();
+    await dialog.getByRole("button", { name: "Stäng Personalpärmen" }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    expect(await page.evaluate(() => !document.getElementById("root")?.inert && document.body.style.overflow === "" && document.querySelector<HTMLElement>(".station-v2-shell")?.dataset.popupTestMarker === "kept")).toBe(true);
+    await trigger.click();
+    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
+    await expect(dialog.getByText("2 av 3 klara")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    if (viewport.width === 1024 && viewport.height === 768) {
+      await page.reload();
+      await page.getByRole("button", { name: "PERSONALPÄRM" }).click();
+      await page.getByRole("dialog").getByRole("button", { name: /Öppningsrutiner/ }).click();
+      await expect(page.getByRole("dialog").getByText("2 av 3 klara")).toBeVisible();
+    }
+  }
+});
+
+test("Båda rutinerna visar långa checklistor i två kolumner på större skärmar", async ({ page }) => {
+  await mockDashboard(page);
+  await mockReader(page);
+  const content = docs();
+  for (let index = 0; index < 21; index++) {
+    content.opening.blocks.push({ type: "check", id: `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`, text: `Syntetiskt öppningsmoment ${String(index + 4).padStart(2, "0")} – kontrollera stationens ytor` });
+    content.closing.blocks.push({ type: "check", id: `11111111-0000-4000-8000-${String(index).padStart(12, "0")}`, text: `Syntetiskt stängningsmoment ${String(index + 4).padStart(2, "0")} – kontrollera stationens ytor` });
+  }
+  const checked = (kind: "opening" | "closing", count: number) => content[kind].blocks.filter((block) => block.type === "check").slice(0, count).map((block) => ({ item_id: block.id, done: 1, revision: 1 }));
+  await page.route("**/api/station/handbook/opening", (route) => route.fulfill({ json: live("opening", content.opening, checked("opening", 8)) }));
+  await page.route("**/api/station/handbook/closing", (route) => route.fulfill({ json: live("closing", content.closing, checked("closing", 3)) }));
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 1024, height: 650 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/station?weather-demo=1");
+    await page.getByRole("button", { name: "PERSONALPÄRM" }).click();
+    const dialog = page.getByRole("dialog", { name: "Personalpärmen" });
+    await dialog.getByRole("button", { name: /Öppningsrutiner/ }).click();
+    await expect(dialog.getByText("8 av 24 klara")).toBeVisible();
+    await expect(dialog.getByText(/Syntetiskt öppningsmoment 24/)).toBeAttached();
+    await expectChecklistColumns(dialog, viewport.width);
+    if (gridPreviewDir && viewport.width === 1440) await page.screenshot({ path: `${gridPreviewDir}/01-opening-desktop-1440x900.png` });
+    if (gridPreviewDir && viewport.width === 1024 && viewport.height === 768) await page.screenshot({ path: `${gridPreviewDir}/03-opening-cashier-1024x768.png` });
+    if (gridPreviewDir && viewport.width === 390) await page.screenshot({ path: `${gridPreviewDir}/05-opening-mobile-390x844.png` });
+    const before = await dialog.locator(".hb-dialog-toolbar").boundingBox();
+    await dialog.locator(".hb-dialog-body").evaluate((element) => { element.scrollTop = element.scrollHeight; });
+    expect(await dialog.locator(".hb-dialog-body").evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+    expect(await dialog.locator(".hb-dialog-toolbar").boundingBox()).toEqual(before);
+    await expect(dialog.getByRole("button", { name: "Stäng Personalpärmen" })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.body.style.overflow === "hidden")).toBe(true);
+    await dialog.getByRole("button", { name: "Till Personalpärmen" }).click();
+    await expect(dialog.locator(".hb-card")).toHaveCount(3);
+    expect(await dialog.locator(".hb-dialog-body").evaluate((element) => element.scrollTop)).toBe(0);
+    await dialog.getByRole("button", { name: /Stängningsrutiner/ }).click();
+    await expect(dialog.getByText("3 av 24 klara")).toBeVisible();
+    await expectChecklistColumns(dialog, viewport.width);
+    if (gridPreviewDir && viewport.width === 1440) await page.screenshot({ path: `${gridPreviewDir}/02-closing-desktop-1440x900.png` });
+    if (gridPreviewDir && viewport.width === 1024 && viewport.height === 650) await page.screenshot({ path: `${gridPreviewDir}/04-closing-cashier-1024x650.png` });
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
   }
 });
 
@@ -108,7 +226,6 @@ test("Word-import av syntetisk tabell förhandsgranskas och kan sparas som utkas
   await admin.getByRole("button", { name: "Förhandsgranska" }).click();
   await admin.locator(".hb-admin-preview").getByRole("tab", { name: "Måndag" }).click();
   await expect(admin.locator(".hb-admin-preview")).toContainText("Fralla");
-  if (previewDir) await admin.screenshot({ path: `${previewDir}/05-admin-wordimport.png` });
   await admin.getByRole("button", { name: "Spara utkast" }).click();
   await expect(admin.getByText("Utkastet är sparat. Det syns ännu inte för personalen.")).toBeVisible();
   expect(saved).toMatchObject({ reviewed: false, content: { days: { monday: [{ product: "Fralla", quantity: "12 st" }], tuesday: [{ product: "Fralla", quantity: "8 st" }] } } });
@@ -117,19 +234,18 @@ test("Word-import av syntetisk tabell förhandsgranskas och kan sparas som utkas
   await expect(admin.locator(".hb-change-summary")).toContainText("Ändrat: Starta kaffe och kontrollera frukostytan → Starta kaffe och kontrollera frukostytan noga");
 });
 
-test("länken till Personalpärmen ryms i Viktig info på kassaskärm och mobil", async ({ page }) => {
-  await page.route("**/api/station/dashboard", (route) => route.fulfill({ json: { business_date: "2026-10-10", comparison_date: "2025-10-11", net_sales_ore: 2850000, comparison_sales_ore: 2600000, difference_ore: 250000, percent: 9.6, updated_at: null, week: [] } }));
-  await page.route("**/api/station/v2", (route) => route.fulfill({ json: { today: "2026-10-11", shifts: [], tasks: [], notices: [{ id: "synthetic-notice", title: "Tävling – måndag", message: "Läs mer i personalpärmen om dagens rutiner.", updated_at: "2026-10-11T07:00:00Z" }], updated_at: null } }));
+test("Personalpärm-knappen ryms i Viktig info på kassaskärm och mobil", async ({ page }) => {
+  await mockDashboard(page);
   for (const viewport of [{width:1366,height:768},{width:1024,height:768},{width:1024,height:650},{width:390,height:844}]) {
     await page.setViewportSize(viewport);
     await page.goto("/station?weather-demo=1");
-    const link = page.getByRole("link", { name: "PERSONALPÄRM" });
+    const link = page.getByRole("button", { name: "PERSONALPÄRM" });
     await expect(link).toBeVisible();
-    await expect(link).toHaveAttribute("href", "/station/handbook");
+    await expect(page.locator(".v2-info h3")).toHaveText("Tävling – måndag");
     expect(await page.evaluate(() => {
       const panel = document.querySelector(".v2-info")!.getBoundingClientRect();
-      const link = document.querySelector(".v2-info-actions a")!.getBoundingClientRect();
-      const button = document.querySelector(".v2-info-actions button")!.getBoundingClientRect();
+      const link = document.querySelector(".v2-info-actions .v2-handbook-trigger")!.getBoundingClientRect();
+      const button = document.querySelector(".v2-info-actions button:not(.v2-handbook-trigger)")!.getBoundingClientRect();
       return document.documentElement.scrollWidth <= innerWidth && link.left >= panel.left && link.right <= panel.right && link.top >= panel.top && link.bottom <= panel.bottom && (link.left >= button.right || link.top >= button.bottom);
     })).toBe(true);
   }

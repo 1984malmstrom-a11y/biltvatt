@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ArrowLeft, ChevronRight, ClipboardCheck, Croissant, LockKeyhole, X } from "lucide-react";
 import { api, send, HttpError } from "./api";
 import { HANDBOOK_KINDS, HANDBOOK_LABELS, WEEKDAYS, WEEKDAY_LABELS, stockholmWeekday, type HandbookContent, type HandbookKind, type Weekday } from "../shared/handbook";
@@ -56,27 +57,90 @@ export function HandbookDocumentView({ document, preview = false }: { document: 
   </div>;
 }
 
-export default function StationHandbook() {
+export default function StationHandbook({ onClose }: { onClose: () => void }) {
   const [documents, setDocuments] = useState<Summary[]>([]);
   const [selected, setSelected] = useState<LiveHandbook | null>(null);
+  const [pendingKind, setPendingKind] = useState<HandbookKind | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const dialogRef = useRef<HTMLElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const backRef = useRef<HTMLButtonElement>(null);
+  const firstCardRef = useRef<HTMLButtonElement>(null);
+  const previousSelected = useRef(false);
+  const closeAction = useRef(onClose);
+  closeAction.current = onClose;
   useEffect(() => {
     api<{ documents: Summary[] }>("/station/handbook").then((result) => setDocuments(result.documents)).catch((cause) => {
       if (cause instanceof HttpError && cause.status === 401) window.location.assign("/station/login");
       else setError((cause as Error).message);
     }).finally(() => setLoading(false));
   }, []);
+  useEffect(() => {
+    if (previousSelected.current !== Boolean(selected)) bodyRef.current?.scrollTo({ top: 0 });
+    if (selected) backRef.current?.focus();
+    else if (previousSelected.current) (firstCardRef.current?.disabled ? closeRef.current : firstCardRef.current)?.focus();
+    previousSelected.current = Boolean(selected);
+  }, [selected]);
+  useEffect(() => {
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const appRoot = document.getElementById("root");
+    const previousInert = appRoot?.inert ?? false;
+    const previousOverflow = document.body.style.overflow;
+    if (appRoot) appRoot.inert = true;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        closeAction.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>("a[href],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex='-1'])"))
+        .filter((element) => element.getClientRects().length > 0);
+      if (!focusable.length) { event.preventDefault(); dialog.focus(); return; }
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); first.focus();
+      }
+    };
+    document.addEventListener("keydown", keydown, true);
+    return () => {
+      document.removeEventListener("keydown", keydown, true);
+      if (appRoot) appRoot.inert = previousInert;
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
+  }, []);
   async function open(kind: HandbookKind) {
     setError("");
+    setPendingKind(kind);
     try { setSelected(await api<LiveHandbook>(`/station/handbook/${kind}`)); }
     catch (cause) { setError((cause as Error).message); }
+    finally { setPendingKind(null); }
   }
-  useEffect(() => {
-    if (!selected) return;
-    const close = (event: KeyboardEvent) => { if (event.key === "Escape") setSelected(null); };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, [selected]);
-  return <div className="hb-page"><header className="hb-header"><a href="/station" className="hb-back"><ArrowLeft size={18} /> Till dashboarden</a><span>PREEM TINGSRYD</span></header><main className="hb-main"><div className="hb-heading"><span className="hb-eyebrow">DIN DIGITALA HANDBOK</span><h1>Personalpärmen</h1><p>Rutiner och upplockningsschema, alltid nära till hands.</p></div>{loading ? <p>Laddar personalpärmen…</p> : <div className="hb-cards">{HANDBOOK_KINDS.map((kind) => { const document = documents.find((entry) => entry.kind === kind); const Icon = icon[kind]; return <button className="hb-card" key={kind} disabled={!document?.available} onClick={() => void open(kind)}><span className="hb-card-icon"><Icon size={26} /></span><span className="hb-card-copy"><strong>{document?.title || HANDBOOK_LABELS[kind]}</strong><small>{document?.available ? document.description || "Öppna dokumentet" : "Kommer snart"}</small></span><ChevronRight size={20} /></button>; })}</div>}{error && <p className="hb-error" role="alert">{error}</p>}</main>{selected && <div className="hb-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section className="hb-dialog" role="dialog" aria-modal="true" aria-label={selected.title}><button className="hb-close" onClick={() => setSelected(null)} aria-label="Stäng"><X size={22} /></button><HandbookDocumentView document={selected} /></section></div>}</div>;
+  return createPortal(<div className="hb-overlay" role="presentation">
+    <section className="hb-dialog" role="dialog" aria-modal="true" aria-labelledby="hb-dialog-title" ref={dialogRef} tabIndex={-1}>
+      <div className="hb-dialog-toolbar">
+        {selected ? <button className="hb-dialog-back" ref={backRef} onClick={() => { setSelected(null); setError(""); }}><ArrowLeft size={17} /> Till Personalpärmen</button> : <span className="hb-dialog-brand">PREEM TINGSRYD</span>}
+        <span className="hb-dialog-title" id="hb-dialog-title">Personalpärmen</span>
+        <button className="hb-close" ref={closeRef} onClick={onClose} aria-label="Stäng Personalpärmen"><X size={22} /></button>
+      </div>
+      <div className="hb-dialog-body" ref={bodyRef}>
+        {selected ? <HandbookDocumentView document={selected} /> : <div className="hb-home">
+          <div className="hb-heading"><span className="hb-eyebrow">DIN DIGITALA HANDBOK</span><h1>Personalpärmen</h1><p>Rutiner och upplockningsschema, alltid nära till hands.</p></div>
+          {loading ? <p className="hb-loading" role="status">Laddar personalpärmen…</p> : <div className="hb-cards">{HANDBOOK_KINDS.map((kind, index) => { const entry = documents.find((item) => item.kind === kind); const Icon = icon[kind]; return <button className="hb-card" ref={index === 0 ? firstCardRef : undefined} key={kind} disabled={!entry?.available || Boolean(pendingKind)} onClick={() => void open(kind)}><span className="hb-card-icon"><Icon size={26} /></span><span className="hb-card-copy"><strong>{entry?.title || HANDBOOK_LABELS[kind]}</strong><small>{entry?.available ? entry.description || "Öppna dokumentet" : "Kommer snart"}</small></span><ChevronRight size={20} /></button>; })}</div>}
+          {pendingKind && <p className="hb-loading" role="status">Öppnar {HANDBOOK_LABELS[pendingKind]}…</p>}
+        </div>}
+        {error && <p className="hb-error hb-dialog-error" role="alert">{error}</p>}
+      </div>
+    </section>
+  </div>, document.body);
 }

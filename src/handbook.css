@@ -278,7 +278,15 @@
 }
 .hb-blocks {
   display:grid;
-  gap:9px
+  gap:10px 16px
+}
+@media(min-width:701px) {
+  .hb-blocks {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  .hb-blocks>:not(.hb-check) {
+    grid-column:1/-1
+  }
 }
 .hb-blocks h3 {
   font-size:17px;
@@ -292,12 +300,16 @@
   display:flex;
   align-items:center;
   gap:15px;
+  min-width:0;
   padding:14px 17px;
   border:1px solid #e5ebe4;
   border-radius:11px;
   background:#fff;
   line-height:1.45;
   cursor:pointer
+}
+.hb-check span {
+  overflow-wrap:anywhere
 }
 .hb-check input {
   appearance:none;
@@ -652,6 +664,170 @@
   }
   .hb-admin-types button {
     flex:1
+  }
+}
+.v2-info-actions .v2-handbook-trigger,.v2-handbook-solo.v2-handbook-trigger {
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  width:auto;
+  min-height:0;
+  margin-top:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#18583e!important;
+  font-size:clamp(10px,.76vw,12px);
+  font-weight:850;
+  letter-spacing:.045em;
+  white-space:nowrap;
+  cursor:pointer
+}
+.v2-info-actions .v2-handbook-trigger:hover,.v2-handbook-solo.v2-handbook-trigger:hover {
+  text-decoration:underline
+}
+.v2-handbook-solo.v2-handbook-trigger {
+  margin-top:auto
+}
+.hb-overlay {
+  padding:18px;
+  background:#0b231bbd
+}
+.hb-dialog {
+  width:min(1160px,calc(100vw - 36px));
+  max-height:calc(100dvh - 36px);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 28px 90px #071b1480
+}
+.hb-dialog-toolbar {
+  flex:none;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+  min-height:66px;
+  padding:12px 22px;
+  border-bottom:1px solid #e4ece4;
+  background:#fff
+}
+.hb-dialog-brand {
+  color:#34624a;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.12em
+}
+.hb-dialog-title {
+  color:#173c2b;
+  font-size:14px;
+  font-weight:850
+}
+.hb-dialog-back {
+  justify-self:start;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 0;
+  border:0;
+  background:transparent;
+  color:#17633f;
+  font:inherit;
+  font-size:13px;
+  font-weight:750;
+  cursor:pointer
+}
+.hb-dialog-back:hover {
+  text-decoration:underline
+}
+.hb-dialog .hb-close {
+  position:static;
+  float:none;
+  justify-self:end;
+  margin:0;
+  flex:none
+}
+.hb-dialog-body {
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain
+}
+.hb-home {
+  padding:clamp(22px,3vw,38px)
+}
+.hb-home .hb-heading {
+  margin-bottom:22px
+}
+.hb-home .hb-heading h1 {
+  font-size:clamp(32px,3.3vw,45px)
+}
+.hb-home .hb-card {
+  min-height:150px;
+  padding:21px
+}
+.hb-home .hb-card-icon {
+  margin-bottom:12px
+}
+.hb-dialog .hb-document {
+  padding:clamp(22px,3vw,38px)
+}
+.hb-loading,.hb-dialog-error {
+  margin:12px clamp(22px,3vw,38px) 22px
+}
+@media(max-width:1100px) {
+  .v2-info-actions .v2-handbook-trigger {
+    font-size:10px
+  }
+}
+@media(max-width:700px) {
+  .hb-overlay {
+    padding:6px
+  }
+  .hb-dialog {
+    width:calc(100vw - 12px);
+    height:calc(100dvh - 12px);
+    max-height:calc(100dvh - 12px);
+    border-radius:15px
+  }
+  .hb-dialog-toolbar {
+    grid-template-columns:1fr auto;
+    min-height:59px;
+    padding:9px 16px
+  }
+  .hb-dialog-brand {
+    display:none
+  }
+  .hb-dialog-title {
+    grid-column:1;
+    grid-row:1;
+    justify-self:start
+  }
+  .hb-dialog-back {
+    grid-column:1;
+    grid-row:1
+  }
+  .hb-dialog-back+.hb-dialog-title {
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip-path:inset(50%)
+  }
+  .hb-dialog .hb-close {
+    grid-column:2;
+    grid-row:1
+  }
+  .hb-home {
+    padding:22px 17px
+  }
+  .hb-home .hb-card {
+    min-height:120px;
+    padding:17px
+  }
+  .hb-dialog .hb-document {
+    padding:23px 17px
   }
 }
 .hb-check {

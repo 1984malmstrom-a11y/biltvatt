@@ -10,7 +10,6 @@ import {
 import { api, HttpError, send } from "./api";
 import StationDashboardV2 from "./StationDashboardV2";
 import StationV2Admin from "./StationV2Admin";
-import StationHandbook from "./StationHandbook";
 import StationHandbookAdmin from "./StationHandbookAdmin";
 
 type Summary = {
@@ -578,7 +577,7 @@ export default function StationApp() {
   return path === "/station/admin" ? (
     <StationAdmin />
   ) : path === "/station/handbook" ? (
-    <StationHandbook />
+    <StationDashboardV2 initialHandbookOpen />
   ) : path === "/station/login" ? (
     <StationLogin />
   ) : (
