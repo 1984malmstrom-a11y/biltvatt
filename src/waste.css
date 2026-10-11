@@ -4,7 +4,7 @@
 .waste-preview { display:grid; gap:2px; min-height:0; }
 .waste-row { display:grid; grid-template-columns:24px minmax(0,1fr) auto; gap:7px; align-items:center; min-width:0; padding:0 6px; border:1px solid #e4ebe3; border-radius:8px; background:#fff; }
 .waste-row-copy { display:flex; align-items:baseline; flex-wrap:wrap; gap:3px 7px; min-width:0; }
-.waste-row-copy strong { font-size:clamp(13px,1vw,16px); font-weight:750; line-height:1.15; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.waste-row-copy strong { font-size:clamp(13px,1vw,16px); font-weight:500; line-height:1.15; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .waste-row-copy small { font-size:clamp(10px,.74vw,12px); font-weight:750; white-space:nowrap; }
 .waste-row time { color:#385846; font-size:clamp(12px,.82vw,14px); font-weight:650; white-space:nowrap; }
 .waste-row.waste-tomorrow { border-color:#e8ae66; background:#fff4e8; animation:waste-warmth 5s ease-in-out infinite; }
@@ -17,7 +17,7 @@
 .waste-preview .waste-row { height:clamp(27px,3vh,32px); }
 .waste-preview .waste-check { width:22px; height:22px; }
 .waste-check[aria-pressed=true] { background:#16854d; border-color:#16854d; }
-.waste-more { align-self:flex-start; margin-top:auto; padding:3px 0 0; border:0; background:transparent; color:#17633f; font-size:13px; font-weight:750; }
+.waste-more { align-self:flex-start; margin-top:auto; padding:8px 0 0; border:0; background:transparent; color:#17633f; font-size:13px; font-weight:750; }
 .waste-more:hover { text-decoration:underline; }
 .waste-error { margin:4px 0; color:#ad3027; font-size:12px; }
 .waste-overlay { position:fixed; inset:0; z-index:110; display:grid; place-items:center; padding:18px; background:#0b231bc9; }

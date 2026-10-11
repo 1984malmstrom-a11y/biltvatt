@@ -873,7 +873,7 @@ td { background: #fff; border-color: var(--preem-line); }
 .v30-bottom .v2-station-image { padding:0; }
 .v30-bottom .v2-ferrari-art { width:100%; height:100%; object-fit:contain; }
 .v30-bottom .v2-info { z-index:auto; }
-.v30-bottom .v2-waste { padding:7px 12px; }
+.v30-bottom .v2-waste { padding:4px 12px; }
 .v30-bottom .waste-preview { gap:2px; }
 .v30-bottom .waste-preview .waste-row-copy { flex-wrap:nowrap; }
 .v30-bottom .waste-preview .waste-row-copy strong { min-width:0; }
@@ -908,7 +908,7 @@ td { background: #fff; border-color: var(--preem-line); }
   .v30-bottom { grid-column:1; grid-row:3; gap:8px; grid-template-columns:minmax(0,1.35fr) minmax(0,.8fr) minmax(0,1.1fr); }
   .v30-bottom .v2-station-image,.v30-bottom .v2-info { grid-column:auto; grid-row:auto; }
   .v30-bottom .v2-info p { display:none; }
-  .v30-bottom .v2-waste { padding:2px 9px; }
+  .v30-bottom .v2-waste { padding:0 9px; }
   .v30-bottom .v2-waste .v2-panel-head { margin-bottom:0; }
   .v30-bottom .waste-preview { gap:1px; }
   .v30-bottom .waste-preview .waste-row { height:20px; }
