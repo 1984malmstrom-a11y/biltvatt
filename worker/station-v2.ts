@@ -6,7 +6,7 @@ import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 import { isFixedMonthlyMetrics, type FixedMonthlyMetrics } from "../shared/monthly";
 import { isRecurringTaskId, recurringTaskForDay } from "../shared/recurring-tasks";
 
-const STATION = "tingsryd";
+import { stationId } from "./station-config";
 const isoDay = (value: unknown): value is string =>
   typeof value === "string" &&
   /^\d{4}-\d{2}-\d{2}$/.test(value) &&
@@ -119,7 +119,7 @@ export async function stationV2Api(
     const row = await env.DB.prepare(
       "SELECT month,metrics_json,updated_at FROM station_monthly_figures WHERE station_id=? AND month=?",
     )
-      .bind(STATION, month)
+      .bind(stationId(env), month)
       .first<{ month: string; metrics_json: string; updated_at: string }>();
     return json({
       month,
@@ -131,7 +131,7 @@ export async function stationV2Api(
     const rows = await env.DB.prepare(
       "SELECT month,metrics_json,revision,updated_at FROM station_monthly_figures WHERE station_id=? ORDER BY month DESC LIMIT 60",
     )
-      .bind(STATION)
+      .bind(stationId(env))
       .all<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
     return json(rows.results.map((row) => ({
       month: row.month,
@@ -148,7 +148,7 @@ export async function stationV2Api(
     if (!validMonth(month) || month >= today.slice(0, 7)) fail(400, "Välj en avslutad månad.");
     const row = await env.DB.prepare(
       "SELECT month,metrics_json,revision,updated_at FROM station_monthly_figures WHERE station_id=? AND month=?",
-    ).bind(STATION, month).first<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
+    ).bind(stationId(env), month).first<{ month: string; metrics_json: string; revision: number; updated_at: string }>();
     return json(row ? { month, ...monthlyRecord(row.metrics_json), revision: row.revision, updated_at: row.updated_at } :
       { month, metrics: null, legacy: false, revision: null, updated_at: null });
   }
@@ -165,7 +165,7 @@ export async function stationV2Api(
       const result = await env.DB.prepare(
         "INSERT OR IGNORE INTO station_monthly_figures(station_id,month,metrics_json,created_at,updated_at) VALUES(?,?,?,?,?)",
       )
-        .bind(STATION, month, payload, now, now)
+        .bind(stationId(env), month, payload, now, now)
         .run();
       if (result.meta.changes !== 1)
         fail(409, "Månaden finns redan. Uppdatera sidan.");
@@ -174,7 +174,7 @@ export async function stationV2Api(
     const expected = version(data.expected_revision);
     const existing = await env.DB.prepare(
       "SELECT metrics_json FROM station_monthly_figures WHERE station_id=? AND month=?",
-    ).bind(STATION, month).first<{ metrics_json: string }>();
+    ).bind(stationId(env), month).first<{ metrics_json: string }>();
     if (existing && monthlyRecord(existing.metrics_json).legacy)
       fail(409, "Äldre fria månadsvärden är bevarade och kan inte skrivas över.");
     if (existing) {
@@ -188,7 +188,7 @@ export async function stationV2Api(
     const result = await env.DB.prepare(
       "UPDATE station_monthly_figures SET metrics_json=?,revision=revision+1,updated_at=? WHERE station_id=? AND month=? AND revision=? AND json_extract(metrics_json,'$.kind')='fixed-v25'",
     )
-      .bind(payload, now, STATION, month, expected)
+      .bind(payload, now, stationId(env), month, expected)
       .run();
     if (result.meta.changes !== 1)
       fail(409, "Månadens siffror har ändrats. Uppdatera sidan.");
@@ -206,22 +206,22 @@ export async function stationV2Api(
       env.DB.prepare(
         "SELECT id,text,done,revision,created_at FROM station_tasks WHERE station_id=? AND task_date=? AND id<>? AND deleted_at IS NULL ORDER BY created_at,id LIMIT 100",
       )
-        .bind(STATION, today, recurring?.id ?? "")
+        .bind(stationId(env), today, recurring?.id ?? "")
         .all(),
       recurring
         ? env.DB.prepare(
           "SELECT done,revision,created_at FROM station_tasks WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL",
-        ).bind(recurring.id, STATION, today).first<{ done: number; revision: number; created_at: string }>()
+        ).bind(recurring.id, stationId(env), today).first<{ done: number; revision: number; created_at: string }>()
         : Promise.resolve(null),
       env.DB.prepare(
         "SELECT id,title,message,updated_at FROM station_notices WHERE station_id=? AND published=1 AND (expires_on IS NULL OR expires_on>? OR (expires_on=? AND (expires_time IS NULL OR expires_time>=?))) ORDER BY updated_at DESC,id DESC LIMIT 20",
       )
-        .bind(STATION, today, today, localTime)
+        .bind(stationId(env), today, today, localTime)
         .all(),
       env.DB.prepare(
         "SELECT MAX(updated_at) AS updated_at FROM (SELECT updated_at FROM station_schedule_periods WHERE station_id=? UNION ALL SELECT updated_at FROM station_tasks WHERE station_id=? UNION ALL SELECT updated_at FROM station_notices WHERE station_id=?)",
       )
-        .bind(STATION, STATION, STATION)
+        .bind(stationId(env), stationId(env), stationId(env))
         .first<{ updated_at: string | null }>(),
     ]);
     return json({
@@ -252,7 +252,7 @@ export async function stationV2Api(
     await env.DB.prepare(
       "INSERT INTO station_tasks(id,station_id,task_date,text,created_at,updated_at) VALUES(?,?,?,?,?,?)",
     )
-      .bind(id, STATION, today, taskText, now, now)
+      .bind(id, stationId(env), today, taskText, now, now)
       .run();
     return json({ id }, 201);
   }
@@ -275,10 +275,10 @@ export async function stationV2Api(
       const result = expected === 0
         ? await env.DB.prepare(
           "INSERT OR IGNORE INTO station_tasks(id,station_id,task_date,text,done,revision,created_at,updated_at) VALUES(?,?,?,?,?,1,?,?)",
-        ).bind(recurring.id, STATION, today, recurring.text, data.done ? 1 : 0, now, now).run()
+        ).bind(recurring.id, stationId(env), today, recurring.text, data.done ? 1 : 0, now, now).run()
         : await env.DB.prepare(
           "UPDATE station_tasks SET text=?,done=?,revision=revision+1,updated_at=? WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL AND revision=?",
-        ).bind(recurring.text, data.done ? 1 : 0, now, recurring.id, STATION, today, expected).run();
+        ).bind(recurring.text, data.done ? 1 : 0, now, recurring.id, stationId(env), today, expected).run();
       if (result.meta.changes !== 1)
         fail(409, "Uppgiften har ändrats på en annan enhet. Uppdatera listan.");
       return json({ ok: true });
@@ -297,7 +297,7 @@ export async function stationV2Api(
       result = await env.DB.prepare(
         "UPDATE station_tasks SET deleted_at=?,updated_at=?,revision=revision+1 WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL AND revision=?",
       )
-        .bind(now, now, taskId[1], STATION, today, expected)
+        .bind(now, now, taskId[1], stationId(env), today, expected)
         .run();
     } else {
       if (typeof data.done !== "boolean")
@@ -313,7 +313,7 @@ export async function stationV2Api(
           data.done ? 1 : 0,
           now,
           taskId[1],
-          STATION,
+          stationId(env),
           today,
           expected,
         )
@@ -328,12 +328,12 @@ export async function stationV2Api(
       env.DB.prepare(
         "SELECT * FROM station_schedule_periods WHERE station_id=? ORDER BY starts_on DESC LIMIT 30",
       )
-        .bind(STATION)
+        .bind(stationId(env))
         .all(),
       env.DB.prepare(
         "SELECT s.* FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id=? ORDER BY s.work_date DESC,s.starts_at LIMIT 1000",
       )
-        .bind(STATION)
+        .bind(stationId(env))
         .all(),
     ]);
     return json({ periods: periods.results, shifts: shifts.results });
@@ -374,7 +374,7 @@ export async function stationV2Api(
     }
     const existing = await env.DB.prepare(
       "SELECT s.work_date,s.first_name,s.starts_at,s.ends_at,s.status FROM station_shifts s JOIN station_schedule_periods p ON p.id=s.period_id WHERE p.station_id=? AND s.work_date BETWEEN ? AND ?",
-    ).bind(STATION, addDays(startsOn, -1), addDays(endsOn, 1)).all<ScheduleRow>();
+    ).bind(stationId(env), addDays(startsOn, -1), addDays(endsOn, 1)).all<ScheduleRow>();
     const conflicts = findScheduleConflicts(rows, existing.results);
     if (conflicts.length) {
       const first = conflicts[0];
@@ -388,7 +388,7 @@ export async function stationV2Api(
       await env.DB.batch([
         env.DB.prepare(
           "INSERT INTO station_schedule_periods(id,station_id,label,starts_on,ends_on,created_at,updated_at) VALUES(?,?,?,?,?,?,?)",
-        ).bind(period, STATION, label, startsOn, endsOn, now, now),
+        ).bind(period, stationId(env), label, startsOn, endsOn, now, now),
         ...rows.map((row) =>
           env.DB.prepare(
             "INSERT INTO station_shifts(id,period_id,work_date,first_name,starts_at,ends_at,status,updated_at) VALUES(?,?,?,?,?,?,?,?)",
@@ -428,7 +428,7 @@ export async function stationV2Api(
     const period = await env.DB.prepare(
       "SELECT starts_on,ends_on FROM station_schedule_periods WHERE id=? AND station_id=?",
     )
-      .bind(periodId, STATION)
+      .bind(periodId, stationId(env))
       .first<{ starts_on: string; ends_on: string }>();
     if (
       !period ||
@@ -490,7 +490,7 @@ export async function stationV2Api(
         now,
         shiftId[1],
         expected,
-        STATION,
+        stationId(env),
         row.work_date,
       )
       .run()
@@ -510,7 +510,7 @@ export async function stationV2Api(
     const rows = await env.DB.prepare(
       "SELECT * FROM station_notices WHERE station_id=? ORDER BY updated_at DESC LIMIT 100",
     )
-      .bind(STATION)
+      .bind(stationId(env))
       .all();
     return json(rows.results);
   }
@@ -532,7 +532,7 @@ export async function stationV2Api(
     )
       .bind(
         id,
-        STATION,
+        stationId(env),
         text(data.title, "Rubrik", 100),
         text(data.message, "Meddelande", 1000),
         data.published ? 1 : 0,
@@ -561,7 +561,7 @@ export async function stationV2Api(
       result = await env.DB.prepare(
         "DELETE FROM station_notices WHERE id=? AND station_id=? AND revision=?",
       )
-        .bind(noticeId[1], STATION, expected)
+        .bind(noticeId[1], stationId(env), expected)
         .run();
     else {
       if (
@@ -584,7 +584,7 @@ export async function stationV2Api(
           data.expires_time ?? null,
           now,
           noticeId[1],
-          STATION,
+          stationId(env),
           expected,
         )
         .run();
