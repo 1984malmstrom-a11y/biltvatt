@@ -1,3 +1,4 @@
+import { stationNameUpper } from "./station-brand";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ChevronRight, ClipboardCheck, Croissant, LockKeyhole, Sandwich, X } from "lucide-react";
@@ -173,7 +174,7 @@ export default function StationHandbook({ onClose }: { onClose: () => void }) {
   return createPortal(<div className="hb-overlay" role="presentation">
     <section className="hb-dialog" role="dialog" aria-modal="true" aria-labelledby="hb-dialog-title" ref={dialogRef} tabIndex={-1}>
       <div className="hb-dialog-toolbar">
-        {selected ? <button className="hb-dialog-back" ref={backRef} onClick={() => { setSelected(null); setError(""); }}><ArrowLeft size={17} /> Till Personalpärmen</button> : <span className="hb-dialog-brand">PREEM TINGSRYD</span>}
+        {selected ? <button className="hb-dialog-back" ref={backRef} onClick={() => { setSelected(null); setError(""); }}><ArrowLeft size={17} /> Till Personalpärmen</button> : <span className="hb-dialog-brand">{stationNameUpper}</span>}
         <span className="hb-dialog-title" id="hb-dialog-title">Personalpärmen</span>
         <button className="hb-close" ref={closeRef} onClick={onClose} aria-label="Stäng Personalpärmen"><X size={22} /></button>
       </div>
