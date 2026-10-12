@@ -12,13 +12,15 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "db:migrate": "wrangler d1 migrations apply tvattligan --local",
+    "db:migrate": "node scripts/master-command.mjs migrate-local",
     "local:secret": "node scripts/local-secret.mjs",
     "push:keys": "node scripts/push-keys.mjs",
     "pwa:icons": "node scripts/create-icons.mjs",
     "setup": "npm run local:secret && npm run db:migrate",
-    "deploy": "npm run build && wrangler deploy",
-    "db:migrate:remote": "wrangler d1 migrations apply tvattligan --remote"
+    "deploy": "node scripts/master-command.mjs deploy",
+    "db:migrate:remote": "node scripts/master-command.mjs migrate-remote",
+    "master:prepare": "node scripts/master-command.mjs prepare",
+    "master:check": "node scripts/master-command.mjs check"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
