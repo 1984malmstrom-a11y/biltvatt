@@ -1,22 +1,22 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tvattligan-master-unconfigured",
+  "name": "tvattligan-master-test",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-07",
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"],
+    "run_worker_first": ["/api/*"]
   },
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "station-master-unconfigured",
-      "database_id": "00000000-0000-0000-0000-000000000000",
-      "migrations_dir": "migrations-master",
-    },
+      "database_name": "stationmastertest",
+      "database_id": "ca2d4bb8-0c28-47b7-9514-8c893ea47c09",
+      "migrations_dir": "migrations-master"
+    }
   ],
-  "vars": { "STATION_ID": "station" },
-  "observability": { "enabled": true },
+  "vars": { "STATION_ID": "mastertest" },
+  "observability": { "enabled": true }
 }
