@@ -4,7 +4,7 @@ import { ApiError, body, checkFields, fail, json, text } from "./http";
 import { stationV2Api } from "./station-v2";
 import { handbookApi } from "./handbook";
 import { wasteApi } from "./waste";
-import { getWeather } from "./weather";
+import { getWeather, smhiPointUrl } from "./weather";
 
 import { stationId } from "./station-config";
 const MAX_ORE = 10_000_000_000;
@@ -90,7 +90,15 @@ export async function stationApi(
   if (path === "/api/station/weather" && method === "GET") {
     await viewerOrAdmin(request, env);
     try {
-      return json(await getWeather(), 200, {
+      // Existing local Tingsryd tests retain their historical default.
+      // Other stations must supply their own coordinates or show no forecast.
+      if (stationId(env) !== "tingsryd" &&
+          (!env.STATION_LATITUDE || !env.STATION_LONGITUDE))
+        throw new Error("Stationens väderkoordinater saknas.");
+      const pointUrl = env.STATION_LATITUDE && env.STATION_LONGITUDE
+        ? smhiPointUrl(Number(env.STATION_LATITUDE), Number(env.STATION_LONGITUDE))
+        : undefined;
+      return json(await getWeather(new Date(), fetch, pointUrl), 200, {
         "Cache-Control": "no-store",
       });
     } catch {
