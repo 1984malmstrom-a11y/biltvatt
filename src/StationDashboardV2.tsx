@@ -67,6 +67,13 @@ type Task = {
   created_at: string;
   recurring?: boolean;
 };
+type TaskUpdateResult = {
+  ok: boolean;
+  done: boolean;
+  revision: number;
+  completion: { today: string; total: number; remaining: number; all_done: boolean };
+  tasks: Task[];
+};
 type Notice = {
   id: string;
   title: string;
@@ -258,7 +265,9 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
   const [celebratingTasks, setCelebratingTasks] = useState(false);
+  const [celebrationRun, setCelebrationRun] = useState(0);
   const celebrationTimer = useRef<number | null>(null);
+  const overviewRequest = useRef(0);
   const [taskHistoryOpen, setTaskHistoryOpen] = useState(false);
   const [taskHistoryDay, setTaskHistoryDay] = useState("");
   const [taskHistoryEvents, setTaskHistoryEvents] = useState<TaskHistoryEvent[]>([]);
@@ -274,17 +283,24 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     if (window.location.pathname === "/station/handbook") window.history.replaceState(null, "", "/station");
   }, []);
   const load = useCallback(async () => {
+    const requestId = ++overviewRequest.current;
+    const overviewLoad = api<Overview>("/station/v2").then((value) => {
+      // Show the To-do data as soon as it arrives, even if sales is still loading.
+      if (requestId === overviewRequest.current) setOverview(value);
+      return value;
+    });
     const [sales, other] = await Promise.allSettled([
       api<Summary>("/station/dashboard"),
-      api<Overview>("/station/v2"),
+      overviewLoad,
     ]);
     if (sales.status === "fulfilled") setSummary(sales.value);
-    if (other.status === "fulfilled") setOverview(other.value);
     if ([sales, other].some((result) => result.status === "rejected" &&
         result.reason instanceof HttpError && result.reason.status === 401)) {
       window.location.replace("/station/login");
       return null;
     }
+    // A background read started before a successful write must not replace its result.
+    if (requestId !== overviewRequest.current) return null;
     setError(sales.status === "fulfilled" && other.status === "fulfilled"
       ? "" : "Kunde inte hämta stationsuppgifterna. Försök igen.");
     return other.status === "fulfilled" ? other.value : null;
@@ -370,6 +386,15 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       setBusy(false);
     }
   }
+  function startTaskCelebration() {
+    if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+    setCelebrationRun((run) => run + 1);
+    setCelebratingTasks(true);
+    celebrationTimer.current = window.setTimeout(() => {
+      setCelebratingTasks(false);
+      celebrationTimer.current = null;
+    }, 1800);
+  }
   async function updateTask(task: Task, action: "toggle" | "edit" | "delete") {
     if (task.recurring && action !== "toggle") return;
     let updated = task.text;
@@ -385,8 +410,9 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     )
       return;
     setBusy(true);
+    let saved: TaskUpdateResult;
     try {
-      await api(
+      saved = await api<TaskUpdateResult>(
         `/station/v2/tasks/${task.id}`,
         send(
           action === "delete" ? "DELETE" : "PUT",
@@ -401,25 +427,48 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       );
     } catch (e) {
       setError("Ändringen kunde inte sparas. Listan har uppdaterats.");
-      await load();
+      try {
+        const latest = await api<Overview>("/station/v2");
+        overviewRequest.current++;
+        setOverview(latest);
+      } catch (refreshError) {
+        if (refreshError instanceof HttpError && refreshError.status === 401)
+          window.location.replace("/station/login");
+      }
       setBusy(false);
       return;
     }
     try {
-      // A confirmed task update must not wait for the unrelated sales dashboard.
-      const latest = await api<Overview>("/station/v2");
-      setOverview(latest);
-      setError("");
-      if (action === "toggle" && !task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
-          latest.today === overview.today && latest.tasks.length > 0 &&
-          latest.tasks.every((item) => Boolean(item.done))) {
-        if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
-        setCelebratingTasks(true);
-        celebrationTimer.current = window.setTimeout(() => {
-          setCelebratingTasks(false);
-          celebrationTimer.current = null;
-        }, 1500);
+      if (action === "toggle") {
+        // The Worker counts today's manual and recurring tasks after the revisioned write.
+        // Neither sales nor a second To-do GET is needed to show the confirmation.
+        if (saved.completion && Number.isSafeInteger(saved.revision) && Array.isArray(saved.tasks)) {
+          overviewRequest.current++;
+          setOverview((current) => current?.today === saved.completion.today
+            ? { ...current, tasks: saved.tasks }
+            : current);
+          if (task.done && !saved.done) {
+            if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+            celebrationTimer.current = null;
+            setCelebratingTasks(false);
+          }
+          if (!task.done && saved.done && saved.completion.total > 0 && saved.completion.all_done)
+            startTaskCelebration();
+        } else {
+          // An older Worker can answer during a rolling update. Keep it usable.
+          const latest = await api<Overview>("/station/v2");
+          overviewRequest.current++;
+          setOverview(latest);
+          if (!task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
+              latest.today === overview.today && latest.tasks.length > 0 &&
+              latest.tasks.every((item) => Boolean(item.done))) startTaskCelebration();
+        }
+      } else {
+        const latest = await api<Overview>("/station/v2");
+        overviewRequest.current++;
+        setOverview(latest);
       }
+      setError("");
     } catch (e) {
       if (e instanceof HttpError && e.status === 401) window.location.replace("/station/login");
       else setError("Uppgiften sparades, men dagens lista kunde inte hämtas. Försök igen.");
@@ -700,7 +749,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
           </a>
           </div>
           <section className={`v2-panel v2-tasks${celebratingTasks ? " is-celebrating" : ""}`}>
-            {celebratingTasks && <div className="v32-task-celebration" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
+            {celebratingTasks && <div key={celebrationRun} className="v32-task-celebration" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
             <div className="v2-panel-head">
               <h2>
                 <ClipboardCheck /> DAGENS TO-DO
@@ -822,7 +871,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       )}
       {modal === "tasks" && (
         <Modal title="Dagens to-do" onClose={() => { setModal(null); setTaskHistoryOpen(false); }}>
-          {celebratingTasks && <div className="v32-task-celebration v32-task-celebration-modal" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
+          {celebratingTasks && <div key={celebrationRun} className="v32-task-celebration v32-task-celebration-modal" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
           {taskHistoryOpen ? <div className="v32-history-view">
             <button ref={taskHistoryBack} className="v32-history-back" onClick={() => setTaskHistoryOpen(false)}><ArrowLeft size={17} /> Till dagens uppgifter</button>
             <div className="v32-history-heading"><h3>Händelsehistorik</h3><label>Välj dag<input type="date" value={taskHistoryDay} max={overview?.today} onChange={(event) => { setTaskHistoryDay(event.target.value); setTaskHistoryEvents([]); setTaskHistoryCursor(null); if (event.target.value) void loadTaskHistory(event.target.value); }} /></label></div>

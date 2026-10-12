@@ -517,7 +517,7 @@ td { background: #fff; border-color: var(--preem-line); }
   width:45%;
   transform:skewX(-22deg);
   background:linear-gradient(90deg,transparent,#8cd5a273,transparent);
-  animation:v32-task-sweep 1500ms ease-out both;
+  animation:v32-task-sweep 1800ms ease-out both;
 }
 .v32-task-celebration svg,.v32-task-celebration strong { position:relative; z-index:1; }
 .v32-task-celebration svg { width:30px; height:30px; stroke-width:3; }

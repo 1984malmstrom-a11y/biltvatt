@@ -61,7 +61,9 @@ test("firande efter bekräftad sista uppgift, ingen repris vid omladdning och re
   await expect(card.getByText("Snyggt jobbat, team Tingsryd!")).toBeVisible();
   await expect(card.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "2");
   if (previewDir) await page.screenshot({ path: join(previewDir, "01-todo-firande-1024.png") });
-  await page.clock.runFor(1600);
+  await page.clock.runFor(1400);
+  await expect(card.getByText("Snyggt jobbat, team Tingsryd!")).toBeVisible();
+  await page.clock.runFor(500);
   await expect(card.getByText("Snyggt jobbat, team Tingsryd!")).toHaveCount(0);
   await page.reload();
   await expect(card.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "2");

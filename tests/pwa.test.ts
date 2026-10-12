@@ -150,6 +150,9 @@ describe("PWA och Service Worker", () => {
     ]);
     expect(source).not.toContain("caches.");
     expect(source).not.toContain("requestPermission");
+    const headers = readFileSync(new URL("../public/_headers", import.meta.url), "utf8");
+    for (const path of ["/", "/station", "/index.html", "/sw.js"])
+      expect(headers).toContain(`${path}\n  Cache-Control: no-cache, no-store, must-revalidate`);
   });
   it("push hanteras med rätt payload och notification defaults", async () => {
     const sw = serviceWorker();
