@@ -1,3 +1,4 @@
+import { stationName, stationNameUpper } from "./station-brand";
 import { useCallback, useEffect, useState } from "react";
 import {
   ArrowRight,
@@ -86,7 +87,7 @@ function Shell({
         <div className="station-mark">
           <img className="station-mark-icon" src="/preem-logo-review.png" alt="Preem" />
           <div>
-            <strong>PREEM TINGSRYD</strong>
+            <strong>{stationNameUpper}</strong>
             <small>BUTIKSFÖRSÄLJNING</small>
           </div>
         </div>
@@ -94,7 +95,7 @@ function Shell({
       </header>
       {children}
       <footer className="station-foot">
-        <span>Preem Tingsryd · Tillsammans framåt</span>
+        <span>{stationName} · Tillsammans framåt</span>
         {onViewerLogout && (
           <button onClick={onViewerLogout}>Avsluta visning</button>
         )}
@@ -567,12 +568,12 @@ export default function StationApp() {
   useEffect(() => {
     document.title =
       path === "/station/admin"
-        ? "Administration · Preem Tingsryd"
+        ? `Administration · ${stationName}`
         : path === "/station/handbook"
-          ? "Personalpärmen · Preem Tingsryd"
+          ? `Personalpärmen · ${stationName}`
         : path === "/station/login"
-          ? "Aktivera visning · Preem Tingsryd"
-          : "Butiksförsäljning · Preem Tingsryd";
+          ? `Aktivera visning · ${stationName}`
+          : `Butiksförsäljning · ${stationName}`;
   }, [path]);
   return path === "/station/admin" ? (
     <StationAdmin />
