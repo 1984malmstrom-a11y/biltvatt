@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tvattligan",
+  "name": "tvattligan-master-unconfigured",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-07",
   "assets": {
@@ -12,10 +12,11 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "tvattligan",
-      "database_id": "695033b7-6bb2-47a3-a9c3-08d4ca818088",
-      "migrations_dir": "migrations",
+      "database_name": "station-master-unconfigured",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations-master",
     },
   ],
+  "vars": { "STATION_ID": "station" },
   "observability": { "enabled": true },
 }
