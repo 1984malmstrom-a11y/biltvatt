@@ -1,3 +1,4 @@
+import { stationName } from "./station-brand";
 import {
   CarFront,
   Droplets,
@@ -28,7 +29,7 @@ export function Brand() {
       </div>
       <div>
         <strong>Tvättligan</strong>
-        <span>Preem Tingsryd – Biltvättsförsäljning</span>
+        <span>{stationName} – Biltvättsförsäljning</span>
       </div>
     </div>
   );
