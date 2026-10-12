@@ -3,7 +3,7 @@ import { body, checkFields, fail, json, text } from "./http";
 import { HANDBOOK_KINDS, isHandbookContent, isHandbookKind, preserveUnchangedChecks, stockholmToday, type HandbookContent, type HandbookKind } from "../shared/handbook";
 import { containsSensitiveAccessText, contentHasSensitiveAccessText, contentHasUnredactedAccessText } from "../shared/handbook-security";
 
-const STATION = "tingsryd";
+import { stationId } from "./station-config";
 type Head = {
   kind: HandbookKind; published_version_id: string | null; draft_title: string | null;
   draft_description: string | null; draft_json: string | null; draft_reviewed: number;
@@ -16,12 +16,12 @@ const checkId = (value: string) => /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}
 
 async function readHead(env: Env, kind: HandbookKind) {
   return env.DB.prepare("SELECT * FROM station_handbook_heads WHERE station_id=? AND kind=?")
-    .bind(STATION, kind).first<Head>();
+    .bind(stationId(env), kind).first<Head>();
 }
 async function published(env: Env, id: string | null) {
   if (!id) return null;
   return env.DB.prepare("SELECT id,title,description,content_json,published_at FROM station_handbook_versions WHERE id=? AND station_id=?")
-    .bind(id, STATION).first<Version>();
+    .bind(id, stationId(env)).first<Version>();
 }
 async function documentFor(env: Env, kind: HandbookKind) {
   const head = await readHead(env, kind);
@@ -84,7 +84,7 @@ export async function handbookApi(
     const content = parseContent(live!.content_json);
     const checks = kind === "bakeoff" || kind === "freshfood" ? [] : (await env.DB.prepare(
       "SELECT item_id,done,revision FROM station_handbook_checks WHERE station_id=? AND kind=? AND task_date=?",
-    ).bind(STATION, kind, day).all<{item_id:string;done:number;revision:number}>()).results;
+    ).bind(stationId(env), kind, day).all<{item_id:string;done:number;revision:number}>()).results;
     return json({ kind, id: live!.id, title: live!.title, description: live!.description, content, day, checks });
   }
   const toggle = path.match(/^\/api\/station\/handbook\/(opening|closing)\/checks\/([0-9a-f-]{36})$/i);
@@ -105,9 +105,9 @@ export async function handbookApi(
     const now = new Date().toISOString();
     const result = expected === 0
       ? await env.DB.prepare("INSERT OR IGNORE INTO station_handbook_checks(station_id,kind,task_date,item_id,done,revision,updated_at) VALUES(?,?,?,?,?,1,?)")
-        .bind(STATION, kind, day, itemId, data.done ? 1 : 0, now).run()
+        .bind(stationId(env), kind, day, itemId, data.done ? 1 : 0, now).run()
       : await env.DB.prepare("UPDATE station_handbook_checks SET done=?,revision=revision+1,updated_at=? WHERE station_id=? AND kind=? AND task_date=? AND item_id=? AND revision=?")
-        .bind(data.done ? 1 : 0, now, STATION, kind, day, itemId, expected).run();
+        .bind(data.done ? 1 : 0, now, stationId(env), kind, day, itemId, expected).run();
     if (result.meta.changes !== 1) fail(409, "Checklistan har ändrats på en annan enhet. Uppdatera vyn.");
     return json({ ok: true, revision: expected + 1, day });
   }
@@ -127,7 +127,7 @@ export async function handbookApi(
     const expected = version(data.expected_revision);
     const now = new Date().toISOString();
     await env.DB.prepare("INSERT OR IGNORE INTO station_handbook_heads(station_id,kind,updated_at) VALUES(?,?,?)")
-      .bind(STATION, kind, now).run();
+      .bind(stationId(env), kind, now).run();
     const head = await readHead(env, kind);
     const previous = await published(env, head?.published_version_id ?? null);
     const content = preserveUnchangedChecks(validContent, previous ? parseContent(previous.content_json) : null);
@@ -136,7 +136,7 @@ export async function handbookApi(
       if (earlier?.weekend) content.weekend = earlier.weekend;
     }
     const result = await env.DB.prepare("UPDATE station_handbook_heads SET draft_title=?,draft_description=?,draft_json=?,draft_reviewed=?,revision=revision+1,updated_at=? WHERE station_id=? AND kind=? AND revision=?")
-      .bind(title, description, JSON.stringify(content), data.reviewed ? 1 : 0, now, STATION, kind, expected).run();
+      .bind(title, description, JSON.stringify(content), data.reviewed ? 1 : 0, now, stationId(env), kind, expected).run();
     if (result.meta.changes !== 1) fail(409, "Dokumentet har ändrats. Uppdatera adminvyn.");
     return json({ ok: true, revision: expected + 1, content });
   }
@@ -150,7 +150,7 @@ export async function handbookApi(
     const now = new Date().toISOString();
     if (action === "unpublish") {
       const result = await env.DB.prepare("UPDATE station_handbook_heads SET published_version_id=NULL,revision=revision+1,updated_at=? WHERE station_id=? AND kind=? AND revision=?")
-        .bind(now, STATION, kind, expected).run();
+        .bind(now, stationId(env), kind, expected).run();
       if (result.meta.changes !== 1) fail(409, "Dokumentet har ändrats.");
       return json({ ok: true, revision: expected + 1 });
     }
@@ -168,9 +168,9 @@ export async function handbookApi(
       fail(400, "FreshFood-guiden saknar innehåll.");
     const id = crypto.randomUUID();
     await env.DB.prepare("INSERT INTO station_handbook_versions(id,station_id,kind,title,description,content_json,published_at) VALUES(?,?,?,?,?,?,?)")
-      .bind(id, STATION, kind, currentHead.draft_title, currentHead.draft_description, currentHead.draft_json, now).run();
+      .bind(id, stationId(env), kind, currentHead.draft_title, currentHead.draft_description, currentHead.draft_json, now).run();
     const result = await env.DB.prepare("UPDATE station_handbook_heads SET published_version_id=?,draft_title=NULL,draft_description=NULL,draft_json=NULL,draft_reviewed=0,revision=revision+1,updated_at=? WHERE station_id=? AND kind=? AND revision=?")
-      .bind(id, now, STATION, kind, expected).run();
+      .bind(id, now, stationId(env), kind, expected).run();
     if (result.meta.changes !== 1) fail(409, "Dokumentet har ändrats. Uppdatera adminvyn.");
     return json({ ok: true, id, revision: expected + 1 });
   }
