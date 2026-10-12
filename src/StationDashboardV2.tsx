@@ -1,3 +1,4 @@
+import { stationNameUpper, stationCity, stationCityUpper } from "./station-brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -398,10 +399,10 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     summary?.net_sales_ore === null || !summary
       ? "Gårdagens resultat väntar på registrering."
       : summary.percent === null
-        ? "Tillsammans framåt, team Tingsryd!"
+        ? `Tillsammans framåt, team ${stationCity}!`
         : summary.percent < 0
-          ? "Ny dag, nya möjligheter för team Tingsryd."
-          : "Starkt jobbat, team Tingsryd!";
+          ? `Ny dag, nya möjligheter för team ${stationCity}.`
+          : `Starkt jobbat, team ${stationCity}!`;
   const bars = summary?.week ?? [];
   const chart = bars.some((bar) => bar.net_sales_ore !== null);
   const selected = bars.find((bar) =>
@@ -423,7 +424,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         <div className="v2-brand">
           <img className="v2-logo-slot" src="/preem-logo-review.png" alt="Preem" />
           <div>
-            <h1>PREEM TINGSRYD</h1>
+            <h1>{stationNameUpper}</h1>
             <p>Stationsdashboard</p>
           </div>
         </div>
@@ -444,8 +445,8 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         </nav>
         <div className="v2-header-right">
           {showWeather ? (
-            <div className="v2-weather" aria-label="Väderprognos för Tingsryd">
-              {weather?.now && <WeatherItem label="TINGSRYD · JUST NU" period={weather.now} />}
+            <div className="v2-weather" aria-label={`Väderprognos för ${stationCity}`}>
+              {weather?.now && <WeatherItem label={`${stationCityUpper} · JUST NU`} period={weather.now} />}
               {weather?.tomorrow && <WeatherItem label="IMORGON CA 12" period={weather.tomorrow} />}
               <span className="v2-weather-source">
                 {WEATHER_DEMO ? "DEMO · TESTVÄRDEN" : "SMHI · PROGNOS"}
