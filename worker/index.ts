@@ -20,6 +20,9 @@ import {
 
 export interface Env {
   DB: D1Database;
+  STATION_ID?: string;
+  STATION_LATITUDE?: string;
+  STATION_LONGITUDE?: string;
   ADMIN_PIN?: string;
   ASSETS?: Fetcher;
   VAPID_PUBLIC_KEY?: string;
