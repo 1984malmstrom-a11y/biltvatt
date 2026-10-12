@@ -1,3 +1,4 @@
+import { stationCity } from "./station-brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, send } from "./api";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
@@ -657,7 +658,7 @@ export default function StationV2Admin() {
             />
           </label>
           <label>
-            Sluttid i Tingsryd (valfritt)
+            Sluttid i {stationCity} (valfritt)
             <input
               type="time"
               value={notice.expires_time}
