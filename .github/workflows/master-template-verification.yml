@@ -1,0 +1,80 @@
+name: Verify MASTER station template (no deployment)
+
+on:
+  push:
+    branches:
+      - feat/master-station-template
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Generate fresh-station migrations
+        run: npm run master:prepare
+
+      - name: Verify a fresh database has no station-specific data
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { DatabaseSync } from 'node:sqlite';
+          import { readdirSync, readFileSync } from 'node:fs';
+          const db = new DatabaseSync(':memory:');
+          const migrations = readdirSync('migrations-master')
+            .filter((name) => /^\d+_.*\.sql$/.test(name)).sort();
+          if (migrations.length < 9) throw new Error('Expected all migrations');
+          for (const name of migrations) {
+            db.exec(readFileSync('migrations-master/' + name, 'utf8'));
+          }
+          const tables = db.prepare(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+          ).all().map((row) => row.name);
+          const permittedSeedTables = new Set(['wash_programs', 'settings']);
+          for (const table of tables) {
+            const count = db.prepare('SELECT COUNT(*) AS n FROM "' + table + '"').get().n;
+            if (!permittedSeedTables.has(table) && count !== 0) {
+              throw new Error('MASTER includes personal data in ' + table + ': ' + count);
+            }
+          }
+          if (db.prepare('SELECT COUNT(*) AS n FROM staff').get().n !== 0) {
+            throw new Error('Employee name buttons must begin empty');
+          }
+          if (db.prepare('SELECT COUNT(*) AS n FROM wash_programs').get().n !== 6) {
+            throw new Error('Six editable wash program defaults are missing');
+          }
+          if (db.prepare('PRAGMA integrity_check').get().integrity_check !== 'ok') {
+            throw new Error('Fresh database has integrity errors');
+          }
+          console.log('PASS: ' + migrations.length + ' migrations, no station data, six wash programs.');
+          db.close();
+          NODE
+
+      - name: Check Cloudflare production safety barrier
+        shell: bash
+        run: |
+          if npm run master:check; then
+            echo "FAIL: unconfigured MASTER must refuse deployment"
+            exit 1
+          fi
+          echo "PASS: placeholder D1 configuration is blocked"
+
+      - name: TypeScript type checking
+        run: npm run typecheck
+
+      - name: Unit and API tests
+        run: npm test
+
+      - name: Create static build, never deploy
+        run: npm run build
