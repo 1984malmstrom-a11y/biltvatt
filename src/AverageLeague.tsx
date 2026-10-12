@@ -1,3 +1,4 @@
+import { stationBenchmark } from "./station-benchmark";
 import type { Stats } from "./types";
 import { sek } from "./api";
 import { Empty } from "./components";
@@ -15,16 +16,17 @@ export function BenchmarkDelta({
   count: number;
   explanation?: boolean;
 }) {
-  const delta = benchmarkComparison(average, count);
+  const reference = stationBenchmark();
+  const delta = reference ? benchmarkComparison(average, count, reference.amount) : null;
   return (
     <div className="benchmark-comparison">
       {delta ? (
         <small className={`benchmark-delta ${delta.tone}`}>{delta.text}</small>
       ) : (
-        <small className="muted">Ingen jämförelse ännu</small>
+        <small className="muted">{reference ? "Ingen jämförelse ännu" : "Referenssnitt saknas"}</small>
       )}
       {explanation && (
-        <small className="benchmark-caption">mot jan–sep 2026 (250 kr)</small>
+        <small className="benchmark-caption">{reference ? `mot ${reference.label} (${reference.amount.toLocaleString("sv-SE")} kr)` : "Inget referenssnitt inlagt ännu"}</small>
       )}
     </div>
   );
@@ -48,7 +50,7 @@ export function AverageLeague({
         Topplista snittköp <span className="league-period">· {periodLabel}</span>
       </h3>
       <p className="muted small-text league-caption">
-        Minst 3 giltiga tvättar · jämförelse mot jan–sep 2026 (250 kr)
+        Minst 3 giltiga tvättar · {stationBenchmark() ? `jämförelse mot ${stationBenchmark()!.label} (${stationBenchmark()!.amount.toLocaleString("sv-SE")} kr)` : "referenssnitt inte inställt"}
       </p>
       {!qualifying.length ? (
         <Empty>
