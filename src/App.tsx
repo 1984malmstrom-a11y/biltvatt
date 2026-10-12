@@ -50,7 +50,7 @@ const programImages: Record<string, string> = {
   fin: "/wash-programs/fin",
   borstlos: "/wash-programs/borstlos",
 };
-const victoryImages = Array.from({ length: 5 }, (_, index) =>
+const victoryImages = Array.from({ length: 6 }, (_, index) =>
   `/celebrations/victory-${index + 1}.webp`,
 );
 type Celebration = {

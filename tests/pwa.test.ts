@@ -150,7 +150,7 @@ describe("PWA och Service Worker", () => {
     ]);
     expect(source).not.toContain("caches.");
     expect(source).not.toContain("requestPermission");
-    const headers = readFileSync(new URL("../public/_headers", import.meta.url), "utf8");
+    const headers = readFileSync(new URL("../public/_headers", import.meta.url), "utf8").replace(/\r\n/g, "\n");
     for (const path of ["/", "/station", "/index.html", "/sw.js"])
       expect(headers).toContain(`${path}\n  Cache-Control: no-cache, no-store, must-revalidate`);
   });
