@@ -1,10 +1,11 @@
 import { stationNameUpper } from "./station-brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
+import { ArrowLeft, Check, History, Pencil, Plus, Trash2, X } from "lucide-react";
 import { api, send } from "./api";
 import { sortWaste, wasteStatus, wasteStatusLabel, type WasteItem } from "../shared/waste";
 import { stockholmToday } from "../shared/handbook";
+import { historyDay, historyTime, wasteHistoryDescription, type HistoryPage, type WasteHistoryEvent } from "../shared/station-history";
 import "./waste.css";
 
 function formatDate(day: string) { return new Intl.DateTimeFormat("sv-SE", { day: "numeric", month: "short", timeZone: "Europe/Stockholm" }).format(new Date(`${day}T12:00:00Z`)); }
@@ -18,6 +19,13 @@ export default function StationWaste() {
   const [editing, setEditing] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [eventsOpen, setEventsOpen] = useState(false);
+  const [events, setEvents] = useState<WasteHistoryEvent[]>([]);
+  const [eventsCursor, setEventsCursor] = useState<number | null>(null);
+  const [eventsLoading, setEventsLoading] = useState(false);
+  const [eventsError, setEventsError] = useState("");
+  const eventsRequest = useRef(0);
+  const eventsBack = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const load = useCallback(async () => { try { const result = await api<{ items: WasteItem[] }>("/station/waste"); setItems(result.items); setError(""); } catch (cause) { setError((cause as Error).message); } }, []);
@@ -49,6 +57,22 @@ export default function StationWaste() {
     document.addEventListener("keydown", escape);
     return () => { document.removeEventListener("keydown", escape); if (root) root.inert = previousInert; document.body.style.overflow = previousOverflow; former?.focus(); };
   }, [open]);
+  useEffect(() => { if (eventsOpen) eventsBack.current?.focus(); }, [eventsOpen]);
+  async function loadEvents(before?: number) {
+    const requestId = ++eventsRequest.current;
+    setEventsLoading(true); setEventsError("");
+    try {
+      const page = await api<HistoryPage<WasteHistoryEvent>>(`/station/waste/history${before ? `?before=${before}` : ""}`);
+      if (requestId !== eventsRequest.current) return;
+      setEvents((previous) => before ? [...previous, ...page.events] : page.events);
+      setEventsCursor(page.next_cursor);
+    } catch (cause) {
+      if (requestId === eventsRequest.current) setEventsError((cause as Error).message);
+    } finally {
+      if (requestId === eventsRequest.current) setEventsLoading(false);
+    }
+  }
+  function openEvents() { setEventsOpen(true); setEvents([]); setEventsCursor(null); void loadEvents(); }
   const active = sortWaste(items.filter((item) => !item.resolved));
   const history = sortWaste(items.filter((item) => item.resolved));
   async function mutate(item: WasteItem, resolved: boolean) {
@@ -86,6 +110,17 @@ export default function StationWaste() {
     </div>;
   };
   return <><section className="v2-panel v2-waste" aria-labelledby="waste-heading"><div className="v2-panel-head"><h2 id="waste-heading">SVINNLISTAN</h2><span>{active.length} aktiva</span></div><div className="waste-preview">{active.length ? active.slice(0, 5).map((item) => row(item)) : <p className="v2-panel-empty">Inga produkter att åtgärda.</p>}</div><button className="waste-more" onClick={() => setOpen(true)}>Se hela listan →</button>{error && <p className="waste-error" role="alert">{error}</p>}</section>
-    {open && createPortal(<div className="waste-overlay"><section className="waste-dialog" role="dialog" aria-modal="true" aria-labelledby="waste-dialog-heading" ref={dialogRef}><header><div><span>{stationNameUpper}</span><h2 id="waste-dialog-heading">Svinnlistan</h2></div><button ref={closeRef} aria-label="Stäng Svinnlistan" onClick={() => setOpen(false)}><X /></button></header><div className="waste-body"><div className="waste-tabs" role="tablist" aria-label="Produktstatus"><button role="tab" aria-selected={tab === "active"} onClick={() => setTab("active")}>Aktiva ({active.length})</button><button role="tab" aria-selected={tab === "history"} onClick={() => setTab("history")}>Åtgärdade ({history.length})</button></div><form className="waste-form" onSubmit={(event) => void save(event)}><label>Produktnamn<input value={name} onChange={(event) => setName(event.target.value)} required maxLength={180} /></label><label>Utgångsdatum<input type="date" value={expires} onChange={(event) => setExpires(event.target.value)} required /></label><button type="submit" disabled={busy}><Plus size={17} /> {editing ? "Spara ändring" : "Lägg till produkt"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setName(""); setExpires(""); }}>Avbryt</button>}</form><div className="waste-list">{(tab === "active" ? active : history).length ? (tab === "active" ? active : history).map((item) => row(item, true)) : <p>Inga produkter här ännu.</p>}</div>{error && <p className="waste-error" role="alert">{error}</p>}</div></section></div>, document.body)}
+    {open && createPortal(<div className="waste-overlay"><section className="waste-dialog" role="dialog" aria-modal="true" aria-labelledby="waste-dialog-heading" ref={dialogRef}><header><div><span>{stationNameUpper}</span><h2 id="waste-dialog-heading">Svinnlistan</h2></div><button ref={closeRef} aria-label="Stäng Svinnlistan" onClick={() => { setOpen(false); setEventsOpen(false); }}><X /></button></header><div className="waste-body">{eventsOpen ? <div className="v32-history-view">
+      <button ref={eventsBack} className="v32-history-back" onClick={() => setEventsOpen(false)}><ArrowLeft size={17} /> Till Svinnlistan</button>
+      <h3>Händelsehistorik</h3>
+      <ol className="v32-history-list">{events.map((event, index) => <li key={event.id}>
+        {(index === 0 || historyDay(events[index - 1].occurred_at) !== historyDay(event.occurred_at)) && <strong className="v32-history-date">{historyDay(event.occurred_at)}</strong>}
+        <div><time dateTime={event.occurred_at}>{historyTime(event.occurred_at)}</time><span>{wasteHistoryDescription(event)}</span></div>
+      </li>)}</ol>
+      {!eventsLoading && !events.length && !eventsError && <p>Inga händelser registrerade ännu.</p>}
+      {eventsError && <p role="alert">{eventsError}</p>}
+      {eventsLoading && <p role="status">Hämtar historik…</p>}
+      {eventsCursor && <button className="v32-history-more" disabled={eventsLoading} onClick={() => void loadEvents(eventsCursor)}>Visa äldre händelser</button>}
+    </div> : <><div className="waste-tabs" role="tablist" aria-label="Produktstatus"><button role="tab" aria-selected={tab === "active"} onClick={() => setTab("active")}>Aktiva ({active.length})</button><button role="tab" aria-selected={tab === "history"} onClick={() => setTab("history")}>Åtgärdade ({history.length})</button></div><form className="waste-form" onSubmit={(event) => void save(event)}><label>Produktnamn<input value={name} onChange={(event) => setName(event.target.value)} required maxLength={180} /></label><label>Utgångsdatum<input type="date" value={expires} onChange={(event) => setExpires(event.target.value)} required /></label><button type="submit" disabled={busy}><Plus size={17} /> {editing ? "Spara ändring" : "Lägg till produkt"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setName(""); setExpires(""); }}>Avbryt</button>}</form><div className="waste-list">{(tab === "active" ? active : history).length ? (tab === "active" ? active : history).map((item) => row(item, true)) : <p>Inga produkter här ännu.</p>}</div><button className="waste-events-button" onClick={openEvents}><History size={16} /> Visa historik</button>{error && <p className="waste-error" role="alert">{error}</p>}</>}</div></section></div>, document.body)}
   </>;
 }

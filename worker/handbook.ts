@@ -55,7 +55,8 @@ export async function handbookApi(
   if (path === "/api/station/handbook" && method === "GET") {
     const documents = await Promise.all(HANDBOOK_KINDS.map(async (kind) => {
       const row = await documentFor(env, kind);
-      return { kind, title: row?.title ?? null, description: row?.description ?? null, available: Boolean(row) };
+      return { kind, title: row?.title ?? null, description: row?.description ?? null,
+        published_at: row?.published_at ?? null, available: Boolean(row) };
     }));
     return json({ documents });
   }

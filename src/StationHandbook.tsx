@@ -4,9 +4,10 @@ import { createPortal } from "react-dom";
 import { ArrowLeft, ChevronRight, ClipboardCheck, Croissant, LockKeyhole, Sandwich, X } from "lucide-react";
 import { api, send, HttpError } from "./api";
 import { BAKEOFF_GROUPS, HANDBOOK_KINDS, HANDBOOK_LABELS, WEEKDAYS, WEEKDAY_LABELS, stockholmWeekday, type HandbookBlock, type HandbookContent, type HandbookKind, type Weekday } from "../shared/handbook";
+import { historyDay, publicationIsNew } from "../shared/station-history";
 
 export type LiveHandbook = { kind: HandbookKind; id: string; title: string; description: string; content: HandbookContent; day: string; checks: { item_id: string; done: number; revision: number }[] };
-type Summary = { kind: HandbookKind; title: string | null; description: string | null; available: boolean };
+type Summary = { kind: HandbookKind; title: string | null; description: string | null; published_at: string | null; available: boolean };
 const icon = { bakeoff: Croissant, opening: ClipboardCheck, closing: LockKeyhole, freshfood: Sandwich };
 
 function InfoBlock({ block }: { block: HandbookBlock }) {
@@ -108,6 +109,7 @@ export default function StationHandbook({ onClose }: { onClose: () => void }) {
   const [pendingKind, setPendingKind] = useState<HandbookKind | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(() => new Date());
   const dialogRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -121,6 +123,10 @@ export default function StationHandbook({ onClose }: { onClose: () => void }) {
       if (cause instanceof HttpError && cause.status === 401) window.location.assign("/station/login");
       else setError((cause as Error).message);
     }).finally(() => setLoading(false));
+  }, []);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 30000);
+    return () => window.clearInterval(timer);
   }, []);
   useEffect(() => {
     if (previousSelected.current !== Boolean(selected)) bodyRef.current?.scrollTo({ top: 0 });
@@ -181,7 +187,7 @@ export default function StationHandbook({ onClose }: { onClose: () => void }) {
       <div className="hb-dialog-body" ref={bodyRef}>
         {selected ? <HandbookDocumentView document={selected} /> : <div className="hb-home">
           <div className="hb-heading"><span className="hb-eyebrow">DIN DIGITALA HANDBOK</span><h1>Personalpärmen</h1><p>Rutiner och upplockningsschema, alltid nära till hands.</p></div>
-          {loading ? <p className="hb-loading" role="status">Laddar personalpärmen…</p> : <div className="hb-cards">{HANDBOOK_KINDS.map((kind, index) => { const entry = documents.find((item) => item.kind === kind); const Icon = icon[kind]; return <button className="hb-card" ref={index === 0 ? firstCardRef : undefined} key={kind} disabled={!entry?.available || Boolean(pendingKind)} onClick={() => void open(kind)}><span className="hb-card-icon"><Icon size={26} /></span><span className="hb-card-copy"><strong>{entry?.title || HANDBOOK_LABELS[kind]}</strong><small>{entry?.available ? entry.description || "Öppna dokumentet" : "Kommer snart"}</small></span><ChevronRight size={20} /></button>; })}</div>}
+          {loading ? <p className="hb-loading" role="status">Laddar personalpärmen…</p> : <div className="hb-cards">{HANDBOOK_KINDS.map((kind, index) => { const entry = documents.find((item) => item.kind === kind); const Icon = icon[kind]; return <button className="hb-card" ref={index === 0 ? firstCardRef : undefined} key={kind} disabled={!entry?.available || Boolean(pendingKind)} onClick={() => void open(kind)}><span className="hb-card-icon"><Icon size={26} /></span>{entry?.available && publicationIsNew(entry.published_at, now) && <span className="hb-card-new">NYTT</span>}<span className="hb-card-copy"><strong>{entry?.title || HANDBOOK_LABELS[kind]}</strong><small>{entry?.available ? entry.description || "Öppna dokumentet" : "Kommer snart"}</small>{entry?.published_at && <small className="hb-card-date">Uppdaterad {historyDay(entry.published_at)}</small>}</span><ChevronRight size={20} /></button>; })}</div>}
           {pendingKind && <p className="hb-loading" role="status">Öppnar {HANDBOOK_LABELS[pendingKind]}…</p>}
         </div>}
         {error && <p className="hb-error hb-dialog-error" role="alert">{error}</p>}

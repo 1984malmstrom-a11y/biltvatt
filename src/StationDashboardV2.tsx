@@ -1,7 +1,8 @@
 import { stationNameUpper, stationCity, stationCityUpper } from "./station-brand";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  ArrowLeft,
   BookOpen,
   CalendarDays,
   CarFront,
@@ -27,7 +28,10 @@ import { api, HttpError, send } from "./api";
 import PreemResultRibbon from "./PreemResultRibbon";
 import StationHandbook from "./StationHandbook";
 import StationWaste from "./StationWaste";
+import StationIssues from "./StationIssues";
 import { formatMonthlyNumber, MONTHLY_CATEGORIES, monthlyTone, type FixedMonthlyMetrics } from "../shared/monthly";
+import { prioritizeTasks } from "../shared/task-priority";
+import { historyDay, historyTime, taskHistoryDescription, type HistoryPage, type TaskHistoryEvent } from "../shared/station-history";
 
 // The isolated Cloudflare Worker verified the SMHI request and public-only cache.
 const WEATHER_ENABLED = true;
@@ -63,6 +67,13 @@ type Task = {
   revision: number;
   created_at: string;
   recurring?: boolean;
+};
+type TaskUpdateResult = {
+  ok: boolean;
+  done: boolean;
+  revision: number;
+  completion: { today: string; total: number; remaining: number; all_done: boolean };
+  tasks: Task[];
 };
 type Notice = {
   id: string;
@@ -254,27 +265,46 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
   const [monthlyError, setMonthlyError] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [busy, setBusy] = useState(false);
+  const [celebratingTasks, setCelebratingTasks] = useState(false);
+  const [celebrationRun, setCelebrationRun] = useState(0);
+  const celebrationTimer = useRef<number | null>(null);
+  const overviewRequest = useRef(0);
+  const [taskHistoryOpen, setTaskHistoryOpen] = useState(false);
+  const [taskHistoryDay, setTaskHistoryDay] = useState("");
+  const [taskHistoryEvents, setTaskHistoryEvents] = useState<TaskHistoryEvent[]>([]);
+  const [taskHistoryCursor, setTaskHistoryCursor] = useState<number | null>(null);
+  const [taskHistoryLoading, setTaskHistoryLoading] = useState(false);
+  const [taskHistoryError, setTaskHistoryError] = useState("");
+  const taskHistoryRequest = useRef(0);
+  const taskHistoryBack = useRef<HTMLButtonElement>(null);
+  const [ferrariVisit, setFerrariVisit] = useState(0);
   const [handbookOpen, setHandbookOpen] = useState(initialHandbookOpen);
   const closeHandbook = useCallback(() => {
     setHandbookOpen(false);
     if (window.location.pathname === "/station/handbook") window.history.replaceState(null, "", "/station");
   }, []);
   const load = useCallback(async () => {
-    try {
-      const [sales, other] = await Promise.all([
-        api<Summary>("/station/dashboard"),
-        api<Overview>("/station/v2"),
-      ]);
-      setSummary(sales);
-      setOverview(other);
-      setError("");
-    } catch (e) {
-      if (e instanceof HttpError && e.status === 401) {
-        window.location.replace("/station/login");
-        return;
-      }
-      setError("Kunde inte hämta stationsuppgifterna. Försök igen.");
+    const requestId = ++overviewRequest.current;
+    const overviewLoad = api<Overview>("/station/v2").then((value) => {
+      // Show the To-do data as soon as it arrives, even if sales is still loading.
+      if (requestId === overviewRequest.current) setOverview(value);
+      return value;
+    });
+    const [sales, other] = await Promise.allSettled([
+      api<Summary>("/station/dashboard"),
+      overviewLoad,
+    ]);
+    if (sales.status === "fulfilled") setSummary(sales.value);
+    if ([sales, other].some((result) => result.status === "rejected" &&
+        result.reason instanceof HttpError && result.reason.status === 401)) {
+      window.location.replace("/station/login");
+      return null;
     }
+    // A background read started before a successful write must not replace its result.
+    if (requestId !== overviewRequest.current) return null;
+    setError(sales.status === "fulfilled" && other.status === "fulfilled"
+      ? "" : "Kunde inte hämta stationsuppgifterna. Försök igen.");
+    return other.status === "fulfilled" ? other.value : null;
   }, []);
   useEffect(() => {
     void load();
@@ -299,6 +329,10 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       document.removeEventListener("visibilitychange", visible);
     };
   }, [load]);
+  useEffect(() => () => {
+    if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+  }, []);
+  useEffect(() => { if (taskHistoryOpen) taskHistoryBack.current?.focus(); }, [taskHistoryOpen]);
   const loadWeather = useCallback(async () => {
     try {
       const result = await api<Weather>("/station/weather");
@@ -322,6 +356,23 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       document.removeEventListener("visibilitychange", visible);
     };
   }, [loadWeather]);
+  useEffect(() => {
+    let lastStart = performance.now();
+    const replay = () => {
+      const now = performance.now();
+      if (now - lastStart < 900) return;
+      lastStart = now;
+      setFerrariVisit((visit) => visit + 1);
+    };
+    const onVisible = () => { if (document.visibilityState === "visible") replay(); };
+    const onPageShow = (event: PageTransitionEvent) => { if (event.persisted) replay(); };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pageshow", onPageShow);
+    };
+  }, []);
   async function addTask(e: React.FormEvent) {
     e.preventDefault();
     if (!newTask.trim()) return;
@@ -335,6 +386,15 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     } finally {
       setBusy(false);
     }
+  }
+  function startTaskCelebration() {
+    if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+    setCelebrationRun((run) => run + 1);
+    setCelebratingTasks(true);
+    celebrationTimer.current = window.setTimeout(() => {
+      setCelebratingTasks(false);
+      celebrationTimer.current = null;
+    }, 1800);
   }
   async function updateTask(task: Task, action: "toggle" | "edit" | "delete") {
     if (task.recurring && action !== "toggle") return;
@@ -351,8 +411,9 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
     )
       return;
     setBusy(true);
+    let saved: TaskUpdateResult;
     try {
-      await api(
+      saved = await api<TaskUpdateResult>(
         `/station/v2/tasks/${task.id}`,
         send(
           action === "delete" ? "DELETE" : "PUT",
@@ -365,10 +426,53 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               },
         ),
       );
-      await load();
     } catch (e) {
       setError("Ändringen kunde inte sparas. Listan har uppdaterats.");
-      await load();
+      try {
+        const latest = await api<Overview>("/station/v2");
+        overviewRequest.current++;
+        setOverview(latest);
+      } catch (refreshError) {
+        if (refreshError instanceof HttpError && refreshError.status === 401)
+          window.location.replace("/station/login");
+      }
+      setBusy(false);
+      return;
+    }
+    try {
+      if (action === "toggle") {
+        // The Worker counts today's manual and recurring tasks after the revisioned write.
+        // Neither sales nor a second To-do GET is needed to show the confirmation.
+        if (saved.completion && Number.isSafeInteger(saved.revision) && Array.isArray(saved.tasks)) {
+          overviewRequest.current++;
+          setOverview((current) => current?.today === saved.completion.today
+            ? { ...current, tasks: saved.tasks }
+            : current);
+          if (task.done && !saved.done) {
+            if (celebrationTimer.current !== null) window.clearTimeout(celebrationTimer.current);
+            celebrationTimer.current = null;
+            setCelebratingTasks(false);
+          }
+          if (!task.done && saved.done && saved.completion.total > 0 && saved.completion.all_done)
+            startTaskCelebration();
+        } else {
+          // An older Worker can answer during a rolling update. Keep it usable.
+          const latest = await api<Overview>("/station/v2");
+          overviewRequest.current++;
+          setOverview(latest);
+          if (!task.done && overview?.tasks.filter((item) => !item.done).length === 1 &&
+              latest.today === overview.today && latest.tasks.length > 0 &&
+              latest.tasks.every((item) => Boolean(item.done))) startTaskCelebration();
+        }
+      } else {
+        const latest = await api<Overview>("/station/v2");
+        overviewRequest.current++;
+        setOverview(latest);
+      }
+      setError("");
+    } catch (e) {
+      if (e instanceof HttpError && e.status === 401) window.location.replace("/station/login");
+      else setError("Uppgiften sparades, men dagens lista kunde inte hämtas. Försök igen.");
     } finally {
       setBusy(false);
     }
@@ -385,7 +489,29 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
       setMonthlyLoading(false);
     }
   }
-  const tasks = overview?.tasks ?? [];
+  async function loadTaskHistory(day: string, before?: number) {
+    const requestId = ++taskHistoryRequest.current;
+    setTaskHistoryLoading(true);
+    setTaskHistoryError("");
+    try {
+      const suffix = before ? `&before=${before}` : "";
+      const page = await api<HistoryPage<TaskHistoryEvent>>(`/station/v2/tasks/history?day=${encodeURIComponent(day)}${suffix}`);
+      if (requestId !== taskHistoryRequest.current) return;
+      setTaskHistoryEvents((current) => before ? [...current, ...page.events] : page.events);
+      setTaskHistoryCursor(page.next_cursor);
+    } catch (cause) {
+      if (requestId === taskHistoryRequest.current) setTaskHistoryError((cause as Error).message);
+    } finally {
+      if (requestId === taskHistoryRequest.current) setTaskHistoryLoading(false);
+    }
+  }
+  function openTaskHistory() {
+    const day = overview?.today ?? "";
+    setTaskHistoryDay(day);
+    setTaskHistoryOpen(true);
+    if (day) void loadTaskHistory(day);
+  }
+  const tasks = useMemo(() => prioritizeTasks(overview?.tasks ?? []), [overview?.tasks]);
   const shifts = overview?.shifts ?? [];
   const notices = overview?.notices ?? [];
   const done = tasks.filter((t) => t.done).length;
@@ -442,6 +568,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <BookOpen size={18} aria-hidden="true" />
             <span>Personalpärm</span>
           </button>
+          <StationIssues />
         </nav>
         <div className="v2-header-right">
           {showWeather ? (
@@ -622,7 +749,8 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
             <ChevronRight aria-hidden="true" />
           </a>
           </div>
-          <section className="v2-panel v2-tasks">
+          <section className={`v2-panel v2-tasks${celebratingTasks ? " is-celebrating" : ""}`}>
+            {celebratingTasks && <div key={celebrationRun} className="v32-task-celebration" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
             <div className="v2-panel-head">
               <h2>
                 <ClipboardCheck /> DAGENS TO-DO
@@ -681,6 +809,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         <StationWaste />
         <div className="v2-station-image">
           <img
+            key={ferrariVisit}
             className="v2-ferrari-art"
             src="/ferrari-campaign-original.png"
             alt="Tanka bil, få en påse Ferrari-godis när du laddar eller tankar."
@@ -742,7 +871,18 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
         </Modal>
       )}
       {modal === "tasks" && (
-        <Modal title="Dagens to-do" onClose={() => setModal(null)}>
+        <Modal title="Dagens to-do" onClose={() => { setModal(null); setTaskHistoryOpen(false); }}>
+          {celebratingTasks && <div key={celebrationRun} className="v32-task-celebration v32-task-celebration-modal" role="status"><Check aria-hidden="true" /><strong>Snyggt jobbat, team Tingsryd!</strong></div>}
+          {taskHistoryOpen ? <div className="v32-history-view">
+            <button ref={taskHistoryBack} className="v32-history-back" onClick={() => setTaskHistoryOpen(false)}><ArrowLeft size={17} /> Till dagens uppgifter</button>
+            <div className="v32-history-heading"><h3>Händelsehistorik</h3><label>Välj dag<input type="date" value={taskHistoryDay} max={overview?.today} onChange={(event) => { setTaskHistoryDay(event.target.value); setTaskHistoryEvents([]); setTaskHistoryCursor(null); if (event.target.value) void loadTaskHistory(event.target.value); }} /></label></div>
+            {taskHistoryDay && <p className="v32-history-day">{historyDay(`${taskHistoryDay}T12:00:00Z`)}</p>}
+            <ol className="v32-history-list">{taskHistoryEvents.map((event) => <li key={event.id}><time dateTime={event.occurred_at}>{historyTime(event.occurred_at)}</time><span>{taskHistoryDescription(event)}</span></li>)}</ol>
+            {!taskHistoryLoading && !taskHistoryEvents.length && !taskHistoryError && <p>Inga händelser registrerade denna dag.</p>}
+            {taskHistoryError && <p role="alert">{taskHistoryError}</p>}
+            {taskHistoryLoading && <p role="status">Hämtar historik…</p>}
+            {taskHistoryCursor && <button className="v32-history-more" disabled={taskHistoryLoading} onClick={() => void loadTaskHistory(taskHistoryDay, taskHistoryCursor)}>Visa äldre händelser</button>}
+          </div> : <>
           <form className="v2-add-task" onSubmit={(e) => void addTask(e)}>
             <input
               aria-label="Ny uppgift"
@@ -779,6 +919,8 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
               </div>}
             </div>
           ))}
+          <button className="v32-history-link" onClick={openTaskHistory}>Visa historik</button>
+          </>}
         </Modal>
       )}
       {modal === "notices" && (

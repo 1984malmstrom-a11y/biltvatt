@@ -5,6 +5,7 @@ import { body, checkFields, fail, json, text } from "./http";
 import { findScheduleConflicts, type ScheduleRow } from "../shared/schedule";
 import { isFixedMonthlyMetrics, type FixedMonthlyMetrics } from "../shared/monthly";
 import { isRecurringTaskId, recurringTaskForDay } from "../shared/recurring-tasks";
+import { safeHistoryLabel, type TaskHistoryEvent } from "../shared/station-history";
 
 import { stationId } from "./station-config";
 const isoDay = (value: unknown): value is string =>
@@ -55,6 +56,42 @@ const shiftInput = (value: unknown) => {
 };
 const taskFields = (row: Record<string, unknown>) =>
   text(row.text, "Uppgift", 180);
+async function visibleTasks(env: Env, today: string) {
+  const recurring = recurringTaskForDay(today);
+  const [manual, recurringStatus] = await Promise.all([
+    env.DB.prepare(
+      "SELECT id,text,done,revision,created_at FROM station_tasks WHERE station_id=? AND task_date=? AND id<>? AND deleted_at IS NULL ORDER BY created_at,id LIMIT 100",
+    ).bind(stationId(env), today, recurring?.id ?? "").all(),
+    recurring
+      ? env.DB.prepare(
+        "SELECT done,revision,created_at FROM station_tasks WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL",
+      ).bind(recurring.id, stationId(env), today).first<{ done: number; revision: number; created_at: string }>()
+      : Promise.resolve(null),
+  ]);
+  return [
+    ...(recurring ? [{ ...recurring, recurring: true,
+      done: recurringStatus?.done ?? 0, revision: recurringStatus?.revision ?? 0,
+      created_at: recurringStatus?.created_at ?? `${today}T00:00:00` }] : []),
+    ...manual.results,
+  ];
+}
+async function taskCompletion(env: Env, today: string) {
+  const recurring = recurringTaskForDay(today);
+  const counts = await env.DB.prepare(
+    "SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN done=0 THEN 1 ELSE 0 END),0) AS remaining, COALESCE(SUM(CASE WHEN id=? THEN 1 ELSE 0 END),0) AS recurring_stored FROM station_tasks WHERE station_id=? AND task_date=? AND deleted_at IS NULL",
+  ).bind(recurring?.id ?? "", stationId(env), today).first<{
+    total: number; remaining: number; recurring_stored: number;
+  }>();
+  // An unmaterialized weekly task is visible in the overview and still incomplete.
+  const virtualRecurring = recurring && !counts?.recurring_stored ? 1 : 0;
+  const total = (counts?.total ?? 0) + virtualRecurring;
+  const remaining = (counts?.remaining ?? 0) + virtualRecurring;
+  return { today, total, remaining, all_done: total > 0 && remaining === 0 };
+}
+async function confirmedTaskWrite(env: Env, today: string, done: boolean, revision: number) {
+  const completion = await taskCompletion(env, today);
+  return json({ ok: true, done, revision, completion, tasks: await visibleTasks(env, today) });
+}
 const validMonth = (value: unknown): value is string =>
   typeof value === "string" &&
   /^\d{4}-(0[1-9]|1[0-2])$/.test(value) &&
@@ -196,23 +233,13 @@ export async function stationV2Api(
   }
 
   if (path === "/api/station/v2" && method === "GET") {
-    const recurring = recurringTaskForDay(today);
-    const [shifts, tasks, recurringStatus, notices, latest] = await Promise.all([
+    const [shifts, tasks, notices, latest] = await Promise.all([
       env.DB.prepare(
         "SELECT id,first_name,starts_at,ends_at FROM station_shifts WHERE status='active' AND (work_date=? OR (work_date=? AND ends_at<starts_at AND ends_at>?)) ORDER BY work_date,starts_at,first_name,id",
       )
         .bind(today, addDays(today, -1), localTime)
         .all(),
-      env.DB.prepare(
-        "SELECT id,text,done,revision,created_at FROM station_tasks WHERE station_id=? AND task_date=? AND id<>? AND deleted_at IS NULL ORDER BY created_at,id LIMIT 100",
-      )
-        .bind(stationId(env), today, recurring?.id ?? "")
-        .all(),
-      recurring
-        ? env.DB.prepare(
-          "SELECT done,revision,created_at FROM station_tasks WHERE id=? AND station_id=? AND task_date=? AND deleted_at IS NULL",
-        ).bind(recurring.id, stationId(env), today).first<{ done: number; revision: number; created_at: string }>()
-        : Promise.resolve(null),
+      visibleTasks(env, today),
       env.DB.prepare(
         "SELECT id,title,message,updated_at FROM station_notices WHERE station_id=? AND published=1 AND (expires_on IS NULL OR expires_on>? OR (expires_on=? AND (expires_time IS NULL OR expires_time>=?))) ORDER BY updated_at DESC,id DESC LIMIT 20",
       )
@@ -227,19 +254,23 @@ export async function stationV2Api(
     return json({
       today,
       shifts: shifts.results,
-      tasks: [
-        ...(recurring ? [{
-          ...recurring,
-          recurring: true,
-          done: recurringStatus?.done ?? 0,
-          revision: recurringStatus?.revision ?? 0,
-          created_at: recurringStatus?.created_at ?? `${today}T00:00:00`,
-        }] : []),
-        ...tasks.results,
-      ],
+      tasks,
       notices: notices.results,
       updated_at: latest?.updated_at ?? null,
     });
+  }
+  if (path === "/api/station/v2/tasks/history" && method === "GET") {
+    const params = new URL(request.url).searchParams;
+    const day = params.get("day") ?? today;
+    const rawBefore = params.get("before");
+    if (!isoDay(day) || day > today || (rawBefore !== null && !/^[1-9]\d{0,14}$/.test(rawBefore)))
+      fail(400, "Ogiltigt datum eller historikmarkör.");
+    const before = rawBefore === null ? Number.MAX_SAFE_INTEGER : Number(rawBefore);
+    const rows = (await env.DB.prepare(
+      "SELECT e.id,e.task_date,e.action,e.occurred_at,t.text AS label FROM station_task_events e LEFT JOIN station_tasks t ON t.id=e.task_id AND t.station_id=e.station_id WHERE e.station_id=? AND e.task_date=? AND e.id<? ORDER BY e.id DESC LIMIT 31",
+    ).bind(stationId(env), day, before).all<TaskHistoryEvent>()).results;
+    return json({ day, events: rows.slice(0, 30).map((row) => ({ ...row, label: safeHistoryLabel(row.label) })),
+      next_cursor: rows.length > 30 ? rows[29].id : null });
   }
   if (path === "/api/station/v2/tasks" && method === "POST") {
     await limitTaskWrites(request, env);
@@ -281,7 +312,7 @@ export async function stationV2Api(
         ).bind(recurring.text, data.done ? 1 : 0, now, recurring.id, stationId(env), today, expected).run();
       if (result.meta.changes !== 1)
         fail(409, "Uppgiften har ändrats på en annan enhet. Uppdatera listan.");
-      return json({ ok: true });
+      return confirmedTaskWrite(env, today, data.done as boolean, expected + 1);
     }
     await limitTaskWrites(request, env);
     const data = await body(request);
@@ -321,6 +352,8 @@ export async function stationV2Api(
     }
     if (result.meta.changes !== 1)
       fail(409, "Uppgiften har ändrats på en annan enhet. Uppdatera listan.");
+    if (method === "PUT")
+      return confirmedTaskWrite(env, today, data.done as boolean, expected + 1);
     return json({ ok: true });
   }
   if (path === "/api/admin/station/v2/schedule" && method === "GET") {

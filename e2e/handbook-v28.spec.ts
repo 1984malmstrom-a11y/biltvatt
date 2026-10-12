@@ -81,6 +81,7 @@ async function expectChecklistColumns(dialog: Locator, width: number) {
 }
 
 test("Personalpärmen växlar vy i en tillgänglig popup och bevarar checklistestatus", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-11T10:00:00Z") });
   await mockDashboard(page);
   for (const viewport of [{width:1920,height:1080},{width:1440,height:900},{width:1366,height:768},{width:1024,height:768},{width:1024,height:650},{width:390,height:844}]) {
     await page.unroute("**/api/station/handbook**");

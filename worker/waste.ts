@@ -1,6 +1,7 @@
 import type { Env } from "./index";
 import { body, checkFields, fail, json } from "./http";
 import type { WasteItem } from "../shared/waste";
+import { safeHistoryLabel, type WasteHistoryEvent } from "../shared/station-history";
 
 import { stationId } from "./station-config";
 const date = (value: unknown): value is string => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
@@ -11,8 +12,18 @@ const uuid = (value: string) => /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 
 export async function wasteApi(request: Request, env: Env, authorize: (request: Request, env: Env) => Promise<void>): Promise<Response | null> {
   const path = new URL(request.url).pathname;
-  if (path !== "/api/station/waste" && !/^\/api\/station\/waste\/[0-9a-f-]{36}$/i.test(path)) return null;
+  if (path !== "/api/station/waste" && path !== "/api/station/waste/history" && !/^\/api\/station\/waste\/[0-9a-f-]{36}$/i.test(path)) return null;
   await authorize(request, env);
+  if (path === "/api/station/waste/history" && request.method === "GET") {
+    const rawBefore = new URL(request.url).searchParams.get("before");
+    if (rawBefore !== null && !/^[1-9]\d{0,14}$/.test(rawBefore)) fail(400, "Ogiltig historikmarkör.");
+    const before = rawBefore === null ? Number.MAX_SAFE_INTEGER : Number(rawBefore);
+    const rows = (await env.DB.prepare(
+      "SELECT e.id,e.action,e.old_expires_on,e.new_expires_on,e.occurred_at,w.product_name AS label FROM station_waste_events e LEFT JOIN station_waste_items w ON w.id=e.waste_id AND w.station_id=e.station_id WHERE e.station_id=? AND e.id<? ORDER BY e.id DESC LIMIT 31",
+    ).bind(stationId(env), before).all<WasteHistoryEvent>()).results;
+    return json({ events: rows.slice(0, 30).map((row) => ({ ...row, label: safeHistoryLabel(row.label) })),
+      next_cursor: rows.length > 30 ? rows[29].id : null });
+  }
   if (path === "/api/station/waste" && request.method === "GET") {
     const rows = (await env.DB.prepare("SELECT id,product_name,expires_on,resolved,revision,created_at,updated_at FROM station_waste_items WHERE station_id=? ORDER BY resolved ASC, expires_on ASC, created_at ASC, id ASC")
       .bind(stationId(env)).all<WasteItem>()).results;

@@ -1,3 +1,4 @@
+import { stationName } from "./station-brand";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -1189,7 +1190,7 @@ export default function App() {
                   <dt>Applikation</dt>
                   <dd>Tvättligan 1.0.0</dd>
                   <dt>Station</dt>
-                  <dd>Preem Tingsryd</dd>
+                  <dd>{stationName}</dd>
                   <dt>Tidszon</dt>
                   <dd>Europe/Stockholm</dd>
                   <dt>Administratörsåtkomst</dt>
@@ -1312,7 +1313,7 @@ export default function App() {
       )}
       <PushControls staff={staff} disabled={busy || !!pending} />
       <footer className="app-footer">
-        <span>Tvättligan · Preem Tingsryd</span>
+        <span>Tvättligan · {stationName}</span>
         <span>
           Renare resor varje dag <Sparkles size={14} />
         </span>

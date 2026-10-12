@@ -65,19 +65,21 @@ test("onsdag: fast uppgift ligger först, räknas och kan bockas av och ångras"
   await page.goto("/station?weather-demo=1");
   await waitForArtwork(page);
   const tasks = page.locator(".v2-tasks");
-  const recurring = tasks.locator(".v2-task-row").first();
+  const recurring = tasks.locator(".v2-task-row").filter({ hasText: "Hallmiba beställning senast 22.00" });
   await expect(recurring).toContainText("Hallmiba beställning senast 22.00");
   await expect(recurring.locator(".v2-recurring-icon")).toBeVisible();
   await expect(tasks.locator(".v2-panel-head span")).toHaveText("1 av 4 klara");
-  await expect(tasks.locator(".v2-task-row").nth(1)).toContainText("Kontrollera kylar");
+  await expect(tasks.locator(".v2-task-row").nth(1)).toContainText("Fyll på kaffe");
   if (previewDir) await page.screenshot({ path: `${previewDir}/dashboard-onsdag.png` });
 
   await recurring.click();
   await expect(recurring).toHaveClass(/done/);
+  await expect(tasks.locator(".v2-task-row").nth(2)).toContainText("Hallmiba beställning senast 22.00");
   await expect(tasks.locator(".v2-panel-head span")).toHaveText("2 av 4 klara");
   await tasks.locator(".v2-task-manage").click();
   const dialog = page.getByRole("dialog", { name: "Dagens to-do" });
-  const fixedRow = dialog.locator(".v2-detail-row").first();
+  await expect(dialog.locator(".v2-detail-row").first()).toContainText("Fyll på kaffe");
+  const fixedRow = dialog.locator(".v2-detail-row").filter({ hasText: "Hallmiba beställning senast 22.00" });
   await expect(fixedRow).toContainText("Hallmiba beställning senast 22.00");
   await expect(fixedRow.getByRole("button", { name: "Ändra" })).toHaveCount(0);
   await expect(fixedRow.getByRole("button", { name: "Ta bort" })).toHaveCount(0);
@@ -86,6 +88,7 @@ test("onsdag: fast uppgift ligger först, räknas och kan bockas av och ångras"
   if (previewDir) await dialog.screenshot({ path: `${previewDir}/todo-klar.png` });
   await fixedRow.getByRole("button").click();
   await expect(fixedRow.getByRole("button")).toHaveAttribute("aria-pressed", "false");
+  await expect(tasks.locator(".v2-task-row").first()).toContainText("Hallmiba beställning senast 22.00");
   await expect(tasks.locator(".v2-panel-head span")).toHaveText("1 av 4 klara");
 });
 

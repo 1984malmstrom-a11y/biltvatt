@@ -6,6 +6,7 @@ import StationApp from "./StationApp";
 import "./station.css";
 import "./station-v2.css";
 import "./preem-theme.css";
+import "./issues.css";
 import "./handbook.css";
 import { registerServiceWorker } from "./pwa";
 void registerServiceWorker()?.catch(() => {
