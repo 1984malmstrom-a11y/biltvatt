@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, describe, it, expect } from "vitest";
+import { beforeEach, afterEach, describe, it, expect, vi } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { fixture } from "./fixture";
@@ -13,11 +13,14 @@ import { stockholmDay } from "../worker/stats";
 import type { Stats } from "../src/types";
 let f: ReturnType<typeof fixture>;
 beforeEach(() => {
+  vi.stubEnv("VITE_STATION_BENCHMARK_SEK", "250");
+  vi.stubEnv("VITE_STATION_BENCHMARK_LABEL", "jan–sep 2026");
   f = fixture();
 });
 afterEach(async () => {
   await f.finish();
   f.db.close();
+  vi.unstubAllEnvs();
 });
 describe("Historiskt snittköp: jan–sep 2026 är alltid 250 kr", () => {
   it.each([
@@ -38,6 +41,19 @@ describe("Historiskt snittköp: jan–sep 2026 är alltid 250 kr", () => {
     );
     expect(rendered).toContain(text);
     expect(rendered).toContain("mot jan–sep 2026 (250 kr)");
+  });
+  it("MASTER utan referens använder inte Tingsryds 250 kronor", () => {
+    vi.stubEnv("VITE_STATION_BENCHMARK_SEK", "");
+    const rendered = renderToStaticMarkup(
+      createElement(BenchmarkDelta, { average: 276, count: 3, explanation: true }),
+    );
+    expect(rendered).toContain("Referenssnitt saknas");
+    expect(rendered).not.toContain("250 kr");
+    expect(rendered).not.toContain("+26 kr");
+  });
+  it("beräknar även andra stationers egna referenssnitt", () => {
+    expect(benchmarkComparison(300, 3, 280)?.differenceSek).toBe(20);
+    expect(benchmarkComparison(300, 3, 280)?.text).toContain("+7,1 %");
   });
   it("tom period har ingen missvisande minusjämförelse", () => {
     expect(benchmarkComparison(0, 0)).toBeNull();
