@@ -1,22 +1,28 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tvattligan-master-test",
-  "main": "worker/index.ts",
-  "compatibility_date": "2026-10-07",
-  "assets": {
-    "directory": "./dist/client",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
-  },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "stationmastertest",
-      "database_id": "ca2d4bb8-0c28-47b7-9514-8c893ea47c09",
-      "migrations_dir": "migrations-master"
-    }
-  ],
-  "vars": { "STATION_ID": "mastertest" },
-  "observability": { "enabled": true }
+    "$schema":  "node_modules/wrangler/config-schema.json",
+    "name":  "tvattligan-karlskrona",
+    "main":  "worker/index.ts",
+    "compatibility_date":  "2026-10-07",
+    "assets":  {
+                   "directory":  "./dist/client",
+                   "binding":  "ASSETS",
+                   "not_found_handling":  "single-page-application",
+                   "run_worker_first":  [
+                                            "/api/*"
+                                        ]
+               },
+    "d1_databases":  [
+                         {
+                             "binding":  "DB",
+                             "database_name":  "station-karlskrona",
+                             "database_id":  "10433063-3ab9-4dd9-a7d6-a07a742c1070",
+                             "migrations_dir":  "migrations-master"
+                         }
+                     ],
+    "vars":  {
+                 "STATION_ID":  "karlskrona"
+             },
+    "observability":  {
+                          "enabled":  true
+                      }
 }
