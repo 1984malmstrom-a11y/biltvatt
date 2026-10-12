@@ -1,10 +1,10 @@
 export const HISTORICAL_AVERAGE_BENCHMARK_SEK = 250;
 export const AVERAGE_LEAGUE_MINIMUM_SALES = 3;
-export function benchmarkComparison(average: number, count: number) {
-  if (!count || !Number.isFinite(average)) return null;
-  const differenceSek = average - HISTORICAL_AVERAGE_BENCHMARK_SEK;
+export function benchmarkComparison(average: number, count: number, referenceSek = HISTORICAL_AVERAGE_BENCHMARK_SEK) {
+  if (!count || !Number.isFinite(average) || !Number.isFinite(referenceSek) || referenceSek <= 0) return null;
+  const differenceSek = average - referenceSek;
   const differencePercent =
-    (differenceSek / HISTORICAL_AVERAGE_BENCHMARK_SEK) * 100;
+    (differenceSek / referenceSek) * 100;
   const sign = differenceSek > 0 ? "+" : differenceSek < 0 ? "−" : "±";
   const sek = new Intl.NumberFormat("sv-SE", {
     maximumFractionDigits: 0,
