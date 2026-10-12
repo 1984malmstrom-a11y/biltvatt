@@ -6,7 +6,7 @@ import { handbookApi } from "./handbook";
 import { wasteApi } from "./waste";
 import { getWeather } from "./weather";
 
-const STATION = "tingsryd";
+import { stationId } from "./station-config";
 const MAX_ORE = 10_000_000_000;
 type SaleRow = {
   business_date: string;
@@ -165,7 +165,7 @@ export async function stationApi(
     const rows = await env.DB.prepare(
       "SELECT business_date,net_sales_ore,updated_at FROM station_store_daily_sales WHERE station_id=? AND (business_date BETWEEN ? AND ? OR business_date BETWEEN ? AND ?)",
     )
-      .bind(STATION, weekStart, day, previousWeekStart, previousDay)
+      .bind(stationId(env), weekStart, day, previousWeekStart, previousDay)
       .all<{ business_date: string; net_sales_ore: number; updated_at: string }>();
     const byDate = new Map(rows.results.map((row) => [row.business_date, row]));
     const current =
@@ -198,7 +198,7 @@ export async function stationApi(
     const rows = await env.DB.prepare(
       "SELECT business_date,net_sales_ore,source,revision,created_at,updated_at,actor FROM station_store_daily_sales WHERE station_id=? ORDER BY business_date DESC LIMIT 5000",
     )
-      .bind(STATION)
+      .bind(stationId(env))
       .all<SaleRow>();
     return json({ yesterday: addDays(stockholmDay(), -1), rows: rows.results });
   }
@@ -212,7 +212,7 @@ export async function stationApi(
       const rows = await env.DB.prepare(
         "SELECT action,actor,old_net_sales_ore,new_net_sales_ore,reason,changed_at FROM station_store_sales_audit WHERE station_id=? AND business_date=? ORDER BY id DESC LIMIT 100",
       )
-        .bind(STATION, day)
+        .bind(stationId(env), day)
         .all();
       return json(rows.results);
     }
@@ -234,7 +234,7 @@ export async function stationApi(
         const result = await env.DB.prepare(
           "INSERT OR IGNORE INTO station_store_daily_sales(station_id,business_date,net_sales_ore,source,revision,created_at,updated_at,actor) VALUES(?,?,?,'manual',0,?,?,'ADMIN')",
         )
-          .bind(STATION, day, data.net_sales_ore as number, now, now)
+          .bind(stationId(env), day, data.net_sales_ore as number, now, now)
           .run();
         if (result.meta.changes !== 1)
           fail(409, "Datumet har redan registrerats. Uppdatera listan.");
@@ -248,7 +248,7 @@ export async function stationApi(
             data.net_sales_ore as number,
             now,
             reason,
-            STATION,
+            stationId(env),
             day,
             expected as number,
             data.net_sales_ore as number,
@@ -264,7 +264,7 @@ export async function stationApi(
         await env.DB.prepare(
           "SELECT business_date,net_sales_ore,revision,updated_at FROM station_store_daily_sales WHERE station_id=? AND business_date=?",
         )
-          .bind(STATION, day)
+          .bind(stationId(env), day)
           .first(),
       );
     }
