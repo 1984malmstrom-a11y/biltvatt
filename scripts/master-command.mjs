@@ -21,8 +21,9 @@ const safe = validName(json.name) && json.name !== "tvattligan" &&
   validName(json.vars?.STATION_ID) && json.vars.STATION_ID !== "tingsryd";
 const cmd = process.argv[2] || "check";
 function run(program, args) {
-  const child = spawnSync(process.platform === "win32" ? program + ".cmd" : program, args, {
-    cwd: root, stdio: "inherit", shell: process.platform === "win32",
+  const batch = process.platform === "win32" && ["npm", "npx"].includes(program);
+  const child = spawnSync(batch ? program + ".cmd" : program, args, {
+    cwd: root, stdio: "inherit", shell: batch,
   });
   if (child.error) throw child.error;
   if (child.status !== 0) process.exit(child.status || 1);
