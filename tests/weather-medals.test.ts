@@ -1,9 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fixture } from "./fixture";
-import { getWeather, selectWeather, SMHI_POINT_URL } from "../worker/weather";
+import { getWeather, selectWeather, SMHI_POINT_URL, smhiPointUrl } from "../worker/weather";
 import { medalPlacements } from "../src/medals";
 import { stockholmDay } from "../worker/stats";
 import type { Stats } from "../src/types";
+
+describe("MASTER: väder per station", () => {
+  it("bygger stationsspecifik SMHI-adress och stoppar ogiltiga koordinater", () => {
+    expect(smhiPointUrl(56.525, 14.979)).toBe(SMHI_POINT_URL);
+    expect(smhiPointUrl(57.7, 11.97)).toContain("/lon/11.97/lat/57.7/data.json");
+    expect(() => smhiPointUrl(91, 15)).toThrow("Ogiltiga koordinater");
+    expect(() => smhiPointUrl(57, Number.NaN)).toThrow("Ogiltiga koordinater");
+  });
+});
 
 describe("SMHI SNOW1gv1 prognos", () => {
   const series = {
