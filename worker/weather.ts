@@ -2,8 +2,14 @@ import { addDays, stockholmDay } from "./stats";
 
 // SMHI SNOW1gv1 point forecast, WGS84 coordinates for central Tingsryd.
 // https://opendata.smhi.se/metfcst/snow1gv1
-export const SMHI_POINT_URL =
-  "https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/14.979/lat/56.525/data.json";
+// Configure the weather endpoint per station instead of reusing Tingsryd's forecast.
+export function smhiPointUrl(latitude: number, longitude: number): string {
+  if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+      !Number.isFinite(longitude) || longitude < -180 || longitude > 180)
+    throw new Error("Ogiltiga koordinater för väderprognosen.");
+  return `https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/${longitude}/lat/${latitude}/data.json`;
+}
+export const SMHI_POINT_URL = smhiPointUrl(56.525, 14.979);
 const CACHE_SECONDS = 30 * 60;
 type ForecastStep = {
   time: string;
@@ -68,8 +74,8 @@ export function selectWeather(data: unknown, now = new Date()): Weather {
 
 // Only this public SMHI subrequest is cacheable. The authenticated station API
 // response remains no-store, and the local-day selection runs on every request.
-export function fetchSmhiForecast(fetcher: typeof fetch = fetch): Promise<Response> {
-  return fetcher(SMHI_POINT_URL, {
+export function fetchSmhiForecast(fetcher: typeof fetch = fetch, pointUrl = SMHI_POINT_URL): Promise<Response> {
+  return fetcher(pointUrl, {
     method: "GET",
     headers: { Accept: "application/json" },
     // Workers threw TypeError for redirect:"error" even when SMHI returned
@@ -88,8 +94,9 @@ export function fetchSmhiForecast(fetcher: typeof fetch = fetch): Promise<Respon
 export async function getWeather(
   now = new Date(),
   fetcher: typeof fetch = fetch,
+  pointUrl = SMHI_POINT_URL,
 ): Promise<Weather> {
-  const upstream = await fetchSmhiForecast(fetcher);
+  const upstream = await fetchSmhiForecast(fetcher, pointUrl);
   if (!upstream.ok) throw new Error(`SMHI svarade ${upstream.status}.`);
   return selectWeather(await upstream.json(), now);
 }
