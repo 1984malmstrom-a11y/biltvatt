@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronLeft, ChevronRight, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
@@ -7,6 +7,7 @@ import ArenaDialog from "./ArenaDialog";
 import ArenaAdmin from "./ArenaAdmin";
 import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
+import { arenaStartActivities } from "./arena-start";
 import "./arena.css";
 
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
@@ -15,17 +16,17 @@ function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: Ar
   return src ? <img src={src} alt="" loading={loading} decoding="async" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
-export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl }: {
-  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string;
+export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
+  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;
 }) {
-  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} onClick={onClick}
-    aria-label={`${activity.name}, +${num(activity.points)} poäng`}>
+  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} onClick={onClick} disabled={unavailable}
+    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, +${num(activity.points)} poäng`}>
     {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span></span>}
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading={focus ? "eager" : "lazy"} />
     </span>
     <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>
-    <span className="arena-points">+{num(activity.points)} POÄNG</span>
+    <span className="arena-points">{unavailable ? "EJ UPPLAGD" : `+${num(activity.points)} POÄNG`}</span>
   </button>;
 }
 function Progress({ points, target, label, suffix = "poäng" }: { points: number; target: number; label: string; suffix?: string }) {
@@ -93,7 +94,7 @@ function ArenaHome() {
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
   const [attempt, setAttempt] = useState<Attempt | null>(null), [busy, setBusy] = useState(false), [saleError, setSaleError] = useState("");
   const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "campaign" | null>(null);
-  const [page, setPage] = useState(0), [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const lock = useRef(false), statsRef = useRef(stats), attemptRef = useRef<Attempt | null>(null), statsVersion = useRef(0);
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -122,10 +123,7 @@ function ArenaHome() {
   }, [bootstrap, refresh]);
   useEffect(() => { if (period !== "custom" || (start && end)) { setStats(null); void refresh(); } }, [query, period, start, end, refresh]);
   const setSelection = (next: Attempt | null) => { attemptRef.current = next; setAttempt(next); };
-  const focus = data?.activities.find(a => a.id === data.campaign?.activity_id) ?? data?.activities[0];
-  const other = data?.activities.filter(a => a.id !== focus?.id) ?? [];
-  const pages = Math.max(1, Math.ceil(other.length / 6));
-  useEffect(() => { setPage(p => Math.min(p, pages - 1)); }, [pages]);
+  const [focus, ...other] = arenaStartActivities(data?.activities ?? []);
   const begin = (activity: ArenaActivity) => {
     if (lock.current || attemptRef.current) return;
     celebrationAllowed.current = "";
@@ -195,16 +193,12 @@ function ArenaHome() {
     {error && <div className="arena-error" role="alert">{error}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
       <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA</h2>{controls}<People stats={stats} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}><Trophy /> SE FLER TOPPLISTOR <ChevronRight /></button></aside>
-      <section className="arena-stage" aria-label="Försäljningsaktiviteter" onTouchStart={e => { e.currentTarget.dataset.touch = String(e.touches[0].clientX); }} onTouchEnd={e => {
-        const delta = e.changedTouches[0].clientX - Number(e.currentTarget.dataset.touch);
-        if (Math.abs(delta) > 60) setPage(p => Math.max(0, Math.min(pages - 1, p + (delta < 0 ? 1 : -1))));
-      }}>
+      <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-stats" aria-label="Dagens resultat"><span><BarChart3 /> {stats?.today.count ?? "—"} registreringar</span><span><Star /> {stats ? num(stats.today.points) : "—"} p</span><span><Users /> {stats?.today.sellers ?? "—"} säljare</span></div>
-        {focus ? <>
-          <div className="arena-focus-slot"><ArenaActivityButton activity={focus} focus campaignName={data?.campaign?.name} onClick={() => begin(focus)} /></div>
-          <div className="arena-satellites">{other.slice(page * 6, page * 6 + 6).map((activity, index) => <div key={activity.id} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={activity} onClick={() => begin(activity)} /></div>)}</div>
-          {pages > 1 && <div className="arena-pagination"><button aria-label="Föregående aktiviteter" disabled={page === 0} onClick={() => setPage(p => p - 1)}><ChevronLeft /></button><span>{page + 1} / {pages}</span><button aria-label="Nästa aktiviteter" disabled={page === pages - 1} onClick={() => setPage(p => p + 1)}><ChevronRight /></button></div>}
+        {data ? <>
+          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? () => begin(focus.activity!) : undefined} /></div>
+          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? () => begin(activity) : undefined} /></div>)}</div>
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
       <aside className="arena-stats arena-panel"><span className="arena-eyebrow">STARKARE TILLSAMMANS</span><h2>DAGENS STATS</h2>

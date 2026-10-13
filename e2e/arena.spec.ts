@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import type { ArenaActivity, ArenaBootstrap, ArenaStats } from "../shared/arena";
 
-const activities: ArenaActivity[] = Array.from({ length: 15 }, (_, i) => ({ id: `activity-${i}`, name: ["Biltvätt", "Korv", "Extra dryck", "Kaffe + bulle", "Spolarvätska", "Räksallad", "Isskrapa"][i % 7] + (i > 6 ? ` ${i}` : ""), offer_text: i === 0 ? "Finast Plus" : i === 2 ? "TVÅ FÖR" : "", price_text: i === 2 ? "25:–" : "", points: i === 0 ? 2 : 1, image_key: i === 0 ? "demo-image" : null, category: i % 2 ? "Mat" : "Bilvård", sort_order: i, active: 1 }));
+const activities: ArenaActivity[] = Array.from({ length: 15 }, (_, i) => ({ id: `activity-${i}`, name: ["Biltvätt", "Korv", "Två för 25", "Kaffe + bulle", "Spolarvätska", "Räksallad", "Två för 30"][i % 7] + (i > 6 ? ` ${i}` : ""), offer_text: i === 0 ? "Finast Plus" : i === 2 ? "TVÅ FÖR" : "", price_text: i === 2 ? "25:–" : "", points: i === 0 ? 2 : 1, image_key: i === 0 ? "demo-image" : null, category: i % 2 ? "Mat" : "Bilvård", sort_order: i, active: 1 }));
 const sellers = ["Peter", "Alva", "Sofia", "Erik", "Linnea", "Anton", "Julia", "Oskar", "Maja", "Felix"].map((name, i) => ({ id: `s-${i}`, external_staff_id: String(i), name, color: "#4bd5ff", active: 1 }));
 const boot: ArenaBootstrap = { station: { id: "mastertest", name: "STATIONEN" }, sellers, activities, campaign: { id: "campaign", name: "MÅNADENS FOKUS", activity_id: "activity-0", start_at: "2026-09-30T22:00:00Z", end_at: "2026-10-31T23:00:00Z", target_count: 100, target_points: 200, active: 1 } };
 const stats: ArenaStats = { range: { start: "2026-10-13", end: "2026-10-13", from: "", to: "" }, points: 42, count: 18, today: { points: 42, count: 18, sellers: 3 }, campaign: { ...boot.campaign!, points: 148, count: 70 }, station_goals: [{ id: "g", period_type: "month", start_date: "2026-10-01", end_date: "2026-10-31", target_points: 1000, points: 742 }], personal_goals: [], leaderboard: sellers.map((s, i) => ({ ...s, rank: i + 1, points: 126 - i * 12, count: 12 - i, activities: [] })) };
@@ -25,9 +25,11 @@ const productAssets = [
   ["Räksallad", "06_arena-raksallad.png"],
   ["Två för 30", "07_arena-tva-for-30.png"],
 ];
-const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:"", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
+const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:i === 0 ? "Finast Plus" : "", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
 // Non-transparent pixel bounds in the supplied 1024px originals. Their empty gutters may extend beyond the slot.
 const productAlphaBounds = [[100,118,924,906],[100,269,924,755],[155,100,868,924],[100,192,924,832],[230,100,794,924],[100,182,924,842],[169,100,854,924]];
+// Visible car height measured in checkpoint b1bace1 with the same seven activities and offer text.
+const previousCarHeight: Record<string, number> = { "1920x1080":173.4, "1024x768":114.3, "390x844":82, "844x390":58.9 };
 
 for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   test(`Arena: sju rena produktmotiv med contain och fri text ${width}x${height}`, async ({ page }) => {
@@ -39,12 +41,12 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
     for (let i=0; i<productAssets.length; i++) {
       const [name,file] = productAssets[i], activity = cleanProducts[i];
-      const button = page.getByRole("button", { name:`${name}, +${activity.points} poäng`, exact:true });
+      const button = page.getByRole("button", { name:`${name}${i === 2 || i === 6 ? ":-" : ""}, +${activity.points} poäng`, exact:true });
       const img = button.locator(".arena-product img");
       await expect(img).toHaveAttribute("src", `/arena-products/${file}`);
       await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth === 1024)).toBe(true);
       const geometry = await button.evaluate((el, alpha) => {
-        const product = el.querySelector(".arena-product")!.getBoundingClientRect();
+        const orb = el.getBoundingClientRect();
         const image = el.querySelector("img")!, box = image.getBoundingClientRect(), style = getComputedStyle(image);
         const copy = el.querySelector(".arena-product-copy")!.getBoundingClientRect();
         const badge = el.querySelector(".arena-points")!.getBoundingClientRect();
@@ -53,14 +55,28 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
         const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom"), size = Math.min(width,height);
         const left = box.left+px("left")+(width-size)/2, top = box.top+px("top")+(height-size)/2;
         const motif = { left:left+alpha[0]*size/1024, top:top+alpha[1]*size/1024, right:left+alpha[2]*size/1024, bottom:top+alpha[3]*size/1024 };
-        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=product.left-1 && motif.right<=product.right+1 && motif.top>=product.top-1 && motif.bottom<=product.bottom+1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1 };
+        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top+1 && motif.bottom<=orb.bottom-1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top };
       }, productAlphaBounds[i]);
-      expect(geometry).toEqual({ fit:"contain", position:"50% 50%", inside:true, clear:true });
+      expect(geometry).toMatchObject({ fit:"contain", position:"50% 50%", inside:true, clear:true });
+      if (i === 0) {
+        const ratio = geometry.motifHeight/previousCarHeight[`${width}x${height}`];
+        expect(ratio).toBeGreaterThanOrEqual(1.6); expect(ratio).toBeLessThanOrEqual(1.9);
+      }
       await expect(button.locator(".arena-product-copy")).toContainText(name);
       await expect(button.locator(".arena-points")).toContainText(`+${activity.points} POÄNG`);
       expect(await button.locator("img").count()).toBe(1);
     }
     expect(demos).toEqual([]);
+    const positions = await page.locator(".arena-stage .arena-orb").evaluateAll(orbs => orbs.map(orb => {
+      const r = orb.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2 };
+    }));
+    for (const i of [1,3,5]) expect(positions[i].x).toBeLessThan(positions[0].x);
+    for (const i of [2,4,6]) expect(positions[i].x).toBeGreaterThan(positions[0].x);
+    expect(positions[1].y).toBeLessThan(positions[3].y); expect(positions[3].y).toBeLessThan(positions[5].y);
+    expect(positions[2].y).toBeLessThan(positions[4].y); expect(positions[4].y).toBeLessThan(positions[6].y);
+    const crown = (await page.locator(".arena-focus-slot .arena-crown").boundingBox())!;
+    const focus = (await page.locator(".arena-focus-slot .arena-orb").boundingBox())!;
+    expect(crown.y).toBeGreaterThan(focus.y); expect(crown.y+crown.height).toBeLessThan(focus.y+focus.height);
     expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
     await stateScreenshot(page, `products-${width}x${height}`);
     await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
@@ -85,6 +101,29 @@ test("Arena-admin: samma sju produktbilder i preview och ny uppladdning priorite
   await stateScreenshot(page,"product-upload-preview");
 });
 
+test("Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning", async ({ page }) => {
+  await visualData(page, () => stats);
+  const entries = [...cleanProducts].reverse();
+  entries[4] = { ...entries[4], name:"Två för", price_text:"25:-" };
+  await page.route("**/api/arena/bootstrap", route => route.fulfill({ json:{ ...boot, campaign:{ ...boot.campaign, activity_id:"scraper" }, activities:[{ ...activities[2], id:"extra", name:"Extra dryck" }, { ...activities[6], id:"scraper", name:"Isskrapa" }, ...entries] } }));
+  await page.goto("/arena");
+  await expect(page.locator(".arena-focus-slot .arena-product-copy strong")).toHaveText("Biltvätt");
+  await expect(page.locator(".arena-satellite .arena-product-copy strong")).toHaveText(["Korv med mos","Två för 25:-","Kaffe + bulle","Spolarvätska","Räksallad","Två för 30:-"]);
+  await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+  await expect(page.locator(".arena-stage")).not.toContainText("Extra dryck");
+  await expect(page.locator(".arena-stage")).not.toContainText("Isskrapa");
+  let registered: { activity_id: string } | undefined;
+  await page.route("**/api/arena/registrations", route => {
+    registered = route.request().postDataJSON();
+    return route.fulfill({ json:{ registration:{ id:crypto.randomUUID(), points_awarded:1, voided_at:null } } });
+  });
+  await page.getByRole("button", { name:"Två för 25:-, +1 poäng", exact:true }).click();
+  await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/03_arena-tva-for-25.png");
+  await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  expect(registered?.activity_id).toBe(entries[4].id);
+});
+
 for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   test(`Arena: hero burst är läsbar, kort och klickar igenom ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);
@@ -106,7 +145,7 @@ for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
       expect(box.y).toBeGreaterThanOrEqual(ring.y); expect(box.y+box.height).toBeLessThanOrEqual(ring.y+ring.height);
     }
     await stateScreenshot(page, `hero-burst-${width}x${height}`);
-    await page.getByRole("button", { name:"Korv, +1 poäng", exact:true }).click();
+    await page.getByRole("button", { name:"Korv med mos, +1 poäng", exact:true }).click();
     await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
     await expect(reward).toHaveCount(0, { timeout:1600 });
   });
@@ -188,7 +227,7 @@ test("Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverks
   await expect.poll(() => page.locator(".arena-celebration").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
   await stateScreenshot(page,"registration-reward");
   // The next activity immediately works while celebration is still playing.
-  await page.getByRole("button", { name: "Korv, +1 poäng", exact: true }).click();
+  await page.getByRole("button", { name: "Korv med mos, +1 poäng", exact: true }).click();
   await expect(dialog).toBeVisible(); await expect(dialog.getByRole("button", { name: "Peter", exact: true })).toBeEnabled();
   loseResponse = true; await dialog.getByRole("button", { name: "Peter", exact: true }).click();
   await expect(dialog.getByRole("alert")).toContainText("Svaret kunde inte bekräftas");
@@ -219,7 +258,7 @@ for (const nextSelection of [false,true]) {
     await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
     await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
     await expect(page.locator(".celebration-points")).toBeVisible(); await pending;
-    if (nextSelection) await page.getByRole("button", { name:"Korv, +1 poäng", exact:true }).click();
+    if (nextSelection) await page.getByRole("button", { name:"Korv med mos, +1 poäng", exact:true }).click();
     else await expect(page.locator(".celebration-points")).toHaveCount(0, { timeout:1600 });
     release(); await expect(page.getByRole("button", { name:"Peter 128 p", exact:true })).toHaveCount(1);
     if (nextSelection) {
@@ -318,7 +357,7 @@ for (const kind of ["leader","personal-goal","station-goal"] as const) {
       await stateScreenshot(page, `${kind}-${width}x${height}`);
       await page.emulateMedia({ reducedMotion:"reduce" });
       expect(await reward.locator(".arena-confetti").first().evaluate(el => getComputedStyle(el).display)).toBe("none");
-      await page.getByRole("button", { name:"Korv, +1 poäng", exact:true }).click();
+      await page.getByRole("button", { name:"Korv med mos, +1 poäng", exact:true }).click();
       await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
       await expect(page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true })).toBeEnabled();
     });
@@ -344,8 +383,8 @@ for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
       await buttons.nth(i).click(); await expect(page.getByRole("dialog")).toBeVisible(); await page.getByRole("button", { name: "Stäng", exact: true }).click();
     }
     if (process.env.ARENA_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/arena-${width}x${height}.png` });
-    await page.getByRole("button", { name: "Nästa aktiviteter", exact: true }).click();
-    await expect(page.getByRole("button", { name: "Biltvätt 7, +1 poäng", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name:"Nästa aktiviteter", exact:true })).toHaveCount(0);
+    await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
     await page.emulateMedia({ reducedMotion: "reduce" }); expect(await page.locator(".arena-crown").evaluate(el => getComputedStyle(el).animationName)).toBe("none");
     await page.getByRole("button", { name: "TOPPLISTOR", exact: true }).click(); await expect(page.getByRole("dialog", { name: "Topplistor & statistik" })).toBeVisible();
     await page.getByRole("dialog", { name: "Topplistor & statistik" }).getByRole("button", { name: /Peter/ }).click(); await expect(page.getByRole("dialog", { name: "Peter · Min Arena" })).toBeVisible();
@@ -361,7 +400,7 @@ test("Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI", 
   expect((await page.request.get("/api/arena/bootstrap")).status()).toBe(200);
   const staff = await (await page.request.get("/api/staff")).json() as { id: string; name: string }[];
   expect(staff.length).toBeGreaterThan(0);
-  const activityName = `E2E-${Date.now()}`;
+  const activityName = "Korv med mos";
   await page.goto("/arena/admin"); await expect(page.getByRole("heading", { name: "Skapa aktivitet" })).toBeVisible();
   await page.getByLabel("Namn", { exact: true }).fill(activityName);
   await page.getByLabel("Poäng", { exact: true }).fill("0.5");
@@ -373,14 +412,15 @@ test("Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI", 
   });
   await page.getByLabel("Produktbild", { exact: true }).setInputFiles({ name: "product.png", mimeType: "image/png", buffer: Buffer.from(png) });
   await expect(page.locator(".arena-preview img")).toBeVisible();
+  const created = page.waitForResponse(response => response.url().endsWith("/api/admin/arena/activities") && response.request().method() === "POST");
   await page.getByRole("button", { name: "Spara", exact: true }).click(); await expect(page.getByRole("status")).toContainText("Sparat");
+  const createdId = (await (await created).json()).id;
   const config = await (await page.request.get("/api/admin/arena/config")).json() as { activities: typeof activities };
-  const activity = config.activities.find(a => a.name === activityName)!; expect(activity.image_key).toBeTruthy();
+  const activity = config.activities.find(a => a.id === createdId)!; expect(activity.image_key).toBeTruthy();
   const image = await page.request.get(`/api/arena/activity-images/${activity.image_key}`); expect(image.status()).toBe(200); expect((await image.body()).length).toBeLessThan(250000);
   const baseline = await (await page.request.get("/api/arena/stats")).json() as ArenaStats;
   await page.goto("/arena"); await expect(page.locator(".arena-orb").first()).toBeVisible();
   const ownActivity = page.getByRole("button", { name: `${activityName}, +0,5 poäng`, exact: true });
-  for (let i = 0; !await ownActivity.isVisible() && i < Math.ceil(config.activities.length / 6); i++) await page.getByRole("button", { name: "Nästa aktiviteter", exact: true }).click();
   await ownActivity.click();
   await page.getByRole("dialog").getByRole("button", { name: staffName, exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0); await expect(page.getByRole("status")).toContainText("+0,5 POÄNG!");
