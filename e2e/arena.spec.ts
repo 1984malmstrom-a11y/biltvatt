@@ -13,24 +13,23 @@ async function visualData(page: Page, current: () => ArenaStats) {
   await page.route("**/api/arena/stats*", route => route.fulfill({ json: current() }));
 }
 async function stateScreenshot(page: Page, name: string) {
-  if (process.env.ARENA_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/${name}.png` });
+  if (process.env.ARENA_SCREENSHOT_DIR) {
+    await page.locator(".arena-stage img").evaluateAll(images => Promise.all(images.map(el => (el as HTMLImageElement).decode().catch(() => undefined))));
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/${name}.png` });
+  }
 }
 
 const productAssets = [
-  ["Biltvätt", "01_arena-biltvatt.png"],
-  ["Korv med mos", "02_arena-korv-med-mos.png"],
-  ["Två för 25", "03_arena-tva-for-25.png"],
-  ["Kaffe + bulle", "04_arena-kaffe-bulle.png"],
-  ["Spolarvätska", "05_arena-spolarvatska.png"],
-  ["Räksallad", "06_arena-raksallad.png"],
-  ["Två för 30", "07_arena-tva-for-30.png"],
+  ["Biltvätt", "01_arena-biltvatt.webp"],
+  ["Korv med mos", "02_arena-korv-med-mos.webp"],
+  ["Två för 25", "03_arena-tva-for-25.webp"],
+  ["Kaffe + bulle", "04_arena-kaffe-bulle.webp"],
+  ["Spolarvätska", "05_arena-spolarvatska.webp"],
+  ["Räksallad", "06_arena-raksallad.webp"],
+  ["Två för 30", "07_arena-tva-for-30.webp"],
 ];
 const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:i === 0 ? "Finast Plus" : "", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
-// Non-transparent pixel bounds in the supplied 1024px originals. Their empty gutters may extend beyond the slot.
-const productAlphaBounds = [[100,118,924,906],[100,269,924,755],[155,100,868,924],[100,192,924,832],[230,100,794,924],[100,182,924,842],[169,100,854,924]];
-// Visible car height measured in checkpoint b1bace1 with the same seven activities and offer text.
-const previousCarHeight: Record<string, number> = { "1920x1080":173.4, "1024x768":114.3, "390x844":82, "844x390":58.9 };
-
 for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   test(`Arena: sju rena produktmotiv med contain och fri text ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);
@@ -44,24 +43,30 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
       const button = page.getByRole("button", { name:`${name}${i === 2 || i === 6 ? ":-" : ""}, +${activity.points} poäng`, exact:true });
       const img = button.locator(".arena-product img");
       await expect(img).toHaveAttribute("src", `/arena-products/${file}`);
-      await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth === 1024)).toBe(true);
-      const geometry = await button.evaluate((el, alpha) => {
+      await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0)).toBe(true);
+      const geometry = await button.evaluate(el => {
         const orb = el.getBoundingClientRect();
         const image = el.querySelector("img")!, box = image.getBoundingClientRect(), style = getComputedStyle(image);
+        const canvas=document.createElement("canvas"); canvas.width=image.naturalWidth; canvas.height=image.naturalHeight;
+        const context=canvas.getContext("2d")!; context.drawImage(image,0,0);
+        const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
+        const alpha=[canvas.width,canvas.height,0,0];
+        // Ignore almost invisible edge antialiasing; measure the actual rendered motif.
+        for (let y=0;y<canvas.height;y++) for (let x=0;x<canvas.width;x++) if (pixels[(y*canvas.width+x)*4+3]>=16) {
+          alpha[0]=Math.min(alpha[0],x); alpha[1]=Math.min(alpha[1],y); alpha[2]=Math.max(alpha[2],x+1); alpha[3]=Math.max(alpha[3],y+1);
+        }
         const copy = el.querySelector(".arena-product-copy")!.getBoundingClientRect();
         const badge = el.querySelector(".arena-points")!.getBoundingClientRect();
         const scale = style.transform === "none" ? 1 : new DOMMatrixReadOnly(style.transform).a;
         const px = (side: string) => parseFloat(style.getPropertyValue(`padding-${side}`)) * scale;
         const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom"), size = Math.min(width,height);
         const left = box.left+px("left")+(width-size)/2, top = box.top+px("top")+(height-size)/2;
-        const motif = { left:left+alpha[0]*size/1024, top:top+alpha[1]*size/1024, right:left+alpha[2]*size/1024, bottom:top+alpha[3]*size/1024 };
-        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top+1 && motif.bottom<=orb.bottom-1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top };
-      }, productAlphaBounds[i]);
+        const motif = { left:left+alpha[0]*size/canvas.width, top:top+alpha[1]*size/canvas.height, right:left+alpha[2]*size/canvas.width, bottom:top+alpha[3]*size/canvas.height };
+        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top+1 && motif.bottom<=orb.bottom-1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top, orbHeight:orb.height, motifWidth:motif.right-motif.left, orbWidth:orb.width };
+      });
       expect(geometry).toMatchObject({ fit:"contain", position:"50% 50%", inside:true, clear:true });
-      if (i === 0) {
-        const ratio = geometry.motifHeight/previousCarHeight[`${width}x${height}`];
-        expect(ratio).toBeGreaterThanOrEqual(1.6); expect(ratio).toBeLessThanOrEqual(1.9);
-      }
+      expect(geometry.motifHeight/geometry.orbHeight).toBeGreaterThan(i === 0 ? .45 : .32);
+      expect(geometry.motifWidth/geometry.orbWidth).toBeGreaterThan(i === 0 ? .6 : .25);
       await expect(button.locator(".arena-product-copy")).toContainText(name);
       await expect(button.locator(".arena-points")).toContainText(`+${activity.points} POÄNG`);
       expect(await button.locator("img").count()).toBe(1);
@@ -80,7 +85,77 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
     await stateScreenshot(page, `products-${width}x${height}`);
     await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
-    await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/01_arena-biltvatt.png");
+    await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/01_arena-biltvatt.webp");
+    await page.getByRole("button", { name:"Stäng", exact:true }).click();
+    await page.route("**/api/arena/bootstrap", route => route.fulfill({ json:{ ...boot, activities:cleanProducts.map(a => a.id === "activity-0" || a.id === "activity-2" ? { ...a, active:0 } : a) } }));
+    await page.reload();
+    await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+    for (const name of ["Biltvätt","Två för 25:-"]) {
+      const missing=page.getByRole("button", { name:`${name}, ej upplagd`, exact:true });
+      await expect(missing).toBeDisabled();
+      await expect(missing.locator(".arena-points")).toHaveText("EJ UPPLAGD");
+      await expect.poll(() => missing.locator("img").evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth>0)).toBe(true);
+      const usable=await missing.evaluate(el => {
+        const image=el.querySelector("img")!.getBoundingClientRect(),copy=el.querySelector(".arena-product-copy")!.getBoundingClientRect(),badge=el.querySelector(".arena-points")!.getBoundingClientRect();
+        return { fit:getComputedStyle(el.querySelector("img")!).objectFit, readable:copy.bottom<=badge.top+1, art:image.width>0 };
+      });
+      expect(usable).toEqual({ fit:"contain", readable:true, art:true });
+    }
+    expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight }))).toEqual({ width,height });
+    await stateScreenshot(page, `unavailable-${width}x${height}`);
+  });
+}
+
+for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
+  test(`Arena: premium-topplista behåller perioder, poäng och Min Arena ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width,height }); await visualData(page, () => stats);
+    const queries: URLSearchParams[] = [];
+    await page.route("**/api/arena/stats*", route => {
+      queries.push(new URL(route.request().url()).searchParams);
+      return route.fulfill({ json:stats });
+    });
+    await page.goto("/arena");
+    const desktop = width >= 1024;
+    if (!desktop) await page.getByRole("button", { name:"TOPPLISTOR", exact:true }).click();
+    const panel = desktop ? page.locator(".arena-leaderboard") : page.getByRole("dialog", { name:"Topplistor & statistik" });
+    await expect(panel.locator(".arena-leader-list button")).toHaveCount(10);
+    await expect(panel.locator(".arena-rank")).toHaveText(stats.leaderboard.map(p => String(p.rank)));
+    await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+    for (const person of stats.leaderboard) {
+      await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
+    }
+    const geometry = await panel.locator(".arena-leader-list button").evaluateAll(rows => rows.map(row => {
+      const box=row.getBoundingClientRect(), name=row.children[2].getBoundingClientRect(), points=row.children[3].getBoundingClientRect();
+      return { touch:box.height>=44, distinct:name.right<=points.left, inside:points.right<=box.right && name.left>=box.left };
+    }));
+    expect(geometry.every(row => row.touch && row.distinct && row.inside)).toBe(true);
+    if (width === 1920) {
+      const last = (await panel.locator(".arena-leader-list button").last().boundingBox())!;
+      const list = (await panel.locator(".arena-leader-list").boundingBox())!;
+      expect(last.y+last.height).toBeLessThanOrEqual(list.y+list.height);
+    }
+    const period = panel.getByRole("button", { name:"VECKA", exact:true });
+    await period.click(); await expect(period).toHaveAttribute("aria-pressed","true");
+    await expect.poll(() => queries.at(-1)?.get("period")).toBe("week");
+    await panel.getByRole("button", { name:"MÅNAD", exact:true }).click();
+    await expect.poll(() => queries.at(-1)?.get("period")).toBe("month");
+    await panel.getByRole("button", { name:"PERIOD", exact:true }).click();
+    await panel.getByLabel("Från", { exact:true }).fill("2026-10-01");
+    await panel.getByLabel("Till", { exact:true }).fill("2026-10-13");
+    await expect.poll(() => queries.at(-1)?.get("start")).toBe("2026-10-01");
+    expect(queries.at(-1)?.get("end")).toBe("2026-10-13");
+    expect(queries.at(-1)?.get("period")).toBe("custom");
+    await panel.getByRole("button", { name:"IDAG", exact:true }).click();
+    await expect.poll(() => queries.at(-1)?.get("period")).toBe("today");
+    expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
+    await stateScreenshot(page, `leaderboard-${width}x${height}`);
+    if (desktop) {
+      await panel.getByRole("button", { name:"SE FLER TOPPLISTOR", exact:true }).click();
+      await expect(page.getByRole("dialog", { name:"Topplistor & statistik" })).toBeVisible();
+      await page.getByRole("button", { name:"Stäng", exact:true }).click();
+    }
+    await panel.getByRole("button", { name:"Peter 126 p", exact:true }).click();
+    await expect(page.getByRole("dialog", { name:"Peter · Min Arena" })).toBeVisible();
   });
 }
 
@@ -92,10 +167,10 @@ test("Arena-admin: samma sju produktbilder i preview och ny uppladdning priorite
     await page.getByRole("button", { name:`Redigera aktivitet: ${name}`, exact:true }).click();
     const preview = page.locator(".arena-preview img");
     await expect(preview).toHaveAttribute("src", `/arena-products/${file}`);
-    await expect.poll(() => preview.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBe(1024);
+    await expect.poll(() => preview.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
     expect(await preview.evaluate(el => getComputedStyle(el).objectFit)).toBe("contain");
   }
-  await page.getByLabel("Produktbild", { exact:true }).setInputFiles("public/arena-products/01_arena-biltvatt.png");
+  await page.getByLabel("Produktbild", { exact:true }).setInputFiles("public/arena-products/01_arena-biltvatt.webp");
   await expect(page.locator(".arena-preview img")).toHaveAttribute("src", /^blob:/);
   expect(await page.locator(".arena-preview img").evaluate(el => getComputedStyle(el).objectFit)).toBe("contain");
   await stateScreenshot(page,"product-upload-preview");
@@ -118,7 +193,7 @@ test("Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter oc
     return route.fulfill({ json:{ registration:{ id:crypto.randomUUID(), points_awarded:1, voided_at:null } } });
   });
   await page.getByRole("button", { name:"Två för 25:-, +1 poäng", exact:true }).click();
-  await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/03_arena-tva-for-25.png");
+  await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/03_arena-tva-for-25.webp");
   await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect(registered?.activity_id).toBe(entries[4].id);

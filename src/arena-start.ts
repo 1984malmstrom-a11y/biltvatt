@@ -2,13 +2,13 @@ import type { ArenaActivity } from "../shared/arena";
 import { arenaProductImage } from "./arena-product-images";
 
 const products = [
-  ["biltvatt", "Biltvätt", "01_arena-biltvatt.png"],
-  ["korv", "Korv med mos", "02_arena-korv-med-mos.png"],
-  ["25", "Två för 25:-", "03_arena-tva-for-25.png"],
-  ["kaffe", "Kaffe + bulle", "04_arena-kaffe-bulle.png"],
-  ["spolarvatska", "Spolarvätska", "05_arena-spolarvatska.png"],
-  ["raksallad", "Räksallad", "06_arena-raksallad.png"],
-  ["30", "Två för 30:-", "07_arena-tva-for-30.png"],
+  ["biltvatt", "Biltvätt", "01_arena-biltvatt.webp"],
+  ["korv", "Korv med mos", "02_arena-korv-med-mos.webp"],
+  ["25", "Två för 25:-", "03_arena-tva-for-25.webp"],
+  ["kaffe", "Kaffe + bulle", "04_arena-kaffe-bulle.webp"],
+  ["spolarvatska", "Spolarvätska", "05_arena-spolarvatska.webp"],
+  ["raksallad", "Räksallad", "06_arena-raksallad.webp"],
+  ["30", "Två för 30:-", "07_arena-tva-for-30.webp"],
 ] as const;
 const normalized = (name: string) => name.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase("sv-SE").replace(/:-$/, "");
 

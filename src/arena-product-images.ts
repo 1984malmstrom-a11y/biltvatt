@@ -1,20 +1,20 @@
 import type { ArenaActivity } from "../shared/arena";
 
 const products = new Map([
-  ["biltvätt", "01_arena-biltvatt.png"],
-  ["korv", "02_arena-korv-med-mos.png"],
-  ["korv med mos", "02_arena-korv-med-mos.png"],
-  ["två för 25", "03_arena-tva-for-25.png"],
-  ["kaffe + bulle", "04_arena-kaffe-bulle.png"],
-  ["spolarvätska", "05_arena-spolarvatska.png"],
-  ["räksallad", "06_arena-raksallad.png"],
-  ["två för 30", "07_arena-tva-for-30.png"],
-  ["extra dryck", "07_arena-tva-for-30.png"],
+  ["biltvätt", "01_arena-biltvatt.webp"],
+  ["korv", "02_arena-korv-med-mos.webp"],
+  ["korv med mos", "02_arena-korv-med-mos.webp"],
+  ["två för 25", "03_arena-tva-for-25.webp"],
+  ["kaffe + bulle", "04_arena-kaffe-bulle.webp"],
+  ["spolarvätska", "05_arena-spolarvatska.webp"],
+  ["räksallad", "06_arena-raksallad.webp"],
+  ["två för 30", "07_arena-tva-for-30.webp"],
+  ["extra dryck", "07_arena-tva-for-30.webp"],
 ]);
 
 export function arenaProductImage(activity: Pick<ArenaActivity, "name" | "image_key"> & Partial<Pick<ArenaActivity, "price_text">>, previewUrl?: string) {
   if (previewUrl) return previewUrl;
-  // These named products use the supplied clean motifs, including when an old demo image is stored.
+  // These named products use the reference-matched clean motifs, including when an old demo image is stored.
   const name = activity.name.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase("sv-SE");
   const offerName = name.match(/^(?:två|2)\s*för\s*(25|30)(?:\s*(?:kr|:?[–−-]|:))?$/);
   const offerPrice = /^(?:två|2)\s*för$/.test(name) ? activity.price_text?.trim().toLocaleLowerCase("sv-SE").match(/^(25|30)(?:\s*(?:kr|:?[–−-]|:))?$/) : null;

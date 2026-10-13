@@ -41,7 +41,7 @@ function GoalProgress({ goal }: { goal: ArenaGoal }) {
 function People({ stats, onPerson, highlightId, newLeaderId }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string }) {
   return <ol className="arena-leader-list">{stats?.leaderboard.map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${num(p.points)} p`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank <= 3 ? <><Trophy /><b>{p.rank}</b></> : p.rank}</span><span className="arena-leader-avatar" style={{ "--seller-color": p.color } as React.CSSProperties} aria-hidden="true">{initials(p.name)}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
+      {p.rank}</span><span className="arena-leader-avatar" style={{ "--seller-color": p.color } as React.CSSProperties} aria-hidden="true">{initials(p.name)}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 }
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
@@ -192,7 +192,7 @@ function ArenaHome() {
     </header>
     {error && <div className="arena-error" role="alert">{error}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
-      <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA</h2>{controls}<People stats={stats} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}><Trophy /> SE FLER TOPPLISTOR <ChevronRight /></button></aside>
+      <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA</h2>{controls}<People stats={stats} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}>SE FLER TOPPLISTOR <ChevronRight aria-hidden="true" /></button></aside>
       <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-stats" aria-label="Dagens resultat"><span><BarChart3 /> {stats?.today.count ?? "—"} registreringar</span><span><Star /> {stats ? num(stats.today.points) : "—"} p</span><span><Users /> {stats?.today.sellers ?? "—"} säljare</span></div>
