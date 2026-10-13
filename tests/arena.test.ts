@@ -143,6 +143,13 @@ describe("Arena dataintegritet och stationsisolering", () => {
 });
 
 describe("Arena validering och Stockholmsperioder", () => {
+  it("firar ett stationsmål när gränsen passeras och inte vid nästa uppdatering", () => {
+    const before: ArenaStats = { range: { start:"2026-10-12", end:"2026-10-18", from:"", to:"" }, points:148, count:74, today:{points:0,count:0,sellers:0}, leaderboard:[], campaign:null, personal_goals:[], station_goals:[{id:"week",period_type:"week",start_date:"2026-10-12",end_date:"2026-10-18",target_points:150,points:148}] };
+    const after = { ...before, points:150, count:75, station_goals:[{ ...before.station_goals[0], points:150 }] };
+    expect(arenaAchievement(before, after, "seller")).toMatchObject({ kind:"station-goal", special:true, goal:{ target_points:150, points:150 } });
+    expect(arenaAchievement(after, after, "seller").special).toBe(false);
+    expect(arenaAchievement(null, after, "seller").special).toBe(false);
+  });
   it("validerar aktiviteter inklusive bråkpoäng och okända klientfält", () => {
     expect(activityInput({ ...draft, points: 0.5 }).points).toBe(0.5);
     for (const points of [-1, NaN, Infinity, "1", 0.123, 10001]) expect(() => activityInput({ ...draft, points })).toThrow();

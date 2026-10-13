@@ -31,14 +31,21 @@ export const arenaNumber = (n: number) => new Intl.NumberFormat("sv-SE", { maxim
 export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 // Small event function shared by all celebrations. No animation controls the sale flow.
-export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, sellerId: string) {
+export type ArenaAchievement = {
+  text: string; special: boolean; kind: "points" | "leader" | "personal-goal" | "station-goal";
+  goal?: ArenaGoal;
+};
+export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, sellerId: string): ArenaAchievement {
   const person = after.leaderboard.find(p => p.id === sellerId);
   const old = before?.leaderboard.find(p => p.id === sellerId);
   const goal = after.personal_goals.find(g => g.seller_id === sellerId && g.points >= g.target_points &&
     (before?.personal_goals.find(b => b.id === g.id)?.points ?? 0) < g.target_points);
-  if (goal) return { text: "Personliga målet uppnått!", special: true };
-  if (person?.rank === 1 && person.points > 0 && (!old || old.rank > 1)) return { text: "Ny etta!", special: true };
+  if (goal) return { text: "Personliga målet uppnått!", special: true, kind: "personal-goal", goal };
+  const teamGoal = after.station_goals.find(g => g.points >= g.target_points &&
+    before?.station_goals.some(b => b.id === g.id && b.points < g.target_points));
+  if (teamGoal) return { text: "Lagets mål uppnått!", special: true, kind: "station-goal", goal: teamGoal };
+  if (person?.rank === 1 && person.points > 0 && (!old || old.rank > 1)) return { text: "Ny etta!", special: true, kind: "leader" };
   const next = person && after.leaderboard.find(p => p.rank === person.rank - 1);
-  if (next && person) return { text: `${person.name}: ${arenaNumber(roundedPoints(next.points - person.points))} poäng till nästa placering!`, special: false };
-  return { text: `${person?.name ?? "Laget"}, tillsammans säljer vi mer!`, special: false };
+  if (next && person) return { text: `${person.name}: ${arenaNumber(roundedPoints(next.points - person.points))} poäng till nästa placering!`, special: false, kind: "points" };
+  return { text: `${person?.name ?? "Laget"}, tillsammans säljer vi mer!`, special: false, kind: "points" };
 }
