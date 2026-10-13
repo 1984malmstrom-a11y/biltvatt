@@ -35,13 +35,13 @@ function Progress({ points, target, label, suffix = "poäng" }: { points: number
     <i style={{ "--fill": percent / 100 } as React.CSSProperties} /><strong>{num(points)} / {num(target)} {suffix}</strong><b>{percent}%</b>
   </div></div>;
 }
-function GoalProgress({ goal }: { goal: ArenaGoal }) {
-  return <><Progress points={goal.points} target={goal.target_points} label={goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL"} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
+function GoalProgress({ goal, label }: { goal: ArenaGoal; label?: string }) {
+  return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
 function People({ stats, onPerson, highlightId, newLeaderId }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string }) {
   return <ol className="arena-leader-list">{stats?.leaderboard.map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${num(p.points)} p`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span className="arena-leader-avatar" style={{ "--seller-color": p.color } as React.CSSProperties} aria-hidden="true">{initials(p.name)}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
+      {p.rank}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 }
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
@@ -187,7 +187,7 @@ function ArenaHome() {
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
     <header className="arena-header">
       <a href="/station" className="arena-brand" aria-label="Till stationsdashboarden"><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{data?.station.name || "STATIONEN"}</small></span></a>
-      <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label={campaign.name} /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label={campaign.name} suffix="försäljningar" /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
+      <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
       <p className="arena-handwritten">Tillsammans<br />säljer vi mer! ♡</p>
     </header>
     {error && <div className="arena-error" role="alert">{error}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}

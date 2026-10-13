@@ -38,13 +38,15 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await page.route("**/api/arena/activity-images/demo-image", route => { demos.push(route.request().url()); return route.abort(); });
     await page.goto("/arena");
     await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+    await expect(page.locator(".arena-team-goal .arena-progress>span")).toHaveText("MÅNADENS MÅL");
+    await expect(page.locator(".arena-focus-title")).toHaveText("MÅNADENS FOKUS");
     for (let i=0; i<productAssets.length; i++) {
       const [name,file] = productAssets[i], activity = cleanProducts[i];
       const button = page.getByRole("button", { name:`${name}${i === 2 || i === 6 ? ":-" : ""}, +${activity.points} poäng`, exact:true });
       const img = button.locator(".arena-product img");
       await expect(img).toHaveAttribute("src", `/arena-products/${file}`);
       await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0)).toBe(true);
-      const geometry = await button.evaluate(el => {
+      const geometry = await button.evaluate((el, largerMotif) => {
         const orb = el.getBoundingClientRect();
         const image = el.querySelector("img")!, box = image.getBoundingClientRect(), style = getComputedStyle(image);
         const canvas=document.createElement("canvas"); canvas.width=image.naturalWidth; canvas.height=image.naturalHeight;
@@ -62,9 +64,11 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
         const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom"), size = Math.min(width,height);
         const left = box.left+px("left")+(width-size)/2, top = box.top+px("top")+(height-size)/2;
         const motif = { left:left+alpha[0]*size/canvas.width, top:top+alpha[1]*size/canvas.height, right:left+alpha[2]*size/canvas.width, bottom:top+alpha[3]*size/canvas.height };
-        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top+1 && motif.bottom<=orb.bottom-1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top, orbHeight:orb.height, motifWidth:motif.right-motif.left, orbWidth:orb.width };
-      });
-      expect(geometry).toMatchObject({ fit:"contain", position:"50% 50%", inside:true, clear:true });
+        // Larger coffee, salad and energy motifs may lift into the existing halo above the ring.
+        const upperAllowance=largerMotif ? orb.height*.07 : 0;
+        return { fit:style.objectFit, position:style.objectPosition, visible:motif.left>=0 && motif.right<=innerWidth && motif.top>=0 && motif.bottom<=innerHeight, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top-upperAllowance && motif.bottom<=orb.bottom-1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top, orbHeight:orb.height, motifWidth:motif.right-motif.left, orbWidth:orb.width };
+      }, [3,5,6].includes(i));
+      expect(geometry).toMatchObject({ fit:"contain", position:"50% 50%", visible:true, inside:true, clear:true });
       expect(geometry.motifHeight/geometry.orbHeight).toBeGreaterThan(i === 0 ? .45 : .32);
       expect(geometry.motifWidth/geometry.orbWidth).toBeGreaterThan(i === 0 ? .6 : .25);
       await expect(button.locator(".arena-product-copy")).toContainText(name);
@@ -121,11 +125,13 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect(panel.locator(".arena-leader-list button")).toHaveCount(10);
     await expect(panel.locator(".arena-rank")).toHaveText(stats.leaderboard.map(p => String(p.rank)));
     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+    await expect(panel.locator(".arena-leader-avatar")).toHaveCount(0);
+    await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(stats.leaderboard.map(p => p.name));
     for (const person of stats.leaderboard) {
       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
     }
     const geometry = await panel.locator(".arena-leader-list button").evaluateAll(rows => rows.map(row => {
-      const box=row.getBoundingClientRect(), name=row.children[2].getBoundingClientRect(), points=row.children[3].getBoundingClientRect();
+      const box=row.getBoundingClientRect(), name=row.children[1].getBoundingClientRect(), points=row.children[2].getBoundingClientRect();
       return { touch:box.height>=44, distinct:name.right<=points.left, inside:points.right<=box.right && name.left>=box.left };
     }));
     expect(geometry.every(row => row.touch && row.distinct && row.inside)).toBe(true);
@@ -156,6 +162,23 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     }
     await panel.getByRole("button", { name:"Peter 126 p", exact:true }).click();
     await expect(page.getByRole("dialog", { name:"Peter · Min Arena" })).toBeVisible();
+  });
+}
+
+for (const source of ["station", "campaign-points", "campaign-count"] as const) {
+  test(`Arena: målrubrik skiljer sig från fokus och bevarar värden ${source}`, async ({ page }) => {
+    const current=structuredClone(stats);
+    if (source !== "station") current.station_goals=[];
+    if (source === "campaign-count") current.campaign!.target_points=null;
+    await visualData(page, () => current);
+    await page.goto("/arena");
+    const progress=page.locator(".arena-team-goal").getByRole("progressbar", { name:"MÅNADENS MÅL", exact:true });
+    await expect(progress).toHaveAttribute("aria-valuemax",source === "station" ? "1000" : source === "campaign-points" ? "200" : "100");
+    await expect(progress).toHaveAttribute("aria-valuenow",source === "station" ? "742" : source === "campaign-points" ? "148" : "70");
+    await expect(progress).toContainText(source === "campaign-count" ? "70 / 100 försäljningar" : source === "campaign-points" ? "148 / 200 poäng" : "742 / 1 000 poäng");
+    await expect(page.locator(".arena-team-goal")).not.toContainText("MÅNADENS FOKUS");
+    await expect(page.locator(".arena-focus-title")).toHaveText("MÅNADENS FOKUS");
+    await expect(page.locator(".arena-focus-cap .arena-crown")).toBeVisible();
   });
 }
 
