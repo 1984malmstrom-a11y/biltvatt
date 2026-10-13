@@ -1,3 +1,4 @@
+import { arenaApi } from "./arena";
 import {
   addDays,
   dateRange,
@@ -20,6 +21,8 @@ import {
 
 export interface Env {
   DB: D1Database;
+  ARENA_DB?: D1Database;
+  STATION_NAME?: string;
   STATION_ID?: string;
   STATION_LATITUDE?: string;
   STATION_LONGITUDE?: string;
@@ -39,25 +42,25 @@ const hash = async (text: string) =>
     .join("");
 function active(value: unknown): number {
   if (value !== 0 && value !== 1)
-    return fail(400, "Aktiv måste vara 0 eller 1.");
+    return fail(400, "Aktiv mÃ¥ste vara 0 eller 1.");
   return value;
 }
 function color(value: unknown): string {
   if (typeof value !== "string" || !/^#[0-9a-f]{6}$/i.test(value))
-    return fail(400, "Välj en giltig färg.");
+    return fail(400, "VÃ¤lj en giltig fÃ¤rg.");
   return value;
 }
 export async function requireAdmin(request: Request, env: Env) {
   const token = request.headers
     .get("Cookie")
     ?.match(/(?:^|;\s*)tvattligan_session=([a-f0-9-]+)/)?.[1];
-  if (!token) return fail(401, "Logga in som administratör.");
+  if (!token) return fail(401, "Logga in som administratÃ¶r.");
   const session = await env.DB.prepare(
     "SELECT token_hash FROM admin_sessions WHERE token_hash = ? AND expires_at > ?",
   )
     .bind(await hash(token), new Date().toISOString())
     .first();
-  if (!session) fail(401, "Din session har gått ut. Logga in igen.");
+  if (!session) fail(401, "Din session har gÃ¥tt ut. Logga in igen.");
 }
 const cookie = (request: Request, token: string, age: number) =>
   `tvattligan_session=${token}; Path=/api; HttpOnly; SameSite=Lax; Max-Age=${age}${new URL(request.url).protocol === "https:" ? "; Secure" : ""}`;
@@ -75,18 +78,22 @@ async function api(
   if (!["GET", "HEAD"].includes(method)) {
     const origin = request.headers.get("Origin");
     if (origin && origin !== url.origin)
-      fail(403, "Anrop från en annan webbplats är inte tillåtet.");
+      fail(403, "Anrop frÃ¥n en annan webbplats Ã¤r inte tillÃ¥tet.");
     if (request.headers.get("Sec-Fetch-Site") === "cross-site")
-      fail(403, "Anrop från en annan webbplats är inte tillåtet.");
+      fail(403, "Anrop frÃ¥n en annan webbplats Ã¤r inte tillÃ¥tet.");
   }
   const now = new Date().toISOString();
+if (path.startsWith("/api/arena/")) {
+  const response = await arenaApi(request, env);
+  if (response) return response;
+}
   if (path.startsWith("/api/station/") || path.startsWith("/api/admin/station/")) {
     const response = await stationApi(request, env, requireAdmin);
     if (response) return response;
   }
   if (path === "/api/admin/login" && method === "POST") {
     if (!env.ADMIN_PIN || !/^\d{6,12}$/.test(env.ADMIN_PIN))
-      fail(503, "Administratörs-PIN är inte konfigurerad på servern.");
+      fail(503, "AdministratÃ¶rs-PIN Ã¤r inte konfigurerad pÃ¥ servern.");
     const data = await body(request);
     checkFields(data, ["pin"]);
     const ip = await hash(request.headers.get("CF-Connecting-IP") ?? "local");
@@ -100,13 +107,13 @@ async function api(
       .bind(ip, now)
       .first<{ attempts: number }>();
     if ((attempt?.attempts ?? 6) > 5)
-      fail(429, "För många inloggningsförsök. Försök igen om 15 minuter.");
+      fail(429, "FÃ¶r mÃ¥nga inloggningsfÃ¶rsÃ¶k. FÃ¶rsÃ¶k igen om 15 minuter.");
     if (
       typeof data.pin !== "string" ||
       data.pin.length > 12 ||
       (await hash(data.pin)) !== (await hash(env.ADMIN_PIN!))
     )
-      fail(401, "Fel PIN. Försök igen.");
+      fail(401, "Fel PIN. FÃ¶rsÃ¶k igen.");
     const token = `${crypto.randomUUID()}${crypto.randomUUID()}`;
     await env.DB.batch([
       env.DB.prepare("DELETE FROM login_attempts WHERE ip_hash=?").bind(ip),
@@ -138,7 +145,7 @@ async function api(
   }
   if (path.startsWith("/api/admin/")) {
     if ((path.startsWith("/api/admin/sales") || path.startsWith("/api/admin/stats")) &&
-        await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
+        await launchLocked(env)) fail(503, "TvÃ¤ttligan Ã¤r tillfÃ¤lligt stÃ¤ngd fÃ¶r V2-start.");
     const response = await maintenance(request, env);
     if (response) return response;
   }
@@ -164,18 +171,18 @@ async function api(
     return json(rows.results);
   }
   if (path === "/api/sales" && method === "POST") {
-    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
+    if (await launchLocked(env)) fail(503, "TvÃ¤ttligan Ã¤r tillfÃ¤lligt stÃ¤ngd fÃ¶r V2-start.");
     const data = await body(request);
     checkFields(data, ["staff_id", "wash_program_id", "request_id"]);
-    const staffId = text(data.staff_id, "Säljare"),
-      programId = text(data.wash_program_id, "Tvättprogram"),
-      requestId = text(data.request_id, "Begärande-ID", 36);
+    const staffId = text(data.staff_id, "SÃ¤ljare"),
+      programId = text(data.wash_program_id, "TvÃ¤ttprogram"),
+      requestId = text(data.request_id, "BegÃ¤rande-ID", 36);
     if (
       !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
         requestId,
       )
     )
-      fail(400, "Begärande-ID måste vara ett UUID.");
+      fail(400, "BegÃ¤rande-ID mÃ¥ste vara ett UUID.");
     const id = crypto.randomUUID();
     // The request ID doubles as a private undo receipt. Only a hash is returned in database exports.
     const undoHash = await hash(requestId);
@@ -198,15 +205,15 @@ async function api(
     if (!sale)
       fail(
         400,
-        "Säljaren eller tvättprogrammet är inte aktivt. Uppdatera sidan.",
+        "SÃ¤ljaren eller tvÃ¤ttprogrammet Ã¤r inte aktivt. Uppdatera sidan.",
       );
     if (sale!.staff_id !== staffId || sale!.wash_program_id !== programId)
-      fail(409, "Begärande-ID har redan använts för en annan försäljning.");
+      fail(409, "BegÃ¤rande-ID har redan anvÃ¤nts fÃ¶r en annan fÃ¶rsÃ¤ljning.");
     if (sale!.id === id && context && queuedNotification) {
       try {
         context.waitUntil(
           deliverSaleEvents(env, id).catch(() => {
-            console.warn("En bakgrundsnotis kunde inte slutföras.");
+            console.warn("En bakgrundsnotis kunde inte slutfÃ¶ras.");
           }),
         );
       } catch {
@@ -217,7 +224,7 @@ async function api(
   }
   const undo = path.match(/^\/api\/sales\/([^/]+)\/void$/);
   if (undo && method === "POST") {
-    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
+    if (await launchLocked(env)) fail(503, "TvÃ¤ttligan Ã¤r tillfÃ¤lligt stÃ¤ngd fÃ¶r V2-start.");
     const data = await body(request);
     checkFields(data, ["request_id"]);
     const receipt = text(data.request_id, "Kvitto", 36);
@@ -226,9 +233,9 @@ async function api(
     )
       .bind(undo[1])
       .first<{ undo_token_hash: string }>();
-    if (!sale) fail(404, "Försäljningen finns inte.");
+    if (!sale) fail(404, "FÃ¶rsÃ¤ljningen finns inte.");
     if (sale!.undo_token_hash !== (await hash(receipt)))
-      fail(403, "Du kan bara ångra din egen registrering.");
+      fail(403, "Du kan bara Ã¥ngra din egen registrering.");
     await env.DB.prepare(
       "UPDATE sales SET voided_at=?,void_reason='SELLER_UNDO',voided_by='SELLER',updated_by='SELLER',updated_at=?,revision=revision+1 WHERE id=? AND voided_at IS NULL",
     )
@@ -240,7 +247,7 @@ async function api(
     (path === "/api/stats" || /^\/api\/stats\/staff\/[^/]+$/.test(path)) &&
     method === "GET"
   ) {
-    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
+    if (await launchLocked(env)) fail(503, "TvÃ¤ttligan Ã¤r tillfÃ¤lligt stÃ¤ngd fÃ¶r V2-start.");
     let range;
     try {
       range = dateRange(url);
@@ -258,7 +265,7 @@ async function api(
         .bind(staffId)
         .first())
     )
-      fail(404, "Säljaren finns inte.");
+      fail(404, "SÃ¤ljaren finns inte.");
     const rows = await env.DB.prepare(
       `${saleQuery} WHERE s.sold_at>=? AND s.sold_at<? AND s.voided_at IS NULL AND t.deleted_at IS NULL ${staffId ? "AND s.staff_id=?" : ""}`,
     )
@@ -309,7 +316,7 @@ async function api(
   const staffPatch = path.match(/^\/api\/admin\/staff\/([^/]+)$/);
   const programPatch = path.match(/^\/api\/admin\/wash-programs\/([^/]+)$/);
   if ((staffPatch || programPatch) && method === "PATCH") {
-    if (programPatch && await launchLocked(env)) fail(503, "Tvättprogrammen är låsta under V2-start.");
+    if (programPatch && await launchLocked(env)) fail(503, "TvÃ¤ttprogrammen Ã¤r lÃ¥sta under V2-start.");
     const data = await body(request);
     const isStaff = !!staffPatch,
       id = (staffPatch ?? programPatch)![1];
@@ -364,13 +371,13 @@ async function api(
       Object.entries(data).map(([key, value]) =>
         env.DB.prepare(
           "INSERT INTO settings(key,value,updated_at) VALUES(?,?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at",
-        ).bind(key, String(integer(value, "Mål")), now),
+        ).bind(key, String(integer(value, "MÃ¥l")), now),
       ),
     );
     return json({ ok: true });
   }
   if (path === "/api/admin/export" && method === "GET") {
-    if (await launchLocked(env)) fail(503, "Tvättligan är tillfälligt stängd för V2-start.");
+    if (await launchLocked(env)) fail(503, "TvÃ¤ttligan Ã¤r tillfÃ¤lligt stÃ¤ngd fÃ¶r V2-start.");
     let range;
     try {
       range = dateRange(url);
@@ -388,7 +395,7 @@ async function api(
         .replace(/^[=+@\-\t\r]/, "'$&")
         .replaceAll('"', '""')}"`;
     const lines = [
-      "Datum;Tid;Säljare;Tvättprogram;Pris;Status",
+      "Datum;Tid;SÃ¤ljare;TvÃ¤ttprogram;Pris;Status",
       ...rows.results.map((row) =>
         [
           stockholmDay(new Date(row.sold_at)),
@@ -427,7 +434,7 @@ export default {
     const url = new URL(request.url);
     let response: Response;
     try {
-      response = url.pathname.startsWith("/api/")
+response = url.pathname.startsWith("/api/")
         ? await api(request, env, context)
         : env.ASSETS
           ? await env.ASSETS.fetch(request)
@@ -443,7 +450,7 @@ export default {
           error:
             error instanceof ApiError
               ? error.message
-              : "Ett serverfel uppstod. Försök igen.",
+              : "Ett serverfel uppstod. FÃ¶rsÃ¶k igen.",
         },
         error instanceof ApiError ? error.status : 500,
       );

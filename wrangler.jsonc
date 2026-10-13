@@ -15,8 +15,18 @@
       "database_name": "stationmastertest",
       "database_id": "ca2d4bb8-0c28-47b7-9514-8c893ea47c09",
       "migrations_dir": "migrations-master"
+    },
+    {
+      "binding": "ARENA_DB",
+      "database_name": "arena-master-test",
+      "database_id": "767b5a12-6b40-4516-9f7c-e072c1130480",
+      "migrations_dir": "migrations-arena"
     }
   ],
-  "vars": { "STATION_ID": "mastertest" },
-  "observability": { "enabled": true }
+  "vars": {
+    "STATION_ID": "mastertest"
+  },
+  "observability": {
+    "enabled": true
+  }
 }
