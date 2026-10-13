@@ -59,11 +59,11 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-stage-label { position:absolute; top:2%; left:50%; transform:translateX(-50%); text-align:center; white-space:nowrap; }
 .arena-stage-label small { display:block; margin-top:3px; font-size:clamp(9px,.65vw,12px); color:#839eb9; }
 .arena-mobile-stats { display:none; }
-.arena-focus-slot { position:absolute; z-index:2; left:50%; top:49%; transform:translate(-50%,-50%); width:min(55cqw,61cqh); height:min(55cqw,61cqh); }
-.arena-orb { --orb-color:#54ceff; width:100%; height:100%; position:relative; display:grid; grid-template-rows:minmax(0,1fr) auto auto; align-items:center; justify-items:center; gap:4%; border:2px solid var(--orb-color); border-radius:50%; color:#fff!important; background:radial-gradient(ellipse at 50% 20%,#1e354f,#030a15 78%)!important; box-shadow:0 0 6px var(--orb-color),0 0 22px color-mix(in srgb,var(--orb-color) 30%,transparent),inset 0 0 16px color-mix(in srgb,var(--orb-color) 16%,transparent); padding:10% 9% 12%; transition:transform .14s; }
+.arena-focus-slot { position:absolute; z-index:2; left:50%; top:46%; transform:translate(-50%,-50%); width:min(55cqw,58cqh); height:min(55cqw,58cqh); }
+.arena-orb { --orb-color:#54ceff; width:100%; height:100%; position:relative; display:grid; grid-template-rows:minmax(0,1fr) auto auto; align-items:center; justify-items:center; gap:4%; border:2px solid var(--orb-color); border-radius:50%; color:#fff!important; background:radial-gradient(ellipse at 50% 20%,#1e354f,#030a15 78%)!important; box-shadow:0 0 8px var(--orb-color),0 0 26px color-mix(in srgb,var(--orb-color) 48%,transparent),inset 0 0 18px color-mix(in srgb,var(--orb-color) 22%,transparent); padding:10% 9% 12%; transition:transform .14s; }
 .arena-orb:hover { transform:scale(1.035); }.arena-orb:active { transform:scale(.965); }
 .arena-orb::before { content:""; position:absolute; inset:5px; border-radius:50%; border:1px solid #badcff22; pointer-events:none; }
-.arena-orb::after { content:""; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--orb-color); opacity:.3; pointer-events:none; }
+.arena-orb::after { content:""; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--orb-color); opacity:.5; pointer-events:none; }
 .arena-product { width:100%; height:100%; min-height:0; display:flex; align-items:center; justify-content:center; }
 .arena-product img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 5px 4px #0007); }
 .arena-product>svg { width:49%; height:70%; color:var(--orb-color); stroke-width:1.25; }
@@ -71,7 +71,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-product-copy strong { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; font-size:clamp(11px,1.85cqw,22px); font-weight:850; text-transform:uppercase; overflow-wrap:anywhere; text-shadow:0 2px 4px #000; }
 .arena-offer { display:block; font-size:clamp(9px,1.2cqw,15px); font-weight:700; color:#f6dfaa; margin-bottom:2px; }
 .arena-price { display:block; font-weight:850; font-size:clamp(12px,2.2cqw,26px); margin-top:2px; }
-.arena-points { background:linear-gradient(145deg,#fff0b2,#ddb754); border:1px solid #ffe4a0; color:#1a1b16; font-weight:900; font-size:clamp(10px,1.25cqw,16px); border-radius:50px; padding:3% 12%; white-space:nowrap; box-shadow:inset 0 1px 0 #fff7df; letter-spacing:.015em; }
+.arena-points { background:linear-gradient(145deg,#f4d28a,#c99a43); border:1px solid #f0c977; color:#21190e; font-weight:900; font-size:clamp(12px,1.55cqw,20px); border-radius:50px; padding:3% 8%; white-space:nowrap; box-shadow:inset 0 1px 0 #ffe7b299,0 2px 6px #0004; letter-spacing:.015em; }
 .arena-orb-focus { grid-template-rows:minmax(0,1fr) auto auto; border-width:3px; padding:14% 7% 8%; gap:3%; background:radial-gradient(ellipse at 50% 35%,#135b8a,#021124 72%)!important; box-shadow:0 0 10px #77deff,0 0 32px #179de855,inset 0 0 24px #278de630; }
 .arena-orb-focus::before { inset:7px; border-color:#a4e7ff77; }
 .arena-orb-focus::after { inset:-9px; border:1px solid #b5e9ff; animation:arena-pulse 4s ease-in-out infinite; }
@@ -79,13 +79,13 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-crown { fill:#f1ce72; color:#ffebb0; width:clamp(24px,5cqw,58px); height:clamp(24px,5cqw,58px); stroke-width:1.5; animation:arena-crown 4s ease-in-out infinite; }
 .arena-focus-title { font-size:clamp(11px,1.8cqw,24px); font-weight:850; text-transform:uppercase; text-align:center; line-height:1.15; letter-spacing:.04em; max-width:100%; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; color:#fff1c5; background:linear-gradient(90deg,transparent,#111d2ecf 20% 80%,transparent); padding:3px 10px; }
 .arena-orb-focus .arena-product-copy strong { font-size:clamp(23px,4.5cqw,57px); font-weight:950; letter-spacing:-.015em; }
-.arena-orb-focus .arena-points { font-size:clamp(13px,2cqw,25px); padding:2% 10%; }
+.arena-orb-focus .arena-points { font-size:clamp(15px,2.3cqw,29px); padding:2% 10%; }
 .arena-orb-focus .arena-product { padding-top:2%; }
 .arena-satellites { position:absolute; inset:0; }
 .arena-satellite { position:absolute; width:min(26cqw,28.5cqh); height:min(26cqw,28.5cqh); z-index:3; }
-.satellite-0 { left:8%; top:6%; --orbit:#f4c274; }.satellite-1 { right:8%; top:6%; --orbit:#ea9da8; }
-.satellite-2 { left:0; top:36%; --orbit:#a78ce7; }.satellite-3 { right:0; top:36%; --orbit:#58d4d8; }
-.satellite-4 { left:13%; bottom:2%; --orbit:#9cd9a0; }.satellite-5 { right:13%; bottom:2%; --orbit:#d690d9; }
+.satellite-0 { left:8%; top:6%; --orbit:#ffc565; }.satellite-1 { right:8%; top:6%; --orbit:#ff829a; }
+.satellite-2 { left:0; top:36%; --orbit:#b180ff; }.satellite-3 { right:0; top:36%; --orbit:#27e2e8; }
+.satellite-4 { left:13%; bottom:8%; --orbit:#a0f06d; }.satellite-5 { right:13%; bottom:8%; --orbit:#e480f1; }
 .arena-satellite .arena-orb { --orb-color:var(--orbit); }
 .arena-pagination { position:absolute; bottom:1%; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:10px; z-index:4; font-size:11px; color:#aec2d9; }
 .arena-pagination button { border-radius:50%; background:#0a1928; border:1px solid #5797c850; display:grid; place-items:center; min-width:44px; min-height:44px; }
@@ -118,7 +118,10 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-error { color:#ffd5d2!important; background:#5c242dee; border:1px solid #b67578; border-radius:10px; padding:12px; font-size:14px; }
 .arena-shell>.arena-error { position:absolute; top:8px; left:50%; transform:translateX(-50%); z-index:10; max-width:90%; }
 .arena-error button { text-decoration:underline; margin-left:12px; }
-.arena-dialog { color:#f6f8ff; background:radial-gradient(ellipse at 50% 0,#102b49,#030c17 80%); border:1px solid #75c6ffb3; border-radius:14px; max-width:min(760px,94vw); width:760px; max-height:90vh; max-height:90svh; max-height:90dvh; padding:clamp(18px,3vw,30px); overflow:auto; box-shadow:0 0 8px #54bcff66,0 10px 30px #0009; }
+.arena-dialog { color:#f6f8ff; background:radial-gradient(ellipse at 50% 0,#102b49,#030c17 80%); border:1px solid #75c6ffb3; border-radius:14px; max-width:min(760px,94vw); width:760px; max-height:90vh; max-height:90svh; max-height:90dvh; padding:clamp(18px,3vw,30px); overflow:auto; color-scheme:dark; scrollbar-width:thin; scrollbar-color:#466681 #071426; box-shadow:0 0 8px #54bcff66,0 10px 30px #0009; }
+.arena-dialog::-webkit-scrollbar { width:8px; }
+.arena-dialog::-webkit-scrollbar-track { background:#071426; }
+.arena-dialog::-webkit-scrollbar-thumb { background:#466681; border:2px solid #071426; border-radius:8px; }
 .arena-dialog::backdrop { background:#01060bc9; }
 .arena-dialog>header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #7495be26; }
 .arena-dialog>header h2 { font-size:clamp(21px,2.1vw,31px); letter-spacing:.04em; text-transform:uppercase; margin:3px 0 0; line-height:1.18; }
@@ -170,27 +173,39 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-dates,.arena-filters { display:flex; gap:12px; margin:14px 0; }.arena-dates label,.arena-filters label { flex:1; min-width:0; }
 .arena-dialog-campaign>h3 { font-size:25px; color:var(--arena-gold); margin-bottom:8px; }.arena-dialog-campaign>p { color:#b2c8e0; font-size:14px; }.arena-dialog-campaign .arena-progress { margin:22px 0; }
 .arena-dialog-leaders .arena-leader-list { max-height:52dvh; }
-.arena-celebration { pointer-events:none; position:absolute; left:50%; top:74%; transform:translate(-50%,-50%); z-index:15; display:flex; align-items:center; gap:20px; width:min(600px,57vw); max-width:92vw; padding:22px 26px; border-radius:12px; background:linear-gradient(145deg,#132e47f5,#050f1bf7); border:1px solid #f0cc79; box-shadow:0 0 10px #dfbd6c55,0 6px 25px #0008; animation:arena-burst .3s ease-out both; isolation:isolate; }
-.arena-celebration::before { content:""; position:absolute; inset:5px; border:1px solid #edd9a320; border-radius:8px; z-index:-1; }
-.arena-reward-emblem { position:absolute; top:-21px; left:50%; transform:translateX(-50%); width:38px; height:38px; display:grid; place-items:center; border-radius:50%; background:#123329; border:1px solid #90e4ba; color:#a7f4cb; }
-.arena-reward-emblem svg { width:22px; height:22px; }
-.arena-reward-product { border-radius:50%; width:82px; height:82px; flex:none; border:2px solid #e8ca80; background:#061527; padding:8px; box-shadow:0 0 10px #deb7673d; }
-.arena-reward-product :is(img,svg) { width:100%; height:100%; object-fit:contain; color:#69c8ff; }
-.arena-reward-copy { min-width:0; flex:1; }.arena-reward-copy>strong { display:block; color:#ffe2a1; font-size:clamp(26px,3.1vw,48px); font-weight:950; letter-spacing:-.03em; line-height:1.2; text-shadow:0 2px 0 #7c5b2433; }
-.arena-reward-copy>span { display:block; font-size:clamp(12px,.95vw,16px); color:#d9e6f4; margin:5px 0; }
-.arena-reward-copy>.arena-eyebrow { font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.arena-reward-activity { display:inline-block; border:1px solid #6581a04d; border-radius:50px; padding:3px 12px; margin-top:5px; font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:#c6d6e8; }
-.arena-celebration.is-special { top:52%; width:min(680px,72vw); max-height:65dvh; padding:45px 30px 24px; text-align:center; justify-content:center; flex-wrap:wrap; border-color:#f2d790; }
-.arena-celebration.is-special .arena-reward-emblem { background:linear-gradient(145deg,#4e3b1f,#162234); border:1px solid #f0d491; color:#ffe2a1; width:66px; height:66px; top:-34px; }
-.arena-celebration.is-special .arena-reward-emblem svg { width:40px; height:40px; }
-.arena-celebration.is-special .arena-reward-product { display:none; }
-.arena-celebration.is-special .arena-reward-copy { flex-basis:100%; }
-.arena-reward-copy h2 { font-size:clamp(27px,3.7vw,54px); font-weight:950; letter-spacing:-.03em; margin:4px 0; color:#ffe7b2; text-shadow:0 2px 1px #583b1c55; }
-.arena-celebration.is-special .arena-reward-copy>strong { font-size:clamp(20px,2.3vw,33px); color:#ead29a; }
-.arena-reward-goal { display:flex; align-items:center; justify-content:center; gap:10px; padding:8px 24px; border-radius:50px; border:1px solid #70bdcf80; background:#142d4155; color:#c6edff; font-size:16px; }
-.arena-reward-goal svg { width:19px; height:19px; color:#abf4cf; }
-.arena-confetti { position:absolute; left:50%; top:50%; width:5px; height:10px; background:#ebd38d; --angle:calc(var(--i) * 31deg); animation:arena-confetti 1.05s ease-out forwards; z-index:-1; }
-.arena-celebration .arena-confetti:nth-of-type(even) { background:#86d0ff; }
+/* Static gradients and bounded ring shadows; only opacity/transform animate. */
+.arena-celebration { --reward-size:min(660px,75dvh,88vw); pointer-events:none; position:fixed; inset:0; z-index:15; display:grid; place-items:center; isolation:isolate; animation:arena-reward-dim .16s ease-out both,arena-reward-fade .15s ease-in calc(var(--reward-life) - 150ms) forwards; }
+.arena-celebration::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%,#01071135,#010711b3 75%); z-index:-1; }
+.arena-reward-ring { --reward-color:#50ceff; position:relative; container-type:size; width:var(--reward-size); height:var(--reward-size); border-radius:50%; border:3px solid #9de7ff; background:radial-gradient(ellipse at 50% 28%,#143b60,#031326 65%,#020b16); box-shadow:0 0 9px #e0f8ff,0 0 26px var(--reward-color),inset 0 0 28px #2aa8e366; padding:32px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(3px,.65vmin,7px); color:#eef6ff; text-align:center; animation:arena-reward-enter .18s ease-out both; }
+.arena-reward-ring::before,.arena-reward-ring::after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
+.arena-reward-ring::before { inset:9px; border:1px solid #5ebaff; box-shadow:inset 0 0 12px #389eea55; }
+.arena-reward-ring::after { inset:-10px; border:1px solid var(--reward-color); opacity:.65; }
+.arena-reward-product { width:14cqw; height:14cqw; flex:none; }
+.arena-reward-product :is(img,svg) { width:100%; height:100%; object-fit:contain; color:#6bc8ff; }
+.arena-reward-activity { font-size:clamp(15px,4cqw,27px); font-weight:850; text-transform:uppercase; max-width:85%; overflow-wrap:anywhere; line-height:1.08; }
+.arena-reward-offer { font-size:clamp(9px,2cqw,14px); color:#bed0e2; max-width:85%; }
+.arena-reward-points { display:block; color:#ffdf84; font-size:12cqw; font-weight:950; letter-spacing:-.04em; line-height:1.1; white-space:nowrap; text-shadow:0 0 7px #ffc750b3,0 0 22px #edaa3566,0 3px 0 #785014; }
+.arena-reward-seller { font-size:7cqw; font-weight:850; text-transform:uppercase; max-width:85%; overflow-wrap:anywhere; line-height:1.05; }
+.arena-reward-confirmation { font-size:clamp(9px,2cqw,14px); letter-spacing:.09em; }
+.arena-reward-check { width:9cqw; height:9cqw; flex:none; display:grid; place-items:center; color:#c5ffae; border:2px solid #9df276; border-radius:50%; background:#183c1d; box-shadow:0 0 16px #77f54d66; margin-top:1cqw; }
+.arena-reward-check svg { width:70%; height:70%; stroke-width:3; }
+.arena-reward-pep { font-size:clamp(12px,3cqw,21px); color:#ffdb84; letter-spacing:.24em; margin-top:1cqw; }
+.arena-reward-encouragement { font-size:clamp(11px,2.3cqw,16px); color:#cbdff0; max-width:80%; }
+.arena-celebration.is-special { --reward-size:min(800px,83dvh,90vw); }
+.is-special .arena-reward-ring { --reward-color:#ebc166; border-color:#fbe9a8; background:radial-gradient(ellipse at 50% 28%,#1c4169,#03152b 65%,#171918); box-shadow:0 0 10px #ffefbd,0 0 35px #dfb44699,inset 0 0 28px #298fcd66; animation-name:arena-milestone-enter; }
+.is-special .arena-reward-ring::before { border-color:#ebd691; }
+.is-special .arena-reward-product { display:none; }
+.arena-reward-crown { order:-3; display:flex; align-items:center; justify-content:center; position:relative; width:15cqw; height:15cqw; color:#ffe7a2; }
+.arena-reward-crown>svg { width:100%; height:100%; stroke-width:1.4; fill:#f1c86b33; }
+.arena-reward-crown>b { position:absolute; font-size:5cqw; top:40%; text-shadow:0 0 10px #f1bb55; }
+.arena-reward-ring h2 { order:-2; font-size:11cqw; font-weight:950; line-height:1.02; letter-spacing:-.025em; color:#ffe29a; margin:0; text-shadow:0 0 12px #eaba5999; max-width:90%; }
+.celebration-personal-goal h2,.celebration-station-goal h2 { font-size:8cqw; }
+.arena-milestone-subtitle { order:-1; font-size:clamp(13px,3.7cqw,29px); font-weight:650; color:#fff4d6; max-width:88%; margin-bottom:1cqw; }
+.is-special .arena-reward-points { font-size:8cqw; }.is-special .arena-reward-seller { font-size:5cqw; }.is-special .arena-reward-check { width:6cqw; height:6cqw; }
+.arena-reward-goal { display:flex; align-items:center; justify-content:center; gap:8px; padding:5px 14px; border-radius:50px; border:1px solid #d5b66866; background:#19374c; color:#ffe8b7; font-size:clamp(10px,2cqw,16px); }
+.arena-reward-goal svg { width:16px; height:16px; color:#efd18b; }
+.arena-confetti { position:absolute; left:50%; top:50%; width:5px; height:9px; background:#f5d482; --angle:calc(var(--i) * 60deg); animation:arena-confetti 1s ease-out forwards; pointer-events:none; }
+.is-special .arena-confetti { --angle:calc(var(--i) * 30deg); width:6px; height:12px; animation-duration:1.4s; }
 .has-achievement .arena-team-goal { animation:arena-goal-reward 1.5s ease-out both; }
 .arena-action { display:flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 20px; border-radius:12px; font-weight:800!important; background:linear-gradient(90deg,#35c82c,#abed44)!important; color:#122411!important; }
 .arena-admin { min-height:100svh; padding:clamp(16px,3vw,48px); background:radial-gradient(ellipse at top,#24354a,#080e17 70%); }
@@ -204,8 +219,11 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-admin .arena-action { background:linear-gradient(145deg,#ffe6a1,#cda856)!important; color:#162333!important; }
 @keyframes arena-pulse { 50% { opacity:.65; transform:scale(1.01); } }
 @keyframes arena-crown { 50% { transform:scale(1.055); opacity:.85; } }
-@keyframes arena-burst { from { opacity:0; transform:translate(-50%,-50%) scale(.94); } }
-@keyframes arena-confetti { from { opacity:.9; transform:rotate(var(--angle)) translateY(-15px); } to { opacity:0; transform:rotate(var(--angle)) translateY(-155px); } }
+@keyframes arena-reward-dim { from { opacity:0; } to { opacity:1; } }
+@keyframes arena-reward-fade { to { opacity:0; } }
+@keyframes arena-reward-enter { from { opacity:0; transform:scale(.9); } to { opacity:1; transform:scale(1); } }
+@keyframes arena-milestone-enter { from { opacity:0; transform:scale(.88); } to { opacity:1; transform:scale(1); } }
+@keyframes arena-confetti { from { opacity:.9; transform:rotate(var(--angle)) translateY(-20cqw); } to { opacity:0; transform:rotate(var(--angle)) translateY(-56cqw); } }
 @keyframes arena-row-reward { from { opacity:1; } to { opacity:0; } }
 @keyframes arena-goal-reward { 35% { opacity:.75; transform:scale(1.025); } }
 @media (max-aspect-ratio:4/3) and (min-width:801px) {
@@ -214,7 +232,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-leader-list button { font-size:12px; gap:5px; grid-template-columns:20px 23px minmax(0,1fr) auto; padding:5px 0; }.arena-leader-avatar { width:23px; height:23px; font-size:8px; }.arena-rank { width:20px; height:20px; }.arena-rank svg { width:20px; height:20px; }
   .arena-tabs button { font-size:9px; padding:5px 2px; }.arena-stats { padding:12px; gap:8px; }.arena-stat { gap:9px; padding:13px 0; }.arena-stat>svg { width:23px; padding:5px; }.arena-stats blockquote { padding:10px; font-size:12px; }.arena-stat strong { font-size:27px; }
   .arena-focus-slot { width:min(56cqw,53cqh); height:min(56cqw,53cqh); }.arena-satellite { width:min(28cqw,28cqh); height:min(28cqw,28cqh); }
-  .satellite-0 { left:4%; top:8%; }.satellite-1 { right:4%; top:8%; }.satellite-4 { left:9%; bottom:3%; }.satellite-5 { right:9%; bottom:3%; }
+  .satellite-0 { left:4%; top:8%; }.satellite-1 { right:4%; top:8%; }.satellite-4 { left:9%; bottom:8%; }.satellite-5 { right:9%; bottom:8%; }
   .arena-product-copy strong { font-size:clamp(11px,2.2cqw,16px); }.arena-orb-focus .arena-product-copy strong { font-size:clamp(23px,4.5cqw,36px); }.arena-stage-label small { font-size:9px; }
 }
 @media (max-width:800px) {
@@ -229,7 +247,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-orb { gap:4%; padding:9% 8% 12%; }.arena-orb-focus { gap:3%; padding:17% 7% 8%; }
   .arena-product-copy strong { font-size:clamp(10px,2.85cqw,15px); }.arena-orb-focus .arena-product-copy strong { font-size:clamp(24px,6.4cqw,38px); }
   .arena-crown { width:32px; height:32px; }.arena-focus-title { font-size:12px; }.arena-focus-cap { top:-11%; gap:3px; }
-  .arena-points { font-size:clamp(9px,2.45cqw,13px); padding:3% 10%; }.arena-orb-focus .arena-points { font-size:clamp(12px,3.5cqw,18px); }
+  .arena-points { font-size:clamp(10px,2.8cqw,15px); padding:3% 6%; }.arena-orb-focus .arena-points { font-size:clamp(14px,4cqw,21px); }
   .arena-offer { font-size:9px; }.arena-price { font-size:15px; }
   .arena-utility { font-size:10px; }.arena-utility-actions { max-width:63%; gap:5px; }.arena-utility a { white-space:nowrap; }.arena-utility svg { width:13px; }
   .arena-nav { margin:0 -12px; }.arena-nav :is(button,a) { font-size:9px; gap:4px; flex-direction:column; }.arena-nav svg { width:20px; }
@@ -246,8 +264,6 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-person-progress { gap:15px; padding:18px 0; }.arena-progress-ring { width:90px; height:90px; padding:6px; }.arena-progress-ring>span { font-size:25px; }.arena-person-progress>div:nth-child(2)>strong { font-size:17px; }.arena-person-progress p { font-size:10px; }.arena-person-progress .arena-next-rank { font-size:12px!important; }
   .arena-breakdown-heading { flex-wrap:wrap; gap:3px; }.arena-breakdown li { gap:8px; padding:10px; }.arena-breakdown li>svg { width:16px; height:16px; }.arena-breakdown strong { font-size:13px; }.arena-breakdown strong small { display:block; }.arena-breakdown span { font-size:9px; }
   .arena-person-footer { flex-wrap:wrap; padding:12px; gap:9px; }.arena-person-footer .arena-gold-action { width:100%; }
-  .arena-celebration { top:77%; width:92vw; padding:18px 16px; gap:12px; }.arena-reward-product { width:59px; height:59px; }.arena-reward-copy>strong { font-size:30px; }.arena-reward-copy>span { font-size:11px; }.arena-reward-copy>.arena-eyebrow { font-size:7px; }.arena-reward-activity { font-size:8px; padding:3px 10px; }
-  .arena-celebration.is-special { top:50%; width:90vw; padding:38px 19px 19px; }.arena-reward-copy h2 { font-size:29px; }.arena-celebration.is-special .arena-reward-copy>strong { font-size:23px; }.arena-reward-goal { font-size:13px; }
   .arena-admin-grid { grid-template-columns:1fr; }.arena-admin-header { flex-wrap:wrap; }.arena-admin-header h1 { font-size:20px; }.arena-admin-tabs a { margin-left:0; }
 }
 @media (max-width:950px) and (max-height:500px) and (orientation:landscape) {
@@ -256,14 +272,39 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-progress>span { font-size:9px; margin-bottom:2px; }.arena-progress-track { height:24px; }.arena-progress-track i { top:3px; bottom:3px; }.arena-progress-track strong { font-size:10px; }.arena-team-goal>small { display:none; }
   .arena-focus-slot { top:52%; width:min(36cqw,82cqh); height:min(36cqw,82cqh); }.arena-satellite { width:min(22cqw,43cqh); height:min(22cqw,43cqh); }
   .arena-orb { padding:8% 8% 11%; gap:3%; }.arena-orb-focus { padding:15% 7% 7%; }.arena-focus-cap { top:-10%; gap:0; }.arena-crown { width:22px; height:22px; }.arena-focus-title { font-size:10px; padding:2px 6px; }
-  .arena-product-copy strong { font-size:11px; }.arena-orb-focus .arena-product-copy strong { font-size:24px; }.arena-points { font-size:9px; }.arena-orb-focus .arena-points { font-size:13px; }.arena-offer { font-size:8px; }.arena-price { font-size:12px; }
+  .arena-product-copy strong { font-size:11px; }.arena-orb-focus .arena-product-copy strong { font-size:24px; }.arena-points { font-size:10px; }.arena-orb-focus .arena-points { font-size:15px; }.arena-offer { font-size:8px; }.arena-price { font-size:12px; }
   .satellite-0 { left:20%; top:1%; }.satellite-1 { right:20%; left:auto; top:1%; }.satellite-2 { left:2%; right:auto; top:28%; }.satellite-3 { right:2%; left:auto; top:28%; bottom:auto; }.satellite-4 { left:20%; bottom:1%; top:auto; }.satellite-5 { right:20%; left:auto; bottom:1%; top:auto; }
   .arena-mobile-stats { left:1%; top:0; right:auto; flex-direction:column; gap:3px; font-size:9px; }.arena-stage::before { bottom:0; left:19%; right:19%; height:6%; }
   .arena-pagination { left:50%; top:auto; bottom:0; gap:6px; font-size:9px; }.arena-pagination button { min-width:25px; min-height:25px; }.arena-pagination svg { width:14px; height:14px; }
   .arena-nav :is(button,a) { flex-direction:row; font-size:10px; }.arena-utility :is(a,button) { min-height:28px; }
   .arena-dialog { max-height:94dvh; padding:16px 22px; }.arena-dialog>header { margin-bottom:10px; padding-bottom:9px; }.arena-dialog>header h2 { font-size:21px; }.arena-dialog .arena-eyebrow { font-size:8px; }
   .arena-dialog-sellers { width:720px; }.arena-sellers { grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:13px 0; }.arena-sellers button { width:90px; height:90px; justify-self:center; aspect-ratio:1; }.arena-seller-initial { font-size:22px; }.arena-seller-name { font-size:11px; }.arena-modal-summary { padding:6px 12px; }.arena-selected-product { width:34px; height:34px; }.arena-modal-summary strong { font-size:20px; }.arena-seller-hint { font-size:10px; }
-  .arena-celebration { top:76%; width:440px; padding:13px 19px; gap:15px; }.arena-reward-product { width:48px; height:48px; }.arena-reward-copy>strong { font-size:28px; }.arena-reward-copy>span { font-size:10px; }.arena-reward-emblem { width:29px; height:29px; top:-15px; }.arena-reward-emblem svg { width:18px; height:18px; }.arena-reward-activity { font-size:8px; padding:2px 10px; }
-  .arena-celebration.is-special { width:500px; top:52%; padding:23px 23px 14px; max-height:80dvh; }.arena-celebration.is-special .arena-reward-emblem { width:40px; height:40px; top:-21px; }.arena-celebration.is-special .arena-reward-emblem svg { width:25px; height:25px; }.arena-reward-copy h2 { font-size:27px; }.arena-celebration.is-special .arena-reward-copy>strong { font-size:21px; }.arena-reward-goal { padding:4px 19px; }
 }
+
+.arena-person-metrics .arena-person-goal.is-empty strong { font-size:15px; line-height:1.3; margin-top:12px; }
+.arena-person-progress>div:nth-child(2) { min-width:0; }
+.arena-new-leader { display:flex!important; align-items:center; gap:3px; color:#f4d589!important; font-size:9px!important; }
+.arena-new-leader svg { width:12px; height:12px; fill:#ecd089; }
+.arena-leader-list li.is-new-leader { background:linear-gradient(90deg,#be96312b,#bb96300a); border-color:#ebcc7a99; }
+.arena-leader-list li.is-new-leader::after { border-width:2px; }
+.arena-admin-list .arena-edit-item { min-height:64px; padding:14px 12px; border:1px solid transparent; border-radius:7px; transition:background .12s,border-color .12s; }
+.arena-admin-list .arena-edit-item:hover { background:#183754; border-color:#5bafdf80; }
+.arena-admin-list .arena-edit-item[aria-pressed="true"] { background:#16344c; border-color:#f0cd8399; }
+.arena-edit-item>span { flex:1; min-width:0; overflow-wrap:anywhere; }.arena-edit-item small { margin-top:4px; line-height:1.35; }
+.arena-edit-icon { width:17px; height:17px; flex:none; color:#9ad4ff; }
+.arena-admin-list li>button:not(.arena-edit-item) { width:auto; min-height:44px; font-size:12px; color:#aebfd3; padding:10px 12px; }
+@media (min-width:801px) {
+  .arena-dialog-person { padding:18px 24px; }
+  .arena-person-rank { padding:8px 10px 12px; }.arena-person-rank strong { font-size:27px; }
+  .arena-dialog-person>header { margin-bottom:12px; padding-bottom:10px; }.arena-dialog-person>header h2 { font-size:25px; }
+  .arena-person-heading { padding-bottom:12px; }.arena-person-avatar { width:60px; height:60px; font-size:24px; }
+  .arena-person-metrics>div { padding:12px 15px; }.arena-person-metrics svg { top:12px; }
+  .arena-person-progress { padding:14px 8px; }.arena-progress-ring { width:94px; height:94px; }
+  .arena-breakdown-heading { margin:13px 0 9px; }.arena-breakdown { gap:8px; margin-bottom:12px; }.arena-breakdown li { padding:10px 12px; }
+  .arena-person-footer { padding:9px 12px; }
+}
+@media (max-width:800px) and (orientation:portrait) { .arena-reward-ring { padding:18px; } }
+@media (max-height:500px) and (orientation:landscape) { .arena-reward-ring { padding:16px; }.arena-reward-offer { font-size:8px; }.arena-reward-confirmation { font-size:8px; }.arena-reward-pep { font-size:10px; }.arena-reward-encouragement { font-size:9px; }.celebration-personal-goal h2,.celebration-station-goal h2 { font-size:8cqw; }
+.arena-milestone-subtitle { font-size:11px; }.is-special .arena-reward-crown { width:11cqw; height:11cqw; } }
+
 @media (prefers-reduced-motion:reduce) { .arena-theme *, .arena-theme *::before,.arena-theme *::after { animation:none!important; transition:none!important; } .arena-confetti { display:none; } }

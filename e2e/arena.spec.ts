@@ -2,9 +2,9 @@ import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import type { ArenaActivity, ArenaBootstrap, ArenaStats } from "../shared/arena";
 
-const activities: ArenaActivity[] = Array.from({ length: 15 }, (_, i) => ({ id: `activity-${i}`, name: ["Biltvätt", "Korv", "Extra dryck", "Kaffe + bulle", "Spolarvätska", "Räksallad", "Två för"][i % 7] + (i > 6 ? ` ${i}` : ""), offer_text: "", price_text: "", points: i === 0 ? 2 : 1, image_key: i === 0 ? "demo-image" : null, category: i % 2 ? "Mat" : "Bilvård", sort_order: i, active: 1 }));
+const activities: ArenaActivity[] = Array.from({ length: 15 }, (_, i) => ({ id: `activity-${i}`, name: ["Biltvätt", "Korv", "Extra dryck", "Kaffe + bulle", "Spolarvätska", "Räksallad", "Isskrapa"][i % 7] + (i > 6 ? ` ${i}` : ""), offer_text: i === 0 ? "Finast Plus" : i === 2 ? "TVÅ FÖR" : "", price_text: i === 2 ? "25:–" : "", points: i === 0 ? 2 : 1, image_key: i === 0 ? "demo-image" : null, category: i % 2 ? "Mat" : "Bilvård", sort_order: i, active: 1 }));
 const sellers = ["Peter", "Alva", "Sofia", "Erik", "Linnea", "Anton", "Julia", "Oskar", "Maja", "Felix"].map((name, i) => ({ id: `s-${i}`, external_staff_id: String(i), name, color: "#4bd5ff", active: 1 }));
-const boot: ArenaBootstrap = { station: { id: "mastertest", name: "STATIONEN" }, sellers, activities, campaign: { id: "campaign", name: "MÅNADENS FOKUS", activity_id: "activity-0", start_at: "2026-10-01T00:00:00Z", end_at: "2026-11-01T00:00:00Z", target_count: 100, target_points: 200, active: 1 } };
+const boot: ArenaBootstrap = { station: { id: "mastertest", name: "STATIONEN" }, sellers, activities, campaign: { id: "campaign", name: "MÅNADENS FOKUS", activity_id: "activity-0", start_at: "2026-09-30T22:00:00Z", end_at: "2026-10-31T23:00:00Z", target_count: 100, target_points: 200, active: 1 } };
 const stats: ArenaStats = { range: { start: "2026-10-13", end: "2026-10-13", from: "", to: "" }, points: 42, count: 18, today: { points: 42, count: 18, sellers: 3 }, campaign: { ...boot.campaign!, points: 148, count: 70 }, station_goals: [{ id: "g", period_type: "month", start_date: "2026-10-01", end_date: "2026-10-31", target_points: 1000, points: 742 }], personal_goals: [], leaderboard: sellers.map((s, i) => ({ ...s, rank: i + 1, points: 126 - i * 12, count: 12 - i, activities: [] })) };
 
 async function visualData(page: Page, current: () => ArenaStats) {
@@ -15,6 +15,86 @@ async function visualData(page: Page, current: () => ArenaStats) {
 async function stateScreenshot(page: Page, name: string) {
   if (process.env.ARENA_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/${name}.png` });
 }
+
+for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
+  test(`Arena: hero burst är läsbar, kort och klickar igenom ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width,height }); await visualData(page, () => stats);
+    await page.route("**/api/arena/registrations", route => {
+      const payload = route.request().postDataJSON();
+      return route.fulfill({ json:{ registration:{ id:payload.request_id, points_awarded:2, voided_at:null } } });
+    });
+    await page.goto("/arena"); await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
+    await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
+    const reward = page.locator(".celebration-points");
+    await expect(reward).toContainText("SÄLJNINGEN REGISTRERAD");
+    await expect(reward).toContainText("BRA JOBBAT!"); await expect(reward.locator(".arena-reward-seller")).toHaveText("Peter");
+    await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+    await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+    const ring = (await reward.locator(".arena-reward-ring").boundingBox())!;
+    for (const selector of [".arena-reward-activity", ".arena-reward-points", ".arena-reward-seller", ".arena-reward-check", ".arena-reward-encouragement"]) {
+      const box = (await reward.locator(selector).boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(ring.x); expect(box.x+box.width).toBeLessThanOrEqual(ring.x+ring.width);
+      expect(box.y).toBeGreaterThanOrEqual(ring.y); expect(box.y+box.height).toBeLessThanOrEqual(ring.y+ring.height);
+    }
+    await stateScreenshot(page, `hero-burst-${width}x${height}`);
+    await page.getByRole("button", { name:"Korv, +1 poäng", exact:true }).click();
+    await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
+    await expect(reward).toHaveCount(0, { timeout:1600 });
+  });
+}
+
+test("Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål", async ({ page }) => {
+  await page.setViewportSize({ width:1366,height:768 }); await visualData(page, () => stats);
+  await page.goto("/arena"); await page.getByRole("button", { name:/Peter 126 p/ }).click();
+  const person = page.getByRole("dialog", { name:"Peter · Min Arena" });
+  await expect(person).toContainText("Inget personligt mål satt ännu");
+  await expect(person).toContainText("Stationsadmin kan sätta ett mål för dig");
+  await expect(person.locator(".arena-person-goal")).toContainText("Inte satt ännu");
+  expect(await person.evaluate(el => el.scrollHeight <= el.clientHeight)).toBe(true);
+  expect(await person.evaluate(el => getComputedStyle(el).colorScheme)).toBe("dark");
+  await stateScreenshot(page, "person-empty-desktop");
+});
+
+test("Arena-admin: mänskliga listor, vald post, ordning och periodförval", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-10-13T12:00:00Z"));
+  const config = { activities, campaigns:[boot.campaign], station_goals:stats.station_goals, personal_goals:[{ id:"personal", seller_id:"s-0", period_type:"week", start_date:"2026-10-12", end_date:"2026-10-18", target_points:100 }] };
+  await visualData(page, () => stats);
+  const saves: Record<string, unknown>[] = [];
+  await page.route("**/api/admin/arena/config", route => route.fulfill({ json:config }));
+  await page.route("**/api/admin/arena/activities/*", route => { saves.push(route.request().postDataJSON()); return route.fulfill({ json:{ id:"activity-0" } }); });
+  await page.route("**/api/admin/arena/campaigns/*", route => { saves.push(route.request().postDataJSON()); return route.fulfill({ json:{ id:"campaign" } }); });
+  await page.goto("/arena/admin");
+  const activity = page.getByRole("button", { name:"Redigera aktivitet: Biltvätt", exact:true });
+  await expect(activity).toContainText("Ordning 1"); await activity.click(); await expect(activity).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByLabel("Ordning", { exact:true })).toHaveValue("1");
+  await page.getByLabel("Ordning", { exact:true }).fill("2"); await page.getByRole("button", { name:"Spara", exact:true }).click();
+  await expect(page.getByRole("status")).toContainText("Sparat"); expect(saves[0].sort_order).toBe(1);
+  await page.getByRole("button", { name:"Kampanj / fokus", exact:true }).click();
+  const campaign = page.getByRole("button", { name:"Redigera kampanj: MÅNADENS FOKUS", exact:true });
+  await expect(campaign).toContainText("Biltvätt"); await expect(campaign).toContainText("200 p · 100 st");
+  await expect(campaign).toContainText("1–31 okt"); await campaign.click(); await expect(campaign).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("combobox", { name:"Period", exact:true }).selectOption("week");
+  await expect(page.getByLabel("Startdatum", { exact:true })).toHaveValue("2026-10-12");
+  await expect(page.getByLabel("Slutdatum (inklusive)")).toHaveValue("2026-10-18");
+  await page.getByRole("combobox", { name:"Period", exact:true }).selectOption("month");
+  await expect(page.getByLabel("Startdatum", { exact:true })).toHaveValue("2026-10-01");
+  await expect(page.getByLabel("Slutdatum (inklusive)")).toHaveValue("2026-10-31");
+  await page.getByRole("combobox", { name:"Period", exact:true }).selectOption("custom");
+  await page.getByLabel("Startdatum", { exact:true }).fill("2026-10-14");
+  await page.getByRole("button", { name:"Spara", exact:true }).click(); await expect(page.getByRole("status")).toContainText("Sparat");
+  expect(saves[1].start_date).toBe("2026-10-14"); expect(saves[1]).not.toHaveProperty("period_type");
+  await page.getByRole("button", { name:"Stationsmål & personliga mål", exact:true }).click();
+  const goal = page.getByRole("button", { name:"Redigera mål: Peter", exact:true });
+  await expect(goal).toContainText("Den här veckan"); await expect(goal).toContainText("100 p"); await expect(goal).toContainText("Aktivt");
+  await goal.click(); await expect(goal).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("combobox", { name:"Period", exact:true }).selectOption("month");
+  await expect(page.getByLabel("Startdatum", { exact:true })).toHaveValue("2026-10-01");
+  await expect(page.getByLabel("Slutdatum", { exact:true })).toHaveValue("2026-10-31");
+  await page.getByRole("combobox", { name:"Period", exact:true }).selectOption("custom");
+  await page.getByLabel("Startdatum", { exact:true }).fill("2026-10-16");
+  await expect(page.getByLabel("Slutdatum", { exact:true })).toHaveValue("2026-10-31");
+  await stateScreenshot(page,"admin-goals");
+});
 
 test("Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry", async ({ page }) => {
   await page.route("**/api/arena/bootstrap", route => route.fulfill({ json: boot }));
@@ -49,9 +129,44 @@ test("Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverks
   expect(requests).toHaveLength(3); expect(requests[1].request_id).toBe(requests[2].request_id); expect(requests[0].request_id).not.toBe(requests[1].request_id);
 });
 
-for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
+for (const nextSelection of [false,true]) {
+  test(`Arena: långsamt milestone-svar ${nextSelection ? "stör inte nästa säljarval" : "missas inte efter en kort burst"}`, async ({ page }) => {
+    const before = structuredClone(stats), after = structuredClone(stats);
+    before.leaderboard = [{ ...stats.leaderboard[1], rank:1, points:127 }, { ...stats.leaderboard[0], rank:2 }, ...stats.leaderboard.slice(2)];
+    after.leaderboard = [{ ...stats.leaderboard[0], rank:1, points:128 }, { ...stats.leaderboard[1], rank:2, points:127 }, ...stats.leaderboard.slice(2)];
+    await visualData(page, () => before);
+    let recorded = false, release!: () => void, requested!: () => void;
+    const pending = new Promise<void>(resolve => { requested = resolve; });
+    const blocked = new Promise<void>(resolve => { release = resolve; });
+    await page.route("**/api/arena/stats*", async route => {
+      if (recorded) { requested(); await blocked; }
+      await route.fulfill({ json:recorded ? after : before });
+    });
+    await page.route("**/api/arena/registrations", route => {
+      recorded = true; const payload = route.request().postDataJSON();
+      return route.fulfill({ json:{ registration:{ id:payload.request_id, points_awarded:2, voided_at:null } } });
+    });
+    await page.goto("/arena"); await expect(page.getByRole("button", { name:"Peter 126 p", exact:true })).toBeVisible();
+    await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
+    await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
+    await expect(page.locator(".celebration-points")).toBeVisible(); await pending;
+    if (nextSelection) await page.getByRole("button", { name:"Korv, +1 poäng", exact:true }).click();
+    else await expect(page.locator(".celebration-points")).toHaveCount(0, { timeout:1600 });
+    release(); await expect(page.getByRole("button", { name:"Peter 128 p", exact:true })).toHaveCount(1);
+    if (nextSelection) {
+      await expect(page.locator(".celebration-leader")).toHaveCount(0);
+      await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
+    } else {
+      await expect(page.locator(".celebration-leader")).toContainText("Peter går om Alva");
+      await expect(page.locator(".celebration-leader")).toBeVisible();
+    }
+  });
+}
+
+for (const [width,height] of [[1920,1080],[1366,768],[1024,768],[390,844],[844,390]]) {
   test(`Arena: säljarpopup och Min Arena med mål ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height });
+    await page.clock.setFixedTime(new Date("2026-10-13T12:00:00Z"));
     const personal = structuredClone(stats);
     personal.personal_goals = [{ id: "personal", seller_id: "s-0", period_type: "week", start_date: "2026-10-12", end_date: "2026-10-18", target_points: 170, points: 142 }];
     personal.leaderboard[0] = { ...personal.leaderboard[0], points: 142, count: 48, activities: [
@@ -80,6 +195,9 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect(person).toContainText("6 poäng till nästa placering");
     await expect(person.locator(".arena-breakdown li")).toHaveCount(4);
     expect(await person.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+    await expect(person).toContainText("Den här veckan · 12–18 okt");
+    await expect(person.locator(".arena-breakdown-heading")).toContainText("Idag");
+    if (width >= 1024) expect(await person.evaluate(el => el.scrollHeight <= el.clientHeight)).toBe(true);
     await stateScreenshot(page, `person-${width}x${height}`);
     await person.getByRole("button", { name:"Fortsätt sälja", exact:true }).click();
     await expect(person).not.toBeVisible();
@@ -88,7 +206,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
 }
 
 for (const kind of ["leader","personal-goal","station-goal"] as const) {
-  for (const [width,height] of [[1920,1080],[390,844]]) {
+  for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     test(`Arena: ${kind} firar utan att blockera nästa registrering ${width}x${height}`, async ({ page }) => {
       await page.setViewportSize({ width,height });
       const before = structuredClone(stats), after = structuredClone(stats);
@@ -112,7 +230,19 @@ for (const kind of ["leader","personal-goal","station-goal"] as const) {
       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+    await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+      if (kind === "leader") {
+        await expect(reward).toContainText("Peter går om Alva");
+        if (width >= 1024) await expect(page.locator(".arena-leaderboard .is-new-leader")).toContainText("Ny etta!");
+      }
+      const ring = (await reward.locator(".arena-reward-ring").boundingBox())!;
+      expect(ring.y).toBeGreaterThanOrEqual(0); expect(ring.y + ring.height).toBeLessThanOrEqual(height);
+      for (const selector of ["h2", ".arena-reward-points", ".arena-reward-seller", ".arena-reward-goal"]) {
+        const item = reward.locator(selector); if (!await item.count()) continue;
+        const box = (await item.boundingBox())!;
+        expect(box.y).toBeGreaterThanOrEqual(ring.y); expect(box.y + box.height).toBeLessThanOrEqual(ring.y + ring.height);
+      }
       expect(await reward.locator(".arena-confetti").count()).toBeLessThanOrEqual(12);
       expect(await page.locator("canvas").count()).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(height);
@@ -140,6 +270,8 @@ for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
       expect(bounds.width).toBeGreaterThanOrEqual(44); expect(bounds.height).toBeGreaterThanOrEqual(44);
       expect(bounds.x).toBeGreaterThanOrEqual(0); expect(bounds.y).toBeGreaterThanOrEqual(0);
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(width); expect(bounds.y + bounds.height).toBeLessThanOrEqual(height);
+      const nav = (await page.locator(".arena-nav").boundingBox())!;
+      expect(bounds.y + bounds.height + 12).toBeLessThanOrEqual(nav.y);
       await buttons.nth(i).click(); await expect(page.getByRole("dialog")).toBeVisible(); await page.getByRole("button", { name: "Stäng", exact: true }).click();
     }
     if (process.env.ARENA_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/arena-${width}x${height}.png` });

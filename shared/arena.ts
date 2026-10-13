@@ -33,7 +33,7 @@ export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 10
 // Small event function shared by all celebrations. No animation controls the sale flow.
 export type ArenaAchievement = {
   text: string; special: boolean; kind: "points" | "leader" | "personal-goal" | "station-goal";
-  goal?: ArenaGoal;
+  goal?: ArenaGoal; previousLeader?: string;
 };
 export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, sellerId: string): ArenaAchievement {
   const person = after.leaderboard.find(p => p.id === sellerId);
@@ -44,7 +44,7 @@ export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, s
   const teamGoal = after.station_goals.find(g => g.points >= g.target_points &&
     before?.station_goals.some(b => b.id === g.id && b.points < g.target_points));
   if (teamGoal) return { text: "Lagets mål uppnått!", special: true, kind: "station-goal", goal: teamGoal };
-  if (person?.rank === 1 && person.points > 0 && (!old || old.rank > 1)) return { text: "Ny etta!", special: true, kind: "leader" };
+  if (person?.rank === 1 && person.points > 0 && (!old || old.rank > 1)) return { text: "Ny etta!", special: true, kind: "leader", previousLeader: before?.leaderboard.find(p => p.rank === 1 && p.id !== sellerId)?.name };
   const next = person && after.leaderboard.find(p => p.rank === person.rank - 1);
   if (next && person) return { text: `${person.name}: ${arenaNumber(roundedPoints(next.points - person.points))} poäng till nästa placering!`, special: false, kind: "points" };
   return { text: `${person?.name ?? "Laget"}, tillsammans säljer vi mer!`, special: false, kind: "points" };

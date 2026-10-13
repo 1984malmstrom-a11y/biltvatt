@@ -39,6 +39,18 @@ afterEach(() => { vi.useRealTimers(); for (const f of fixtures.splice(0)) { f.db
 const draft = { name: "Testaktivitet", offer_text: "2 FÖR", price_text: "25:–", category: "Dryck", points: 1, image_key: null, sort_order: 0, active: 1 };
 
 describe("Arena dataintegritet och stationsisolering", () => {
+  it("visar läsliga svenska adminfel utan att ändra inloggningsskyddet", async () => {
+    const f = setup();
+    expect(await (await f.call("/admin/arena/config")).json()).toEqual({ error:"Logga in som administratör." });
+    for (let i=0; i<5; i++) {
+      const response = await f.call("/admin/login", "POST", { pin:"000000" });
+      expect(response.status).toBe(401);
+      expect(await response.json()).toEqual({ error:"Fel PIN. Försök igen." });
+    }
+    const blocked = await f.call("/admin/login", "POST", { pin:"000000" });
+    expect(blocked.status).toBe(429);
+    expect(await blocked.json()).toEqual({ error:"För många inloggningsförsök. Försök igen om 15 minuter." });
+  });
   it("skyddar admin före maintenance och synkar personal utan att skapa produkter", async () => {
     const f = setup();
     expect((await f.call("/admin/arena/config")).status).toBe(401);

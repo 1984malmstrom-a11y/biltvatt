@@ -55,13 +55,13 @@ export async function requireAdmin(request: Request, env: Env) {
   const token = request.headers
     .get("Cookie")
     ?.match(/(?:^|;\s*)tvattligan_session=([a-f0-9-]+)/)?.[1];
-  if (!token) return fail(401, "Logga in som administratÃ¶r.");
+  if (!token) return fail(401, "Logga in som administratör.");
   const session = await env.DB.prepare(
     "SELECT token_hash FROM admin_sessions WHERE token_hash = ? AND expires_at > ?",
   )
     .bind(await hash(token), new Date().toISOString())
     .first();
-  if (!session) fail(401, "Din session har gÃ¥tt ut. Logga in igen.");
+  if (!session) fail(401, "Din session har gått ut. Logga in igen.");
 }
 const cookie = (request: Request, token: string, age: number) =>
   `tvattligan_session=${token}; Path=/api; HttpOnly; SameSite=Lax; Max-Age=${age}${new URL(request.url).protocol === "https:" ? "; Secure" : ""}`;
@@ -79,9 +79,9 @@ async function api(
   if (!["GET", "HEAD"].includes(method)) {
     const origin = request.headers.get("Origin");
     if (origin && origin !== url.origin)
-      fail(403, "Anrop frÃ¥n en annan webbplats Ã¤r inte tillÃ¥tet.");
+      fail(403, "Anrop från en annan webbplats är inte tillåtet.");
     if (request.headers.get("Sec-Fetch-Site") === "cross-site")
-      fail(403, "Anrop frÃ¥n en annan webbplats Ã¤r inte tillÃ¥tet.");
+      fail(403, "Anrop från en annan webbplats är inte tillåtet.");
   }
   const now = new Date().toISOString();
   if (path.startsWith("/api/arena/")) {
@@ -94,7 +94,7 @@ async function api(
   }
   if (path === "/api/admin/login" && method === "POST") {
     if (!env.ADMIN_PIN || !/^\d{6,12}$/.test(env.ADMIN_PIN))
-      fail(503, "AdministratÃ¶rs-PIN Ã¤r inte konfigurerad pÃ¥ servern.");
+      fail(503, "Administratörs-PIN är inte konfigurerad på servern.");
     const data = await body(request);
     checkFields(data, ["pin"]);
     const ip = await hash(request.headers.get("CF-Connecting-IP") ?? "local");
@@ -108,13 +108,13 @@ async function api(
       .bind(ip, now)
       .first<{ attempts: number }>();
     if ((attempt?.attempts ?? 6) > 5)
-      fail(429, "FÃ¶r mÃ¥nga inloggningsfÃ¶rsÃ¶k. FÃ¶rsÃ¶k igen om 15 minuter.");
+      fail(429, "För många inloggningsförsök. Försök igen om 15 minuter.");
     if (
       typeof data.pin !== "string" ||
       data.pin.length > 12 ||
       (await hash(data.pin)) !== (await hash(env.ADMIN_PIN!))
     )
-      fail(401, "Fel PIN. FÃ¶rsÃ¶k igen.");
+      fail(401, "Fel PIN. Försök igen.");
     const token = `${crypto.randomUUID()}${crypto.randomUUID()}`;
     await env.DB.batch([
       env.DB.prepare("DELETE FROM login_attempts WHERE ip_hash=?").bind(ip),
@@ -452,7 +452,7 @@ response = url.pathname.startsWith("/api/")
           error:
             error instanceof ApiError
               ? error.message
-              : "Ett serverfel uppstod. FÃ¶rsÃ¶k igen.",
+              : "Ett serverfel uppstod. Försök igen.",
         },
         error instanceof ApiError ? error.status : 500,
       );
