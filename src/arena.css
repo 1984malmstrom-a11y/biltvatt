@@ -65,7 +65,15 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-orb::before { content:""; position:absolute; inset:5px; border-radius:50%; border:1px solid #badcff22; pointer-events:none; }
 .arena-orb::after { content:""; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--orb-color); opacity:.5; pointer-events:none; }
 .arena-product { width:100%; height:100%; min-height:0; display:flex; align-items:center; justify-content:center; }
-.arena-product img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 5px 4px #0007); }
+.arena-product img { width:100%; height:100%; min-height:0; object-fit:contain; object-position:center; padding:3%; pointer-events:none; filter:drop-shadow(0 5px 4px #0007); }
+/* Balance the originals' transparent gutters; the visible product stays inside its slot. */
+.arena-product img[src$="01_arena-biltvatt.png"] { transform:scale(1.2); }
+.arena-product img[src$="02_arena-korv-med-mos.png"] { transform:scale(1.65); }
+.arena-product img[src$="03_arena-tva-for-25.png"] { transform:scale(1.1); }
+.arena-product img[src$="04_arena-kaffe-bulle.png"] { transform:scale(1.3); }
+.arena-product img[src$="05_arena-spolarvatska.png"] { transform:scale(1.1); }
+.arena-product img[src$="06_arena-raksallad.png"] { transform:scale(1.3); }
+.arena-product img[src$="07_arena-tva-for-30.png"] { transform:scale(1.1); }
 .arena-product>svg { width:49%; height:70%; color:var(--orb-color); stroke-width:1.25; }
 .arena-product-copy { text-align:center; line-height:1.07; width:100%; }
 .arena-product-copy strong { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; font-size:clamp(11px,1.85cqw,22px); font-weight:850; text-transform:uppercase; overflow-wrap:anywhere; text-shadow:0 2px 4px #000; }
@@ -132,7 +140,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-dialog-sellers .arena-eyebrow { font-size:10px; }
 .arena-modal-summary { display:flex; align-items:center; justify-content:center; gap:14px; color:#ecf5ff; background:linear-gradient(100deg,#18385888,#071321); border:1px solid #6b9fc445; border-radius:12px; padding:10px 14px; }
 .arena-selected-product { width:52px; height:52px; border:1px solid #82cfff; border-radius:50%; display:grid; place-items:center; background:#061528; box-shadow:0 0 12px #209fea33; padding:5px; flex:none; }
-.arena-selected-product :is(img,svg) { width:100%; height:100%; object-fit:contain; color:#55caff; }
+.arena-selected-product :is(img,svg) { width:100%; height:100%; object-fit:contain; object-position:center; color:#55caff; }
 .arena-modal-summary>span:nth-child(2) { font-weight:800; text-transform:uppercase; font-size:16px; }
 .arena-modal-summary small { display:block; font-size:9px; letter-spacing:.12em; font-weight:650; color:#9db5d0; }
 .arena-modal-summary strong { margin-left:auto; font-size:25px; color:var(--arena-gold); white-space:nowrap; text-align:center; }
@@ -181,7 +189,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-reward-ring::before { inset:9px; border:1px solid #5ebaff; box-shadow:inset 0 0 12px #389eea55; }
 .arena-reward-ring::after { inset:-10px; border:1px solid var(--reward-color); opacity:.65; }
 .arena-reward-product { width:14cqw; height:14cqw; flex:none; }
-.arena-reward-product :is(img,svg) { width:100%; height:100%; object-fit:contain; color:#6bc8ff; }
+.arena-reward-product :is(img,svg) { width:100%; height:100%; object-fit:contain; object-position:center; color:#6bc8ff; }
 .arena-reward-activity { font-size:clamp(15px,4cqw,27px); font-weight:850; text-transform:uppercase; max-width:85%; overflow-wrap:anywhere; line-height:1.08; }
 .arena-reward-offer { font-size:clamp(9px,2cqw,14px); color:#bed0e2; max-width:85%; }
 .arena-reward-points { display:block; color:#ffdf84; font-size:12cqw; font-weight:950; letter-spacing:-.04em; line-height:1.1; white-space:nowrap; text-shadow:0 0 7px #ffc750b3,0 0 22px #edaa3566,0 3px 0 #785014; }

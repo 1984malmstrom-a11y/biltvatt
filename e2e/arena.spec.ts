@@ -16,6 +16,75 @@ async function stateScreenshot(page: Page, name: string) {
   if (process.env.ARENA_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.ARENA_SCREENSHOT_DIR}/${name}.png` });
 }
 
+const productAssets = [
+  ["Biltvätt", "01_arena-biltvatt.png"],
+  ["Korv med mos", "02_arena-korv-med-mos.png"],
+  ["Två för 25", "03_arena-tva-for-25.png"],
+  ["Kaffe + bulle", "04_arena-kaffe-bulle.png"],
+  ["Spolarvätska", "05_arena-spolarvatska.png"],
+  ["Räksallad", "06_arena-raksallad.png"],
+  ["Två för 30", "07_arena-tva-for-30.png"],
+];
+const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:"", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
+// Non-transparent pixel bounds in the supplied 1024px originals. Their empty gutters may extend beyond the slot.
+const productAlphaBounds = [[100,118,924,906],[100,269,924,755],[155,100,868,924],[100,192,924,832],[230,100,794,924],[100,182,924,842],[169,100,854,924]];
+
+for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
+  test(`Arena: sju rena produktmotiv med contain och fri text ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width,height }); await visualData(page, () => stats);
+    await page.route("**/api/arena/bootstrap", route => route.fulfill({ json:{ ...boot, activities:cleanProducts } }));
+    const demos: string[] = [];
+    await page.route("**/api/arena/activity-images/demo-image", route => { demos.push(route.request().url()); return route.abort(); });
+    await page.goto("/arena");
+    await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+    for (let i=0; i<productAssets.length; i++) {
+      const [name,file] = productAssets[i], activity = cleanProducts[i];
+      const button = page.getByRole("button", { name:`${name}, +${activity.points} poäng`, exact:true });
+      const img = button.locator(".arena-product img");
+      await expect(img).toHaveAttribute("src", `/arena-products/${file}`);
+      await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth === 1024)).toBe(true);
+      const geometry = await button.evaluate((el, alpha) => {
+        const product = el.querySelector(".arena-product")!.getBoundingClientRect();
+        const image = el.querySelector("img")!, box = image.getBoundingClientRect(), style = getComputedStyle(image);
+        const copy = el.querySelector(".arena-product-copy")!.getBoundingClientRect();
+        const badge = el.querySelector(".arena-points")!.getBoundingClientRect();
+        const scale = style.transform === "none" ? 1 : new DOMMatrixReadOnly(style.transform).a;
+        const px = (side: string) => parseFloat(style.getPropertyValue(`padding-${side}`)) * scale;
+        const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom"), size = Math.min(width,height);
+        const left = box.left+px("left")+(width-size)/2, top = box.top+px("top")+(height-size)/2;
+        const motif = { left:left+alpha[0]*size/1024, top:top+alpha[1]*size/1024, right:left+alpha[2]*size/1024, bottom:top+alpha[3]*size/1024 };
+        return { fit:style.objectFit, position:style.objectPosition, inside:motif.left>=product.left-1 && motif.right<=product.right+1 && motif.top>=product.top-1 && motif.bottom<=product.bottom+1, clear:motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1 };
+      }, productAlphaBounds[i]);
+      expect(geometry).toEqual({ fit:"contain", position:"50% 50%", inside:true, clear:true });
+      await expect(button.locator(".arena-product-copy")).toContainText(name);
+      await expect(button.locator(".arena-points")).toContainText(`+${activity.points} POÄNG`);
+      expect(await button.locator("img").count()).toBe(1);
+    }
+    expect(demos).toEqual([]);
+    expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
+    await stateScreenshot(page, `products-${width}x${height}`);
+    await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
+    await expect(page.getByRole("dialog").locator(".arena-selected-product img")).toHaveAttribute("src", "/arena-products/01_arena-biltvatt.png");
+  });
+}
+
+test("Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras", async ({ page }) => {
+  await visualData(page, () => stats);
+  await page.route("**/api/admin/arena/config", route => route.fulfill({ json:{ activities:cleanProducts, campaigns:[], station_goals:[], personal_goals:[] } }));
+  await page.goto("/arena/admin");
+  for (const [name,file] of productAssets) {
+    await page.getByRole("button", { name:`Redigera aktivitet: ${name}`, exact:true }).click();
+    const preview = page.locator(".arena-preview img");
+    await expect(preview).toHaveAttribute("src", `/arena-products/${file}`);
+    await expect.poll(() => preview.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBe(1024);
+    expect(await preview.evaluate(el => getComputedStyle(el).objectFit)).toBe("contain");
+  }
+  await page.getByLabel("Produktbild", { exact:true }).setInputFiles("public/arena-products/01_arena-biltvatt.png");
+  await expect(page.locator(".arena-preview img")).toHaveAttribute("src", /^blob:/);
+  expect(await page.locator(".arena-preview img").evaluate(el => getComputedStyle(el).objectFit)).toBe("contain");
+  await stateScreenshot(page,"product-upload-preview");
+});
+
 for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   test(`Arena: hero burst är läsbar, kort och klickar igenom ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);

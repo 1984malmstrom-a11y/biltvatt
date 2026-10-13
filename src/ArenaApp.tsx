@@ -6,11 +6,13 @@ import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/a
 import ArenaDialog from "./ArenaDialog";
 import ArenaAdmin from "./ArenaAdmin";
 import { arenaPeriodLabel } from "./arena-dates";
+import { arenaProductImage } from "./arena-product-images";
 import "./arena.css";
 
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
-function ActivityImage({ activity }: { activity: ArenaActivity }) {
-  return activity.image_key ? <img src={`/api/arena/activity-images/${activity.image_key}`} alt="" /> : <ShoppingBag aria-hidden="true" />;
+function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: ArenaActivity; imageUrl?: string; loading?: "eager" | "lazy" }) {
+  const src = arenaProductImage(activity, imageUrl);
+  return src ? <img src={src} alt="" loading={loading} decoding="async" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
 export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl }: {
@@ -20,7 +22,7 @@ export function ArenaActivityButton({ activity, focus = false, campaignName, onC
     aria-label={`${activity.name}, +${num(activity.points)} poäng`}>
     {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span></span>}
     <span className="arena-product">
-      {(imageUrl || activity.image_key) ? <img src={imageUrl || `/api/arena/activity-images/${activity.image_key}`} alt="" loading={focus ? "eager" : "lazy"} draggable={false} /> : <ShoppingBag aria-hidden="true" />}
+      <ActivityImage activity={activity} imageUrl={imageUrl} loading={focus ? "eager" : "lazy"} />
     </span>
     <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>
     <span className="arena-points">+{num(activity.points)} POÄNG</span>
