@@ -555,6 +555,7 @@ export default function StationDashboardV2({ initialHandbookOpen = false }: { in
           </div>
         </div>
         <nav className="v2-header-shortcuts" aria-label="Genvägar">
+          <a className="v2-arena-link" href="/arena">★ ARENA</a>
           <a
             className="v2-lovable-link"
             href="https://what-can-i-do-183.lovable.app/"

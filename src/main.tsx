@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
@@ -9,12 +9,15 @@ import "./preem-theme.css";
 import "./issues.css";
 import "./handbook.css";
 import { registerServiceWorker } from "./pwa";
+const ArenaApp = lazy(() => import("./ArenaApp"));
 void registerServiceWorker()?.catch(() => {
   /* UI offers useful feedback when push is requested. */
 });
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {window.location.pathname === "/station" ||
+    {window.location.pathname === "/arena" || window.location.pathname.startsWith("/arena/") ? (
+      <Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaApp /></Suspense>
+    ) : window.location.pathname === "/station" ||
     window.location.pathname.startsWith("/station/") ? (
       <StationApp />
     ) : (

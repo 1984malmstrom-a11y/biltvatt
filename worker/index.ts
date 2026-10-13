@@ -1,4 +1,5 @@
 import { arenaApi } from "./arena";
+import { arenaAdminApi } from "./arena-admin";
 import {
   addDays,
   dateRange,
@@ -83,10 +84,10 @@ async function api(
       fail(403, "Anrop frÃ¥n en annan webbplats Ã¤r inte tillÃ¥tet.");
   }
   const now = new Date().toISOString();
-if (path.startsWith("/api/arena/")) {
-  const response = await arenaApi(request, env);
-  if (response) return response;
-}
+  if (path.startsWith("/api/arena/")) {
+    const response = await arenaApi(request, env);
+    if (response) return response;
+  }
   if (path.startsWith("/api/station/") || path.startsWith("/api/admin/station/")) {
     const response = await stationApi(request, env, requireAdmin);
     if (response) return response;
@@ -132,6 +133,7 @@ if (path.startsWith("/api/arena/")) {
     });
   }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
+  if (path.startsWith("/api/admin/arena/")) return arenaAdminApi(request, env);
   if (path.startsWith("/api/admin/launch/")) {
     const response = await launchResetApi(request, env);
     if (response) return response;

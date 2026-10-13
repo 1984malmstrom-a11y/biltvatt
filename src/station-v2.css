@@ -1420,3 +1420,5 @@
     grid-template-rows: minmax(0, 1.35fr) minmax(0, .75fr) minmax(0, .56fr);
   }
 }
+.v2-arena-link { align-self:center; padding:8px 14px; border-radius:50px; background:#142b47; color:#fff; font-weight:800; white-space:nowrap; border:1px solid #58cdff; box-shadow:0 0 12px #54cfff35; text-decoration:none; }
+@media (max-width:700px) { .v2-header-shortcuts { flex-wrap:wrap; } }

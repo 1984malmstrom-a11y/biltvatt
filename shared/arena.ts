@@ -1,0 +1,44 @@
+export type ArenaActivity = {
+  id: string; name: string; offer_text: string; price_text: string; points: number;
+  image_key: string | null; category: string; sort_order: number; active: number;
+};
+export type ArenaSeller = { id: string; external_staff_id: string; name: string; color: string; active: number };
+export type ArenaCampaign = {
+  id: string; name: string; activity_id: string; start_at: string; end_at: string;
+  target_count: number | null; target_points: number | null; active: number;
+};
+export type ArenaGoal = {
+  id: string; seller_id?: string; period_type: "week" | "month" | "custom";
+  start_date: string; end_date: string; target_points: number; points: number;
+};
+export type ArenaPerson = ArenaSeller & {
+  rank: number; points: number; count: number;
+  activities: { id: string; name: string; category: string; count: number; points: number }[];
+};
+export type ArenaBootstrap = {
+  station: { id: string; name: string }; sellers: ArenaSeller[];
+  activities: ArenaActivity[]; campaign: ArenaCampaign | null;
+};
+export type ArenaStats = {
+  range: { start: string; end: string; from: string; to: string };
+  points: number; count: number; leaderboard: ArenaPerson[];
+  today: { count: number; points: number; sellers: number };
+  campaign: (ArenaCampaign & { points: number; count: number }) | null;
+  station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
+};
+export type ArenaRegistration = { id: string; seller_id: string; activity_id: string; points_awarded: number; registered_at: string; voided_at: string | null };
+export const arenaNumber = (n: number) => new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 2 }).format(n);
+export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
+
+// Small event function shared by all celebrations. No animation controls the sale flow.
+export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, sellerId: string) {
+  const person = after.leaderboard.find(p => p.id === sellerId);
+  const old = before?.leaderboard.find(p => p.id === sellerId);
+  const goal = after.personal_goals.find(g => g.seller_id === sellerId && g.points >= g.target_points &&
+    (before?.personal_goals.find(b => b.id === g.id)?.points ?? 0) < g.target_points);
+  if (goal) return { text: "Personliga målet uppnått!", special: true };
+  if (person?.rank === 1 && person.points > 0 && (!old || old.rank > 1)) return { text: "Ny etta!", special: true };
+  const next = person && after.leaderboard.find(p => p.rank === person.rank - 1);
+  if (next && person) return { text: `${person.name}: ${arenaNumber(roundedPoints(next.points - person.points))} poäng till nästa placering!`, special: false };
+  return { text: `${person?.name ?? "Laget"}, tillsammans säljer vi mer!`, special: false };
+}
