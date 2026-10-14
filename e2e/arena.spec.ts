@@ -5,7 +5,7 @@ import type { ArenaActivity, ArenaBootstrap, ArenaStats } from "../shared/arena"
 const activities: ArenaActivity[] = Array.from({ length: 15 }, (_, i) => ({ id: `activity-${i}`, name: ["Biltvätt", "Korv", "Två för 25", "Kaffe + bulle", "Spolarvätska", "Räksallad", "Två för 30"][i % 7] + (i > 6 ? ` ${i}` : ""), offer_text: i === 0 ? "Finast Plus" : i === 2 ? "TVÅ FÖR" : "", price_text: i === 2 ? "25:–" : "", points: i === 0 ? 2 : 1, image_key: i === 0 ? "demo-image" : null, category: i % 2 ? "Mat" : "Bilvård", sort_order: i, active: 1 }));
 const sellers = ["Peter", "Alva", "Sofia", "Erik", "Linnea", "Anton", "Julia", "Oskar", "Maja", "Felix"].map((name, i) => ({ id: `s-${i}`, external_staff_id: String(i), name, color: "#4bd5ff", active: 1 }));
 const boot: ArenaBootstrap = { station: { id: "mastertest", name: "STATIONEN" }, sellers, activities, campaign: { id: "campaign", name: "MÅNADENS FOKUS", activity_id: "activity-0", start_at: "2026-09-30T22:00:00Z", end_at: "2026-10-31T23:00:00Z", target_count: 100, target_points: 200, active: 1 } };
-const stats: ArenaStats = { range: { start: "2026-10-13", end: "2026-10-13", from: "", to: "" }, points: 42, count: 18, today: { points: 42, count: 18, sellers: 3 }, campaign: { ...boot.campaign!, points: 148, count: 70 }, station_goals: [{ id: "g", period_type: "month", start_date: "2026-10-01", end_date: "2026-10-31", target_points: 1000, points: 742 }], personal_goals: [], leaderboard: sellers.map((s, i) => ({ ...s, rank: i + 1, points: 126 - i * 12, count: 12 - i, activities: [] })) };
+const stats: ArenaStats = { range: { start: "2026-10-13", end: "2026-10-13", from: "", to: "" }, points: 42, count: 18, today: { points: 42, count: 18, sellers: 3 }, recent: sellers.slice(0,5).map((seller,i) => ({ id:`sale-${i}`,seller_name:seller.name,activity_name:activities[i].name,points_awarded:i === 0 ? 2 : 1,registered_at:`2026-10-13T12:${String(37-i).padStart(2,"0")}:00Z` })), campaign: { ...boot.campaign!, points: 148, count: 70 }, station_goals: [{ id: "g", period_type: "month", start_date: "2026-10-01", end_date: "2026-10-31", target_points: 1000, points: 742 }], personal_goals: [], leaderboard: sellers.map((s, i) => ({ ...s, rank: i + 1, points: 126 - i * 12, count: 12 - i, activities: [] })) };
 
 async function visualData(page: Page, current: () => ArenaStats) {
   await page.route("**/api/arena/bootstrap", route => route.fulfill({ json: boot }));
@@ -25,7 +25,7 @@ async function expectDesktopOrbit(page: Page, positions: { x:number; y:number; r
   for (let i=0;i<positions.length;i++) for (let j=i+1;j<positions.length;j++) {
     expect(Math.hypot(positions[i].x-positions[j].x,positions[i].y-positions[j].y)-positions[i].radius-positions[j].radius).toBeGreaterThanOrEqual(2);
   }
-  for (const selector of [".arena-leaderboard", ".arena-stats"]) {
+  for (const selector of [".arena-left-column"]) {
     const panel=(await page.locator(selector).boundingBox())!;
     for (const circle of positions) {
       const x=Math.max(panel.x,Math.min(circle.x,panel.x+panel.width)), y=Math.max(panel.y,Math.min(circle.y,panel.y+panel.height));
@@ -55,7 +55,7 @@ for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200],[1448
     await expectDesktopOrbit(page,positions);
     if (width === 1448) {
       // At the reference's own size, panels must not keep narrow 1024px tablet widths.
-      for (const selector of [".arena-leaderboard", ".arena-stats"]) {
+      for (const selector of [".arena-left-column"]) {
         expect((await page.locator(selector).boundingBox())!.width).toBeGreaterThan(width*.15);
       }
     }
@@ -134,15 +134,20 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
       await expectDesktopOrbit(page, positions);
       const ratio=positions[1].radius/positions[0].radius;
       expect(ratio).toBeGreaterThan(.56); expect(ratio).toBeLessThan(.6);
-      for (const [index,circle] of positions.slice(1).entries()) {
+      for (const circle of positions.slice(1)) {
         const gap=Math.hypot(circle.x-positions[0].x,circle.y-positions[0].y)-circle.radius-positions[0].radius;
-        expect(gap/positions[0].radius).toBeLessThan(width === 1448 && index >= 4 ? .14 : .06);
+        expect(gap/positions[0].radius).toBeLessThan(width === 1920 ? .12 : .06);
       }
     }
-    for (const i of [1,3,5]) expect(positions[i].x).toBeLessThan(positions[0].x);
-    for (const i of [2,4,6]) expect(positions[i].x).toBeGreaterThan(positions[0].x);
-    expect(positions[1].y).toBeLessThan(positions[3].y); expect(positions[3].y).toBeLessThan(positions[5].y);
-    expect(positions[2].y).toBeLessThan(positions[4].y); expect(positions[4].y).toBeLessThan(positions[6].y);
+    if (width === 390) {
+      for (const circle of positions.slice(1)) expect(circle.y-circle.radius).toBeGreaterThan(positions[0].y+positions[0].radius);
+      expect(positions[1].y).toBeCloseTo(positions[2].y,0); expect(positions[2].y).toBeCloseTo(positions[3].y,0);
+      expect(positions[4].y).toBeCloseTo(positions[5].y,0); expect(positions[5].y).toBeCloseTo(positions[6].y,0);
+    } else {
+      for (const i of [1,3,5]) expect(positions[i].x).toBeLessThan(positions[0].x);
+      for (const i of [2,4,6]) expect(positions[i].x).toBeGreaterThan(positions[0].x);
+      expect(positions[1].y).toBeLessThan(positions[5].y); expect(positions[2].y).toBeLessThan(positions[6].y);
+    }
     if (width === 1024) {
       // Hover feedback must also fit the compact orbit without pushing circle bodies together.
       const items=page.locator(".arena-stage .arena-orb");
@@ -198,15 +203,16 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     const desktop = width >= 1024;
     if (!desktop) await page.getByRole("button", { name:"TOPPLISTOR", exact:true }).click();
     const panel = desktop ? page.locator(".arena-leaderboard") : page.getByRole("dialog", { name:"Topplistor & statistik" });
-    await expect(panel.locator(".arena-leader-list button")).toHaveCount(10);
-    await expect(panel.locator(".arena-rank")).toHaveText(stats.leaderboard.map(p => String(p.rank)));
+    const shown=desktop ? stats.leaderboard.slice(0,5) : stats.leaderboard;
+    await expect(panel.locator(".arena-leader-list button")).toHaveCount(shown.length);
+    await expect(panel.locator(".arena-rank")).toHaveText(shown.map(p => String(p.rank)));
     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(0);
-    await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(stats.leaderboard.map(p => p.name));
-    for (const person of stats.leaderboard) {
+    await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+    for (const person of shown.slice(0,width === 1024 ? 3 : shown.length)) {
       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
     }
-    const geometry = await panel.locator(".arena-leader-list button").evaluateAll(rows => rows.map(row => {
+    const geometry = await panel.locator(".arena-leader-list button").evaluateAll(rows => rows.filter(row => row.getBoundingClientRect().height>0).map(row => {
       const box=row.getBoundingClientRect(), name=row.children[1].getBoundingClientRect(), points=row.children[2].getBoundingClientRect();
       return { touch:box.height>=44, distinct:name.right<=points.left, inside:points.right<=box.right && name.left>=box.left };
     }));
@@ -227,6 +233,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect.poll(() => queries.at(-1)?.get("start")).toBe("2026-10-01");
     expect(queries.at(-1)?.get("end")).toBe("2026-10-13");
     expect(queries.at(-1)?.get("period")).toBe("custom");
+    if (desktop) expect(await panel.locator(".arena-leader-list").evaluate(el => el.scrollHeight<=el.clientHeight+1)).toBe(true);
     await panel.getByRole("button", { name:"IDAG", exact:true }).click();
     await expect.poll(() => queries.at(-1)?.get("period")).toBe("today");
     expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
@@ -241,32 +248,87 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   });
 }
 
-for (const width of [1920,1024]) {
-  test(`Arena: premium-stats bevarar decimalpoäng och läsbara siffror ${width}`, async ({ page }) => {
+for (const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,390]]) {
+  test(`Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow ${width}x${height}`, async ({ page }) => {
     const current=structuredClone(stats); current.today={ count:27,points:42.5,sellers:5 };
-    await page.setViewportSize({ width,height:width === 1920 ? 1080 : 768 });
-    await visualData(page, () => current); await page.goto("/arena");
-    const panel=page.locator(".arena-stats");
-    await expect(panel.locator(".arena-stat strong")).toHaveText(["27","42,5","5"]);
-    await expect(panel.locator(".arena-stat span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare"]);
-    const fit=await panel.evaluate(el => {
-      const panel=el.getBoundingClientRect(), heading=el.querySelector("h2")!;
-      const rows=[...el.querySelectorAll(".arena-stat")].map(row => {
-        const value=row.querySelector("strong")!.getBoundingClientRect(),label=row.querySelector("span")!.getBoundingClientRect(),icon=row.querySelector("svg")!.getBoundingClientRect();
-        const card=row.getBoundingClientRect();
-        return icon.right<=value.left && value.bottom<=label.top && label.right<=card.right && icon.left>=card.left && card.right<=panel.right;
+    await page.setViewportSize({width,height}); await visualData(page,() => current); await page.goto("/arena");
+    const bar=page.getByRole("region",{name:"Dagens stats"});
+    await expect(bar.locator("strong")).toHaveText(["27","42,5","5"]);
+    await expect(bar.locator("span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare"]);
+    const fit=await bar.evaluate(el => {
+      const bar=el.getBoundingClientRect();
+      return [...el.querySelectorAll(":scope>div")].every(metric => {
+        const r=metric.getBoundingClientRect(),value=metric.querySelector("strong")!.getBoundingClientRect(),label=metric.querySelector("span")!.getBoundingClientRect();
+        return value.right<=r.right && label.right<=r.right && r.right<=bar.right && label.bottom<=bar.bottom;
       });
-      const quote=el.querySelector("blockquote")!.getBoundingClientRect();
-      return rows.every(Boolean) && heading.scrollWidth<=heading.clientWidth && quote.bottom<=panel.bottom;
-    });
-    expect(fit).toBe(true);
-    const quote=(await panel.locator("blockquote").boundingBox())!,hand=(await page.locator(".arena-stats-column>.arena-handwritten").boundingBox())!;
-    const main=(await page.locator(".arena-main").boundingBox())!;
-    expect(hand.y).toBeGreaterThan(quote.y+quote.height);
-    expect(hand.y+hand.height).toBeLessThanOrEqual(main.y+main.height);
-    await stateScreenshot(page,`premium-stats-${width}`);
+    }); expect(fit).toBe(true);
+    const barBox=(await bar.boundingBox())!,nav=(await page.locator(".arena-nav").boundingBox())!,stage=(await page.locator(".arena-stage").boundingBox())!;
+    expect(barBox.y).toBeGreaterThanOrEqual(stage.y+stage.height); expect(barBox.y+barBox.height).toBeLessThanOrEqual(nav.y);
+    await expect(page.locator(".arena-stats-column")).toHaveCount(0);
+    if (width >= 1024) {
+      const top=(await page.locator(".arena-leaderboard").boundingBox())!,recent=(await page.locator(".arena-recent").boundingBox())!;
+      expect(top.y+top.height).toBeLessThanOrEqual(recent.y); expect(recent.x+recent.width).toBeLessThanOrEqual(stage.x);
+      await expect(page.locator(".arena-leaderboard h2")).toHaveText("TOPPLISTA – Idag");
+      await expect(page.locator(".arena-recent .arena-live")).toHaveText("LIVE");
+      const listsFit=await page.locator(".arena-left-column :is(.arena-leader-list,.arena-recent-list)").evaluateAll(lists => lists.every(list => list.scrollHeight<=list.clientHeight+1));
+      expect(listsFit).toBe(true);
+    } else {
+      await expect(page.locator(".arena-left-column")).toBeHidden();
+      await page.getByRole("button",{name:"Öppna topplistan",exact:true}).click();
+      await expect(page.getByRole("dialog",{name:"Topplistor & statistik"})).toBeVisible();
+      await page.getByRole("dialog").getByRole("button",{name:"Stäng",exact:true}).click();
+    }
+    await page.getByRole("button",{name:"Öppna senaste aktiviteter",exact:true}).click();
+    const feed=page.getByRole("dialog",{name:"Senaste aktiviteter",exact:true});
+    await expect(feed.locator(".arena-recent-list li")).toHaveCount(5);
+    await expect(feed.locator("li").first()).toContainText("Peter"); await expect(feed.locator("li").first()).toContainText("Biltvätt");
+    await expect(feed.locator("li").first().locator("time")).toHaveText("14:37");
+    await feed.getByRole("button",{name:"Stäng",exact:true}).click();
+    const navButtons=await page.locator(".arena-nav :is(button,a)").evaluateAll(items => items.map(el => el.getBoundingClientRect().height));
+    expect(navButtons.every(height => height>=44)).toBe(true);
+    expect(await page.evaluate(() => ({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
+    await stateScreenshot(page,`responsive-${width}x${height}`);
   });
 }
+
+test("Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post", async ({page}) => {
+  let recorded=false;
+  const id=crypto.randomUUID(),after=structuredClone(stats);
+  after.today.count++; after.today.points+=2; after.leaderboard[0].points+=2;
+  after.recent=[{id,seller_name:"Peter",activity_name:"Biltvätt",points_awarded:2,registered_at:"2026-10-13T12:40:00Z"},...stats.recent!];
+  await visualData(page,() => recorded ? after : stats);
+  await page.route("**/api/arena/registrations",route => {
+    recorded=true; return route.fulfill({json:{registration:{id,points_awarded:2,voided_at:null}}});
+  });
+  await page.route(`**/api/arena/registrations/${id}/void`,route => {
+    recorded=false; return route.fulfill({json:{ok:true}});
+  });
+  await page.goto("/arena");
+  await page.getByRole("button",{name:"Biltvätt, +2 poäng",exact:true}).click();
+  await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();
+  await expect(page.locator(".arena-recent-list li").first().locator("time")).toHaveText("14:40");
+  await expect(page.locator(".arena-recent-list li").first()).toContainText("+2 p");
+  await page.getByRole("button",{name:/Ångra senaste/}).click();
+  await expect(page.locator(".arena-recent-list li").first().locator("time")).toHaveText("14:37");
+  await expect(page.locator(`time[datetime="2026-10-13T12:40:00Z"]`)).toHaveCount(0);
+});
+
+test("Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry", async ({page}) => {
+  let failing=true; await visualData(page,() => stats);
+  let release!: () => void, firstBoot=true;
+  const waiting=new Promise<void>(resolve => {release=resolve;});
+  await page.route("**/api/arena/bootstrap",async route => {
+    if (firstBoot) {firstBoot=false; await waiting;}
+    await route.fulfill({json:boot});
+  });
+  await page.route("**/api/arena/stats*",route => route.fulfill(failing ? {status:503,json:{error:"Tillfälligt avbrott"}} : {json:stats}));
+  await page.goto("/arena"); await expect(page.locator(".arena-recent .arena-live")).toHaveText("PAUSAD");
+  release(); await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+  await expect(page.locator(".arena-recent .arena-live")).toHaveText("PAUSAD");
+  failing=false; await page.getByRole("button",{name:"Försök igen",exact:true}).click();
+  await expect(page.locator(".arena-recent .arena-live")).toHaveText("LIVE");
+  await expect(page.locator(".arena-recent-list li")).toHaveCount(4);
+});
 
 test("Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion", async ({ page }) => {
   const after=structuredClone(stats); after.station_goals[0].points+=2;
@@ -680,9 +742,11 @@ test("Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI", 
   await page.getByRole("dialog").getByRole("button", { name: staffName, exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0); await expect(page.getByRole("status")).toContainText("+0,5 POÄNG!");
   let current = await (await page.request.get("/api/arena/stats")).json() as ArenaStats; expect(current).toMatchObject({ count: baseline.count + 1, points: baseline.points + 0.5 });
+  expect(current.recent!.some(r => r.seller_name === staffName && r.activity_name === activityName && r.points_awarded === 0.5)).toBe(true);
   await page.getByRole("button", { name: /Ångra senaste/ }).click();
   await expect(page.getByRole("button", { name: /Ångra senaste/ })).toHaveCount(0);
   current = await (await page.request.get("/api/arena/stats")).json() as ArenaStats; expect(current).toMatchObject({ count: baseline.count, points: baseline.points });
+  expect(current.recent!.some(r => r.seller_name === staffName)).toBe(false);
   const { id, ...draft } = activity;
   expect((await page.request.patch(`/api/admin/arena/activities/${id}`, { data: { ...draft, active: 0 } })).status()).toBe(200);
 });

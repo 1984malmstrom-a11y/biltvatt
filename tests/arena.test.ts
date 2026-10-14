@@ -76,6 +76,30 @@ describe("Arena dataintegritet och stationsisolering", () => {
     expect(() => f.arena.prepare("UPDATE arena_registrations SET points_awarded=100 WHERE id=?").run(first.registration.id)).toThrow("arena_snapshot_immutable");
     const other = await f.create(cookie); expect((await f.registration(other, request)).status).toBe(409);
   });
+  it("visar de tio senaste av dagens försäljningar med snapshotpoäng, utan kvitton, filterläckage eller ångrade poster", async () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date("2026-10-13T21:59:00Z"));
+    const f=setup(),cookie=await f.ready(),a=await f.create(cookie,0.5);
+    await f.registration(a); // Yesterday in Stockholm, even though today's records share this UTC date.
+    const saved: { id:string; request:string }[]=[];
+    for (let i=0;i<12;i++) {
+      vi.setSystemTime(new Date(Date.UTC(2026,9,13,22,2+i)));
+      const request=crypto.randomUUID(),response=await (await f.registration(a,request)).json() as { registration:{id:string} };
+      saved.push({id:response.registration.id,request});
+    }
+    await f.call(`/admin/arena/activities/${a}`,"PATCH",{...draft,points:8},cookie);
+    const other=await f.create(cookie,2);
+    const current=await (await f.call(`/arena/stats?period=month&activity_id=${other}`)).json() as ArenaStats;
+    expect(current.count).toBe(0); expect(current.recent).toHaveLength(10);
+    expect(current.recent!.map(r => r.id)).toEqual(saved.slice(2).reverse().map(r => r.id));
+    expect(current.recent!.every(r => r.points_awarded === 0.5 && r.activity_name === draft.name && r.seller_name)).toBe(true);
+    expect(current.recent![0]).not.toHaveProperty("request_id");
+    const last=saved.at(-1)!;
+    expect((await f.call(`/arena/registrations/${last.id}/void`,"POST",{request_id:last.request})).status).toBe(200);
+    const after=await (await f.call("/arena/stats")).json() as ArenaStats;
+    expect(after.recent!.some(r => r.id === last.id)).toBe(false); expect(after.recent).toHaveLength(10);
+    f.env.STATION_ID="other"; await f.call("/arena/bootstrap");
+    expect((await (await f.call("/arena/stats")).json() as ArenaStats).recent).toEqual([]);
+  });
   it("hindrar korsläsning och korsskrivning av aktiviteter, säljare, bilder och ångring", async () => {
     const f = setup(), cookie = await f.ready(), a = await f.create(cookie), request = crypto.randomUUID();
     const saved = await (await f.registration(a, request)).json() as { registration: { id: string } };

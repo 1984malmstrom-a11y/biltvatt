@@ -1,4 +1,4 @@
-import type { ArenaCampaign, ArenaGoal, ArenaPerson, ArenaSeller, ArenaStats } from "../shared/arena";
+import type { ArenaCampaign, ArenaGoal, ArenaPerson, ArenaRecentActivity, ArenaSeller, ArenaStats } from "../shared/arena";
 import { roundedPoints } from "../shared/arena";
 import { fail, text } from "./http";
 import { arenaRange, goalBounds } from "./arena-model";
@@ -18,7 +18,7 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
   if (category) text(category, "Kategori", 40);
   const day = stockholmDay(now);
   const todayRange = arenaRange(new URL("https://arena.test/?period=today"), now);
-  const [sellers, grouped, today, campaign, stationGoals, personalGoals] = await Promise.all([
+  const [sellers, grouped, today, campaign, stationGoals, personalGoals, recent] = await Promise.all([
     db.prepare("SELECT id,external_staff_id,name,color,active FROM arena_sellers WHERE station_id=?").bind(key).all<ArenaSeller>(),
     db.prepare(`SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points
       FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id
@@ -32,6 +32,14 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     currentCampaign(db, key, now.toISOString()),
     db.prepare("SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     db.prepare("SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
+    // A bounded, station-scoped feed follows today's sales independently of leaderboard filters.
+    db.prepare(`SELECT r.id,s.name seller_name,a.name activity_name,r.points_awarded,r.registered_at
+      FROM arena_registrations r
+      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id
+      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id
+      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?
+      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10`)
+      .bind(key, todayRange.from, todayRange.to).all<ArenaRecentActivity>(),
   ]);
   const people = sellers.results.map(seller => {
     const activities = grouped.results.filter(r => r.seller_id === seller.id).map(({ seller_id: _, ...r }) => ({ ...r, points: roundedPoints(r.points) }));
@@ -57,6 +65,6 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     range, count: leaderboard.reduce((s, p) => s + p.count, 0), points: roundedPoints(leaderboard.reduce((s, p) => s + p.points, 0)), leaderboard,
     today: { count: today?.count ?? 0, points: roundedPoints(today?.points ?? 0), sellers: today?.sellers ?? 0 },
     campaign: campaign ? { ...campaign, count: campaignResult?.count ?? 0, points: roundedPoints(campaignResult?.points ?? 0) } : null,
-    station_goals, personal_goals,
+    station_goals, personal_goals, recent: recent.results.map(r => ({ ...r, points_awarded: roundedPoints(r.points_awarded) })),
   };
 }

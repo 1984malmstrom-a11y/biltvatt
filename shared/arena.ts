@@ -19,10 +19,14 @@ export type ArenaBootstrap = {
   station: { id: string; name: string }; sellers: ArenaSeller[];
   activities: ArenaActivity[]; campaign: ArenaCampaign | null;
 };
+export type ArenaRecentActivity = {
+  id: string; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
+};
 export type ArenaStats = {
   range: { start: string; end: string; from: string; to: string };
   points: number; count: number; leaderboard: ArenaPerson[];
   today: { count: number; points: number; sellers: number };
+  recent?: ArenaRecentActivity[];
   campaign: (ArenaCampaign & { points: number; count: number }) | null;
   station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
 };

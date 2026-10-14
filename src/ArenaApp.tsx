@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
@@ -45,11 +45,22 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
-function People({ stats, onPerson, highlightId, newLeaderId }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string }) {
-  return <ol className="arena-leader-list">{stats?.leaderboard.map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
+function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
+  return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${num(p.points)} p`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
       {p.rank}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
+}
+const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
+function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean }) {
+  return <span className={`arena-live${error ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`}><i aria-hidden="true" />{error ? "PAUSAD" : !stats ? "HÄMTAR" : stats.recent ? "LIVE" : "SAKNAS"}</span>;
+}
+function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
+  const rows = stats?.recent?.slice(0, limit) ?? [];
+  return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id}>
+    <span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span>
+    <b>+{num(row.points_awarded)} p</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
+  </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 }
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
@@ -97,10 +108,11 @@ export default function ArenaApp() {
 function ArenaHome() {
   const [data, setData] = useState<ArenaBootstrap | null>(null);
   const [stats, setStats] = useState<ArenaStats | null>(null);
+  const [statsUnavailable, setStatsUnavailable] = useState(false);
   const [period, setPeriod] = useState("today"), [start, setStart] = useState(""), [end, setEnd] = useState("");
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
   const [attempt, setAttempt] = useState<Attempt | null>(null), [busy, setBusy] = useState(false), [saleError, setSaleError] = useState("");
-  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "campaign" | null>(null);
+  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const lock = useRef(false), statsRef = useRef(stats), attemptRef = useRef<Attempt | null>(null), statsVersion = useRef(0);
@@ -115,9 +127,9 @@ function ArenaHome() {
     const version = ++statsVersion.current;
     try {
       const next = await api<ArenaStats>(`/arena/stats?${queryRef.current}`);
-      if (version === statsVersion.current) { statsRef.current = next; setStats(next); setError(""); }
+      if (version === statsVersion.current) { statsRef.current = next; setStats(next); setStatsUnavailable(false); setError(""); }
       return next;
-    } catch (e) { if (version === statsVersion.current) setError((e as Error).message); return null; }
+    } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, []);
   const bootstrap = useCallback(async () => {
     try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { setError((e as Error).message); }
@@ -197,25 +209,28 @@ function ArenaHome() {
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
       <p className="arena-handwritten">Tillsammans<br />säljer vi mer! ♡</p>
     </header>
-    {error && <div className="arena-error" role="alert">{error}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
+    {(error || statsUnavailable) && <div className="arena-error" role="alert">{error || "Statistiken är tillfälligt otillgänglig."}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
-      <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA</h2>{controls}<People stats={stats} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}>SE FLER TOPPLISTOR <ChevronRight aria-hidden="true" /></button></aside>
+      <div className="arena-left-column">
+        <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA <span>– {({ today:"Idag", week:"Vecka", month:"Månad", custom:"Period" } as Record<string,string>)[period]}</span></h2>{controls}<People stats={stats} limit={period === "custom" ? 2 : 5} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}>SE FLER TOPPLISTOR <ChevronRight aria-hidden="true" /></button></aside>
+        <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>Senaste aktiviteter</h2><ChevronRight aria-hidden="true" /></button><FeedStatus stats={stats} error={statsUnavailable} /></header><RecentActivities stats={stats} limit={4} /></aside>
+      </div>
       <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
-        <div className="arena-mobile-stats" aria-label="Dagens resultat"><span><BarChart3 /> {stats?.today.count ?? "—"} registreringar</span><span><Star /> {stats ? num(stats.today.points) : "—"} p</span><span><Users /> {stats?.today.sellers ?? "—"} säljare</span></div>
+        <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel("leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <>
           <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? () => begin(focus.activity!) : undefined} /></div>
           <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? () => begin(activity) : undefined} /></div>)}</div>
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
-      <div className="arena-stats-column"><aside className="arena-stats arena-panel"><span className="arena-eyebrow">STARKARE TILLSAMMANS</span><h2>DAGENS STATS</h2>
-        <div className="arena-stat"><BarChart3 /><div><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div></div>
-        <div className="arena-stat"><Star /><div><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div></div>
-        <div className="arena-stat"><Users /><div><strong>{stats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div></div>
-        <blockquote>”Små merförsäljningar<br />skapar stora resultat!”<span>♡</span></blockquote>
-      </aside><p className="arena-handwritten">Du gör skillnad! ♡</p></div>
     </main>
     <div className="arena-utility"><a href="/station"><ArrowLeft /> Stationsdashboard</a><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
+    <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
+      <div><BarChart3 aria-hidden="true" /><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div>
+      <div><Star aria-hidden="true" /><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div>
+      <div><Users aria-hidden="true" /><strong>{stats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
+      <p>Små merförsäljningar skapar stora resultat!</p>
+    </section>
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     {attempt && <ArenaDialog title="Vem gjorde försäljningen?" className="arena-dialog-sellers" eyebrow="EN FÖRSÄLJNING. TVÅ TRYCK." locked={busy || Boolean(attempt.sellerId)} onClose={() => { setSelection(null); setSaleError(""); }}>
       <div className="arena-modal-summary"><span className="arena-selected-product" aria-hidden="true"><ActivityImage activity={attempt.activity} /></span><span>{attempt.activity.name}<small>VALD AKTIVITET</small></span><strong>+{num(attempt.activity.points)} <small>POÄNG</small></strong></div>
@@ -232,6 +247,7 @@ function ArenaHome() {
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
       <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar` : "Hämtar statistik…"}</p><People stats={stats} onPerson={p => { setPanel(null); setPersonId(p.id); }} />
     </ArenaDialog>}
+    {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><FeedStatus stats={stats} error={statsUnavailable} /><RecentActivities stats={stats} /></ArenaDialog>}
     {panel === "campaign" && <ArenaDialog title="Lagets kampanj & mål" className="arena-dialog-campaign" eyebrow="TILLSAMMANS MOT NÄSTA MÅL" onClose={() => setPanel(null)}>{campaign ? <>
       <h3>{campaign.name}</h3><p>{data?.activities.find(a => a.id === campaign.activity_id)?.name}</p><p>{new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm", dateStyle: "medium" }).format(new Date(campaign.start_at))} – {new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm", dateStyle: "medium" }).format(new Date(Date.parse(campaign.end_at) - 1))}</p>
       {campaign.target_points && <Progress points={campaign.points} target={campaign.target_points} label="KAMPANJMÅL" />}{campaign.target_count && <Progress points={campaign.count} target={campaign.target_count} label="MERFÖRSÄLJNINGAR" suffix="st" />}
