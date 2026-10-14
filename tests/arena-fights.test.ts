@@ -39,6 +39,19 @@ describe("Butiksfight scoring, lifecycle and authority",()=>{
     expect(await (await f.call("/arena/stats","GET",undefined,f.cookies.t)).json()).toMatchObject({fight:{id,phase:"active"}});
     expect(await (await f.call("/arena/stats","GET",undefined,f.cookies.m)).json()).toMatchObject({fight:null});
   });
+  it("publishes a bounded member-only feed, corrects undo and freezes the final feed",async()=>{
+    const f=await setup(),id=await f.create();const first=f.sale("t"),other=f.sale("k",time,1);f.sale("m",time,500);
+    const live=await f.view(id);expect(live.events?.filter(e=>e.kind==="sale").map(e=>e.id).sort()).toEqual([`sale:${first}`,`sale:${other}`].sort());
+    expect(live.events?.find(e=>e.id===`sale:${first}`)).toMatchObject({station_id:"t",seller_id:"t:seller",seller_name:"Peter",activity_name:"Biltvätt",tb_ore_awarded:3525});
+    expect(live.events?.some(e=>e.kind==="lead" && e.station_id==="t")).toBe(true);
+    await f.call(`/arena/registrations/${other}/void`,"POST",{request_id:other},f.cookies.k);expect((await f.view(id)).events?.some(e=>e.id===`sale:${other}`)).toBe(false);
+    const final=await f.view(id,end);vi.setSystemTime("2026-10-14T11:01:00Z");
+    expect(await (await f.call("/arena/stats","GET",undefined,f.cookies.t)).json()).toMatchObject({fight:{id,phase:"finished",winner_ids:["t"],end_at:end}});
+    f.arena.prepare("UPDATE arena_registrations SET voided_at=? WHERE id=?").run("2026-10-14T11:02:00Z",first);
+    expect(await f.view(id,"2026-10-14T11:03:00Z")).toEqual(final);
+    const listing=await (await f.call("/arena/superadmin/fights","GET",undefined,f.admin)).json() as {fights:{participants:{id:string}[];leader_names:string[]}[]};
+    expect(listing.fights[0].participants.map(p=>p.id).sort()).toEqual(["k","t"]);expect(listing.fights[0].leader_names).toEqual(["Tingsryd"]);
+  });
   it("validates participants, all three metrics, duration, calendar and explicit timezone",async()=>{
     const f=await setup(),body={name:"Fight",description:"",start_at:start,end_at:end,station_ids:["t","k"],metric:"points"};
     for(const change of [{station_ids:["t"]},{station_ids:["t","t"]},{station_ids:["t","unknown"]},{station_ids:Array(33).fill("t")},{metric:"money"},{start_at:end,end_at:start},{start_at:"2026-02-30T10:00:00Z"},{start_at:"2026-10-14T10:00"},{end_at:"2027-10-14T10:00:00Z"}])expect((await f.call("/arena/superadmin/fights","POST",{...body,...change},f.admin)).status).toBe(400);
@@ -53,10 +66,10 @@ describe("Butiksfight scoring, lifecycle and authority",()=>{
   it("deduplicates lead changes across refreshes, concurrent polls and ties",async()=>{
     const f=await setup(),id=await f.create();f.sale("t");const first=await f.view(id);expect(first.latest_lead_change).toMatchObject({station_id:"t",version:1});
     await Promise.all([f.view(id),f.view(id),f.view(id)]);f.sale("t");expect((await f.view(id)).version).toBe(1);
-    f.sale("k",time,4);const tied=await f.view(id);expect(tied.version).toBe(2);expect(tied.standings.map(s=>s.rank)).toEqual([1,1]);expect(tied.leader_ids).toHaveLength(2);expect(tied.latest_lead_change?.version).toBe(1);
-    f.sale("k");const next=await f.view(id);expect(next.latest_lead_change).toMatchObject({station_id:"k",version:3});await f.view(id);expect(f.arena.prepare("SELECT COUNT(*) n FROM arena_fight_lead_events").get()!.n).toBe(2);
+    f.sale("k",time,4);const tied=await f.view(id);expect(tied.version).toBe(2);expect(tied.standings.map(s=>s.rank)).toEqual([1,1]);expect(tied.leader_ids).toHaveLength(2);expect(tied.latest_lead_change?.version).toBe(1);expect(tied.events?.filter(e=>e.kind==="tie")).toHaveLength(1);expect((await f.view(id)).events?.filter(e=>e.kind==="tie")).toEqual(tied.events?.filter(e=>e.kind==="tie"));
+    f.sale("k");const next=await f.view(id);expect(next.latest_lead_change).toMatchObject({station_id:"k",version:3});expect(next.events?.filter(e=>e.kind==="tie")).toHaveLength(1);await f.view(id);expect(f.arena.prepare("SELECT COUNT(*) n FROM arena_fight_lead_events").get()!.n).toBe(2);
     // An older poll must not overwrite a newer live publication.
-    await f.view(id,"2026-10-14T10:01:00.000Z");expect((await f.view(id)).snapshot_at).toBe("2026-10-14T10:01:00.000Z");
+    await f.view(id,"2026-10-14T10:01:00.000Z");expect((await f.view(id)).snapshot_at).toBe("2026-10-14T10:01:00.000Z");vi.setSystemTime(end);expect(await (await f.call("/arena/superadmin/fights","GET",undefined,f.admin)).json()).toMatchObject({fights:[{status:"finished",leader_names:[]}]});expect((await f.view(id,end)).events?.filter(e=>e.kind==="tie")).toHaveLength(1);
   });
   it("undo within the fight removes score and can change leadership; post-finish undo cannot",async()=>{
     const f=await setup(),id=await f.create();f.sale("t",time,1);const sale=f.sale("k",time,2);expect((await f.view(id)).leader_ids).toEqual(["k"]);

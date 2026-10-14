@@ -63,7 +63,7 @@ for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,3
     await visualData(page,()=>current);await page.goto("/arena");await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
     const link=page.getByRole("link",{name:"Öppna Butiksfight: Sydost",exact:true});await expect(link).toBeVisible();await expect(link).toHaveAttribute("href","/arena/fights/live-fight");
     expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
-    const fit=await link.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest(".arena-utility")!.getBoundingClientRect();return r.left>=p.left && r.right<=p.right && r.top>=p.top && r.bottom<=p.bottom;});expect(fit).toBe(true);await stateScreenshot(page,`fight-indicator-${width}x${height}`);
+    const fit=await link.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest(".arena-utility")!.getBoundingClientRect();if(innerWidth<1600 || innerHeight<900)return r.left>=p.left && r.right<=p.right && r.top>=p.top && r.bottom<=p.bottom;return [...document.querySelectorAll(".arena-stage .arena-orb")].every(orb=>{const b=orb.getBoundingClientRect(),x=Math.max(r.left,Math.min(b.x+b.width/2,r.right)),y=Math.max(r.top,Math.min(b.y+b.height/2,r.bottom));return Math.hypot(x-b.x-b.width/2,y-b.y-b.height/2)-b.width/2>=2;});});expect(fit).toBe(true);await stateScreenshot(page,`fight-indicator-${width}x${height}`);
   });
 }
 

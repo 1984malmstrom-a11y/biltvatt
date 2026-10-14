@@ -8,15 +8,17 @@ import ArenaAdmin from "./ArenaAdmin";
 import ArenaAccount from "./ArenaAccount";
 import { ArenaGroups, ArenaSuperadmin } from "./ArenaNetwork";
 import ArenaFight from "./ArenaFight";
-import { fightScore } from "../shared/arena-fights";
+import {FightAnnouncement,FightWidget} from "./ArenaFightPresentation";
+import {fightTransition,type FightFeedback} from "./arena-fight-feedback";
 import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
 import { arenaStartActivities } from "./arena-start";
 import type { EvaluatedAchievement } from "../shared/arena-achievements";
 import { arenaMoney, arenaReward } from "../shared/arena-money";
+import ArenaAvatar, {ArenaShowcaseProvider,useArenaShowcase} from "./ArenaAvatar";
 import "./arena.css";
+import "./arena-showroom.css";
 
-const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
 function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: ArenaActivity; imageUrl?: string; loading?: "eager" | "lazy" }) {
   const src = arenaProductImage(activity, imageUrl);
   return src ? <img src={src} alt="" loading={loading} decoding="sync" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
@@ -51,15 +53,12 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
-function SellerAvatar({ name, imageUrl }: { name: string; imageUrl?: string }) {
-  return <span className="arena-leader-avatar" aria-hidden="true" title={name}>{imageUrl ? <img src={imageUrl} alt="" /> : <UserRound />}</span>;
-}
 function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
   const value=(p:ArenaPerson)=>stats?.metric === "tb" ? arenaMoney(p.tb_ore??0) : num(stats?.metric === "count" ? p.count : p.points);
   const unit=stats?.metric === "tb" ? "TB" : stats?.metric === "count" ? "st" : "p";
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span className="arena-seller-cell"><SellerAvatar name={p.name} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
+      {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 }
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
@@ -69,19 +68,13 @@ function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean
 function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
   return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id} className={row.display_mode === "tb" && row.tb_ore_awarded != null ? "is-tb" : undefined}>
-    <span className="arena-feed-seller"><SellerAvatar name={row.seller_name} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
+    <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
     <b>{row.display_mode === "tb" && row.tb_ore_awarded != null ? `+${arenaMoney(row.tb_ore_awarded)} TB` : `+${num(row.points_awarded)} p`}</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 }
-function FightPeek({stats,stationId}:{stats:ArenaStats|null;stationId?:string}) {
-  const fight=stats?.fight;if(!fight)return null;
-  const own=fight.standings.find(s=>s.id===stationId),top=fight.standings[0],gap=own && top ? fightScore(top,fight.metric)-fightScore(own,fight.metric):0;
-  const value=own ? fight.metric==="tb" ? `${arenaMoney(own.tb_ore)} TB` : `${num(fightScore(own,fight.metric))} ${fight.metric==="count" ? "st":"p"}`:"";
-  return <a className="arena-fight-peek" href={`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}><Flag aria-hidden="true" /><span><strong>BUTIKSFIGHT LIVE</strong><small>{value}{gap>0 ? ` · ${fight.metric==="tb" ? arenaMoney(gap):num(gap)} till ledningen`:" · I täten"}</small></span><ChevronRight aria-hidden="true" /></a>;
-}
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
-type Celebration = ArenaAchievement & { key: string; points: number; tbOre?:number | null; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; heroUrl?: string };
+type Celebration = ArenaAchievement & { key: string; points: number; tbOre?:number | null; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; profileUrl?:string | null; fightEvent?:FightFeedback };
 const rewardDuration = (special: boolean) => special ? 3600 : 2600;
 
 function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats: ArenaStats; onClose: () => void }) {
@@ -89,7 +82,7 @@ function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats:
   const goal = goals[0], next = stats.leaderboard[person.rank - 2];
   const percent = goal ? Math.min(100, Math.round(100 * goal.points / goal.target_points)) : 0;
   return <>
-    <div className="arena-person-heading"><span className="arena-person-avatar" style={{ "--seller-color": person.color } as React.CSSProperties} aria-hidden="true">{initials(person.name)}<Crown /></span><div><h3>{person.name}</h3><p>Din utveckling. Dina resultat.</p></div><div className="arena-person-rank"><strong>#{person.rank}</strong><small>PLACERING</small></div></div>
+    <div className="arena-person-heading"><ArenaAvatar id={person.id} name={person.name} imageUrl={person.profile_url} className="arena-person-avatar" /><div><h3>{person.name}</h3><p>Din utveckling. Dina resultat.</p></div><div className="arena-person-rank"><strong>#{person.rank}</strong><small>PLACERING</small></div></div>
     <div className="arena-person-metrics"><div><Star /><small>POÄNG</small><strong>{num(person.points)}</strong></div><div><BarChart3 /><small>REGISTRERINGAR</small><strong>{num(person.count)}</strong></div><div className={`arena-person-goal${goal ? "" : " is-empty"}`}><Target /><small>{goal ? goal.period_type === "week" ? "VECKOMÅL" : goal.period_type === "month" ? "MÅNADSMÅL" : "PERSONLIGT MÅL" : "PERSONLIGT MÅL"}</small><strong>{goal ? `${num(goal.target_points)} p` : "Inte satt ännu"}</strong></div></div>
     <div className="arena-person-tb"><strong>{arenaMoney(person.tb_ore??0)} TB</strong><span>Genererad uppskattad marginal · {arenaPeriodLabel(stats.range.start,stats.range.end)}</span>{!!person.unknown_tb_count && <small>{person.unknown_tb_count} äldre registreringar saknar historiskt TB.</small>}</div>
     <section className="arena-person-progress"><div className="arena-progress-ring" style={{ "--progress": `${percent}%` } as React.CSSProperties} role={goal ? "progressbar" : undefined} aria-label={goal ? "Personligt mål" : undefined} aria-valuemin={goal ? 0 : undefined} aria-valuemax={goal?.target_points} aria-valuenow={goal ? Math.min(goal.points, goal.target_points) : undefined}><span>{goal ? `${percent}%` : <Target />}<small>{goal ? "AV MÅLET" : "NÄSTA MÅL"}</small></span></div><div>{goal ? <><strong>{goal.points >= goal.target_points ? "Målet uppnått!" : `${num(roundedPoints(goal.target_points - goal.points))} poäng kvar`}</strong><p>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</p></> : <><strong>Inget personligt mål satt ännu</strong><p>Stationsadmin kan sätta ett mål för dig. Dina försäljningar räknas redan!</p></>}{next ? <strong className="arena-next-rank">{stats.metric==="tb" ? `${arenaMoney((next.tb_ore??0)-(person.tb_ore??0))} TB` : stats.metric==="count" ? `${next.count-person.count} registreringar` : `${num(roundedPoints(next.points - person.points))} poäng`} till nästa placering</strong> : <strong className="arena-next-rank">{person.points > 0 ? "Du leder. Fortsätt på samma spår!" : "Varje registrering tar dig framåt."}</strong>}</div></section>
@@ -104,9 +97,10 @@ function CelebrationCard({ event }: { event: Celebration }) {
   const encouragement = event.kind === "leader" ? event.previousLeader ? `${event.name} går om ${event.previousLeader}` : `${event.name} tar förstaplatsen!` : event.kind === "personal-goal" ? `${event.name} · ${event.text}` : event.kind === "station-goal" ? "Hela laget nådde målet!" : event.text;
   const level=event.level ?? (event.special ? 3 : 1);
   const reward=arenaReward(event.activity,event.points,event.tbOre);
+  if(event.fightEvent)return <FightAnnouncement event={event.fightEvent} seller={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl}} activity={event.activity.name} reward={reward} secondary={event.secondary} />;
   if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-victory-hero">
-      <div className="arena-victory-art" aria-hidden="true">{event.heroUrl ? <img src={event.heroUrl} alt="" /> : <><Crown /><Trophy /><b>{event.kind === "leader" ? "1" : <Check />}</b></>}</div>
+      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b><ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} champion className="arena-champion-portrait" /><Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
       <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
         <strong className="arena-reward-seller">{event.name}</strong>
         <div className="arena-victory-sale"><strong className="arena-reward-points">{reward}!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
@@ -135,7 +129,8 @@ function CelebrationCard({ event }: { event: Celebration }) {
     </div>
   </div>;
 }
-export default function ArenaApp() {
+export default function ArenaApp() { return <ArenaShowcaseProvider><ArenaRoutes /></ArenaShowcaseProvider>; }
+function ArenaRoutes() {
   if(window.location.pathname.startsWith("/arena/fights/") || window.location.pathname.startsWith("/arena/superadmin/fights/"))return <ArenaFight />;
   if(window.location.pathname.startsWith("/arena/superadmin"))return <ArenaSuperadmin />;
   if(window.location.pathname.startsWith("/arena/groups"))return <ArenaGroups />;
@@ -143,9 +138,12 @@ export default function ArenaApp() {
   return window.location.pathname.startsWith("/arena/admin") ? <ArenaAdmin /> : <ArenaHome />;
 }
 function ArenaHome() {
+  const showcase=useArenaShowcase();
   const [data, setData] = useState<ArenaBootstrap | null>(null);
   const [stats, setStats] = useState<ArenaStats | null>(null);
   const [todayStats, setTodayStats] = useState<ArenaStats | null>(null);
+  const todayRef=useRef<ArenaStats|null>(null),fightSeen=useRef(new Set<string>()),finalTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
+  const [fightFinal,setFightFinal]=useState<FightFeedback|null>(null);
   const [personScope, setPersonScope] = useState<"today" | "selected">("today");
   const [statsUnavailable, setStatsUnavailable] = useState(false);
   const [period, setPeriod] = useState("today"), [start, setStart] = useState(""), [end, setEnd] = useState("");
@@ -169,7 +167,7 @@ function ArenaHome() {
       const todayRequest = api<ArenaStats>("/arena/stats?period=today&metric=points");
       const selectedRequest = queryRef.current === "period=today&metric=points" ? todayRequest : api<ArenaStats>(`/arena/stats?${queryRef.current}`);
       const [next, today] = await Promise.all([selectedRequest, todayRequest]);
-      if (version === statsVersion.current) { statsRef.current = next; setStats(next); setTodayStats(today); setStatsUnavailable(false); setError(""); }
+      if (version === statsVersion.current) { statsRef.current = next; setStats(next); todayRef.current=today; setTodayStats(today); setStatsUnavailable(false); setError(""); }
       return next;
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, []);
@@ -180,14 +178,14 @@ function ArenaHome() {
     document.documentElement.classList.add("arena-view");
     void bootstrap();
     const timer = setInterval(() => { if (!document.hidden && !lock.current && !attemptRef.current) { void bootstrap(); void refresh(); } }, 30000);
-    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearInterval(timer); clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); };
+    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearInterval(timer); clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
   }, [bootstrap, refresh]);
   useEffect(() => { if (period !== "custom" || (start && end)) { setStats(null); void refresh(); } }, [query, period, start, end, refresh]);
   const setSelection = (next: Attempt | null) => { attemptRef.current = next; setAttempt(next); };
   const [focus, ...other] = arenaStartActivities(data?.activities ?? []);
   const begin = (activity: ArenaActivity) => {
     if (lock.current || attemptRef.current) return;
-    celebrationAllowed.current = "";
+    celebrationAllowed.current = ""; setFightFinal(null);
     setSaleError(""); setSelection({ activity, requestId: crypto.randomUUID() });
   };
   async function register(sellerId: string) {
@@ -195,7 +193,7 @@ function ArenaHome() {
     if (!selected || lock.current || (selected.sellerId && selected.sellerId !== sellerId)) return;
     lock.current = true; setBusy(true); setSaleError("");
     const pending = { ...selected, sellerId }; setSelection(pending);
-    const before = statsRef.current;
+    const before = statsRef.current,beforeFight=todayRef.current?.fight;
     try {
       const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
         request_id: pending.requestId, activity_id: pending.activity.id, seller_id: sellerId,
@@ -204,7 +202,7 @@ function ArenaHome() {
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
       const primary=achievements?.[0];
-      const burst: Celebration = { key: registration.id, points: registration.points_awarded,tbOre:registration.tb_ore_awarded??null, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements ? [...new Set(achievements.slice(1).map(e=>`${e.text} ${e.scope}`))] : undefined };
+      const burst: Celebration = { key: registration.id, points: registration.points_awarded,tbOre:registration.tb_ore_awarded??null, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, profileUrl:data?.sellers.find(s=>s.id===sellerId)?.profile_url, activity: pending.activity,...primary,secondary:achievements ? [...new Set(achievements.slice(1).map(e=>`${e.text} ${e.scope}`))] : undefined };
       setReceipt({ registration, requestId: pending.requestId, name }); setSelection(null);
       if (lastCelebrated.current !== registration.id) {
         lastCelebrated.current = registration.id;
@@ -219,10 +217,15 @@ function ArenaHome() {
           if (!after || before?.range.start !== after.range.start || before?.range.end !== after.range.end) return;
           const event = achievements !== undefined ? primary ?? {text:burst.text,special:false,kind:"points" as const} : arenaAchievement(before, after, sellerId);
           if (celebrationAllowed.current !== registration.id) return;
-          setCelebration(current => current?.key === registration.id ? { ...current, ...event } : event.special && celebrationAllowed.current === registration.id ? { ...burst, ...event } : current);
-          if (event.special && lastCelebrated.current === registration.id) {
+          const fightEvent=data?.station.id ? fightTransition(beforeFight,todayRef.current?.fight,data.station.id):null;
+          const fresh=fightEvent && !fightSeen.current.has(fightEvent.key) ? fightEvent:null;
+          if(fresh)fightSeen.current.add(fresh.key);
+          const hero=event.level===3 || (event.special && event.level!==2);
+          const next={...burst,...event,...(fresh && !hero ? {fightEvent:fresh}:{}),secondary:[...(burst.secondary??[]),...(fresh && hero ? [fresh.kind==="lead" ? "Laget tar ledningen i Butiksfight!":"Laget kvitterar i Butiksfight!"]:[])]};
+          setCelebration(current => current?.key === registration.id ? {...current,...next} : event.special || fresh ? next:current);
+          if ((event.special || fresh) && lastCelebrated.current === registration.id) {
             clearTimeout(celebrationTimer.current);
-            celebrationTimer.current = setTimeout(() => setCelebration(current => current?.key === registration.id ? null : current), rewardDuration(true));
+            celebrationTimer.current = setTimeout(() => setCelebration(current => current?.key === registration.id ? null : current), fresh?.kind === "tie" && !hero ? rewardDuration(false):rewardDuration(true));
           }
         });
       }, 180);
@@ -237,9 +240,18 @@ function ArenaHome() {
     lock.current = true; setBusy(true);
     try {
       await api(`/arena/registrations/${receipt.registration.id}/void`, send("POST", { request_id: receipt.requestId }));
-      celebrationAllowed.current = ""; setReceipt(null); setCelebration(null); await refresh();
+      celebrationAllowed.current = ""; setReceipt(null); setCelebration(null); setFightFinal(null); await refresh();
     } catch (e) { setError((e as Error).message); } finally { lock.current = false; setBusy(false); }
   }
+  useEffect(()=>{
+    const fight=todayStats?.fight,stationId=data?.station.id;
+    if(!fight || fight.phase!=="finished" || !fight.winner_ids?.length || !stationId || celebration || attempt || fightFinal)return;
+    const key=`arena:fight-final:${stationId}:${fight.id}`;
+    if(fightSeen.current.has(key))return;
+    try{if(localStorage.getItem(key))return;localStorage.setItem(key,"1");}catch{/* In-memory dedupe remains available. */}
+    fightSeen.current.add(key);setFightFinal({kind:"final",key,fight,stationId});
+    clearTimeout(finalTimer.current);finalTimer.current=setTimeout(()=>setFightFinal(null),3600);
+  },[todayStats?.fight,data?.station.id,celebration,attempt,fightFinal]);
   const personStats = personScope === "today" ? todayStats : stats;
   const person = personStats?.leaderboard.find(p => p.id === personId);
   const campaign = todayStats?.campaign;
@@ -250,7 +262,7 @@ function ArenaHome() {
   </>;
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
     <header className="arena-header">
-      <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{data?.station.name || "STATIONEN"}</small></span></a>
+      <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{showcase ? "DEMO · FIKTIVA PORTRÄTT":data?.station.name || "STATIONEN"}</small></span></a>
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
       <p className="arena-handwritten">Tillsammans<br />säljer vi mer! ♡</p>
     </header>
@@ -269,7 +281,7 @@ function ArenaHome() {
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
     </main>
-    <div className="arena-utility"><div className="arena-utility-links">{todayStats?.fight ? <FightPeek stats={todayStats} stationId={data?.station.id} /> : data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
+    <div className="arena-utility"><div className="arena-utility-links">{todayStats?.fight ? <FightWidget fight={todayStats.fight} stationId={data?.station.id ?? ""} onBoundary={()=>void refresh()} /> : data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
       <div><BarChart3 aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.count) : "—"}</strong><span>Registreringar</span></div>
       <div><Star aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.points) : "—"}</strong><span>Poäng idag</span></div>
@@ -279,7 +291,7 @@ function ArenaHome() {
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     {attempt && <ArenaDialog title="Vem gjorde försäljningen?" className="arena-dialog-sellers" eyebrow="EN FÖRSÄLJNING. TVÅ TRYCK." locked={busy || Boolean(attempt.sellerId)} onClose={() => { setSelection(null); setSaleError(""); }}>
       <div className="arena-modal-summary"><span className="arena-selected-product" aria-hidden="true"><ActivityImage activity={attempt.activity} /></span><span>{attempt.activity.name}<small>VALD AKTIVITET</small></span><strong>{arenaReward(attempt.activity)}</strong></div>
-      <div className="arena-sellers">{data?.sellers.map(seller => <button key={seller.id} aria-label={seller.name} onClick={() => void register(seller.id)} disabled={busy || Boolean(attempt.sellerId)} style={{ "--seller-color": seller.color } as React.CSSProperties}><span className="arena-seller-initial" aria-hidden="true">{initials(seller.name)}</span><span className="arena-seller-name">{seller.name}</span></button>)}</div>
+      <div className="arena-sellers">{data?.sellers.map(seller => <button key={seller.id} aria-label={seller.name} onClick={() => void register(seller.id)} disabled={busy || Boolean(attempt.sellerId)} style={{ "--seller-color": seller.color } as React.CSSProperties}><ArenaAvatar id={seller.id} name={seller.name} imageUrl={seller.profile_url} className="arena-seller-initial" /><span className="arena-seller-name">{seller.name}</span></button>)}</div>
       <p className="arena-seller-hint"><Check aria-hidden="true" /> Tryck på ditt namn – sedan är det klart.</p>
       {!data?.sellers.length && <p>Lägg till aktiva säljare i stationens personalregister.</p>}
       {busy && <p role="status">Sparar…</p>}{saleError && <p className="arena-error" role="alert">{saleError}</p>}
@@ -300,5 +312,6 @@ function ArenaHome() {
       {campaign.target_points && <Progress points={campaign.points} target={campaign.target_points} label="KAMPANJMÅL" />}{campaign.target_count && <Progress points={campaign.count} target={campaign.target_count} label="MERFÖRSÄLJNINGAR" suffix="st" />}
     </> : <p>Ingen aktiv kampanj just nu.</p>}{stats?.station_goals.map(g => <section key={g.id}><GoalProgress goal={g} /></section>)}</ArenaDialog>}
     {celebration && <CelebrationCard key={`${celebration.key}-${celebration.kind}`} event={celebration} />}
+    {fightFinal && !celebration && !attempt && <FightAnnouncement event={fightFinal} />}
   </div>;
 }

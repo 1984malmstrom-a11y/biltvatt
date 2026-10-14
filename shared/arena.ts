@@ -3,7 +3,7 @@ export type ArenaActivity = {
   image_key: string | null; category: string; sort_order: number; active: number;
   tb_ore?:number; display_mode?:"points" | "tb";
 };
-export type ArenaSeller = { id: string; external_staff_id: string | null; name: string; color: string; active: number; source?:"station" | "arena" };
+export type ArenaSeller = { id: string; external_staff_id: string | null; name: string; color: string; active: number; profile_url?:string | null; source?:"station" | "arena" };
 export type ArenaCampaign = {
   id: string; name: string; activity_id: string; start_at: string; end_at: string;
   target_count: number | null; target_points: number | null; active: number;
@@ -22,7 +22,7 @@ export type ArenaBootstrap = {
   activities: ArenaActivity[]; campaign: ArenaCampaign | null;
 };
 export type ArenaRecentActivity = {
-  id: string; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
+  id: string; seller_id?:string; profile_url?:string | null; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
   tb_ore_awarded?:number | null;
   display_mode?:"points" | "tb";
 };
