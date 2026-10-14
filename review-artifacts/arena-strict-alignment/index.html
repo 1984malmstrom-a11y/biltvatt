@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="sv">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arena – före och efter</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui;background:#061221;color:#eaf3ff}body{margin:0;padding:24px}h1{font-size:24px;color:#ffe1a1;margin:0 0 12px}p{max-width:85ch;color:#b9ccdf;line-height:1.5}label{display:inline-flex;align-items:center;gap:12px;margin:8px 0 24px}select{font:inherit;padding:8px;background:#10263b;color:inherit;border:1px solid #65829b;border-radius:6px}main{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;min-width:0}figcaption{display:flex;justify-content:space-between;gap:12px;padding:12px;background:#10263b;border:1px solid #34506b;border-radius:8px 8px 0 0}a{color:#ffe1a1}img{display:block;width:100%;height:auto;border:1px solid #34506b;box-sizing:border-box}small{color:#b9ccdf}@media(max-width:850px){main{grid-template-columns:1fr}body{padding:12px}}
+</style>
+<h1>Arena – strikt visuell justering</h1>
+<p>Riktiga screenshots från den lokala React/CSS-implementationen med samma demodata, normalt idle-läge och hela viewporten. Välj format för att jämföra kompositionen före och efter. Öppna originalet för pixelgranskning.</p>
+<label>Viewport <select id="viewport"><option>1920x1080</option><option>1448x1086</option><option>1024x768</option><option>390x844</option><option>844x390</option></select></label>
+<main>
+<figure><figcaption>Före <a id="before-link" href="before/arena-responsive-1920x1080.png">Öppna PNG</a></figcaption><img id="before-image" src="before/arena-responsive-1920x1080.png" alt="Arena före justeringen, 1920 gånger 1080"></figure>
+<figure><figcaption>Efter <a id="after-link" href="after/arena-responsive-1920x1080.png">Öppna PNG</a></figcaption><img id="after-image" src="after/arena-responsive-1920x1080.png" alt="Arena efter justeringen, 1920 gånger 1080"></figure>
+</main>
+<p><small>Desktop och 4:3: fem dagliga topprader, fem senaste aktiviteter, vänsterkolumn ned till menyraden och statsbar endast över arenaytan. Mobil: samma visuella språk med listor i paneler. Fokus: ingen extra produktetikett och lägre placerad bil. Befintliga bakgrunds- och produktbilder samt profilreservbilder skiljer sig fortfarande från mockupen.</small></p>
+<script>
+document.querySelector('#viewport').addEventListener('change',event=>{
+  const viewport=event.target.value;
+  for(const state of ['before','after']){
+    const path=`${state}/arena-responsive-${viewport}.png`;
+    document.querySelector(`#${state}-link`).href=path;
+    const img=document.querySelector(`#${state}-image`);img.src=path;img.alt=`Arena ${state==='before'?'före':'efter'} justeringen, ${viewport}`;
+  }
+});
+</script>
+</html>

@@ -1,0 +1,118 @@
+{
+  "before": {
+    "head": "885715cf152432dc88ebf5360fde19450c220de2",
+    "branch": "feat/arena-v1",
+    "status": "## feat/arena-v1...origin/feat/arena-v1 [ahead 5]\n M e2e/arena.spec.ts\n M shared/arena.ts\n M src/ArenaApp.tsx\n M src/arena.css\n M tests/arena.test.ts\n M worker/arena-stats.ts",
+    "diff": "92218b2a05c37d774dd7f8e9dd4af144637c436af85e7948925401a53e3809d4",
+    "files": {
+      "e2e/arena.spec.ts": "f63b185298f954e4ec94daf158371d00ce02a9b92905ea9e9e815e6cbd6dd6c4",
+      "shared/arena.ts": "3cc4d68c46bea5ddac1d366c55f5da7aa2e7769856cbb8f623ce864a320c28f7",
+      "src/ArenaApp.tsx": "5a58323c771e25c7a9304ebd15ff4484f8a744df6cd047ad6b22019838847048",
+      "src/arena.css": "f53e086a5c54fa33ae321eefc474fc662e22c408c13fea1368de17472be6d1cd",
+      "tests/arena.test.ts": "4cd70d97799ce951d36d7398ae83d172bbddda43223437a27754ddb6c95fb9a3",
+      "worker/arena-stats.ts": "33906b511f821ef4edf276311427f1d9dce16cd27b37ff4e468d685b99f2af60"
+    }
+  },
+  "after": {
+    "head": "885715cf152432dc88ebf5360fde19450c220de2",
+    "branch": "feat/arena-v1",
+    "status": "## feat/arena-v1...origin/feat/arena-v1 [ahead 5]\n M e2e/arena.spec.ts\n M shared/arena.ts\n M src/ArenaApp.tsx\n M src/arena.css\n M tests/arena.test.ts\n M worker/arena-stats.ts",
+    "diff": "92218b2a05c37d774dd7f8e9dd4af144637c436af85e7948925401a53e3809d4",
+    "files": {
+      "e2e/arena.spec.ts": "f63b185298f954e4ec94daf158371d00ce02a9b92905ea9e9e815e6cbd6dd6c4",
+      "shared/arena.ts": "3cc4d68c46bea5ddac1d366c55f5da7aa2e7769856cbb8f623ce864a320c28f7",
+      "src/ArenaApp.tsx": "5a58323c771e25c7a9304ebd15ff4484f8a744df6cd047ad6b22019838847048",
+      "src/arena.css": "f53e086a5c54fa33ae321eefc474fc662e22c408c13fea1368de17472be6d1cd",
+      "tests/arena.test.ts": "4cd70d97799ce951d36d7398ae83d172bbddda43223437a27754ddb6c95fb9a3",
+      "worker/arena-stats.ts": "33906b511f821ef4edf276311427f1d9dce16cd27b37ff4e468d685b99f2af60"
+    }
+  },
+  "unchanged": true,
+  "results": [
+    {
+      "file": "/workspace/work/artifacts/arena-strict-alignment/after/arena-responsive-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "document": {
+        "width": 1920,
+        "height": 1080
+      },
+      "activityCount": 7,
+      "openDialogCount": 0,
+      "bodyText": "ARENAN\nSTATIONEN\nMÅNADENS MÅL\n742 / 1 000 poäng\n74%\nDen här månaden · 1–31 okt\n\nTillsammans\nsäljer vi mer! ♡\n\nTOPPLISTA – IDAG\n1\nPeter\n126 p\n2\nAlva\n114 p\n3\nSofia\n102 p\n4\nErik\n90 p\n5\nLinnea\n78 p\nSENASTE AKTIVITETER\nLive\nPeter\nBiltvätt\n+2 p\n14:37\nAlva\nKorv\n+1 p\n14:36\nSofia\nTvå för 25\n+1 p\n14:35\nErik\nKaffe + bulle\n+1 p\n14:34\nLinnea\nSpolarvätska\n+1 p\n14:33\nMÅNADENS FOKUS\nBILTVÄTT\n+2 POÄNG\nKORV MED MOS\n+1 POÄNG\nTVÅ FÖR 25:-\n+1 POÄNG\nKAFFE + BULLE\n+1 POÄNG\nSPOLARVÄTSKA\n+1 POÄNG\nRÄKSALLAD\n+1 POÄNG\nTVÅ FÖR 30:-\n+1 POÄNG\nStationsdashboard\nDAGENS STATS\n18\nRegistreringar\n42\nPoäng idag\n3\nAktiva säljare\n\nSmå merförsäljningar skapar stora resultat!\n\nSTART\nTOPPLISTOR\nKAMPANJER\nADMIN",
+      "errors": []
+    },
+    {
+      "file": "/workspace/work/artifacts/arena-strict-alignment/after/arena-responsive-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "document": {
+        "width": 1024,
+        "height": 768
+      },
+      "activityCount": 7,
+      "openDialogCount": 0,
+      "bodyText": "ARENAN\nSTATIONEN\nMÅNADENS MÅL\n742 / 1 000 poäng\n74%\nDen här månaden · 1–31 okt\n\nTillsammans\nsäljer vi mer! ♡\n\nTOPPLISTA – IDAG\n1\nPeter\n126 p\n2\nAlva\n114 p\n3\nSofia\n102 p\n4\nErik\n90 p\n5\nLinnea\n78 p\nSENASTE AKTIVITETER\nLive\nPeter\nBiltvätt\n+2 p\n14:37\nAlva\nKorv\n+1 p\n14:36\nSofia\nTvå för 25\n+1 p\n14:35\nErik\nKaffe + bulle\n+1 p\n14:34\nLinnea\nSpolarvätska\n+1 p\n14:33\nMÅNADENS FOKUS\nBILTVÄTT\n+2 POÄNG\nKORV MED MOS\n+1 POÄNG\nTVÅ FÖR 25:-\n+1 POÄNG\nKAFFE + BULLE\n+1 POÄNG\nSPOLARVÄTSKA\n+1 POÄNG\nRÄKSALLAD\n+1 POÄNG\nTVÅ FÖR 30:-\n+1 POÄNG\nStationsdashboard\nDAGENS STATS\n18\nRegistreringar\n42\nPoäng idag\n3\nAktiva säljare\nSTART\nTOPPLISTOR\nKAMPANJER\nADMIN",
+      "errors": []
+    },
+    {
+      "file": "/workspace/work/artifacts/arena-strict-alignment/after/arena-responsive-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "document": {
+        "width": 1448,
+        "height": 1086
+      },
+      "activityCount": 7,
+      "openDialogCount": 0,
+      "bodyText": "ARENAN\nSTATIONEN\nMÅNADENS MÅL\n742 / 1 000 poäng\n74%\nDen här månaden · 1–31 okt\n\nTillsammans\nsäljer vi mer! ♡\n\nTOPPLISTA – IDAG\n1\nPeter\n126 p\n2\nAlva\n114 p\n3\nSofia\n102 p\n4\nErik\n90 p\n5\nLinnea\n78 p\nSENASTE AKTIVITETER\nLive\nPeter\nBiltvätt\n+2 p\n14:37\nAlva\nKorv\n+1 p\n14:36\nSofia\nTvå för 25\n+1 p\n14:35\nErik\nKaffe + bulle\n+1 p\n14:34\nLinnea\nSpolarvätska\n+1 p\n14:33\nMÅNADENS FOKUS\nBILTVÄTT\n+2 POÄNG\nKORV MED MOS\n+1 POÄNG\nTVÅ FÖR 25:-\n+1 POÄNG\nKAFFE + BULLE\n+1 POÄNG\nSPOLARVÄTSKA\n+1 POÄNG\nRÄKSALLAD\n+1 POÄNG\nTVÅ FÖR 30:-\n+1 POÄNG\nStationsdashboard\nDAGENS STATS\n18\nRegistreringar\n42\nPoäng idag\n3\nAktiva säljare\nSTART\nTOPPLISTOR\nKAMPANJER\nADMIN",
+      "errors": []
+    },
+    {
+      "file": "/workspace/work/artifacts/arena-strict-alignment/after/arena-responsive-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "activityCount": 7,
+      "openDialogCount": 0,
+      "bodyText": "ARENAN\nSTATIONEN\nMÅNADENS MÅL\n742 / 1 000 poäng\n74%\nDen här månaden · 1–31 okt\nTopplista\nSenaste aktiviteter\nMÅNADENS FOKUS\nBILTVÄTT\n+2 POÄNG\nKORV MED MOS\n+1 POÄNG\nTVÅ FÖR 25:-\n+1 POÄNG\nKAFFE + BULLE\n+1 POÄNG\nSPOLARVÄTSKA\n+1 POÄNG\nRÄKSALLAD\n+1 POÄNG\nTVÅ FÖR 30:-\n+1 POÄNG\nStationsdashboard\nDAGENS STATS\n18\nRegistreringar\n42\nPoäng idag\n3\nAktiva säljare\nSTART\nTOPPLISTOR\nKAMPANJER\nADMIN",
+      "errors": []
+    },
+    {
+      "file": "/workspace/work/artifacts/arena-strict-alignment/after/arena-responsive-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "document": {
+        "width": 844,
+        "height": 390
+      },
+      "activityCount": 7,
+      "openDialogCount": 0,
+      "bodyText": "ARENAN\nSTATIONEN\nMÅNADENS MÅL\n742 / 1 000 poäng\n74%\n\nTillsammans\nsäljer vi mer! ♡\n\nTopplista\nSenaste aktiviteter\nMÅNADENS FOKUS\nBILTVÄTT\n+2 POÄNG\nKORV MED MOS\n+1 POÄNG\nTVÅ FÖR 25:-\n+1 POÄNG\nKAFFE + BULLE\n+1 POÄNG\nSPOLARVÄTSKA\n+1 POÄNG\nRÄKSALLAD\n+1 POÄNG\nTVÅ FÖR 30:-\n+1 POÄNG\nStationsdashboard\nDAGENS STATS\n18\nRegistreringar\n42\nPoäng idag\n3\nAktiva säljare\nSTART\nTOPPLISTOR\nKAMPANJER\nADMIN",
+      "errors": []
+    }
+  ]
+}

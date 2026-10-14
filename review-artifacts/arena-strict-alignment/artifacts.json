@@ -1,0 +1,126 @@
+{
+  "branch": "feat/arena-v1",
+  "checkpoint": "09031033f0dddb0ba7c207f8018fb4830352e584",
+  "before_checkpoint": "885715cf152432dc88ebf5360fde19450c220de2",
+  "working_tree": "clean",
+  "origin_feat_tracking_sha": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "push_performed": false,
+  "deploy_performed": false,
+  "migrations_performed": false,
+  "screenshots": [
+    {
+      "state": "before",
+      "file": "before/arena-responsive-1920x1080.png",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "sha256": "58905fef168ebe51041476852011feca61237bbac7bd3827e6aaf653ec819443"
+    },
+    {
+      "state": "before",
+      "file": "before/arena-responsive-1448x1086.png",
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "sha256": "b0e86b1e9d357428e710fab6f398f0933747004507eee8146fc428e958f90ac7"
+    },
+    {
+      "state": "before",
+      "file": "before/arena-responsive-1024x768.png",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "sha256": "530192de707ca7d71df2a42d543ac67985eb64f116beb0a4d2f274f613736149"
+    },
+    {
+      "state": "before",
+      "file": "before/arena-responsive-390x844.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "c36035553a24713b22090c5bf1d72dc113411e4dd9cf50b4e6ced8adf8369ca8"
+    },
+    {
+      "state": "before",
+      "file": "before/arena-responsive-844x390.png",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "sha256": "61025ee48c879e7c46035a012a153966226d8e9b36b52681ea4d982e68f91f4f"
+    },
+    {
+      "state": "after",
+      "file": "after/arena-responsive-1920x1080.png",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "sha256": "b75e1cb5f6417b0a40632388e490a61f12b916c84b79480afd1a305be7e95eae"
+    },
+    {
+      "state": "after",
+      "file": "after/arena-responsive-1448x1086.png",
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "sha256": "79a831e78b7e9c401682bb1ab93e90045b1ba54a38c7c2d04a1ad518eec62438"
+    },
+    {
+      "state": "after",
+      "file": "after/arena-responsive-1024x768.png",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "sha256": "04c3bdb8eeac99c43962b1af4ec08fecbbe3b54fa8763ae6ecfa0d266a9ae673"
+    },
+    {
+      "state": "after",
+      "file": "after/arena-responsive-390x844.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "sha256": "b3f4020862217a05d12a2d6537f3795ed54e1cc25010591ca97063c88c220644"
+    },
+    {
+      "state": "after",
+      "file": "after/arena-responsive-844x390.png",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "sha256": "f3c72dfd9fb43a1985a4b489c193e5edd386090fe5c7a71a719ad809d81cba84"
+    }
+  ],
+  "gallery": "index.html",
+  "capture": "Actual local React/CSS implementation with seeded test fixtures, idle state, deviceScaleFactor 1, viewport screenshots; source hashes verified against local checkpoint.",
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "arena_unit_tests": {
+      "passed": 34
+    },
+    "arena_playwright": {
+      "passed": 102
+    },
+    "viewports_without_overflow": [
+      "1920x1080",
+      "1448x1086",
+      "1024x768",
+      "390x844",
+      "844x390"
+    ]
+  },
+  "remaining_visual_differences": [
+    "Existing station background and approved product assets differ from reference artwork.",
+    "Profile fallback SVGs are shown where no uploaded seller portrait exists.",
+    "Mobile keeps its responsive panels and compact activity layout."
+  ]
+}
