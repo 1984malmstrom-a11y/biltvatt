@@ -18,13 +18,16 @@ function setup() {
       bind: (...args: (string | number | null | ArrayBuffer)[]) => { values = args.map(v => v instanceof ArrayBuffer ? new Uint8Array(v) : v); return statement; },
       first: async () => arena.prepare(sql).get(...values) ?? null,
       all: async () => ({ results: arena.prepare(sql).all(...values), success: true }),
-      run: async () => ({ meta: { changes: Number(arena.prepare(sql).run(...values).changes) }, success: true }),
+      run: async () => /^\s*(SELECT|WITH)\b/i.test(sql) ? { results:arena.prepare(sql).all(...values),meta:{changes:0},success:true } : ({ meta: { changes: Number(arena.prepare(sql).run(...values).changes) }, success: true }),
     }; return statement;
   };
+  let batchQueue:Promise<unknown>=Promise.resolve();
   f.env.STATION_ID = "mastertest";
-  f.env.ARENA_DB = { prepare, batch: async (statements: ReturnType<typeof prepare>[]) => {
-    arena.exec("BEGIN"); try { const results = []; for (const s of statements) results.push(await s.run()); arena.exec("COMMIT"); return results; }
-    catch (e) { arena.exec("ROLLBACK"); throw e; }
+  f.env.ARENA_DB = { prepare, batch: (statements: ReturnType<typeof prepare>[]) => {
+    const result=batchQueue.then(async()=>{
+      arena.exec("BEGIN"); try { const results = []; for (const s of statements) results.push(await s.run()); arena.exec("COMMIT"); return results; }
+      catch (e) { arena.exec("ROLLBACK"); throw e; }
+    }); batchQueue=result.catch(()=>undefined); return result;
   } } as unknown as D1Database;
   fixtures.push({ db: f.db, arena });
   const registration = (activity_id: string, request_id = crypto.randomUUID(), seller_id = "mastertest:emma") => f.call("/arena/registrations", "POST", { activity_id, seller_id, request_id });
@@ -99,6 +102,20 @@ describe("Arena dataintegritet och stationsisolering", () => {
     expect(after.recent!.some(r => r.id === last.id)).toBe(false); expect(after.recent).toHaveLength(10);
     f.env.STATION_ID="other"; await f.call("/arena/bootstrap");
     expect((await (await f.call("/arena/stats")).json() as ArenaStats).recent).toEqual([]);
+  });
+  it("sparar achievement-kvitton per försäljning, deduplicerar retry och firar inte igen efter undo",async()=>{
+    const f=setup(),cookie=await f.ready(),activity=await f.create(cookie,2);
+    f.db.prepare("INSERT INTO staff(id,name,color,created_at,active) VALUES('p','Peter','#123456','now',1)").run();await f.call("/arena/bootstrap");
+    await f.registration(activity);
+    const request=crypto.randomUUID();
+    await f.registration(activity,crypto.randomUUID(),"mastertest:p"); // Tie, never overtaking.
+    const response=await (await f.registration(activity,request,"mastertest:p")).json() as {registration:{id:string};achievements:{kind:string;scope:string}[]};
+    expect(response.achievements.filter(e=>e.kind==="leader").map(e=>e.scope)).toEqual(expect.arrayContaining(["Idag","Den här veckan","Den här månaden","Testaktivitet"]));
+    expect(await (await f.registration(activity,request,"mastertest:p")).json()).toEqual(response);
+    const again=await (await f.registration(activity,crypto.randomUUID(),"mastertest:p")).json() as {achievements:unknown[]};expect(again.achievements).toEqual([]);
+    await f.call(`/arena/registrations/${response.registration.id}/void`,"POST",{request_id:request});
+    expect(await (await f.registration(activity,request,"mastertest:p")).json()).toMatchObject({registration:{voided_at:expect.any(String)}});
+    expect(f.arena.prepare("SELECT COUNT(*) n FROM arena_registration_achievements WHERE registration_id=?").get(response.registration.id)!.n).toBe(1);
   });
   it("hindrar korsläsning och korsskrivning av aktiviteter, säljare, bilder och ångring", async () => {
     const f = setup(), cookie = await f.ready(), a = await f.create(cookie), request = crypto.randomUUID();

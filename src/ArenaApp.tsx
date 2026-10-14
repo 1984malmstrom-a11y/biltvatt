@@ -8,6 +8,7 @@ import ArenaAdmin from "./ArenaAdmin";
 import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
 import { arenaStartActivities } from "./arena-start";
+import type { EvaluatedAchievement } from "../shared/arena-achievements";
 import "./arena.css";
 
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
@@ -45,8 +46,8 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
-function SellerAvatar({ name }: { name: string }) {
-  return <span className="arena-leader-avatar" aria-hidden="true" title={name}><UserRound /></span>;
+function SellerAvatar({ name, imageUrl }: { name: string; imageUrl?: string }) {
+  return <span className="arena-leader-avatar" aria-hidden="true" title={name}>{imageUrl ? <img src={imageUrl} alt="" /> : <UserRound />}</span>;
 }
 function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
@@ -67,7 +68,7 @@ function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: 
 }
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
-type Celebration = ArenaAchievement & { key: string; points: number; sellerId: string; name: string; activity: ArenaActivity };
+type Celebration = ArenaAchievement & { key: string; points: number; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; heroUrl?: string };
 const rewardDuration = (special: boolean) => special ? 3600 : 2600;
 
 function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats: ArenaStats; onClose: () => void }) {
@@ -84,10 +85,24 @@ function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats:
   </>;
 }
 function CelebrationCard({ event }: { event: Celebration }) {
-  const isGoal = event.kind === "personal-goal" || event.kind === "station-goal";
-  const heading = event.kind === "leader" ? "NY ETTA!" : isGoal ? event.goal?.period_type === "week" ? "VECKOMÅL UPPNÅTT!" : "MÅL UPPNÅTT!" : null;
+  const isGoal = event.kind === "personal-goal" || event.kind === "station-goal" || event.kind === "focus-goal";
+  const heading = event.kind === "leader" ? "NY ETTA!" : event.kind === "focus-goal" ? "FOKUSMÅL UPPNÅTT!" : isGoal ? event.goal?.period_type === "week" ? "VECKOMÅL UPPNÅTT!" : "MÅL UPPNÅTT!" : event.kind === "milestone" ? "VILKET DRIV!" : null;
   const encouragement = event.kind === "leader" ? event.previousLeader ? `${event.name} går om ${event.previousLeader}` : `${event.name} tar förstaplatsen!` : event.kind === "personal-goal" ? `${event.name} · ${event.text}` : event.kind === "station-goal" ? "Hela laget nådde målet!" : event.text;
-  return <div className={`arena-celebration${event.special ? " is-special" : ""} celebration-${event.kind}`} role="status" style={{ "--reward-life": `${rewardDuration(event.special)}ms` } as React.CSSProperties}>
+  const level=event.level ?? (event.special ? 3 : 1);
+  if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
+    <div className="arena-reward-ring arena-victory-hero">
+      <div className="arena-victory-art" aria-hidden="true">{event.heroUrl ? <img src={event.heroUrl} alt="" /> : <><Crown /><Trophy /><b>{event.kind === "leader" ? "1" : <Check />}</b></>}</div>
+      <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
+        <strong className="arena-reward-seller">{event.name}</strong>
+        <div className="arena-victory-sale"><strong className="arena-reward-points">+{num(event.points)} POÄNG!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
+        {isGoal && event.goal && <div className="arena-reward-goal"><Check aria-hidden="true" />{num(event.goal.points)} / {num(event.goal.target_points)} {event.goalMetric === "count" ? "försäljningar" : "poäng"}</div>}
+        {event.secondary?.length ? <p className="arena-victory-secondary">{event.secondary.join(" · ")}</p> : null}
+        <span className="arena-reward-confirmation">SÄLJNINGEN REGISTRERAD</span><strong className="arena-reward-pep">SNYGGT JOBBAT!</strong>
+      </div>
+      {Array.from({length:16},(_,i)=><i key={i} className="arena-confetti" style={{"--i":i} as React.CSSProperties} aria-hidden="true" />)}
+    </div>
+  </div>;
+  return <div className={`arena-celebration${event.special ? " is-special" : ""} level-${level} celebration-${event.kind}`} role="status" style={{ "--reward-life": `${rewardDuration(event.special)}ms` } as React.CSSProperties}>
     <div className="arena-reward-ring" key={event.kind}>
       {event.special && <div className="arena-reward-crown" aria-hidden="true">{isGoal ? <Trophy /> : <><Crown /><b>1</b></>}</div>}
       <div className="arena-reward-product" aria-hidden="true"><ActivityImage activity={event.activity} /></div>
@@ -158,25 +173,27 @@ function ArenaHome() {
     const pending = { ...selected, sellerId }; setSelection(pending);
     const before = statsRef.current;
     try {
-      const { registration } = await api<{ registration: ArenaRegistration }>("/arena/registrations", send("POST", {
+      const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
         request_id: pending.requestId, activity_id: pending.activity.id, seller_id: sellerId,
+        achievement_context:{period:period === "custom" && (!start || !end) ? "today" : period,...(period === "custom" && start && end ? {start,end} : {})},
       }));
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
-      const burst: Celebration = { key: registration.id, points: registration.points_awarded, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity };
+      const primary=achievements?.[0];
+      const burst: Celebration = { key: registration.id, points: registration.points_awarded, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements?.slice(1).map(e=>`${e.text} ${e.scope}`) };
       setReceipt({ registration, requestId: pending.requestId, name }); setSelection(null);
       if (lastCelebrated.current !== registration.id) {
         lastCelebrated.current = registration.id;
         celebrationAllowed.current = registration.id;
         setCelebration(burst);
-        clearTimeout(celebrationTimer.current); celebrationTimer.current = setTimeout(() => setCelebration(null), rewardDuration(false));
+        clearTimeout(celebrationTimer.current); celebrationTimer.current = setTimeout(() => setCelebration(null), rewardDuration(burst.special));
       }
       // One small, debounced statistics refresh, independent of the animation and next sale.
       clearTimeout(refreshTimer.current);
       refreshTimer.current = setTimeout(() => {
         void refresh().then(after => {
           if (!after || before?.range.start !== after.range.start || before?.range.end !== after.range.end) return;
-          const event = arenaAchievement(before, after, sellerId);
+          const event = achievements !== undefined ? primary ?? {text:burst.text,special:false,kind:"points" as const} : arenaAchievement(before, after, sellerId);
           if (celebrationAllowed.current !== registration.id) return;
           setCelebration(current => current?.key === registration.id ? { ...current, ...event } : event.special && celebrationAllowed.current === registration.id ? { ...burst, ...event } : current);
           if (event.special && lastCelebrated.current === registration.id) {

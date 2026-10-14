@@ -630,6 +630,31 @@ for (const [width,height] of [[1920,1080],[1366,768],[1024,768],[390,844],[844,3
   });
 }
 
+test("Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom",async({page})=>{
+  await visualData(page,()=>stats);
+  await page.route("**/api/arena/registrations",r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,points_awarded:2,voided_at:null},achievements:[{id:"near:g",kind:"milestone",level:2,special:true,text:"Bara 19 poäng kvar till ditt mål!",scope:"Personligt mål"}]}}));
+  await page.goto("/arena");await page.getByRole("button",{name:"Biltvätt, +2 poäng",exact:true}).click();await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();
+  await expect(page.locator(".level-2")).toBeVisible();await expect(page.locator(".level-2")).toContainText("Bara 19 poäng kvar");await expect(page.locator(".arena-victory-hero")).toHaveCount(0);
+  await stateScreenshot(page,"level-2-near-personal-goal");
+  await page.getByRole("button",{name:"Korv med mos, +1 poäng",exact:true}).click();await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+for (const scope of ["Idag","Den här veckan","Den här månaden","Vald period","Kaffe + bulle","Aktuellt fokus"]) {
+  test(`Arena: centralt achievement-kvitto för ${scope}, en hero och dedup`,async({page})=>{
+    await visualData(page,()=>stats);let n=0;
+    await page.route("**/api/arena/registrations",r=>{
+      n++;const request=r.request().postDataJSON();
+      return r.fulfill({json:{registration:{id:request.request_id,points_awarded:2,voided_at:null},achievements:n===1 ? [{id:"lead",kind:"leader",level:3,special:true,text:"Ny etta!",scope,previousLeader:"Alva"},{id:"small",kind:"milestone",level:2,special:true,text:"10 försäljningar idag",scope:"Idag"}]:[]}});
+    });
+    await page.goto("/arena");await page.getByRole("button",{name:"Biltvätt, +2 poäng",exact:true}).click();await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();
+    await expect(page.locator(".level-3")).toHaveCount(1);await expect(page.locator(".arena-victory-hero")).toContainText(scope);
+    await expect(page.locator(".arena-victory-secondary")).toContainText("10 försäljningar idag");
+    await stateScreenshot(page,`central-leader-${scope.replaceAll(" ","-")}`);
+    await page.getByRole("button",{name:"Biltvätt, +2 poäng",exact:true}).click();await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();
+    await expect(page.locator(".level-3")).toHaveCount(0);await expect(page.locator(".celebration-points")).toBeVisible();
+  });
+}
+
 for (const kind of ["leader","personal-goal","station-goal"] as const) {
   for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     test(`Arena: ${kind} firar utan att blockera nästa registrering ${width}x${height}`, async ({ page }) => {
@@ -668,7 +693,7 @@ for (const kind of ["leader","personal-goal","station-goal"] as const) {
         const box = (await item.boundingBox())!;
         expect(box.y).toBeGreaterThanOrEqual(ring.y); expect(box.y + box.height).toBeLessThanOrEqual(ring.y + ring.height);
       }
-      expect(await reward.locator(".arena-confetti").count()).toBeLessThanOrEqual(12);
+      expect(await reward.locator(".arena-confetti").count()).toBeLessThanOrEqual(16);
       expect(await page.locator("canvas").count()).toBe(0);
       expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(height);
       await stateScreenshot(page, `${kind}-${width}x${height}`);

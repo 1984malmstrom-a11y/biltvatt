@@ -36,8 +36,8 @@ export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 10
 
 // Small event function shared by all celebrations. No animation controls the sale flow.
 export type ArenaAchievement = {
-  text: string; special: boolean; kind: "points" | "leader" | "personal-goal" | "station-goal";
-  goal?: ArenaGoal; previousLeader?: string;
+  text: string; special: boolean; kind: "points" | "leader" | "personal-goal" | "station-goal" | "focus-goal" | "milestone";
+  goal?: ArenaGoal; previousLeader?: string; level?: 1 | 2 | 3; scope?: string; goalMetric?: "points" | "count";
 };
 export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, sellerId: string): ArenaAchievement {
   const person = after.leaderboard.find(p => p.id === sellerId);
