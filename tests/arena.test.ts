@@ -130,6 +130,38 @@ describe("Arena dataintegritet och stationsisolering", () => {
     expect((await f.call("/admin/arena/goals", "POST", { seller_id: "mastertest:emma", period_type: "custom", start_date: "2026-10-01", end_date: "2026-10-31", target_points: 100 }, cookie)).status).toBe(400);
     expect(() => f.arena.prepare("INSERT INTO arena_registrations(id,station_id,seller_id,activity_id,request_id,points_awarded,registered_at,created_at) VALUES('bad','other','other:emma',?,'request',2,'now','now')").run(a)).toThrow("arena_station_mismatch");
   });
+  it("TB är ett oföränderligt öresnapshot, summeras per period och visar okänd äldre historik",async()=>{
+    vi.useFakeTimers();vi.setSystemTime(new Date("2026-10-14T10:00:00Z"));
+    const f=setup(),cookie=await f.ready();
+    const made=await f.call("/admin/arena/activities","POST",{...draft,points:2,tb_kronor:"35,25",display_mode:"tb"},cookie);
+    const a=(await made.json() as {id:string}).id;expect(made.status).toBe(201);
+    f.arena.prepare("INSERT INTO arena_registrations(id,station_id,seller_id,activity_id,request_id,points_awarded,registered_at,created_at) VALUES(?,'mastertest','mastertest:emma',?,?,2,'2026-10-01T10:00:00Z','2026-10-01T10:00:00Z')").run(crypto.randomUUID(),a,crypto.randomUUID());
+    const request=crypto.randomUUID(),first=await (await f.registration(a,request)).json() as {registration:{id:string;tb_ore_awarded:number}};
+    expect(first.registration.tb_ore_awarded).toBe(3525);
+    await f.call(`/admin/arena/activities/${a}`,"PATCH",{...draft,points:2,tb_kronor:"100.01",display_mode:"points"},cookie);
+    const second=await (await f.registration(a)).json() as {registration:{tb_ore_awarded:number}};expect(second.registration.tb_ore_awarded).toBe(10001);
+    expect(f.arena.prepare("SELECT tb_ore_awarded FROM arena_registrations WHERE id=?").get(first.registration.id)!.tb_ore_awarded).toBe(3525);
+    expect(()=>f.arena.prepare("UPDATE arena_registrations SET tb_ore_awarded=999 WHERE id=?").run(first.registration.id)).toThrow("arena_snapshot_immutable");
+    for(const period of ["today","week","month","custom&start=2026-10-01&end=2026-10-31"]) {
+      const result=await (await f.call(`/arena/stats?metric=tb&period=${period}`)).json() as ArenaStats;
+      expect(result.tb_ore).toBe(13526);expect(result.leaderboard.find(p=>p.id==="mastertest:emma")?.tb_ore).toBe(13526);
+      expect(result.unknown_tb_count).toBe(period.startsWith("month") || period.startsWith("custom") ? 1 : 0);
+    }
+    const archived=await (await f.call("/arena/stats?metric=tb&period=custom&start=2026-10-01&end=2026-10-01")).json() as ArenaStats;
+    expect(archived).toMatchObject({tb_ore:0,unknown_tb_count:1});
+    await f.call(`/arena/registrations/${first.registration.id}/void`,"POST",{request_id:request});expect(await (await f.call("/arena/stats?metric=tb")).json()).toMatchObject({tb_ore:10001,count:1,points:2});
+    f.env.STATION_ID="other";await f.call("/arena/bootstrap");expect(await (await f.call("/arena/stats?metric=tb")).json()).toMatchObject({tb_ore:0,count:0});
+  });
+  it("TB-topplistan sorterar per TB, aktivitet och kategori medan poäng och antal förblir separata",async()=>{
+    const f=setup(),cookie=await f.ready();f.db.prepare("INSERT INTO staff(id,name,color,created_at,active) VALUES('tb','TB-ledare','#123456','now',1)").run();await f.call("/arena/bootstrap");
+    const create=async(name:string,points:number,tb:string)=>{const r=await f.call("/admin/arena/activities","POST",{...draft,name,points,tb_kronor:tb,category:name},cookie);return (await r.json() as {id:string}).id;};
+    const low=await create("Mat",5,"1"),high=await create("Bil",1,"200");await f.registration(low);await f.registration(low);await f.registration(high,crypto.randomUUID(),"mastertest:tb");
+    expect((await (await f.call("/arena/stats?metric=tb")).json() as ArenaStats).leaderboard[0].name).toBe("TB-ledare");
+    for(const metric of ["points","count"]) expect((await (await f.call(`/arena/stats?metric=${metric}`)).json() as ArenaStats).leaderboard[0].id).toBe("mastertest:emma");
+    expect(await (await f.call(`/arena/stats?metric=tb&activity_id=${low}`)).json()).toMatchObject({tb_ore:200,count:2,points:10});
+    expect(await (await f.call("/arena/stats?metric=tb&category=Bil")).json()).toMatchObject({tb_ore:20000,count:1,points:1});
+    expect((await f.call("/arena/stats?metric=invalid")).status).toBe(400);
+  });
   it("ångrar endast med eget UUID-kvitto inom fem minuter och bevarar historiken", async () => {
     const f = setup(), cookie = await f.ready(), a = await f.create(cookie), request = crypto.randomUUID();
     const saved = await (await f.registration(a, request)).json() as { registration: { id: string } };

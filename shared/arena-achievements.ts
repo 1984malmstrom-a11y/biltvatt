@@ -2,7 +2,8 @@ import { arenaNumber, roundedPoints, type ArenaAchievement, type ArenaGoal } fro
 
 export type AchievementScope = {
   id: string; label: string; kind: "period" | "activity" | "focus";
-  board: { id: string; name: string; points: number; count: number }[];
+  metric?:"points" | "tb" | "count";
+  board: { id: string; name: string; points: number; count: number; tb_ore?:number }[];
 };
 export type AchievementSnapshot = {
   scopes: AchievementScope[];
@@ -28,11 +29,12 @@ export function evaluateArenaAchievements(before: AchievementSnapshot, after: Ac
   for (const scope of after.scopes) {
     const old = before.scopes.find(s => s.id === scope.id);
     if (!old) continue;
-    const rank = (s: AchievementScope) => [...s.board].sort((a,b) => b.points-a.points || b.count-a.count || a.name.localeCompare(b.name,"sv") || a.id.localeCompare(b.id));
+    const score=(p:AchievementScope["board"][number])=>scope.metric==="tb" ? p.tb_ore??0 : scope.metric==="count" ? p.count : p.points;
+    const rank = (s: AchievementScope) => [...s.board].sort((a,b) => score(b)-score(a) || b.count-a.count || a.name.localeCompare(b.name,"sv") || a.id.localeCompare(b.id));
     const now = rank(scope), was = rank(old), person = now.find(p => p.id === sellerId);
     // A tie is never described as overtaking the previous leader.
-    if (person && now[0]?.id === sellerId && person.points > 0 && was[0]?.id !== sellerId && (!now[1] || person.points > now[1].points)) {
-      events.push({ id:`leader:${scope.id}:${sellerId}`, level:3, special:true, kind:"leader", scope:scope.label, text:"Ny etta!", previousLeader:was[0]?.points > 0 ? was[0].name : undefined });
+    if (person && now[0]?.id === sellerId && score(person) > 0 && was[0]?.id !== sellerId && (!now[1] || score(person) > score(now[1]))) {
+      events.push({ id:`leader:${scope.id}:${sellerId}`, level:3, special:true, kind:"leader", scope:scope.label, text:"Ny etta!", previousLeader:was[0] && score(was[0]) > 0 ? was[0].name : undefined });
     }
     if (scope.id.startsWith("today:")) {
       const count = person?.count ?? 0, previousCount = old.board.find(p => p.id === sellerId)?.count ?? 0;

@@ -1,5 +1,6 @@
 import { checkFields, fail, integer, text } from "./http";
 import { addDays, dateRange, midnightUTC } from "./stats";
+import { parseArenaMoney } from "../shared/arena-money";
 
 export const arenaUUID = (value: unknown) => {
   const id = text(value, "Begärande-ID", 36);
@@ -16,17 +17,27 @@ const active = (value: unknown) => {
   if (value !== 0 && value !== 1) fail(400, "Aktiv ska vara 0 eller 1.");
   return value as number;
 };
+export function arenaTB(value:unknown) {
+  const ore=parseArenaMoney(value);
+  if(ore===null) return fail(400,"TB ska vara 0–1 000 000 kr med högst två decimaler.");
+  return ore;
+}
 export function activityInput(data: Record<string, unknown>) {
-  checkFields(data, ["name", "offer_text", "price_text", "points", "image_key", "category", "sort_order", "active"]);
+  checkFields(data, ["name", "offer_text", "price_text", "points", "image_key", "category", "sort_order", "active", "tb_kronor", "tb_ore", "display_mode"]);
+  if(data.tb_kronor!==undefined && data.tb_ore!==undefined) fail(400,"Ange TB i kronor eller öre, inte båda.");
+  if(data.display_mode!==undefined && !["points","tb"].includes(String(data.display_mode))) fail(400,"Välj poäng eller TB som badge.");
+  const tb=data.tb_kronor!==undefined ? arenaTB(data.tb_kronor) : data.tb_ore!==undefined ? integer(data.tb_ore,"TB i öre",100000000) : undefined;
   return {
     name: text(data.name, "Namn"), offer_text: optionalText(data.offer_text, "Erbjudande"),
     price_text: optionalText(data.price_text, "Pristext"), points: arenaPoints(data.points),
     image_key: data.image_key === null ? null : arenaUUID(data.image_key),
     category: optionalText(data.category, "Kategori", 40), sort_order: integer(data.sort_order, "Sortering", 10000), active: active(data.active),
+    ...(tb!==undefined ? {tb_ore:tb} : {}),...(data.display_mode!==undefined ? {display_mode:String(data.display_mode)} : {}),
   };
 }
 export function arenaRange(url: URL, now = new Date()) {
-  for (const field of url.searchParams.keys()) if (!["period", "start", "end", "activity_id", "category"].includes(field)) fail(400, "Okänt statistikfilter.");
+  for (const field of url.searchParams.keys()) if (!["period", "start", "end", "activity_id", "category", "metric"].includes(field)) fail(400, "Okänt statistikfilter.");
+  if(url.searchParams.has("metric") && !["points","tb","count"].includes(url.searchParams.get("metric")!)) fail(400,"Välj poäng, TB eller antal.");
   try { return dateRange(url, now); } catch (e) { return fail(400, (e as Error).message); }
 }
 export function goalDates(start: unknown, end: unknown) {

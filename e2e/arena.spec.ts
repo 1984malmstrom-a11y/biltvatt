@@ -630,6 +630,33 @@ for (const [width,height] of [[1920,1080],[1366,768],[1024,768],[390,844],[844,3
   });
 }
 
+for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,390]]) {
+  test(`Arena: TB-badge, snapshotbelöning, topplista och Min Arena ${width}x${height}`,async({page})=>{
+    const tbBoot=structuredClone(boot);tbBoot.activities[0]={...tbBoot.activities[0],display_mode:"tb",tb_ore:3525};
+    const current=structuredClone(stats);current.tb_ore=48600;current.unknown_tb_count=1;current.leaderboard[0].tb_ore=48600;current.leaderboard[0].unknown_tb_count=1;
+    await page.setViewportSize({width,height});await visualData(page,()=>current);
+    await page.route("**/api/arena/bootstrap",r=>r.fulfill({json:tbBoot}));
+    await page.route("**/api/arena/stats*",r=>r.fulfill({json:{...current,metric:new URL(r.request().url()).searchParams.get("metric")??"points"}}));
+    await page.route("**/api/arena/registrations",r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,points_awarded:2,tb_ore_awarded:3525,voided_at:null},achievements:[]}}));
+    await page.goto("/arena");const activity=page.getByRole("button",{name:"Biltvätt, +35,25 kr TB",exact:true});await expect(activity).toBeVisible();await expect(activity.locator(".arena-points")).toContainText("35,25 kr TB");
+    await stateScreenshot(page,`tb-badge-${width}x${height}`);
+    await activity.click();await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();await expect(page.locator(".arena-reward-points")).toHaveText("+35,25 kr TB!");
+    await page.getByRole("button",{name:"Stäng belöning",exact:true}).click();
+    await page.getByRole("button",{name:"TOPPLISTOR",exact:true}).click();const leaders=page.getByRole("dialog",{name:"Topplistor & statistik"});await leaders.getByLabel("Mått",{exact:true}).selectOption("tb");
+    const person=leaders.getByRole("button",{name:"Peter 486 kr TB",exact:true});await expect(person).toBeVisible();await expect(leaders).toContainText("äldre registreringar saknar historiskt TB");
+    await stateScreenshot(page,`tb-leaderboard-${width}x${height}`);await person.click();const mine=page.getByRole("dialog",{name:"Peter · Min Arena",exact:true});await expect(mine.locator(".arena-person-tb")).toContainText("486 kr TB");
+    await stateScreenshot(page,`tb-person-${width}x${height}`);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(width);
+  });
+}
+test("Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans",async({page})=>{
+  await visualData(page,()=>stats);const config={activities:[{...activities[0],tb_ore:2900,display_mode:"points"}],campaigns:[],station_goals:[],personal_goals:[]};let payload:Record<string,unknown>|null=null;
+  await page.route("**/api/admin/arena/config",r=>r.fulfill({json:config}));
+  await page.route(`**/api/admin/arena/activities/${activities[0].id}`,r=>{payload=r.request().postDataJSON();return r.fulfill({json:{id:activities[0].id}});});
+  await page.goto("/arena/admin");await page.getByRole("button",{name:"Redigera aktivitet: Biltvätt",exact:true}).click();await page.getByLabel("TB (kr)",{exact:true}).fill("35,25");await page.getByLabel("Synlig badge",{exact:true}).selectOption("tb");
+  await expect(page.locator(".arena-preview .arena-points")).toHaveText("+35,25 kr TB");await stateScreenshot(page,"tb-admin");
+  await page.getByRole("button",{name:"Spara",exact:true}).click();await expect(page.getByRole("status")).toContainText("Sparat");expect(payload).toMatchObject({points:2,tb_kronor:"35,25",display_mode:"tb"});expect(payload).not.toHaveProperty("tb_ore");
+});
+
 test("Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom",async({page})=>{
   await visualData(page,()=>stats);
   await page.route("**/api/arena/registrations",r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,points_awarded:2,voided_at:null},achievements:[{id:"near:g",kind:"milestone",level:2,special:true,text:"Bara 19 poäng kvar till ditt mål!",scope:"Personligt mål"}]}}));

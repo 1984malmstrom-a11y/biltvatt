@@ -48,7 +48,7 @@ export async function arenaApi(
     const data = await body(request);
     checkFields(data, ["request_id", "activity_id", "seller_id", "achievement_context"]);
     const requestId = arenaUUID(data.request_id), activityId = text(data.activity_id, "Aktivitet", 80), sellerId = text(data.seller_id, "Säljare", 120);
-    const lookup = () => arena.prepare(`SELECT id,seller_id,activity_id,points_awarded,registered_at,voided_at FROM arena_registrations WHERE request_id=? AND station_id=?`)
+    const lookup = () => arena.prepare(`SELECT id,seller_id,activity_id,points_awarded,tb_ore_awarded,registered_at,voided_at FROM arena_registrations WHERE request_id=? AND station_id=?`)
       .bind(requestId, key).first<ArenaRegistration>();
     let registration = await lookup();
     if (!registration) {
@@ -58,8 +58,8 @@ export async function arenaApi(
         fail(400, "Säljaren är inte aktiv. Uppdatera Arenan.");
       // SELECT snapshots points and campaign at the same instant as the atomic insert.
       const scopes=await achievementScopes(arena,key,activityId,data.achievement_context,new Date(now));
-      const result=await arena.batch([scopes.statement(),arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,registered_at,created_at)
-        SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=? AND c.end_at>? ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,?,?
+      const result=await arena.batch([scopes.statement(),arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,tb_ore_awarded,registered_at,created_at)
+        SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=? AND c.end_at>? ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,a.tb_ore,?,?
         FROM arena_sellers s JOIN arena_activities a ON a.station_id=s.station_id
         WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND a.active=1`)
         .bind(crypto.randomUUID(), key, now, now, requestId, now, now, sellerId, activityId, key),scopes.statement()]);
@@ -196,7 +196,7 @@ export async function arenaApi(
       arena
         .prepare(
           `SELECT
-            id,name,offer_text,price_text,points,image_key,
+            id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,
             category,sort_order,active
            FROM arena_activities
            WHERE station_id=? AND active=1

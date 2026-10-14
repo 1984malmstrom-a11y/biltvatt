@@ -532,7 +532,18 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-team-goal .arena-hud .arena-progress-track b { font-size:17px; right:-32px; top:-4px; }
   .arena-focus-name { font-size:18px; }.arena-stage-start .arena-crown { width:22px; height:22px; }
 }
+.arena-person-tb { display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; padding:12px 0; color:#a8c6df; font-size:11px; border-bottom:1px solid #a9cae61a; }.arena-person-tb strong { color:#f4d990; font-size:19px; }.arena-person-tb small { flex-basis:100%; }
+@media (min-width:951px) and (max-height:850px) {
+  .arena-dialog-person { padding:16px 22px; }.arena-dialog-person>header { margin-bottom:8px; padding-bottom:8px; }
+  .arena-person-heading { padding-bottom:8px; }.arena-person-tb { padding:4px 0; font-size:10px; }.arena-person-tb strong { font-size:16px; }
+  .arena-person-metrics>div { padding:8px 13px; }.arena-person-progress { padding:10px 8px; }
+  .arena-breakdown li { padding:8px 10px; }.arena-person-footer { padding:6px 10px; }
+}
+.arena-stage-start .arena-orb[data-display-mode=tb] .arena-points { font-size:clamp(9px,1.1cqw,18px); }
+.arena-stage-start .arena-orb-focus[data-display-mode=tb] .arena-points { font-size:clamp(12px,1.5cqw,23px); }
 .arena-celebration.level-2 { --reward-size:min(700px,80dvh,92vw); }
+.arena-celebration.reward-tb .arena-reward-points { font-size:7cqw; max-width:100%; }
+.arena-victory-hero .arena-reward-points { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
 .arena-celebration.level-3 .arena-victory-hero { width:min(1000px,94vw); height:auto; max-height:90dvh; container-type:normal; display:grid; grid-template-columns:.65fr 1fr; gap:24px; border-radius:22px; padding:32px; background:radial-gradient(ellipse at 20% 50%,#154b8270,transparent 62%),linear-gradient(145deg,#051525,#020914); border:1px solid #f6dc95; box-shadow:0 0 24px #55bfff55,0 0 55px #d7a74222,inset 0 1px 0 #ffedbc44; animation:arena-reward-enter .3s ease-out both; }
 .arena-victory-art { position:relative; height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#f8d16d; background:radial-gradient(ellipse,#2c80c848,transparent 70%); }
 .arena-victory-hero::before,.arena-victory-hero::after { border-radius:inherit; }

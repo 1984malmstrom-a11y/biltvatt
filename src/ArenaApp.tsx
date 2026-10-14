@@ -9,6 +9,7 @@ import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
 import { arenaStartActivities } from "./arena-start";
 import type { EvaluatedAchievement } from "../shared/arena-achievements";
+import { arenaMoney, arenaReward } from "../shared/arena-money";
 import "./arena.css";
 
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
@@ -20,14 +21,14 @@ function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: Ar
 export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
   activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;
 }) {
-  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} onClick={onClick} disabled={unavailable}
-    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, +${num(activity.points)} poäng`}>
+  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
+    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${arenaReward(activity).replace("POÄNG","poäng")}`}>
     {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span><strong className="arena-focus-name">{activity.name}</strong></span>}
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
     </span>
     <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>
-    <span className="arena-points">{unavailable ? "EJ UPPLAGD" : `+${num(activity.points)} POÄNG`}</span>
+    <span className="arena-points">{unavailable ? "EJ UPPLAGD" : arenaReward(activity)}</span>
   </button>;
 }
 function Progress({ points, target, label, suffix = "poäng", hud = false }: { points: number; target: number; label: string; suffix?: string; hud?: boolean }) {
@@ -50,9 +51,11 @@ function SellerAvatar({ name, imageUrl }: { name: string; imageUrl?: string }) {
   return <span className="arena-leader-avatar" aria-hidden="true" title={name}>{imageUrl ? <img src={imageUrl} alt="" /> : <UserRound />}</span>;
 }
 function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
+  const value=(p:ArenaPerson)=>stats?.metric === "tb" ? arenaMoney(p.tb_ore??0) : num(stats?.metric === "count" ? p.count : p.points);
+  const unit=stats?.metric === "tb" ? "TB" : stats?.metric === "count" ? "st" : "p";
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
-    <button onClick={() => onPerson(p)} aria-label={`${p.name} ${num(p.points)} p`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span className="arena-seller-cell"><SellerAvatar name={p.name} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{num(p.points)} <small>p</small></strong>
+    <button onClick={() => onPerson(p)} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
+      {p.rank}</span><span className="arena-seller-cell"><SellerAvatar name={p.name} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 }
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
@@ -68,7 +71,7 @@ function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: 
 }
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
-type Celebration = ArenaAchievement & { key: string; points: number; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; heroUrl?: string };
+type Celebration = ArenaAchievement & { key: string; points: number; tbOre?:number | null; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; heroUrl?: string };
 const rewardDuration = (special: boolean) => special ? 3600 : 2600;
 
 function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats: ArenaStats; onClose: () => void }) {
@@ -78,9 +81,10 @@ function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats:
   return <>
     <div className="arena-person-heading"><span className="arena-person-avatar" style={{ "--seller-color": person.color } as React.CSSProperties} aria-hidden="true">{initials(person.name)}<Crown /></span><div><h3>{person.name}</h3><p>Din utveckling. Dina resultat.</p></div><div className="arena-person-rank"><strong>#{person.rank}</strong><small>PLACERING</small></div></div>
     <div className="arena-person-metrics"><div><Star /><small>POÄNG</small><strong>{num(person.points)}</strong></div><div><BarChart3 /><small>REGISTRERINGAR</small><strong>{num(person.count)}</strong></div><div className={`arena-person-goal${goal ? "" : " is-empty"}`}><Target /><small>{goal ? goal.period_type === "week" ? "VECKOMÅL" : goal.period_type === "month" ? "MÅNADSMÅL" : "PERSONLIGT MÅL" : "PERSONLIGT MÅL"}</small><strong>{goal ? `${num(goal.target_points)} p` : "Inte satt ännu"}</strong></div></div>
-    <section className="arena-person-progress"><div className="arena-progress-ring" style={{ "--progress": `${percent}%` } as React.CSSProperties} role={goal ? "progressbar" : undefined} aria-label={goal ? "Personligt mål" : undefined} aria-valuemin={goal ? 0 : undefined} aria-valuemax={goal?.target_points} aria-valuenow={goal ? Math.min(goal.points, goal.target_points) : undefined}><span>{goal ? `${percent}%` : <Target />}<small>{goal ? "AV MÅLET" : "NÄSTA MÅL"}</small></span></div><div>{goal ? <><strong>{goal.points >= goal.target_points ? "Målet uppnått!" : `${num(roundedPoints(goal.target_points - goal.points))} poäng kvar`}</strong><p>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</p></> : <><strong>Inget personligt mål satt ännu</strong><p>Stationsadmin kan sätta ett mål för dig. Dina försäljningar räknas redan!</p></>}{next ? <strong className="arena-next-rank">{num(roundedPoints(next.points - person.points))} poäng till nästa placering</strong> : <strong className="arena-next-rank">{person.points > 0 ? "Du leder. Fortsätt på samma spår!" : "Varje registrering tar dig framåt."}</strong>}</div></section>
+    <div className="arena-person-tb"><strong>{arenaMoney(person.tb_ore??0)} TB</strong><span>Genererad uppskattad marginal · {arenaPeriodLabel(stats.range.start,stats.range.end)}</span>{!!person.unknown_tb_count && <small>{person.unknown_tb_count} äldre registreringar saknar historiskt TB.</small>}</div>
+    <section className="arena-person-progress"><div className="arena-progress-ring" style={{ "--progress": `${percent}%` } as React.CSSProperties} role={goal ? "progressbar" : undefined} aria-label={goal ? "Personligt mål" : undefined} aria-valuemin={goal ? 0 : undefined} aria-valuemax={goal?.target_points} aria-valuenow={goal ? Math.min(goal.points, goal.target_points) : undefined}><span>{goal ? `${percent}%` : <Target />}<small>{goal ? "AV MÅLET" : "NÄSTA MÅL"}</small></span></div><div>{goal ? <><strong>{goal.points >= goal.target_points ? "Målet uppnått!" : `${num(roundedPoints(goal.target_points - goal.points))} poäng kvar`}</strong><p>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</p></> : <><strong>Inget personligt mål satt ännu</strong><p>Stationsadmin kan sätta ett mål för dig. Dina försäljningar räknas redan!</p></>}{next ? <strong className="arena-next-rank">{stats.metric==="tb" ? `${arenaMoney((next.tb_ore??0)-(person.tb_ore??0))} TB` : stats.metric==="count" ? `${next.count-person.count} registreringar` : `${num(roundedPoints(next.points - person.points))} poäng`} till nästa placering</strong> : <strong className="arena-next-rank">{person.points > 0 ? "Du leder. Fortsätt på samma spår!" : "Varje registrering tar dig framåt."}</strong>}</div></section>
     {goals.slice(1).map(g => <section className="arena-extra-goal" key={g.id}><GoalProgress goal={g} /><p>{g.points >= g.target_points ? "Målet uppnått!" : `${num(roundedPoints(g.target_points - g.points))} poäng kvar till målet`}</p></section>)}
-    <div className="arena-breakdown-heading"><h3>Mina aktiviteter</h3><small>{arenaPeriodLabel(stats.range.start, stats.range.end)}</small></div><ul className="arena-breakdown">{person.activities.map(a => <li key={a.id}><ShoppingBag aria-hidden="true" /><div><span>{a.name}</span><strong>{num(a.points)} poäng <small>· {a.count} st</small></strong><i style={{ "--activity-share": `${person.points ? 100 * a.points / person.points : 0}%` } as React.CSSProperties} /></div></li>)}</ul>{!person.activities.length && <p className="arena-breakdown-empty">Din nästa försäljning är början på nästa resultat.</p>}
+    <div className="arena-breakdown-heading"><h3>Mina aktiviteter</h3><small>{arenaPeriodLabel(stats.range.start, stats.range.end)}</small></div><ul className="arena-breakdown">{person.activities.map(a => <li key={a.id}><ShoppingBag aria-hidden="true" /><div><span>{a.name}</span><strong>{num(a.points)} poäng <small>· {a.count} st · {arenaMoney(a.tb_ore??0)} TB</small></strong><i style={{ "--activity-share": `${person.points ? 100 * a.points / person.points : 0}%` } as React.CSSProperties} /></div></li>)}</ul>{!person.activities.length && <p className="arena-breakdown-empty">Din nästa försäljning är början på nästa resultat.</p>}
     <footer className="arena-person-footer"><Trophy /><span><strong>DU GÖR SKILLNAD!</strong><small>Varje registrering räknas.</small></span><button className="arena-gold-action" onClick={onClose}>Fortsätt sälja <ArrowRight /></button></footer>
   </>;
 }
@@ -89,12 +93,13 @@ function CelebrationCard({ event }: { event: Celebration }) {
   const heading = event.kind === "leader" ? "NY ETTA!" : event.kind === "focus-goal" ? "FOKUSMÅL UPPNÅTT!" : isGoal ? event.goal?.period_type === "week" ? "VECKOMÅL UPPNÅTT!" : "MÅL UPPNÅTT!" : event.kind === "milestone" ? "VILKET DRIV!" : null;
   const encouragement = event.kind === "leader" ? event.previousLeader ? `${event.name} går om ${event.previousLeader}` : `${event.name} tar förstaplatsen!` : event.kind === "personal-goal" ? `${event.name} · ${event.text}` : event.kind === "station-goal" ? "Hela laget nådde målet!" : event.text;
   const level=event.level ?? (event.special ? 3 : 1);
+  const reward=arenaReward(event.activity,event.points,event.tbOre);
   if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-victory-hero">
       <div className="arena-victory-art" aria-hidden="true">{event.heroUrl ? <img src={event.heroUrl} alt="" /> : <><Crown /><Trophy /><b>{event.kind === "leader" ? "1" : <Check />}</b></>}</div>
       <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
         <strong className="arena-reward-seller">{event.name}</strong>
-        <div className="arena-victory-sale"><strong className="arena-reward-points">+{num(event.points)} POÄNG!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
+        <div className="arena-victory-sale"><strong className="arena-reward-points">{reward}!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
         {isGoal && event.goal && <div className="arena-reward-goal"><Check aria-hidden="true" />{num(event.goal.points)} / {num(event.goal.target_points)} {event.goalMetric === "count" ? "försäljningar" : "poäng"}</div>}
         {event.secondary?.length ? <p className="arena-victory-secondary">{event.secondary.join(" · ")}</p> : null}
         <span className="arena-reward-confirmation">SÄLJNINGEN REGISTRERAD</span><strong className="arena-reward-pep">SNYGGT JOBBAT!</strong>
@@ -102,14 +107,14 @@ function CelebrationCard({ event }: { event: Celebration }) {
       {Array.from({length:16},(_,i)=><i key={i} className="arena-confetti" style={{"--i":i} as React.CSSProperties} aria-hidden="true" />)}
     </div>
   </div>;
-  return <div className={`arena-celebration${event.special ? " is-special" : ""} level-${level} celebration-${event.kind}`} role="status" style={{ "--reward-life": `${rewardDuration(event.special)}ms` } as React.CSSProperties}>
+  return <div className={`arena-celebration${event.special ? " is-special" : ""}${event.activity.display_mode === "tb" ? " reward-tb" : ""} level-${level} celebration-${event.kind}`} role="status" style={{ "--reward-life": `${rewardDuration(event.special)}ms` } as React.CSSProperties}>
     <div className="arena-reward-ring" key={event.kind}>
       {event.special && <div className="arena-reward-crown" aria-hidden="true">{isGoal ? <Trophy /> : <><Crown /><b>1</b></>}</div>}
       <div className="arena-reward-product" aria-hidden="true"><ActivityImage activity={event.activity} /></div>
       <div className="arena-reward-activity">{event.activity.name}</div>
       {event.activity.offer_text && <small className="arena-reward-offer">{event.activity.offer_text}</small>}
       {heading && <><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span></>}
-      <strong className="arena-reward-points">+{num(event.points)} POÄNG!</strong>
+      <strong className="arena-reward-points">{reward}!</strong>
       <strong className="arena-reward-seller">{event.name}</strong>
       <span className="arena-reward-confirmation">SÄLJNINGEN REGISTRERAD</span>
       <div className="arena-reward-check" aria-hidden="true"><Check /></div>
@@ -129,6 +134,7 @@ function ArenaHome() {
   const [statsUnavailable, setStatsUnavailable] = useState(false);
   const [period, setPeriod] = useState("today"), [start, setStart] = useState(""), [end, setEnd] = useState("");
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
+  const [metric,setMetric]=useState("points");
   const [attempt, setAttempt] = useState<Attempt | null>(null), [busy, setBusy] = useState(false), [saleError, setSaleError] = useState("");
   const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -139,7 +145,7 @@ function ArenaHome() {
   const lastCelebrated = useRef("");
   // A late statistics response may upgrade a burst, but never revive a dismissed/undone sale or interrupt the next selection.
   const celebrationAllowed = useRef("");
-  const query = new URLSearchParams({ period, ...(period === "custom" ? { start, end } : {}), ...(activityFilter ? { activity_id: activityFilter } : {}), ...(category ? { category } : {}) }).toString();
+  const query = new URLSearchParams({ period, metric,...(period === "custom" ? { start, end } : {}), ...(activityFilter ? { activity_id: activityFilter } : {}), ...(category ? { category } : {}) }).toString();
   const queryRef = useRef(query); queryRef.current = query;
   const refresh = useCallback(async () => {
     const version = ++statsVersion.current;
@@ -175,12 +181,12 @@ function ArenaHome() {
     try {
       const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
         request_id: pending.requestId, activity_id: pending.activity.id, seller_id: sellerId,
-        achievement_context:{period:period === "custom" && (!start || !end) ? "today" : period,...(period === "custom" && start && end ? {start,end} : {})},
+        achievement_context:{period:period === "custom" && (!start || !end) ? "today" : period,metric,...(period === "custom" && start && end ? {start,end} : {})},
       }));
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
       const primary=achievements?.[0];
-      const burst: Celebration = { key: registration.id, points: registration.points_awarded, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements?.slice(1).map(e=>`${e.text} ${e.scope}`) };
+      const burst: Celebration = { key: registration.id, points: registration.points_awarded,tbOre:registration.tb_ore_awarded??null, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements?.slice(1).map(e=>`${e.text} ${e.scope}`) };
       setReceipt({ registration, requestId: pending.requestId, name }); setSelection(null);
       if (lastCelebrated.current !== registration.id) {
         lastCelebrated.current = registration.id;
@@ -253,7 +259,7 @@ function ArenaHome() {
     </section>
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     {attempt && <ArenaDialog title="Vem gjorde försäljningen?" className="arena-dialog-sellers" eyebrow="EN FÖRSÄLJNING. TVÅ TRYCK." locked={busy || Boolean(attempt.sellerId)} onClose={() => { setSelection(null); setSaleError(""); }}>
-      <div className="arena-modal-summary"><span className="arena-selected-product" aria-hidden="true"><ActivityImage activity={attempt.activity} /></span><span>{attempt.activity.name}<small>VALD AKTIVITET</small></span><strong>+{num(attempt.activity.points)} <small>POÄNG</small></strong></div>
+      <div className="arena-modal-summary"><span className="arena-selected-product" aria-hidden="true"><ActivityImage activity={attempt.activity} /></span><span>{attempt.activity.name}<small>VALD AKTIVITET</small></span><strong>{arenaReward(attempt.activity)}</strong></div>
       <div className="arena-sellers">{data?.sellers.map(seller => <button key={seller.id} aria-label={seller.name} onClick={() => void register(seller.id)} disabled={busy || Boolean(attempt.sellerId)} style={{ "--seller-color": seller.color } as React.CSSProperties}><span className="arena-seller-initial" aria-hidden="true">{initials(seller.name)}</span><span className="arena-seller-name">{seller.name}</span></button>)}</div>
       <p className="arena-seller-hint"><Check aria-hidden="true" /> Tryck på ditt namn – sedan är det klart.</p>
       {!data?.sellers.length && <p>Lägg till aktiva säljare i stationens personalregister.</p>}
@@ -264,8 +270,9 @@ function ArenaHome() {
       <PersonDetails person={person} stats={stats!} onClose={() => setPersonId(null)} />
     </ArenaDialog>}
     {panel === "leaders" && <ArenaDialog title="Topplistor & statistik" className="arena-dialog-leaders" eyebrow="LAGETS RESULTAT" onClose={() => setPanel(null)}>{controls}
+      <label>Mått<select aria-label="Mått" value={metric} onChange={e=>setMetric(e.target.value)}><option value="points">Poäng</option><option value="tb">TB</option><option value="count">Antal registreringar</option></select></label>
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
-      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar` : "Hämtar statistik…"}</p><People stats={stats} onPerson={p => { setPanel(null); setPersonId(p.id); }} />
+      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={p => { setPanel(null); setPersonId(p.id); }} />
     </ArenaDialog>}
     {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><FeedStatus stats={stats} error={statsUnavailable} /><RecentActivities stats={stats} /></ArenaDialog>}
     {panel === "campaign" && <ArenaDialog title="Lagets kampanj & mål" className="arena-dialog-campaign" eyebrow="TILLSAMMANS MOT NÄSTA MÅL" onClose={() => setPanel(null)}>{campaign ? <>

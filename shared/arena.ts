@@ -1,6 +1,7 @@
 export type ArenaActivity = {
   id: string; name: string; offer_text: string; price_text: string; points: number;
   image_key: string | null; category: string; sort_order: number; active: number;
+  tb_ore?:number; display_mode?:"points" | "tb";
 };
 export type ArenaSeller = { id: string; external_staff_id: string; name: string; color: string; active: number };
 export type ArenaCampaign = {
@@ -13,7 +14,8 @@ export type ArenaGoal = {
 };
 export type ArenaPerson = ArenaSeller & {
   rank: number; points: number; count: number;
-  activities: { id: string; name: string; category: string; count: number; points: number }[];
+  tb_ore?:number; unknown_tb_count?:number;
+  activities: { id: string; name: string; category: string; count: number; points: number; tb_ore?:number }[];
 };
 export type ArenaBootstrap = {
   station: { id: string; name: string }; sellers: ArenaSeller[];
@@ -21,6 +23,7 @@ export type ArenaBootstrap = {
 };
 export type ArenaRecentActivity = {
   id: string; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
+  tb_ore_awarded?:number | null;
 };
 export type ArenaStats = {
   range: { start: string; end: string; from: string; to: string };
@@ -29,8 +32,9 @@ export type ArenaStats = {
   recent?: ArenaRecentActivity[];
   campaign: (ArenaCampaign & { points: number; count: number }) | null;
   station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
+  tb_ore?:number; unknown_tb_count?:number; metric?:"points" | "tb" | "count";
 };
-export type ArenaRegistration = { id: string; seller_id: string; activity_id: string; points_awarded: number; registered_at: string; voided_at: string | null };
+export type ArenaRegistration = { id: string; seller_id: string; activity_id: string; points_awarded: number; registered_at: string; voided_at: string | null; tb_ore_awarded?:number | null };
 export const arenaNumber = (n: number) => new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 2 }).format(n);
 export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 

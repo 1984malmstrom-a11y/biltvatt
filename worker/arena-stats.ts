@@ -12,6 +12,7 @@ export async function currentCampaign(db: D1Database, key: string, now: string) 
 }
 export async function arenaStats(db: D1Database, key: string, url: URL, now = new Date()): Promise<ArenaStats> {
   const range = arenaRange(url, now);
+  const metric=(url.searchParams.get("metric")??"points") as "points" | "tb" | "count";
   const activity = url.searchParams.get("activity_id");
   const category = url.searchParams.get("category");
   if (activity && !await db.prepare("SELECT id FROM arena_activities WHERE id=? AND station_id=?").bind(text(activity, "Aktivitet", 80), key).first()) fail(404, "Aktiviteten finns inte.");
@@ -20,12 +21,12 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
   const todayRange = arenaRange(new URL("https://arena.test/?period=today"), now);
   const [sellers, grouped, today, campaign, stationGoals, personalGoals, recent] = await Promise.all([
     db.prepare("SELECT id,external_staff_id,name,color,active FROM arena_sellers WHERE station_id=?").bind(key).all<ArenaSeller>(),
-    db.prepare(`SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points
+    db.prepare(`SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count
       FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id
       WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?
       AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)
       GROUP BY r.seller_id,a.id`).bind(key, range.from, range.to, activity, activity, category, category)
-      .all<{ seller_id: string; id: string; name: string; category: string; count: number; points: number }>(),
+      .all<{ seller_id: string; id: string; name: string; category: string; count: number; points: number; tb_ore:number; unknown_tb_count:number }>(),
     db.prepare(`SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers
       FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?`)
       .bind(key, todayRange.from, todayRange.to).first<ArenaStats["today"]>(),
@@ -33,7 +34,7 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     db.prepare("SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     db.prepare("SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     // A bounded, station-scoped feed follows today's sales independently of leaderboard filters.
-    db.prepare(`SELECT r.id,s.name seller_name,a.name activity_name,r.points_awarded,r.registered_at
+    db.prepare(`SELECT r.id,s.name seller_name,a.name activity_name,r.points_awarded,r.tb_ore_awarded,r.registered_at
       FROM arena_registrations r
       JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id
       JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id
@@ -43,8 +44,8 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
   ]);
   const people = sellers.results.map(seller => {
     const activities = grouped.results.filter(r => r.seller_id === seller.id).map(({ seller_id: _, ...r }) => ({ ...r, points: roundedPoints(r.points) }));
-    return { ...seller, rank: 0, activities, count: activities.reduce((s, r) => s + r.count, 0), points: roundedPoints(activities.reduce((s, r) => s + r.points, 0)) };
-  }).filter(p => p.active || p.count).sort((a, b) => b.points - a.points || b.count - a.count || a.name.localeCompare(b.name, "sv") || a.id.localeCompare(b.id));
+    return { ...seller, rank: 0, activities, count: activities.reduce((s, r) => s + r.count, 0), points: roundedPoints(activities.reduce((s, r) => s + r.points, 0)),tb_ore:activities.reduce((s,r)=>s+r.tb_ore,0),unknown_tb_count:activities.reduce((s,r)=>s+r.unknown_tb_count,0) };
+  }).filter(p => p.active || p.count).sort((a, b) => (metric==="tb" ? b.tb_ore-a.tb_ore : metric==="count" ? b.count-a.count : b.points-a.points) || b.points-a.points || b.count-a.count || a.name.localeCompare(b.name, "sv") || a.id.localeCompare(b.id));
   const leaderboard: ArenaPerson[] = people.map((p, index) => ({ ...p, rank: index + 1 }));
   async function withProgress(goals: ArenaGoal[]) {
     return Promise.all(goals.map(async goal => {
@@ -65,6 +66,6 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     range, count: leaderboard.reduce((s, p) => s + p.count, 0), points: roundedPoints(leaderboard.reduce((s, p) => s + p.points, 0)), leaderboard,
     today: { count: today?.count ?? 0, points: roundedPoints(today?.points ?? 0), sellers: today?.sellers ?? 0 },
     campaign: campaign ? { ...campaign, count: campaignResult?.count ?? 0, points: roundedPoints(campaignResult?.points ?? 0) } : null,
-    station_goals, personal_goals, recent: recent.results.map(r => ({ ...r, points_awarded: roundedPoints(r.points_awarded) })),
+    station_goals, personal_goals, recent: recent.results.map(r => ({ ...r, points_awarded: roundedPoints(r.points_awarded) })),metric,tb_ore:leaderboard.reduce((s,p)=>s+(p.tb_ore??0),0),unknown_tb_count:leaderboard.reduce((s,p)=>s+(p.unknown_tb_count??0),0),
   };
 }
