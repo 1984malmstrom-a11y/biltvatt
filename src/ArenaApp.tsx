@@ -31,7 +31,7 @@ export function ArenaActivityButton({ activity, focus = false, campaignName, onC
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
     </span>
-    <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>
+    {!focus && <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>}
     <span className="arena-points">{unavailable ? "EJ UPPLAGD" : arenaReward(activity)}</span>
   </button>;
 }
@@ -64,13 +64,13 @@ function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: A
 }
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
 function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean }) {
-  return <span className={`arena-live${error ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`}><i aria-hidden="true" />{error ? "PAUSAD" : !stats ? "HÄMTAR" : stats.recent ? "LIVE" : "SAKNAS"}</span>;
+  return <span className={`arena-live${error ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`}><i aria-hidden="true" />{error ? "PAUSAD" : !stats ? "HÄMTAR" : stats.recent ? "Live" : "SAKNAS"}</span>;
 }
 function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
-  return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id}>
+  return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id} className={row.display_mode === "tb" && row.tb_ore_awarded != null ? "is-tb" : undefined}>
     <span className="arena-feed-seller"><SellerAvatar name={row.seller_name} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
-    <b>+{num(row.points_awarded)} p</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
+    <b>{row.display_mode === "tb" && row.tb_ore_awarded != null ? `+${arenaMoney(row.tb_ore_awarded)} TB` : `+${num(row.points_awarded)} p`}</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 }
 function FightPeek({stats,stationId}:{stats:ArenaStats|null;stationId?:string}) {
@@ -145,6 +145,8 @@ export default function ArenaApp() {
 function ArenaHome() {
   const [data, setData] = useState<ArenaBootstrap | null>(null);
   const [stats, setStats] = useState<ArenaStats | null>(null);
+  const [todayStats, setTodayStats] = useState<ArenaStats | null>(null);
+  const [personScope, setPersonScope] = useState<"today" | "selected">("today");
   const [statsUnavailable, setStatsUnavailable] = useState(false);
   const [period, setPeriod] = useState("today"), [start, setStart] = useState(""), [end, setEnd] = useState("");
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
@@ -164,8 +166,10 @@ function ArenaHome() {
   const refresh = useCallback(async () => {
     const version = ++statsVersion.current;
     try {
-      const next = await api<ArenaStats>(`/arena/stats?${queryRef.current}`);
-      if (version === statsVersion.current) { statsRef.current = next; setStats(next); setStatsUnavailable(false); setError(""); }
+      const todayRequest = api<ArenaStats>("/arena/stats?period=today&metric=points");
+      const selectedRequest = queryRef.current === "period=today&metric=points" ? todayRequest : api<ArenaStats>(`/arena/stats?${queryRef.current}`);
+      const [next, today] = await Promise.all([selectedRequest, todayRequest]);
+      if (version === statsVersion.current) { statsRef.current = next; setStats(next); setTodayStats(today); setStatsUnavailable(false); setError(""); }
       return next;
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, []);
@@ -236,9 +240,10 @@ function ArenaHome() {
       celebrationAllowed.current = ""; setReceipt(null); setCelebration(null); await refresh();
     } catch (e) { setError((e as Error).message); } finally { lock.current = false; setBusy(false); }
   }
-  const person = stats?.leaderboard.find(p => p.id === personId);
-  const campaign = stats?.campaign;
-  const goal = stats?.station_goals[0];
+  const personStats = personScope === "today" ? todayStats : stats;
+  const person = personStats?.leaderboard.find(p => p.id === personId);
+  const campaign = todayStats?.campaign;
+  const goal = todayStats?.station_goals[0];
   const controls = <>
     <div className="arena-tabs" aria-label="Statistikperiod">{[["today", "IDAG"], ["week", "VECKA"], ["month", "MÅNAD"], ["custom", "PERIOD"]].map(([value, label]) => <button key={value} aria-pressed={period === value} onClick={() => setPeriod(value)}>{label}</button>)}</div>
     {period === "custom" && <div className="arena-dates"><label>Från<input type="date" value={start} onChange={e => setStart(e.target.value)} /></label><label>Till<input type="date" value={end} onChange={e => setEnd(e.target.value)} /></label></div>}
@@ -252,23 +257,23 @@ function ArenaHome() {
     {(error || statsUnavailable) && <div className="arena-error" role="alert">{error || "Statistiken är tillfälligt otillgänglig."}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
       <div className="arena-left-column">
-        <aside className="arena-leaderboard arena-panel"><span className="arena-eyebrow">VARJE POÄNG RÄKNAS</span><h2>TOPPLISTA <span>– {({ today:"Idag", week:"Vecka", month:"Månad", custom:"Period" } as Record<string,string>)[period]}</span></h2>{controls}<People stats={stats} limit={period === "custom" ? 2 : 5} onPerson={p => setPersonId(p.id)} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /><button className="arena-more" onClick={() => setPanel("leaders")}>SE FLER TOPPLISTOR <ChevronRight aria-hidden="true" /></button></aside>
-        <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>Senaste aktiviteter</h2><ChevronRight aria-hidden="true" /></button><FeedStatus stats={stats} error={statsUnavailable} /></header><RecentActivities stats={stats} limit={4} /></aside>
+        <aside className="arena-leaderboard arena-panel" aria-label="Topplista idag"><h2><Trophy aria-hidden="true" />TOPPLISTA – IDAG</h2><People stats={todayStats} limit={5} onPerson={p => { setPersonScope("today"); setPersonId(p.id); }} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
+        <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>SENASTE AKTIVITETER</h2></button><FeedStatus stats={todayStats} error={statsUnavailable} /></header><RecentActivities stats={todayStats} limit={5} /></aside>
       </div>
       <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
-        <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel("leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
+        <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel("leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <>
           <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? () => begin(focus.activity!) : undefined} /></div>
           <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? () => begin(activity) : undefined} /></div>)}</div>
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
     </main>
-    <div className="arena-utility"><div className="arena-utility-links">{stats?.fight ? <FightPeek stats={stats} stationId={data?.station.id} /> : data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
+    <div className="arena-utility"><div className="arena-utility-links">{todayStats?.fight ? <FightPeek stats={todayStats} stationId={data?.station.id} /> : data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
-      <div><BarChart3 aria-hidden="true" /><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div>
-      <div><Star aria-hidden="true" /><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div>
-      <div><Users aria-hidden="true" /><strong>{stats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
+      <div><BarChart3 aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.count) : "—"}</strong><span>Registreringar</span></div>
+      <div><Star aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.points) : "—"}</strong><span>Poäng idag</span></div>
+      <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
       <p>Små merförsäljningar skapar stora resultat!</p>
     </section>
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
@@ -281,13 +286,13 @@ function ArenaHome() {
       {saleError && attempt.sellerId && <button className="arena-action" onClick={() => void register(attempt.sellerId!)} disabled={busy}>Försök igen</button>}
     </ArenaDialog>}
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
-      <PersonDetails person={person} stats={stats!} onClose={() => setPersonId(null)} />
+      <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />
     </ArenaDialog>}
     {panel === "leaders" && <ArenaDialog title="Topplistor & statistik" className="arena-dialog-leaders" eyebrow="LAGETS RESULTAT" onClose={() => setPanel(null)}>{controls}
       <a className="arena-network-link" href="/arena/groups"><Users /> Gemensamma topplistor</a>
       <label>Mått<select aria-label="Mått" value={metric} onChange={e=>setMetric(e.target.value)}><option value="points">Poäng</option><option value="tb">TB</option><option value="count">Antal registreringar</option></select></label>
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
-      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={p => { setPanel(null); setPersonId(p.id); }} />
+      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={p => { setPanel(null); setPersonScope("selected"); setPersonId(p.id); }} />
     </ArenaDialog>}
     {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><FeedStatus stats={stats} error={statsUnavailable} /><RecentActivities stats={stats} /></ArenaDialog>}
     {panel === "campaign" && <ArenaDialog title="Lagets kampanj & mål" className="arena-dialog-campaign" eyebrow="TILLSAMMANS MOT NÄSTA MÅL" onClose={() => setPanel(null)}>{campaign ? <>

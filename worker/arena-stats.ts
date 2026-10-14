@@ -35,7 +35,7 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     db.prepare("SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     db.prepare("SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     // A bounded, station-scoped feed follows today's sales independently of leaderboard filters.
-    db.prepare(`SELECT r.id,s.name seller_name,a.name activity_name,r.points_awarded,r.tb_ore_awarded,r.registered_at
+    db.prepare(`SELECT r.id,s.name seller_name,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at
       FROM arena_registrations r
       JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id
       JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id

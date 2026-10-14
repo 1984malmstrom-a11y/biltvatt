@@ -144,8 +144,10 @@ describe("Arena dataintegritet och stationsisolering", () => {
     f.arena.prepare("INSERT INTO arena_registrations(id,station_id,seller_id,activity_id,request_id,points_awarded,registered_at,created_at) VALUES(?,'mastertest','mastertest:emma',?,?,2,'2026-10-01T10:00:00Z','2026-10-01T10:00:00Z')").run(crypto.randomUUID(),a,crypto.randomUUID());
     const request=crypto.randomUUID(),first=await (await f.registration(a,request)).json() as {registration:{id:string;tb_ore_awarded:number}};
     expect(first.registration.tb_ore_awarded).toBe(3525);
+    expect((await (await f.call("/arena/stats")).json() as ArenaStats).recent?.find(row=>row.id===first.registration.id)).toMatchObject({display_mode:"tb",tb_ore_awarded:3525});
     await f.call(`/admin/arena/activities/${a}`,"PATCH",{...draft,points:2,tb_kronor:"100.01",display_mode:"points"},cookie);
     const second=await (await f.registration(a)).json() as {registration:{tb_ore_awarded:number}};expect(second.registration.tb_ore_awarded).toBe(10001);
+    expect((await (await f.call("/arena/stats")).json() as ArenaStats).recent?.find(row=>row.id===first.registration.id)).toMatchObject({display_mode:"points",tb_ore_awarded:3525});
     expect(f.arena.prepare("SELECT tb_ore_awarded FROM arena_registrations WHERE id=?").get(first.registration.id)!.tb_ore_awarded).toBe(3525);
     expect(()=>f.arena.prepare("UPDATE arena_registrations SET tb_ore_awarded=999 WHERE id=?").run(first.registration.id)).toThrow("arena_snapshot_immutable");
     for(const period of ["today","week","month","custom&start=2026-10-01&end=2026-10-31"]) {

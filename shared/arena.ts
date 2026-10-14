@@ -24,6 +24,7 @@ export type ArenaBootstrap = {
 export type ArenaRecentActivity = {
   id: string; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
   tb_ore_awarded?:number | null;
+  display_mode?:"points" | "tb";
 };
 export type ArenaStats = {
   range: { start: string; end: string; from: string; to: string };

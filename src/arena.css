@@ -116,7 +116,7 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-offer { display:block; font-size:clamp(9px,1.2cqw,15px); font-weight:700; color:#f6dfaa; margin-bottom:2px; }
 .arena-price { display:block; font-weight:850; font-size:clamp(12px,2.2cqw,26px); margin-top:2px; }
 .arena-points { background:linear-gradient(145deg,#f4d28a,#c99a43); border:1px solid #f0c977; color:#21190e; font-weight:900; font-size:clamp(12px,1.55cqw,20px); border-radius:50px; padding:3% 8%; white-space:nowrap; box-shadow:inset 0 1px 0 #ffe7b299,0 2px 6px #0004; letter-spacing:.015em; }
-.arena-orb-focus { grid-template-rows:minmax(0,1fr) auto auto; border-width:3px; padding:14% 7% 8%; gap:3%; background:radial-gradient(ellipse at 50% 35%,#135b8a,#021124 72%)!important; box-shadow:0 0 10px #77deff,0 0 32px #179de855,inset 0 0 24px #278de630; }
+.arena-orb-focus { grid-template-rows:minmax(0,1fr) auto; border-width:3px; padding:14% 7% 8%; gap:3%; background:radial-gradient(ellipse at 50% 35%,#135b8a,#021124 72%)!important; box-shadow:0 0 10px #77deff,0 0 32px #179de855,inset 0 0 24px #278de630; }
 .arena-orb-focus::before { inset:7px; border-color:#a4e7ff77; }
 .arena-orb-focus::after { inset:-9px; border:1px solid #b5e9ff; animation:arena-pulse 4s ease-in-out infinite; }
 .arena-focus-cap { position:absolute; left:50%; top:-10%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; width:86%; gap:4px; }
@@ -151,6 +151,9 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-recent-list li>span { min-width:0; }.arena-recent-list strong { display:block; font-size:13px; line-height:1.2; font-weight:600; color:#e2ebf6; }
 .arena-recent-list small { display:block; font-size:10px; line-height:1.4; color:#a8c4dd; margin-top:3px; }
 .arena-recent-list b { font-size:13px; color:#eacf92; white-space:nowrap; font-weight:700; }.arena-recent-list time { font-size:10px; color:#819fb8; }
+.arena-recent-list li.is-tb { grid-template-columns:minmax(0,1fr) auto; gap:1px 10px; }
+.arena-recent-list li.is-tb .arena-feed-seller { grid-row:span 2; }
+.arena-recent-list li.is-tb>b,.arena-recent-list li.is-tb>time { grid-column:2; text-align:right; }
 .arena-recent-empty { margin:auto 0; font-size:12px; line-height:1.6; color:#b4c8db; }
 .arena-dialog-recent>.arena-live { margin-bottom:8px; }.arena-dialog-recent .arena-recent-list li { padding:14px 0; }.arena-dialog-recent .arena-recent-list strong { font-size:16px; }.arena-dialog-recent .arena-recent-list small { font-size:13px; }
 .arena-mobile-panels { display:none; }
@@ -417,7 +420,6 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 }
 @media (min-width:951px) and (max-width:1150px) and (min-height:501px) {
   .arena-left-column { grid-template-rows:minmax(0,1.5fr) minmax(0,1fr); }
-  .arena-leaderboard .arena-leader-list li:nth-child(n+4),.arena-recent>.arena-recent-list li:nth-child(n+4) { display:none; }
   .arena-leaderboard h2 { font-size:17px; margin:3px 0 8px; }.arena-leaderboard>.arena-eyebrow { font-size:8px; }
   .arena-leaderboard .arena-leader-list { margin:6px 0; padding:0; }.arena-leaderboard .arena-leader-list button { font-size:13px; gap:5px; }.arena-leaderboard .arena-leader-list strong { font-size:18px; }
   .arena-leaderboard .arena-more { font-size:9px!important; padding:8px 2px; }
@@ -427,13 +429,12 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-stage-start .arena-product-copy strong { font-size:14px; }
 }
 @media (min-width:951px) and (max-height:850px) and (min-height:501px) {
-  .arena-leaderboard .arena-leader-list li:nth-child(n+4),.arena-recent>.arena-recent-list li:nth-child(n+4) { display:none; }
   .arena-leaderboard h2 { font-size:17px; margin:3px 0 8px; }.arena-leaderboard { padding:12px; }
   .arena-leaderboard .arena-leader-list { margin:6px 0; padding:0; }.arena-leaderboard .arena-leader-list button { font-size:13px; }.arena-leaderboard .arena-leader-list strong { font-size:18px; }
   .arena-recent { padding:10px; }.arena-recent h2 { font-size:12px; }.arena-recent-list li { padding:5px 0; }
 }
 @media (min-width:951px) and (max-height:750px) and (min-height:501px) {
-  .arena-leaderboard>.arena-eyebrow { display:none; }.arena-recent>.arena-recent-list li:nth-child(n+3) { display:none; }
+  .arena-leaderboard>.arena-eyebrow { display:none; }
 }
 /* Portrait phones keep a hero focus and six real product circles in a three-column grid. */
 @media (max-width:950px) and (orientation:portrait) {
@@ -505,8 +506,6 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
 .arena-focus-name { font-size:clamp(22px,3cqw,40px); line-height:1; text-transform:uppercase; color:#fff; }
 .arena-stage-start .arena-focus-title { color:#ffda63; background:transparent; }
 .arena-stage-start .arena-focus-cap { padding-bottom:6px; background:radial-gradient(ellipse at 50% 65%,#031327ee,transparent 72%); }
-.arena-stage-start .arena-orb-focus .arena-product-copy>strong { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); padding:0; }
-.arena-stage-start .arena-orb-focus .arena-offer { margin:0; background:linear-gradient(155deg,#ffe59a,#d3a335); color:#19160d; font-weight:800; padding:5px 18px; font-size:clamp(11px,1.2vw,17px); transform:rotate(-3deg); }
 .arena-nav [aria-current=page] { color:#ffe6af; background:radial-gradient(ellipse at 50% 100%,#dbb84e2b,transparent 76%); box-shadow:inset 0 -2px 0 #e9c56b; }
 @media (min-width:951px) and (min-height:851px) {
   .arena-left-column { grid-template-rows:minmax(0,1.85fr) minmax(0,1fr); }
@@ -613,3 +612,92 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-victory-hero .arena-reward-seller { font-size:18px; }.arena-victory-hero .arena-reward-pep { font-size:12px; }.arena-victory-secondary { font-size:10px; }
 }
 @media (prefers-reduced-motion:reduce) { .arena-theme *, .arena-theme *::before,.arena-theme *::after { animation:none!important; transition:none!important; } .arena-confetti { display:none; } }
+
+/* Locked start-screen reference: five daily capsules and an equally present live feed. */
+@media (min-width:951px) and (min-height:501px) {
+  .arena-shell { --arena-left-width:clamp(300px,24vw,440px); --arena-column-gap:20px; --arena-footer-span:100px; }
+  .arena-left-column { grid-template-rows:auto minmax(0,1fr); gap:12px; height:calc(100% + var(--arena-footer-span)); }
+  .arena-stats-bar { margin-left:calc(var(--arena-left-width) + var(--arena-column-gap)); }
+  .arena-utility { padding-left:calc(var(--arena-left-width) + var(--arena-column-gap)); }
+  .arena-leaderboard { padding:14px; }
+  .arena-leaderboard h2 { display:flex; align-items:center; gap:12px; margin:0; font-size:clamp(17px,1.38vw,26px); line-height:1.2; color:#ffe6ae; font-weight:750; letter-spacing:0; }
+  .arena-leaderboard h2>svg { width:30px; height:30px; flex:none; color:#f9d470; fill:#e8bb552b; filter:drop-shadow(0 0 5px #efba4855); }
+  .arena-leaderboard .arena-leader-list { flex:none; gap:7px; margin:12px 0 0; padding:0; overflow:visible; }
+  .arena-leaderboard .arena-leader-list li { border-radius:12px; border-color:color-mix(in srgb,var(--row-accent) 48%,transparent); background:linear-gradient(105deg,#082542b3,#010b19eb); box-shadow:inset 0 1px 0 #bfdfff1c,inset -6px 0 16px color-mix(in srgb,var(--row-accent) 18%,transparent),0 0 8px color-mix(in srgb,var(--row-accent) 15%,transparent); }
+  .arena-leaderboard .arena-leader-list li:first-child:not(.arena-empty) { border-color:#ffe5a0; background:linear-gradient(105deg,#6d4f1fb3,#281b09ee 60%,#503c17b3); box-shadow:inset 0 0 11px #ffdb7740,inset 0 1px 0 #fff0b5,0 0 7px #ffdc8ba1,0 0 19px #eebc4c5c; }
+  .arena-leaderboard .arena-leader-list button { min-height:clamp(44px,5.8vh,66px); padding:5px 10px; gap:12px; grid-template-columns:28px minmax(0,1fr) auto; font-size:clamp(15px,1.15vw,21px); }
+  .arena-leaderboard .arena-leader-list strong { font-size:clamp(21px,1.55vw,29px); color:#fff2d1; }
+  .arena-leaderboard .arena-leader-list strong small { font-size:.57em; }
+  .arena-leaderboard .arena-leader-avatar { width:40px; height:40px; border-color:#adcde7a6; }
+  .arena-leaderboard .arena-leader-list li:first-child .arena-leader-avatar { border-color:#ffde89; box-shadow:0 0 8px #e8b44538; }
+  .arena-leaderboard .arena-rank { width:28px; height:30px; font-size:25px; color:#e4effe; border:0; background:transparent; box-shadow:none; font-weight:700; }
+  .arena-leaderboard .arena-rank:is(.rank-1,.rank-2,.rank-3) { border:0; background:transparent; box-shadow:none; }
+  .arena-leaderboard .rank-1 { color:#ffe5a0; text-shadow:0 0 9px #ffd47973; }
+  .arena-recent { display:flex; flex-direction:column; padding:14px; border-color:#6bb1db7d; background:linear-gradient(150deg,#031b31f0,#020b17ed); box-shadow:inset 0 1px 0 #b1dbf02e,0 0 14px #1d95ce15; }
+  .arena-recent>header { gap:8px; flex:none; }
+  .arena-recent h2 { font-size:clamp(14px,1.2vw,22px); margin:0; letter-spacing:.015em; }
+  .arena-recent .arena-live { font-size:clamp(11px,.85vw,15px); letter-spacing:0; gap:7px; }
+  .arena-recent .arena-live i { width:9px; height:9px; box-shadow:0 0 8px #00ed8e73; }
+  .arena-recent>.arena-recent-list { flex:1; display:grid; grid-auto-rows:minmax(0,1fr); margin:12px 0 0; overflow:hidden; }
+  .arena-recent>.arena-recent-list li { padding:6px 0; gap:10px; }
+  .arena-recent-list .arena-feed-seller { gap:10px; }
+  .arena-recent-list .arena-leader-avatar { width:38px; height:38px; }
+  .arena-recent-list strong { font-size:clamp(14px,1vw,18px); font-weight:650; }
+  .arena-recent-list small { font-size:clamp(11px,.82vw,15px); margin-top:3px; line-height:1.25; }
+  .arena-recent-list b { font-size:clamp(14px,1.1vw,20px); color:#1cf49e; }
+  .arena-recent-list time { font-size:clamp(11px,.85vw,15px); color:#b4c8dc; }
+  .arena-stage-start .arena-focus-slot { top:44%; }
+}
+@media (min-width:951px) and (min-height:501px) and (min-aspect-ratio:3/2) {
+  .arena-main { grid-template-columns:var(--arena-left-width) minmax(0,1fr); gap:var(--arena-column-gap); }
+  .arena-stage-start .arena-focus-slot { left:49%; }
+  .arena-stage-start .satellite-0 { left:calc(49% - var(--orbit-radius)*1.47); top:calc(44% - var(--orbit-radius)*.91); }
+  .arena-stage-start .satellite-1 { left:calc(49% + var(--orbit-radius)*1.47); top:calc(44% - var(--orbit-radius)*.91); }
+  .arena-stage-start .satellite-2 { left:calc(49% - var(--orbit-radius)*2); top:calc(44% + var(--orbit-radius)*.26); }
+  .arena-stage-start .satellite-3 { left:calc(49% + var(--orbit-radius)*2); top:calc(44% + var(--orbit-radius)*.26); }
+  .arena-stage-start .satellite-4 { left:calc(49% - var(--orbit-radius)*1.2); top:calc(44% + var(--orbit-radius)*1.22); }
+  .arena-stage-start .satellite-5 { left:calc(49% + var(--orbit-radius)*1.2); top:calc(44% + var(--orbit-radius)*1.22); }
+}
+@media (min-width:951px) and (min-height:501px) and (max-aspect-ratio:3/2) {
+  .arena-shell { --arena-left-width:clamp(244px,24vw,348px); --arena-column-gap:16px; --arena-footer-span:82px; }
+  .arena-main { grid-template-columns:var(--arena-left-width) minmax(0,1fr); gap:var(--arena-column-gap); }
+  .arena-stage-start { --orbit-radius:min(28.1cqh,20cqw); }
+  .arena-stage-start .satellite-0 { left:calc(50% - var(--orbit-radius)*1.38); top:calc(44% - var(--orbit-radius)*.98); }
+  .arena-stage-start .satellite-1 { left:calc(50% + var(--orbit-radius)*1.38); top:calc(44% - var(--orbit-radius)*.98); }
+  .arena-stage-start .satellite-2 { left:calc(50% - var(--orbit-radius)*1.82); top:calc(44% + var(--orbit-radius)*.17); }
+  .arena-stage-start .satellite-3 { left:calc(50% + var(--orbit-radius)*1.82); top:calc(44% + var(--orbit-radius)*.17); }
+  .arena-stage-start .satellite-4 { left:calc(50% - var(--orbit-radius)*1.15); top:calc(44% + var(--orbit-radius)*1.24); }
+  .arena-stage-start .satellite-5 { left:calc(50% + var(--orbit-radius)*1.15); top:calc(44% + var(--orbit-radius)*1.24); }
+}
+@media (min-width:951px) and (min-height:501px) and (max-height:850px) {
+  .arena-left-column { gap:10px; }
+  .arena-leaderboard,.arena-recent { padding:10px; }
+  .arena-leaderboard h2 { font-size:17px; gap:8px; }.arena-leaderboard h2>svg { width:23px; height:23px; }
+  .arena-leaderboard .arena-leader-list { margin-top:9px; gap:4px; }
+  .arena-leaderboard .arena-leader-list button { padding:3px 7px; gap:6px; grid-template-columns:20px minmax(0,1fr) auto; font-size:14px; }
+  .arena-leaderboard .arena-rank { font-size:20px; width:20px; }
+  .arena-leaderboard .arena-leader-avatar { width:30px; height:30px; }
+  .arena-leaderboard .arena-leader-list strong { font-size:21px; }
+  .arena-recent h2 { font-size:13px; }.arena-recent .arena-live { font-size:11px; gap:5px; }.arena-recent .arena-live i { width:7px; height:7px; }
+  .arena-recent>.arena-recent-list { margin-top:9px; }.arena-recent>.arena-recent-list li { padding:3px 0; gap:7px; }
+  .arena-recent-list .arena-feed-seller { gap:7px; }.arena-recent-list .arena-leader-avatar { width:28px; height:28px; }
+  .arena-recent-list strong { font-size:13px; }.arena-recent-list small { font-size:11px; margin-top:2px; }
+  .arena-recent-list b { font-size:13px; }.arena-recent-list time { font-size:10px; }
+}
+
+/* Keep the car lower in the hero, with a clear heading and no offer ribbon. */
+.arena-stage-start .arena-orb-focus .arena-product img[src$="01_arena-biltvatt.webp"] { --product-size:100cqw; }
+@media (max-width:950px) and (orientation:portrait) {
+  .arena-stage-start .arena-orb-focus .arena-product img[src$="01_arena-biltvatt.webp"] { --product-size:95cqw; }
+  .arena-stage-start .arena-focus-cap { gap:1px; padding-bottom:2px; }
+  .arena-stage-start .arena-crown { width:28px; height:28px; }
+  .arena-stage-start .arena-focus-title { font-size:10px; padding:2px 6px; }
+  .arena-stage-start .arena-focus-name { font-size:22px; }
+}
+@media (max-width:950px) and (max-height:500px) and (orientation:landscape) {
+  .arena-stage-start .arena-orb-focus .arena-product img[src$="01_arena-biltvatt.webp"] { --product-size:95cqw; }
+  .arena-stage-start .arena-focus-cap { gap:1px; padding-bottom:2px; }
+  .arena-stage-start .arena-crown { width:18px; height:18px; }
+  .arena-stage-start .arena-focus-title { font-size:9px; padding:2px 5px; }
+  .arena-stage-start .arena-focus-name { font-size:16px; }
+}
