@@ -208,12 +208,12 @@ function ArenaHome() {
           <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? () => begin(activity) : undefined} /></div>)}</div>
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
-      <aside className="arena-stats arena-panel"><span className="arena-eyebrow">STARKARE TILLSAMMANS</span><h2>DAGENS STATS</h2>
+      <div className="arena-stats-column"><aside className="arena-stats arena-panel"><span className="arena-eyebrow">STARKARE TILLSAMMANS</span><h2>DAGENS STATS</h2>
         <div className="arena-stat"><BarChart3 /><div><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div></div>
         <div className="arena-stat"><Star /><div><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div></div>
-        <div className="arena-stat"><Users /><div><strong>{stats?.today.sellers ?? "—"}</strong><span>Aktiva säljare idag</span></div></div>
-        <blockquote>”Små merförsäljningar<br />skapar stora resultat!”<span>♡</span></blockquote><p className="arena-handwritten">Du gör skillnad! ♡</p>
-      </aside>
+        <div className="arena-stat"><Users /><div><strong>{stats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div></div>
+        <blockquote>”Små merförsäljningar<br />skapar stora resultat!”<span>♡</span></blockquote>
+      </aside><p className="arena-handwritten">Du gör skillnad! ♡</p></div>
     </main>
     <div className="arena-utility"><a href="/station"><ArrowLeft /> Stationsdashboard</a><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>

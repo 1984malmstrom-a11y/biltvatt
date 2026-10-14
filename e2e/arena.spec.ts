@@ -44,7 +44,7 @@ const productAssets = [
   ["Två för 30", "07_arena-tva-for-30.webp"],
 ];
 const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:i === 0 ? "Finast Plus" : "", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
-for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200]]) {
+for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200],[1448,1086]]) {
   test(`Arena: desktop-orbit anpassas till tillgängligt utrymme ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);
     await page.goto("/arena");
@@ -53,6 +53,12 @@ for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200]]) {
       const r=el.getBoundingClientRect(); return { x:r.x+r.width/2,y:r.y+r.height/2,radius:r.width/2 };
     }));
     await expectDesktopOrbit(page,positions);
+    if (width === 1448) {
+      // At the reference's own size, panels must not keep narrow 1024px tablet widths.
+      for (const selector of [".arena-leaderboard", ".arena-stats"]) {
+        expect((await page.locator(selector).boundingBox())!.width).toBeGreaterThan(width*.15);
+      }
+    }
     const nav=(await page.locator(".arena-nav").boundingBox())!;
     for (const circle of positions) {
       expect(circle.x-circle.radius).toBeGreaterThanOrEqual(0);
@@ -65,7 +71,7 @@ for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200]]) {
   });
 }
 
-for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
+for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1086]]) {
   test(`Arena: sju rena produktmotiv med contain och fri text ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);
     await page.route("**/api/arena/bootstrap", route => route.fulfill({ json:{ ...boot, activities:cleanProducts } }));
@@ -110,11 +116,29 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
       await expect(button.locator(".arena-points")).toContainText(`+${activity.points} POÄNG`);
       expect(await button.locator("img").count()).toBe(1);
     }
+    // Names, especially Spolarvätska, must remain fully readable in compact circles.
+    const labels=await page.locator(".arena-stage .arena-product-copy strong").evaluateAll(items => items.map(el => {
+      const r=el.getBoundingClientRect(),style=getComputedStyle(el);
+      return { fits:el.scrollWidth<=el.clientWidth+1, lines:r.height/parseFloat(style.lineHeight) };
+    }));
+    expect(labels.every(label => label.fits)).toBe(true);
+    expect(labels[4].lines).toBeLessThan(1.1);
+    const heading=page.locator(".arena-focus-title");
+    const crownBox=(await page.locator(".arena-crown").boundingBox())!,headingBox=(await heading.boundingBox())!;
+    expect(crownBox.y+crownBox.height).toBeLessThanOrEqual(headingBox.y);
     expect(demos).toEqual([]);
     const positions = await page.locator(".arena-stage .arena-orb").evaluateAll(orbs => orbs.map(orb => {
       const r = orb.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2, radius:r.width/2 };
     }));
-    if (width >= 1024) await expectDesktopOrbit(page, positions);
+    if (width >= 1024) {
+      await expectDesktopOrbit(page, positions);
+      const ratio=positions[1].radius/positions[0].radius;
+      expect(ratio).toBeGreaterThan(.56); expect(ratio).toBeLessThan(.6);
+      for (const [index,circle] of positions.slice(1).entries()) {
+        const gap=Math.hypot(circle.x-positions[0].x,circle.y-positions[0].y)-circle.radius-positions[0].radius;
+        expect(gap/positions[0].radius).toBeLessThan(width === 1448 && index >= 4 ? .14 : .06);
+      }
+    }
     for (const i of [1,3,5]) expect(positions[i].x).toBeLessThan(positions[0].x);
     for (const i of [2,4,6]) expect(positions[i].x).toBeGreaterThan(positions[0].x);
     expect(positions[1].y).toBeLessThan(positions[3].y); expect(positions[3].y).toBeLessThan(positions[5].y);
@@ -224,16 +248,22 @@ for (const width of [1920,1024]) {
     await visualData(page, () => current); await page.goto("/arena");
     const panel=page.locator(".arena-stats");
     await expect(panel.locator(".arena-stat strong")).toHaveText(["27","42,5","5"]);
-    await expect(panel.locator(".arena-stat span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare idag"]);
+    await expect(panel.locator(".arena-stat span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare"]);
     const fit=await panel.evaluate(el => {
       const panel=el.getBoundingClientRect(), heading=el.querySelector("h2")!;
       const rows=[...el.querySelectorAll(".arena-stat")].map(row => {
         const value=row.querySelector("strong")!.getBoundingClientRect(),label=row.querySelector("span")!.getBoundingClientRect(),icon=row.querySelector("svg")!.getBoundingClientRect();
-        return value.right<=icon.left && value.bottom<=label.top && label.right<=panel.right;
+        const card=row.getBoundingClientRect();
+        return icon.right<=value.left && value.bottom<=label.top && label.right<=card.right && icon.left>=card.left && card.right<=panel.right;
       });
-      return rows.every(Boolean) && heading.scrollWidth<=heading.clientWidth && el.scrollHeight<=el.clientHeight;
+      const quote=el.querySelector("blockquote")!.getBoundingClientRect();
+      return rows.every(Boolean) && heading.scrollWidth<=heading.clientWidth && quote.bottom<=panel.bottom;
     });
     expect(fit).toBe(true);
+    const quote=(await panel.locator("blockquote").boundingBox())!,hand=(await page.locator(".arena-stats-column>.arena-handwritten").boundingBox())!;
+    const main=(await page.locator(".arena-main").boundingBox())!;
+    expect(hand.y).toBeGreaterThan(quote.y+quote.height);
+    expect(hand.y+hand.height).toBeLessThanOrEqual(main.y+main.height);
     await stateScreenshot(page,`premium-stats-${width}`);
   });
 }
