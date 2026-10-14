@@ -117,7 +117,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
       expect(await button.locator("img").count()).toBe(1);
     }
     // Names, especially Spolarvätska, must remain fully readable in compact circles.
-    const labels=await page.locator(".arena-stage .arena-product-copy strong").evaluateAll(items => items.map(el => {
+    const labels=await page.locator(".arena-stage .arena-focus-name,.arena-stage .arena-orb:not(.arena-orb-focus) .arena-product-copy strong").evaluateAll(items => items.map(el => {
       const r=el.getBoundingClientRect(),style=getComputedStyle(el);
       return { fits:el.scrollWidth<=el.clientWidth+1, lines:r.height/parseFloat(style.lineHeight) };
     }));
@@ -207,7 +207,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect(panel.locator(".arena-leader-list button")).toHaveCount(shown.length);
     await expect(panel.locator(".arena-rank")).toHaveText(shown.map(p => String(p.rank)));
     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
-    await expect(panel.locator(".arena-leader-avatar")).toHaveCount(0);
+    await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
     await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
     for (const person of shown.slice(0,width === 1024 ? 3 : shown.length)) {
       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();

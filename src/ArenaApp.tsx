@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, UserRound, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
@@ -13,7 +13,7 @@ import "./arena.css";
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase();
 function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: ArenaActivity; imageUrl?: string; loading?: "eager" | "lazy" }) {
   const src = arenaProductImage(activity, imageUrl);
-  return src ? <img src={src} alt="" loading={loading} decoding="async" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
+  return src ? <img src={src} alt="" loading={loading} decoding="sync" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
 export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
@@ -21,9 +21,9 @@ export function ArenaActivityButton({ activity, focus = false, campaignName, onC
 }) {
   return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} onClick={onClick} disabled={unavailable}
     aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, +${num(activity.points)} poäng`}>
-    {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span></span>}
+    {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span><strong className="arena-focus-name">{activity.name}</strong></span>}
     <span className="arena-product">
-      <ActivityImage activity={activity} imageUrl={imageUrl} loading={focus ? "eager" : "lazy"} />
+      <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
     </span>
     <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>
     <span className="arena-points">{unavailable ? "EJ UPPLAGD" : `+${num(activity.points)} POÄNG`}</span>
@@ -37,7 +37,7 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
     if (hud && target === previous.current.target && label === previous.current.label && points > previous.current.points) setGain(value => value + 1);
     previous.current = { points, target, label };
   }, [hud, points, target, label]);
-  return <div className="arena-progress"><span><Star aria-hidden="true" />{label}</span><div className="arena-progress-track" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={target} aria-valuenow={Math.min(points, target)}>
+  return <div className={`arena-progress${hud ? " arena-hud" : ""}`}><span><Star aria-hidden="true" />{label}</span><div className="arena-progress-track" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={target} aria-valuenow={Math.min(points, target)}>
     <i style={{ "--fill": percent / 100 } as React.CSSProperties} /><strong>{num(points)} / {num(target)} {suffix}</strong><b>{percent}%</b>
     {hud && gain > 0 && <em key={gain} className="arena-progress-gain" aria-hidden="true" />}
   </div></div>;
@@ -45,10 +45,13 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
+function SellerAvatar({ name }: { name: string }) {
+  return <span className="arena-leader-avatar" aria-hidden="true" title={name}><UserRound /></span>;
+}
 function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${num(p.points)} p`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span><strong>{num(p.points)} <small>p</small></strong>
+      {p.rank}</span><span className="arena-seller-cell"><SellerAvatar name={p.name} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{num(p.points)} <small>p</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 }
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
@@ -58,7 +61,7 @@ function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean
 function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
   return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id}>
-    <span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span>
+    <span className="arena-feed-seller"><SellerAvatar name={row.seller_name} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
     <b>+{num(row.points_awarded)} p</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 }
