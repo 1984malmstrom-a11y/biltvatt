@@ -13,12 +13,13 @@ function setup() {
   for (const name of readdirSync(new URL("../migrations-arena/", import.meta.url)).filter(n => n.endsWith(".sql")).sort())
     arena.exec(readFileSync(new URL(`../migrations-arena/${name}`, import.meta.url), "utf8"));
   const prepare = (sql: string) => {
+    const compile=()=>arena.prepare(sql.replaceAll("strftime('%Y-%m-%dT%H:%M:%fZ','now')",`'${new Date().toISOString()}'`));
     let values: (string | number | null | Uint8Array)[] = [];
     const statement = {
       bind: (...args: (string | number | null | ArrayBuffer)[]) => { if(args.length>100)throw new Error("D1 parameter limit exceeded");values = args.map(v => v instanceof ArrayBuffer ? new Uint8Array(v) : v); return statement; },
-      first: async () => arena.prepare(sql).get(...values) ?? null,
-      all: async () => ({ results: arena.prepare(sql).all(...values), success: true }),
-      run: async () => /^\s*(SELECT|WITH)\b/i.test(sql) ? { results:arena.prepare(sql).all(...values),meta:{changes:0},success:true } : ({ meta: { changes: Number(arena.prepare(sql).run(...values).changes) }, success: true }),
+      first: async () => compile().get(...values) ?? null,
+      all: async () => ({ results: compile().all(...values), success: true }),
+      run: async () => /^\s*(SELECT|WITH)\b/i.test(sql) ? { results:compile().all(...values),meta:{changes:0},success:true } : ({ meta: { changes: Number(compile().run(...values).changes) }, success: true }),
     }; return statement;
   };
   let batchQueue:Promise<unknown>=Promise.resolve();

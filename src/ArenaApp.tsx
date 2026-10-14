@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, UserRound, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Flag, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, UserRound, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
@@ -7,6 +7,8 @@ import ArenaDialog from "./ArenaDialog";
 import ArenaAdmin from "./ArenaAdmin";
 import ArenaAccount from "./ArenaAccount";
 import { ArenaGroups, ArenaSuperadmin } from "./ArenaNetwork";
+import ArenaFight from "./ArenaFight";
+import { fightScore } from "../shared/arena-fights";
 import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
 import { arenaStartActivities } from "./arena-start";
@@ -71,6 +73,12 @@ function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: 
     <b>+{num(row.points_awarded)} p</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 }
+function FightPeek({stats,stationId}:{stats:ArenaStats|null;stationId?:string}) {
+  const fight=stats?.fight;if(!fight)return null;
+  const own=fight.standings.find(s=>s.id===stationId),top=fight.standings[0],gap=own && top ? fightScore(top,fight.metric)-fightScore(own,fight.metric):0;
+  const value=own ? fight.metric==="tb" ? `${arenaMoney(own.tb_ore)} TB` : `${num(fightScore(own,fight.metric))} ${fight.metric==="count" ? "st":"p"}`:"";
+  return <a className="arena-fight-peek" href={`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}><Flag aria-hidden="true" /><span><strong>BUTIKSFIGHT LIVE</strong><small>{value}{gap>0 ? ` · ${fight.metric==="tb" ? arenaMoney(gap):num(gap)} till ledningen`:" · I täten"}</small></span><ChevronRight aria-hidden="true" /></a>;
+}
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
 type Celebration = ArenaAchievement & { key: string; points: number; tbOre?:number | null; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; heroUrl?: string };
@@ -111,7 +119,7 @@ function CelebrationCard({ event }: { event: Celebration }) {
   </div>;
   return <div className={`arena-celebration${event.special ? " is-special" : ""}${event.activity.display_mode === "tb" ? " reward-tb" : ""} level-${level} celebration-${event.kind}`} role="status" style={{ "--reward-life": `${rewardDuration(event.special)}ms` } as React.CSSProperties}>
     <div className="arena-reward-ring" key={event.kind}>
-      {event.special && <div className="arena-reward-crown" aria-hidden="true">{isGoal ? <Trophy /> : <><Crown /><b>1</b></>}</div>}
+      {event.special && <div className="arena-reward-crown" aria-hidden="true">{event.kind==="milestone" ? <Target /> : isGoal ? <Trophy /> : <><Crown /><b>1</b></>}</div>}
       <div className="arena-reward-product" aria-hidden="true"><ActivityImage activity={event.activity} /></div>
       <div className="arena-reward-activity">{event.activity.name}</div>
       {event.activity.offer_text && <small className="arena-reward-offer">{event.activity.offer_text}</small>}
@@ -128,6 +136,7 @@ function CelebrationCard({ event }: { event: Celebration }) {
   </div>;
 }
 export default function ArenaApp() {
+  if(window.location.pathname.startsWith("/arena/fights/") || window.location.pathname.startsWith("/arena/superadmin/fights/"))return <ArenaFight />;
   if(window.location.pathname.startsWith("/arena/superadmin"))return <ArenaSuperadmin />;
   if(window.location.pathname.startsWith("/arena/groups"))return <ArenaGroups />;
   if(["/arena/account","/arena/join","/arena/login"].includes(window.location.pathname))return <ArenaAccount />;
@@ -236,7 +245,7 @@ function ArenaHome() {
   </>;
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
     <header className="arena-header">
-      <a href="/station" className="arena-brand" aria-label="Till stationsdashboarden"><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{data?.station.name || "STATIONEN"}</small></span></a>
+      <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{data?.station.name || "STATIONEN"}</small></span></a>
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
       <p className="arena-handwritten">Tillsammans<br />säljer vi mer! ♡</p>
     </header>
@@ -255,7 +264,7 @@ function ArenaHome() {
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
     </main>
-    <div className="arena-utility"><div className="arena-utility-links">{data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
+    <div className="arena-utility"><div className="arena-utility-links">{stats?.fight ? <FightPeek stats={stats} stationId={data?.station.id} /> : data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
       <div><BarChart3 aria-hidden="true" /><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div>
       <div><Star aria-hidden="true" /><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div>

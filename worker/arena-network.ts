@@ -4,6 +4,7 @@ import { roundedPoints } from "../shared/arena";
 import { requireArenaSuperadmin } from "./arena-auth";
 import { arenaRange } from "./arena-model";
 import { body, checkFields, fail, json, text } from "./http";
+import { arenaFightAdminApi } from "./arena-fights";
 
 export const standingScore=(row:ArenaStationStanding,metric:ArenaMetric)=>metric==="tb" ? row.tb_ore : metric==="count" ? row.count : row.points;
 export function rankStations(rows:ArenaStationStanding[],metric:ArenaMetric) {
@@ -37,6 +38,7 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
 }
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
   await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
+  if(path.startsWith("/api/arena/superadmin/fights"))return arenaFightAdminApi(request,db);
   if(path==="/api/arena/superadmin/stations" && method==="GET") {
     const rows=await db.prepare("SELECT id,name,email,status,kind,created_at,updated_at FROM arena_stations ORDER BY status='pending' DESC,name,id").all();return json({stations:rows.results});
   }

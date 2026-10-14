@@ -34,6 +34,16 @@ async function expectDesktopOrbit(page: Page, positions: { x:number; y:number; r
   }
 }
 
+for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,390]]) {
+  test(`Arena: compact Butiksfight link preserves locked layout ${width}x${height}`,async({page})=>{
+    await page.setViewportSize({width,height});const current={...stats,fight:{id:"live-fight",name:"Sydost",metric:"points" as const,phase:"active" as const,version:1,standings:[{id:"mastertest",name:"STATIONEN",rank:1,count:87,points:342,tb_ore:48000,unknown_tb_count:0},{id:"other",name:"Karlskrona",rank:2,count:82,points:327,tb_ore:46000,unknown_tb_count:0}]}};
+    await visualData(page,()=>current);await page.goto("/arena");await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
+    const link=page.getByRole("link",{name:"Öppna Butiksfight: Sydost",exact:true});await expect(link).toBeVisible();await expect(link).toHaveAttribute("href","/arena/fights/live-fight");
+    expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
+    const fit=await link.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest(".arena-utility")!.getBoundingClientRect();return r.left>=p.left && r.right<=p.right && r.top>=p.top && r.bottom<=p.bottom;});expect(fit).toBe(true);await stateScreenshot(page,`fight-indicator-${width}x${height}`);
+  });
+}
+
 const productAssets = [
   ["Biltvätt", "01_arena-biltvatt.webp"],
   ["Korv med mos", "02_arena-korv-med-mos.webp"],

@@ -1,0 +1,45 @@
+import {test,expect,type Page} from "@playwright/test";
+import {readFileSync,existsSync} from "node:fs";
+import {randomUUID} from "node:crypto";
+import type {ArenaFight} from "../shared/arena-fights";
+
+const now=new Date("2026-10-14T10:00:00.000Z");
+const fight:ArenaFight={id:"fight",name:"Sydost · Butiksfight",description:"Samma lagkänsla. Ett nytt gemensamt mål.",start_at:"2026-10-14T08:00:00.000Z",end_at:"2026-10-20T18:00:00.000Z",metric:"tb",phase:"active",snapshot_at:now.toISOString(),version:1,winner_ids:[],leader_ids:["t"],latest_lead_change:{version:1,station_id:"t",station_name:"Tingsryd",created_at:now.toISOString()},standings:[{id:"t",name:"Tingsryd",rank:1,points:342,count:87,tb_ore:48600,unknown_tb_count:0},{id:"k",name:"Karlskrona",rank:2,points:327,count:82,tb_ore:46100,unknown_tb_count:0}]};
+async function screenshot(page:Page,name:string){if(process.env.ARENA_SCREENSHOT_DIR){await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:`${process.env.ARENA_SCREENSHOT_DIR}/${name}.png`,fullPage:false});}}
+for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,390]]) {
+  test(`Butiksfight: active, lead change and finished ${width}x${height}`,async({page})=>{
+    let current=structuredClone(fight);await page.setViewportSize({width,height});await page.clock.install({time:now});
+    await page.route("**/api/arena/fights/fight",r=>r.fulfill({json:current}));await page.goto("/arena/fights/fight");await expect(page.getByRole("heading",{name:fight.name})).toBeVisible();await expect(page.locator(".arena-fight-score")).toHaveText(["486 kr TB","461 kr TB"]);await expect(page.locator(".arena-fight-lead-event")).toHaveCount(0);await screenshot(page,`fight-active-${width}x${height}`);
+    current={...current,version:2,snapshot_at:"2026-10-14T10:00:30.000Z",leader_ids:["k"],latest_lead_change:{version:2,station_id:"k",station_name:"Karlskrona",created_at:"2026-10-14T10:00:30.000Z"},standings:[{...fight.standings[1],rank:1,tb_ore:50100},{...fight.standings[0],rank:2}]};
+    await page.clock.runFor(30000);await expect(page.locator(".arena-fight-lead-event")).toContainText("Karlskrona tar ledningen!");await screenshot(page,`fight-lead-change-${width}x${height}`);
+    await page.clock.runFor(3600);await expect(page.locator(".arena-fight-lead-event")).toHaveCount(0);await page.clock.runFor(30000);await expect(page.locator(".arena-fight-lead-event")).toHaveCount(0);
+    current={...current,phase:"finished",winner_ids:["k"],snapshot_at:"2026-10-20T18:00:00.000Z"};await page.clock.runFor(30000);await expect(page.locator(".arena-fight-winner")).toContainText("VINNARE!");await expect(page.locator(".arena-fight-winner")).toContainText("Karlskrona");await screenshot(page,`fight-finished-${width}x${height}`);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(width);
+  });
+}
+test("Butiksfight: correct tie, count metric and reduced-motion announcement",async({page})=>{
+  let current={...structuredClone(fight),metric:"count" as const,leader_ids:["t","k"],version:2,standings:fight.standings.map(s=>({...s,rank:1,count:87}))};
+  await page.emulateMedia({reducedMotion:"reduce"});await page.clock.install({time:now});await page.route("**/api/arena/fights/fight",r=>r.fulfill({json:current}));await page.goto("/arena/fights/fight");await expect(page.locator(".arena-fight-rank b")).toHaveText(["DELAD LEDNING","DELAD LEDNING"]);await expect(page.locator(".arena-fight-standings article p")).toHaveText(["Lika resultat. Varje försäljning kan avgöra.","Lika resultat. Varje försäljning kan avgöra."]);
+  current={...current,version:3,leader_ids:["t"],latest_lead_change:{version:3,station_id:"t",station_name:"Tingsryd",created_at:now.toISOString()},standings:[{...current.standings[0],count:88},{...current.standings[1],rank:2}]};await page.clock.runFor(30000);await expect(page.locator(".arena-fight-lead-event")).toBeVisible();expect(await page.locator(".arena-fight-lead-event").evaluate(el=>getComputedStyle(el).animationName)).toBe("none");
+});
+test("Butiksfight: boundary timer fetches final state without waiting for poll",async({page})=>{
+  const finish="2026-10-14T10:00:15.000Z";let requests=0,finished=false;await page.clock.install({time:now});await page.route("**/api/arena/fights/fight",r=>{requests++;return r.fulfill({json:finished ? {...fight,end_at:finish,phase:"finished",winner_ids:["t"]}:{...fight,end_at:finish}});});
+  await page.goto("/arena/fights/fight");await expect(page.locator(".arena-fight-clock")).toContainText("kvar");const initial=requests;finished=true;await page.clock.runFor(16000);await expect(page.locator(".arena-fight-winner")).toContainText("VINNARE!");expect(requests).toBe(initial+1);
+});
+test("Butiksfight: Superadmin creates a timezone-safe event for approved stations",async({page})=>{
+  await page.setViewportSize({width:1920,height:1080});
+  const stations=[{id:"t",name:"Tingsryd",email:null,status:"active",kind:"integrated"},{id:"k",name:"Karlskrona",email:null,status:"active",kind:"integrated"},{id:"m",name:"Malmö",email:null,status:"pending",kind:"arena"}];let posted:Record<string,unknown>|null=null;
+  await page.route("**/api/arena/auth/superadmin/session",r=>r.fulfill({json:{authenticated:true}}));await page.route("**/api/arena/superadmin/stations",r=>r.fulfill({json:{stations}}));await page.route("**/api/arena/superadmin/groups",r=>r.fulfill({json:{groups:[]}}));
+  await page.route("**/api/arena/superadmin/fights",r=>{if(r.request().method()==="POST"){posted=r.request().postDataJSON();return r.fulfill({status:201,json:{id:"fight"}});}return r.fulfill({json:{fights:posted ? [{...fight,status:"scheduled"}]:[]}});});
+  await page.goto("/arena/superadmin");await page.getByRole("button",{name:"Butiksfight",exact:true}).click();await expect(page.getByRole("button",{name:"Skapa fight",exact:true})).toBeDisabled();await expect(page.getByRole("checkbox",{name:"Malmö",exact:true})).toHaveCount(0);
+  await page.getByLabel("Fightnamn",{exact:true}).fill(fight.name);await page.getByLabel("Beskrivning",{exact:true}).fill(fight.description);await page.getByLabel("Start (Stockholm)",{exact:true}).fill("2026-10-14T12:00");await page.getByLabel("Slut (Stockholm)",{exact:true}).fill("2026-10-20T20:00");await page.getByLabel("Tävlingsmått",{exact:true}).selectOption("tb");await page.getByRole("checkbox",{name:"Tingsryd",exact:true}).check();await page.getByRole("checkbox",{name:"Karlskrona",exact:true}).check();await screenshot(page,"superadmin-create-fight");await page.getByRole("button",{name:"Skapa fight",exact:true}).click();await expect(page.getByRole("link",{name:/Sydost · Butiksfight/})).toBeVisible();expect(posted).toMatchObject({start_at:"2026-10-14T10:00:00.000Z",end_at:"2026-10-20T18:00:00.000Z",metric:"tb",station_ids:["t","k"]});
+});
+test("Butiksfight: native local Worker scores a sale and freezes result before later undo",async({page})=>{
+  const secret=process.env.ARENA_E2E_SUPERADMIN_SECRET_FILE,credentials=process.env.ARENA_E2E_DEMO_CREDENTIALS_FILE;
+  test.skip(!secret || !credentials || !existsSync(secret) || !existsSync(credentials),"Requires explicit local-only seeded station and Superadmin credentials.");
+  const account=JSON.parse(readFileSync(credentials!,"utf8"));expect((await page.request.post("/api/arena/auth/login",{data:account})).status()).toBe(200);expect((await page.request.post("/api/arena/auth/superadmin/login",{data:{secret:readFileSync(secret!,"utf8").trim()}})).status()).toBe(200);
+  const start=new Date(Date.now()-60000).toISOString(),end=new Date(Date.now()+4000).toISOString(),create=await page.request.post("/api/arena/superadmin/fights",{data:{name:"QA · lokal Butiksfight",description:"Enbart lokal testdata",start_at:start,end_at:end,metric:"tb",station_ids:["local-demo-malmo","local-demo-tingsryd"]}});expect(create.status()).toBe(201);const id=(await create.json()).id;
+  const boot=await (await page.request.get("/api/arena/bootstrap")).json(),request_id=randomUUID();const sale=await page.request.post("/api/arena/registrations",{data:{request_id,seller_id:boot.sellers[0].id,activity_id:boot.activities[0].id}});expect(sale.status()).toBe(200);const receipt=(await sale.json()).registration;
+  const live=await (await page.request.get(`/api/arena/fights/${id}`)).json();expect(live.standings.find((s:{id:string})=>s.id==="local-demo-malmo")).toMatchObject({count:1,tb_ore:receipt.tb_ore_awarded});
+  await page.waitForTimeout(Math.max(0,Date.parse(end)-Date.now())+50);const final=await (await page.request.get(`/api/arena/fights/${id}`)).json();expect(final.phase).toBe("finished");expect(final.winner_ids).toEqual(["local-demo-malmo"]);
+  expect((await page.request.post(`/api/arena/registrations/${receipt.id}/void`,{data:{request_id}})).status()).toBe(200);expect(await (await page.request.get(`/api/arena/fights/${id}`)).json()).toEqual(final);
+});

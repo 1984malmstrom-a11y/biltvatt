@@ -3,6 +3,7 @@ import { roundedPoints } from "../shared/arena";
 import { fail, text } from "./http";
 import { arenaRange, goalBounds } from "./arena-model";
 import { stockholmDay } from "./stats";
+import { arenaFightSummary } from "./arena-fights";
 
 export async function currentCampaign(db: D1Database, key: string, now: string) {
   return db.prepare(`SELECT c.id,c.name,c.activity_id,c.start_at,c.end_at,c.target_count,c.target_points,c.active
@@ -67,5 +68,6 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     today: { count: today?.count ?? 0, points: roundedPoints(today?.points ?? 0), sellers: today?.sellers ?? 0 },
     campaign: campaign ? { ...campaign, count: campaignResult?.count ?? 0, points: roundedPoints(campaignResult?.points ?? 0) } : null,
     station_goals, personal_goals, recent: recent.results.map(r => ({ ...r, points_awarded: roundedPoints(r.points_awarded) })),metric,tb_ore:leaderboard.reduce((s,p)=>s+(p.tb_ore??0),0),unknown_tb_count:leaderboard.reduce((s,p)=>s+(p.unknown_tb_count??0),0),
+    fight:await arenaFightSummary(db,key),
   };
 }

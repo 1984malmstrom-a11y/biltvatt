@@ -5,6 +5,7 @@ import { arenaStats, currentCampaign } from "./arena-stats";
 import type { ArenaRegistration } from "../shared/arena";
 import { resolveArenaStation } from "./arena-auth";
 import { arenaGroupApi } from "./arena-network";
+import { arenaFightApi, refreshStationFights } from "./arena-fights";
 import { achievementScopes } from "./arena-achievements";
 import { evaluateArenaAchievements, type EvaluatedAchievement } from "../shared/arena-achievements";
 
@@ -36,6 +37,7 @@ export async function arenaApi(
   const identity=await resolveArenaStation(request,env),key=identity.key;
   const now = new Date().toISOString();
   if(path.startsWith("/api/arena/groups")) return arenaGroupApi(request,arena,key);
+  if(path.startsWith("/api/arena/fights"))return arenaFightApi(request,arena,key);
 
   if (path === "/api/arena/stats" && method === "GET") return json(await arenaStats(arena, key, url));
   const image = path.match(/^\/api\/arena\/activity-images\/([a-f0-9-]{36})$/);
@@ -64,11 +66,11 @@ export async function arenaApi(
       const scopes=await achievementScopes(arena,key,activityId,data.achievement_context,new Date(now),sellerId);
       const beforeQueries=scopes.statements();
       const result=await arena.batch([...beforeQueries,arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,tb_ore_awarded,registered_at,created_at)
-        SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=? AND c.end_at>? ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,a.tb_ore,?,?
-        FROM arena_sellers s JOIN arena_activities a ON a.station_id=s.station_id
+        SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=clock.instant AND c.end_at>clock.instant ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,a.tb_ore,clock.instant,clock.instant
+        FROM arena_sellers s JOIN arena_activities a ON a.station_id=s.station_id CROSS JOIN (SELECT strftime('%Y-%m-%dT%H:%M:%fZ','now') instant) clock
         WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND a.active=1
         AND EXISTS(SELECT 1 FROM arena_stations station WHERE station.id=s.station_id AND station.status='active')`)
-        .bind(crypto.randomUUID(), key, now, now, requestId, now, now, sellerId, activityId, key),...scopes.statements()]);
+        .bind(crypto.randomUUID(), key, requestId, sellerId, activityId, key),...scopes.statements()]);
       registration = await lookup();
       if (registration && result[beforeQueries.length].meta.changes) {
         const before=scopes.snapshot(result.slice(0,beforeQueries.length).flatMap(r=>r.results) as unknown as Parameters<typeof scopes.snapshot>[0]);
@@ -81,6 +83,8 @@ export async function arenaApi(
     if (!registration) fail(409, "Aktiviteten är inte aktiv eller registrerings-ID har redan använts.");
     if (registration!.seller_id !== sellerId || registration!.activity_id !== activityId) fail(409, "Registrerings-ID har redan använts för en annan försäljning.");
     const receipt=await arena.prepare("SELECT events_json FROM arena_registration_achievements WHERE registration_id=? AND station_id=?").bind(registration!.id,key).first<{events_json:string}>();
+    // A fight refresh never changes whether an acknowledged sale was saved.
+    try{await refreshStationFights(arena,key);}catch{console.warn("Arena fight refresh deferred; sale receipt is intact.");}
     return json({ registration: registration!, achievements: receipt ? JSON.parse(receipt.events_json) as EvaluatedAchievement[] : [] });
   }
   const undo = path.match(/^\/api\/arena\/registrations\/([a-f0-9-]{36})\/void$/);
@@ -92,8 +96,9 @@ export async function arenaApi(
     if (!registration) fail(404, "Registreringen finns inte.");
     if (registration!.request_id !== receipt) fail(403, "Ångring kräver kvittot från din registrering.");
     if (!registration!.voided_at && Date.now() - Date.parse(registration!.registered_at) > 5 * 60000) fail(409, "Registreringen kan bara ångras inom fem minuter.");
-    await arena.prepare("UPDATE arena_registrations SET voided_at=?,void_reason='SELLER_UNDO' WHERE id=? AND station_id=? AND voided_at IS NULL")
-      .bind(now, undo[1], key).run();
+    await arena.prepare("UPDATE arena_registrations SET voided_at=strftime('%Y-%m-%dT%H:%M:%fZ','now'),void_reason='SELLER_UNDO' WHERE id=? AND station_id=? AND voided_at IS NULL")
+      .bind(undo[1], key).run();
+    try{await refreshStationFights(arena,key);}catch{console.warn("Arena fight refresh deferred after undo.");}
     return json({ ok: true });
   }
 

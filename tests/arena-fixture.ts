@@ -7,8 +7,10 @@ export function arenaFixture() {
   const base=fixture(),arena=new DatabaseSync(":memory:");arena.exec("PRAGMA foreign_keys=ON");
   for(const name of readdirSync(new URL("../migrations-arena/",import.meta.url)).filter(n=>n.endsWith(".sql")).sort())arena.exec(readFileSync(new URL(`../migrations-arena/${name}`,import.meta.url),"utf8"));
   const prepare=(sql:string)=>{
+    // Vitest's fake clock also controls the SQLite clock at statement execution.
+    const compile=()=>arena.prepare(sql.replaceAll("strftime('%Y-%m-%dT%H:%M:%fZ','now')",`'${new Date().toISOString()}'`));
     let values:(string|number|null|Uint8Array)[]=[];
-    const statement={bind:(...v:(string|number|null|ArrayBuffer)[])=>{if(v.length>100)throw new Error("D1 parameter limit exceeded");values=v.map(x=>x instanceof ArrayBuffer ? new Uint8Array(x):x);return statement;},first:async()=>arena.prepare(sql).get(...values)??null,all:async()=>({results:arena.prepare(sql).all(...values),success:true,meta:{}}),run:async()=>/^\s*(SELECT|WITH)\b/i.test(sql) ? {results:arena.prepare(sql).all(...values),meta:{changes:0},success:true}:{results:[],meta:{changes:Number(arena.prepare(sql).run(...values).changes)},success:true}};
+    const statement={bind:(...v:(string|number|null|ArrayBuffer)[])=>{if(v.length>100)throw new Error("D1 parameter limit exceeded");values=v.map(x=>x instanceof ArrayBuffer ? new Uint8Array(x):x);return statement;},first:async()=>compile().get(...values)??null,all:async()=>({results:compile().all(...values),success:true,meta:{}}),run:async()=>/^\s*(SELECT|WITH)\b/i.test(sql) ? {results:compile().all(...values),meta:{changes:0},success:true}:{results:[],meta:{changes:Number(compile().run(...values).changes)},success:true}};
     return statement;
   };
   let queue:Promise<unknown>=Promise.resolve();base.env.STATION_ID="mastertest";base.env.ARENA_SUPERADMIN_SECRET=randomToken();
