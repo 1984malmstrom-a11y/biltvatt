@@ -29,14 +29,21 @@ export function ArenaActivityButton({ activity, focus = false, campaignName, onC
     <span className="arena-points">{unavailable ? "EJ UPPLAGD" : `+${num(activity.points)} POÄNG`}</span>
   </button>;
 }
-function Progress({ points, target, label, suffix = "poäng" }: { points: number; target: number; label: string; suffix?: string }) {
+function Progress({ points, target, label, suffix = "poäng", hud = false }: { points: number; target: number; label: string; suffix?: string; hud?: boolean }) {
   const percent = Math.min(100, Math.round(100 * points / target));
+  const previous = useRef({ points, target, label });
+  const [gain, setGain] = useState(0);
+  useEffect(() => {
+    if (hud && target === previous.current.target && label === previous.current.label && points > previous.current.points) setGain(value => value + 1);
+    previous.current = { points, target, label };
+  }, [hud, points, target, label]);
   return <div className="arena-progress"><span><Star aria-hidden="true" />{label}</span><div className="arena-progress-track" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={target} aria-valuenow={Math.min(points, target)}>
     <i style={{ "--fill": percent / 100 } as React.CSSProperties} /><strong>{num(points)} / {num(target)} {suffix}</strong><b>{percent}%</b>
+    {hud && gain > 0 && <em key={gain} className="arena-progress-gain" aria-hidden="true" />}
   </div></div>;
 }
-function GoalProgress({ goal, label }: { goal: ArenaGoal; label?: string }) {
-  return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
+function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
+  return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
 function People({ stats, onPerson, highlightId, newLeaderId }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string }) {
   return <ol className="arena-leader-list">{stats?.leaderboard.map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
@@ -47,7 +54,7 @@ function People({ stats, onPerson, highlightId, newLeaderId }: { stats: ArenaSta
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
 type Celebration = ArenaAchievement & { key: string; points: number; sellerId: string; name: string; activity: ArenaActivity };
-const rewardDuration = (special: boolean) => special ? 2600 : 1300;
+const rewardDuration = (special: boolean) => special ? 3600 : 2600;
 
 function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats: ArenaStats; onClose: () => void }) {
   const goals = stats.personal_goals.filter(g => g.seller_id === person.id);
@@ -187,7 +194,7 @@ function ArenaHome() {
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
     <header className="arena-header">
       <a href="/station" className="arena-brand" aria-label="Till stationsdashboarden"><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>{data?.station.name || "STATIONEN"}</small></span></a>
-      <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
+      <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
       <p className="arena-handwritten">Tillsammans<br />säljer vi mer! ♡</p>
     </header>
     {error && <div className="arena-error" role="alert">{error}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}

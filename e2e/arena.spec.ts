@@ -20,6 +20,20 @@ async function stateScreenshot(page: Page, name: string) {
   }
 }
 
+async function expectDesktopOrbit(page: Page, positions: { x:number; y:number; radius:number }[]) {
+  // Desktop circle bodies must stay separate, including the tightly packed 4:3 orbit.
+  for (let i=0;i<positions.length;i++) for (let j=i+1;j<positions.length;j++) {
+    expect(Math.hypot(positions[i].x-positions[j].x,positions[i].y-positions[j].y)-positions[i].radius-positions[j].radius).toBeGreaterThanOrEqual(2);
+  }
+  for (const selector of [".arena-leaderboard", ".arena-stats"]) {
+    const panel=(await page.locator(selector).boundingBox())!;
+    for (const circle of positions) {
+      const x=Math.max(panel.x,Math.min(circle.x,panel.x+panel.width)), y=Math.max(panel.y,Math.min(circle.y,panel.y+panel.height));
+      expect(Math.hypot(circle.x-x,circle.y-y)-circle.radius).toBeGreaterThanOrEqual(2);
+    }
+  }
+}
+
 const productAssets = [
   ["Biltvätt", "01_arena-biltvatt.webp"],
   ["Korv med mos", "02_arena-korv-med-mos.webp"],
@@ -30,6 +44,27 @@ const productAssets = [
   ["Två för 30", "07_arena-tva-for-30.webp"],
 ];
 const cleanProducts = productAssets.map(([name], i) => ({ ...activities[i], name, image_key:"demo-image", offer_text:i === 0 ? "Finast Plus" : "", price_text:i === 2 ? "25:–" : i === 6 ? "30:–" : "" }));
+for (const [width,height] of [[1366,768],[1440,900],[1280,800],[1920,1200]]) {
+  test(`Arena: desktop-orbit anpassas till tillgängligt utrymme ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width,height }); await visualData(page, () => stats);
+    await page.goto("/arena");
+    const orbs=page.locator(".arena-stage .arena-orb"); await expect(orbs).toHaveCount(7);
+    const positions=await orbs.evaluateAll(items => items.map(el => {
+      const r=el.getBoundingClientRect(); return { x:r.x+r.width/2,y:r.y+r.height/2,radius:r.width/2 };
+    }));
+    await expectDesktopOrbit(page,positions);
+    const nav=(await page.locator(".arena-nav").boundingBox())!;
+    for (const circle of positions) {
+      expect(circle.x-circle.radius).toBeGreaterThanOrEqual(0);
+      expect(circle.x+circle.radius).toBeLessThanOrEqual(width);
+      expect(circle.y-circle.radius).toBeGreaterThanOrEqual(0);
+      expect(circle.y+circle.radius+12).toBeLessThanOrEqual(nav.y);
+    }
+    expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight }))).toEqual({ width,height });
+    await stateScreenshot(page,`desktop-orbit-${width}x${height}`);
+  });
+}
+
 for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
   test(`Arena: sju rena produktmotiv med contain och fri text ${width}x${height}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await visualData(page, () => stats);
@@ -77,12 +112,29 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     }
     expect(demos).toEqual([]);
     const positions = await page.locator(".arena-stage .arena-orb").evaluateAll(orbs => orbs.map(orb => {
-      const r = orb.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2 };
+      const r = orb.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2, radius:r.width/2 };
     }));
+    if (width >= 1024) await expectDesktopOrbit(page, positions);
     for (const i of [1,3,5]) expect(positions[i].x).toBeLessThan(positions[0].x);
     for (const i of [2,4,6]) expect(positions[i].x).toBeGreaterThan(positions[0].x);
     expect(positions[1].y).toBeLessThan(positions[3].y); expect(positions[3].y).toBeLessThan(positions[5].y);
     expect(positions[2].y).toBeLessThan(positions[4].y); expect(positions[4].y).toBeLessThan(positions[6].y);
+    if (width === 1024) {
+      // Hover feedback must also fit the compact orbit without pushing circle bodies together.
+      const items=page.locator(".arena-stage .arena-orb");
+      for (const index of [0,3,4]) {
+        await items.nth(index).hover();
+        await expect.poll(() => items.nth(index).evaluate(el => getComputedStyle(el).transform)).toBe("matrix(1.01, 0, 0, 1.01, 0, 0)");
+        const hovered=await items.evaluateAll(orbs => orbs.map(el => {
+          const r=el.getBoundingClientRect(); return { x:r.x+r.width/2,y:r.y+r.height/2,r:r.width/2 };
+        }));
+        for (let j=0;j<hovered.length;j++) if (j !== index) {
+          expect(Math.hypot(hovered[index].x-hovered[j].x,hovered[index].y-hovered[j].y)-hovered[index].r-hovered[j].r).toBeGreaterThan(0);
+        }
+      }
+      await page.mouse.move(0,0);
+      await expect.poll(() => items.nth(4).evaluate(el => getComputedStyle(el).transform)).toBe("none");
+    }
     const crown = (await page.locator(".arena-focus-slot .arena-crown").boundingBox())!;
     const focus = (await page.locator(".arena-focus-slot .arena-orb").boundingBox())!;
     expect(crown.y).toBeGreaterThan(focus.y); expect(crown.y+crown.height).toBeLessThan(focus.y+focus.height);
@@ -162,6 +214,81 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     }
     await panel.getByRole("button", { name:"Peter 126 p", exact:true }).click();
     await expect(page.getByRole("dialog", { name:"Peter · Min Arena" })).toBeVisible();
+  });
+}
+
+for (const width of [1920,1024]) {
+  test(`Arena: premium-stats bevarar decimalpoäng och läsbara siffror ${width}`, async ({ page }) => {
+    const current=structuredClone(stats); current.today={ count:27,points:42.5,sellers:5 };
+    await page.setViewportSize({ width,height:width === 1920 ? 1080 : 768 });
+    await visualData(page, () => current); await page.goto("/arena");
+    const panel=page.locator(".arena-stats");
+    await expect(panel.locator(".arena-stat strong")).toHaveText(["27","42,5","5"]);
+    await expect(panel.locator(".arena-stat span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare idag"]);
+    const fit=await panel.evaluate(el => {
+      const panel=el.getBoundingClientRect(), heading=el.querySelector("h2")!;
+      const rows=[...el.querySelectorAll(".arena-stat")].map(row => {
+        const value=row.querySelector("strong")!.getBoundingClientRect(),label=row.querySelector("span")!.getBoundingClientRect(),icon=row.querySelector("svg")!.getBoundingClientRect();
+        return value.right<=icon.left && value.bottom<=label.top && label.right<=panel.right;
+      });
+      return rows.every(Boolean) && heading.scrollWidth<=heading.clientWidth && el.scrollHeight<=el.clientHeight;
+    });
+    expect(fit).toBe(true);
+    await stateScreenshot(page,`premium-stats-${width}`);
+  });
+}
+
+test("Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion", async ({ page }) => {
+  const after=structuredClone(stats); after.station_goals[0].points+=2;
+  let recorded=false; await visualData(page, () => recorded ? after : stats);
+  await page.route("**/api/arena/registrations", route => {
+    recorded=true; return route.fulfill({ json:{ registration:{ id:crypto.randomUUID(),points_awarded:2,voided_at:null } } });
+  });
+  await page.goto("/arena");
+  const hud=page.locator(".arena-team-goal");
+  await expect(hud.getByRole("progressbar")).toHaveAttribute("aria-valuenow","742");
+  await expect(hud.locator(".arena-progress-gain")).toHaveCount(0);
+  await page.getByRole("button", { name:"Biltvätt, +2 poäng",exact:true }).click();
+  await page.getByRole("dialog").getByRole("button", { name:"Peter",exact:true }).click();
+  await expect(hud.getByRole("progressbar")).toHaveAttribute("aria-valuenow","744");
+  const gain=hud.locator(".arena-progress-gain"); await expect(gain).toHaveCount(1);
+  expect(await gain.evaluate(el => getComputedStyle(el).animationName)).toBe("arena-hud-gain");
+  await expect.poll(() => gain.evaluate(el => getComputedStyle(el).opacity)).toBe("0");
+  await page.emulateMedia({ reducedMotion:"reduce" });
+  expect(await gain.evaluate(el => getComputedStyle(el).animationName)).toBe("none");
+  expect(await hud.locator(".arena-progress-track i").evaluate(el => getComputedStyle(el).transitionDuration)).toBe("0s");
+});
+
+for (const special of [false,true]) {
+  test(`Arena: ${special ? "milestone 3,6 s" : "vanlig celebration 2,6 s"} löper ut utan att låsa nästa val`, async ({ page }) => {
+    const before=structuredClone(stats),after=structuredClone(stats);
+    if (special) {
+      before.leaderboard=[{ ...stats.leaderboard[1],rank:1,points:127 },{ ...stats.leaderboard[0],rank:2 },...stats.leaderboard.slice(2)];
+      after.leaderboard=[{ ...stats.leaderboard[0],rank:1,points:128 },{ ...stats.leaderboard[1],rank:2,points:127 },...stats.leaderboard.slice(2)];
+    }
+    let recorded=false; await visualData(page, () => recorded ? after : before);
+    await page.route("**/api/arena/registrations", route => {
+      recorded=true; return route.fulfill({ json:{ registration:{ id:crypto.randomUUID(),points_awarded:2,voided_at:null } } });
+    });
+    await page.emulateMedia({ reducedMotion:"reduce" });
+    await page.goto("/arena"); await expect(page.locator(".arena-team-goal .arena-progress-track")).toBeVisible();
+    // Freeze only after initial rendering; the clock then controls the sale's own timers.
+    await page.clock.install({ time:new Date("2026-10-13T12:00:00Z") });
+    await page.clock.pauseAt(new Date("2026-10-13T12:00:01Z"));
+    await page.getByRole("button", { name:"Biltvätt, +2 poäng",exact:true }).click();
+    await page.getByRole("dialog").getByRole("button", { name:"Peter",exact:true }).click();
+    await expect(page.locator(".celebration-points")).toBeVisible();
+    await page.clock.runFor(special ? 180 : 1500);
+    const reward=page.locator(special ? ".celebration-leader" : ".celebration-points");
+    await expect(reward).toBeVisible();
+    expect(await reward.evaluate(el => el.style.getPropertyValue("--reward-life"))).toBe(special ? "3600ms" : "2600ms");
+    expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+    await page.getByRole("button", { name:"Korv med mos, +1 poäng",exact:true }).click();
+    await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
+    await page.clock.runFor(special ? 3599 : 1099);
+    await expect(reward).toBeVisible(); await page.clock.runFor(1);
+    await expect(reward).toHaveCount(0);
+    await expect(page.getByRole("dialog").getByRole("button", { name:"Peter",exact:true })).toBeEnabled();
   });
 }
 
@@ -245,7 +372,7 @@ for (const [width, height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await stateScreenshot(page, `hero-burst-${width}x${height}`);
     await page.getByRole("button", { name:"Korv med mos, +1 poäng", exact:true }).click();
     await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
-    await expect(reward).toHaveCount(0, { timeout:1600 });
+    await expect(reward).toHaveCount(0, { timeout:3000 });
   });
 }
 
@@ -357,7 +484,7 @@ for (const nextSelection of [false,true]) {
     await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
     await expect(page.locator(".celebration-points")).toBeVisible(); await pending;
     if (nextSelection) await page.getByRole("button", { name:"Korv med mos, +1 poäng", exact:true }).click();
-    else await expect(page.locator(".celebration-points")).toHaveCount(0, { timeout:1600 });
+    else await expect(page.locator(".celebration-points")).toHaveCount(0, { timeout:3000 });
     release(); await expect(page.getByRole("button", { name:"Peter 128 p", exact:true })).toHaveCount(1);
     if (nextSelection) {
       await expect(page.locator(".celebration-leader")).toHaveCount(0);
