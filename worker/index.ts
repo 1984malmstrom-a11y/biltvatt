@@ -1,5 +1,7 @@
 import { arenaApi } from "./arena";
 import { arenaAdminApi } from "./arena-admin";
+import { arenaAuthApi, hasArenaStationCookie, renewedArenaCookie } from "./arena-auth";
+import { arenaSuperadminApi } from "./arena-network";
 import {
   addDays,
   dateRange,
@@ -25,6 +27,11 @@ export interface Env {
   ARENA_DB?: D1Database;
   STATION_NAME?: string;
   STATION_ID?: string;
+  ARENA_ONLY?: string;
+  ARENA_SUPERADMIN_SECRET?: string;
+  STATION_DB_TINGSRYD?:D1Database;
+  STATION_DB_KARLSHAMN?:D1Database;
+  STATION_DB_KARLSKRONA?:D1Database;
   STATION_LATITUDE?: string;
   STATION_LONGITUDE?: string;
   ADMIN_PIN?: string;
@@ -84,6 +91,9 @@ async function api(
       fail(403, "Anrop från en annan webbplats är inte tillåtet.");
   }
   const now = new Date().toISOString();
+  if(path.startsWith("/api/arena/auth/")) return arenaAuthApi(request,env);
+  if(path.startsWith("/api/arena/superadmin/")) return arenaSuperadminApi(request,env);
+  if(env.ARENA_ONLY==="1" && !path.startsWith("/api/arena/") && !path.startsWith("/api/admin/arena/")) fail(404,"Den här tjänsten innehåller endast Arenan.");
   if (path.startsWith("/api/arena/")) {
     const response = await arenaApi(request, env);
     if (response) return response;
@@ -132,8 +142,11 @@ async function api(
       "Set-Cookie": cookie(request, token, 8 * 3600),
     });
   }
+  if (path.startsWith("/api/admin/arena/")) {
+    if(!hasArenaStationCookie(request)) await requireAdmin(request,env);
+    return arenaAdminApi(request,env);
+  }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
-  if (path.startsWith("/api/admin/arena/")) return arenaAdminApi(request, env);
   if (path.startsWith("/api/admin/launch/")) {
     const response = await launchResetApi(request, env);
     if (response) return response;
@@ -436,7 +449,7 @@ export default {
     const url = new URL(request.url);
     let response: Response;
     try {
-response = url.pathname.startsWith("/api/")
+response = env.ARENA_ONLY==="1" && url.pathname==="/" ? Response.redirect(new URL("/arena",url).toString(),302) : url.pathname.startsWith("/api/")
         ? await api(request, env, context)
         : env.ASSETS
           ? await env.ASSETS.fetch(request)
@@ -458,6 +471,7 @@ response = url.pathname.startsWith("/api/")
       );
     }
     const headers = new Headers(response.headers);
+    const renewal=renewedArenaCookie(request);if(renewal && !headers.has("Set-Cookie"))headers.set("Set-Cookie",renewal);
     headers.set("X-Content-Type-Options", "nosniff");
     headers.set("Referrer-Policy", "same-origin");
     headers.set("X-Frame-Options", "DENY");

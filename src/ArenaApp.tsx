@@ -5,6 +5,8 @@ import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaP
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
 import ArenaDialog from "./ArenaDialog";
 import ArenaAdmin from "./ArenaAdmin";
+import ArenaAccount from "./ArenaAccount";
+import { ArenaGroups, ArenaSuperadmin } from "./ArenaNetwork";
 import { arenaPeriodLabel } from "./arena-dates";
 import { arenaProductImage } from "./arena-product-images";
 import { arenaStartActivities } from "./arena-start";
@@ -126,6 +128,9 @@ function CelebrationCard({ event }: { event: Celebration }) {
   </div>;
 }
 export default function ArenaApp() {
+  if(window.location.pathname.startsWith("/arena/superadmin"))return <ArenaSuperadmin />;
+  if(window.location.pathname.startsWith("/arena/groups"))return <ArenaGroups />;
+  if(["/arena/account","/arena/join","/arena/login"].includes(window.location.pathname))return <ArenaAccount />;
   return window.location.pathname.startsWith("/arena/admin") ? <ArenaAdmin /> : <ArenaHome />;
 }
 function ArenaHome() {
@@ -156,7 +161,7 @@ function ArenaHome() {
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, []);
   const bootstrap = useCallback(async () => {
-    try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { setError((e as Error).message); }
+    try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { if(e instanceof HttpError && e.status===401)window.location.assign("/arena/account");else setError((e as Error).message); }
   }, []);
   useEffect(() => {
     document.documentElement.classList.add("arena-view");
@@ -186,7 +191,7 @@ function ArenaHome() {
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
       const primary=achievements?.[0];
-      const burst: Celebration = { key: registration.id, points: registration.points_awarded,tbOre:registration.tb_ore_awarded??null, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements?.slice(1).map(e=>`${e.text} ${e.scope}`) };
+      const burst: Celebration = { key: registration.id, points: registration.points_awarded,tbOre:registration.tb_ore_awarded??null, text: `${name}, snyggt jobbat!`, special: false, kind: "points", sellerId, name, activity: pending.activity,...primary,secondary:achievements ? [...new Set(achievements.slice(1).map(e=>`${e.text} ${e.scope}`))] : undefined };
       setReceipt({ registration, requestId: pending.requestId, name }); setSelection(null);
       if (lastCelebrated.current !== registration.id) {
         lastCelebrated.current = registration.id;
@@ -250,7 +255,7 @@ function ArenaHome() {
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
     </main>
-    <div className="arena-utility"><a href="/station"><ArrowLeft /> Stationsdashboard</a><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
+    <div className="arena-utility"><div className="arena-utility-links">{data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
       <div><BarChart3 aria-hidden="true" /><strong>{stats ? num(stats.today.count) : "—"}</strong><span>Registreringar</span></div>
       <div><Star aria-hidden="true" /><strong>{stats ? num(stats.today.points) : "—"}</strong><span>Poäng idag</span></div>
@@ -270,6 +275,7 @@ function ArenaHome() {
       <PersonDetails person={person} stats={stats!} onClose={() => setPersonId(null)} />
     </ArenaDialog>}
     {panel === "leaders" && <ArenaDialog title="Topplistor & statistik" className="arena-dialog-leaders" eyebrow="LAGETS RESULTAT" onClose={() => setPanel(null)}>{controls}
+      <a className="arena-network-link" href="/arena/groups"><Users /> Gemensamma topplistor</a>
       <label>Mått<select aria-label="Mått" value={metric} onChange={e=>setMetric(e.target.value)}><option value="points">Poäng</option><option value="tb">TB</option><option value="count">Antal registreringar</option></select></label>
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
       <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={p => { setPanel(null); setPersonId(p.id); }} />

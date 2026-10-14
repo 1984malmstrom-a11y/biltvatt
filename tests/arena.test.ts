@@ -15,7 +15,7 @@ function setup() {
   const prepare = (sql: string) => {
     let values: (string | number | null | Uint8Array)[] = [];
     const statement = {
-      bind: (...args: (string | number | null | ArrayBuffer)[]) => { values = args.map(v => v instanceof ArrayBuffer ? new Uint8Array(v) : v); return statement; },
+      bind: (...args: (string | number | null | ArrayBuffer)[]) => { if(args.length>100)throw new Error("D1 parameter limit exceeded");values = args.map(v => v instanceof ArrayBuffer ? new Uint8Array(v) : v); return statement; },
       first: async () => arena.prepare(sql).get(...values) ?? null,
       all: async () => ({ results: arena.prepare(sql).all(...values), success: true }),
       run: async () => /^\s*(SELECT|WITH)\b/i.test(sql) ? { results:arena.prepare(sql).all(...values),meta:{changes:0},success:true } : ({ meta: { changes: Number(arena.prepare(sql).run(...values).changes) }, success: true }),
@@ -116,6 +116,11 @@ describe("Arena dataintegritet och stationsisolering", () => {
     await f.call(`/arena/registrations/${response.registration.id}/void`,"POST",{request_id:request});
     expect(await (await f.registration(activity,request,"mastertest:p")).json()).toMatchObject({registration:{voided_at:expect.any(String)}});
     expect(f.arena.prepare("SELECT COUNT(*) n FROM arena_registration_achievements WHERE registration_id=?").get(response.registration.id)!.n).toBe(1);
+  });
+  it("registrering och atomic achievement-snapshots fungerar med fler än 19 aktiva mål",async()=>{
+    const f=setup(),cookie=await f.ready(),activity=await f.create(cookie,2),today=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm"}).format(new Date());
+    for(let i=0;i<40;i++)f.arena.prepare("INSERT INTO arena_personal_goals(id,station_id,seller_id,period_type,start_date,end_date,target_points,created_at,updated_at) VALUES(?,'mastertest','mastertest:emma','custom',?,?,2,'now','now')").run(`large-goal-${i}`,today,today);
+    const r=await f.registration(activity);expect(r.status).toBe(200);expect((await r.json() as {achievements:{kind:string}[]}).achievements.filter(e=>e.kind==="personal-goal")).toHaveLength(40);
   });
   it("hindrar korsläsning och korsskrivning av aktiviteter, säljare, bilder och ångring", async () => {
     const f = setup(), cookie = await f.ready(), a = await f.create(cookie), request = crypto.randomUUID();

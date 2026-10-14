@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ImagePlus, Pencil, Plus, Save, Settings } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import { ArenaActivityButton } from "./ArenaApp";
-import type { ArenaActivity, ArenaBootstrap, ArenaCampaign, ArenaGoal } from "../shared/arena";
+import type { ArenaActivity, ArenaBootstrap, ArenaCampaign, ArenaGoal, ArenaSeller } from "../shared/arena";
 import { arenaNumber as num } from "../shared/arena";
 import { arenaDecimalMoney, arenaMoney, parseArenaMoney } from "../shared/arena-money";
 import { normalizeArenaImage } from "./arena-images";
 import { arenaDay as day, arenaDateSpan, arenaPeriodDates, arenaPeriodLabel, arenaPeriodStatus, type ArenaPeriod } from "./arena-dates";
 
-type Config = { activities: ArenaActivity[]; campaigns: ArenaCampaign[]; station_goals: ArenaGoal[]; personal_goals: ArenaGoal[] };
+type Config = { activities: ArenaActivity[]; campaigns: ArenaCampaign[]; station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];sellers?:ArenaSeller[] };
 const blankActivity = (): ArenaActivity => ({ id: "", name: "", offer_text: "", price_text: "", category: "", points: 1, image_key: null, sort_order: 0, active: 1 });
 const blankCampaign = () => ({ id: "", name: "", activity_id: "", start_date: day(), end_date: day(), target_count: "", target_points: "", active: 1 });
 const blankGoal = () => ({ id: "", seller_id: "", period_type: "custom", start_date: day(), end_date: day(), target_points: 100 });
 
 export default function ArenaAdmin() {
   const [authorized, setAuthorized] = useState<boolean | null>(null), [pin, setPin] = useState("");
+  const [accountRequired,setAccountRequired]=useState(false),[seller,setSeller]=useState({id:"",name:"",color:"#49caff",active:1});
   const [config, setConfig] = useState<Config | null>(null), [bootstrap, setBootstrap] = useState<ArenaBootstrap | null>(null);
   const [tab, setTab] = useState("activities"), [activity, setActivity] = useState(blankActivity), [campaign, setCampaign] = useState(blankCampaign), [goal, setGoal] = useState(blankGoal);
   const [tbKronor,setTbKronor]=useState("0,00");
@@ -28,7 +29,8 @@ export default function ArenaAdmin() {
   async function load() {
     try {
       // Bootstrap only syncs the existing station register; Arena has no separate staff editor.
-      const b = await api<ArenaBootstrap>("/arena/bootstrap");
+      let b:ArenaBootstrap;
+      try{b=await api<ArenaBootstrap>("/arena/bootstrap");}catch(e){if(e instanceof HttpError && [401,403].includes(e.status)){setAccountRequired(true);setAuthorized(false);return;}throw e;}
       const c = await api<Config>("/admin/arena/config");
       setBootstrap(b); setConfig(c); setAuthorized(true);
     } catch (e) { if (e instanceof HttpError && e.status === 401) setAuthorized(false); else setError((e as Error).message); }
@@ -44,12 +46,13 @@ export default function ArenaAdmin() {
   }
   const field = (label: string, value: string | number, onChange: (v: string) => void, type = "text", required = false) => <label>{label}<input type={type} value={value} onChange={e => onChange(e.target.value)} required={required} maxLength={type === "text" ? 80 : undefined} step={type === "number" ? "0.01" : undefined} min={type === "number" ? 0 : undefined} /></label>;
   const save = <button className="arena-action" disabled={busy}><Save size={18} /> {busy ? "Sparar…" : "Spara"}</button>;
-  return <div className="arena-admin arena-theme"><header className="arena-admin-header"><a href="/arena"><ArrowLeft /> Till Arenan</a><h1><Settings /> Arena-admin</h1><a href="/station/admin">Stationsadmin</a></header>
+  return <div className="arena-admin arena-theme"><header className="arena-admin-header"><a href="/arena"><ArrowLeft /> Till Arenan</a><h1><Settings /> Arena-admin</h1><a href={bootstrap?.station.kind==="arena" ? "/arena/account":"/station/admin"}>{bootstrap?.station.kind==="arena" ? "Stationskonto":"Stationsadmin"}</a></header>
     {error && <p className="arena-error" role="alert">{error}</p>}{notice && <p className="arena-notice" role="status">{notice}</p>}
-    {authorized === false ? <form className="arena-login arena-panel" onSubmit={e => { e.preventDefault(); void action(async () => { await api("/admin/login", send("POST", { pin })); setPin(""); }); }}>
+    {authorized === false && accountRequired ? <section className="arena-login arena-panel"><h2>Stationskonto krävs</h2><p>Logga in på ett aktivt stationskonto. Väntande stationer behöver godkännas först.</p><a className="arena-gold-action" href="/arena/account">Logga in / Anslut station</a></section> : authorized === false ? <form className="arena-login arena-panel" onSubmit={e => { e.preventDefault(); void action(async () => { await api("/admin/login", send("POST", { pin })); setPin(""); }); }}>
       <h2>Logga in som stationsadmin</h2><p>Samma administratörssession som i Tvättligan och stationsdashboarden.</p><label>Administratörs-PIN<input type="password" inputMode="numeric" autoComplete="current-password" value={pin} onChange={e => setPin(e.target.value)} required maxLength={12} /></label><button className="arena-action" disabled={busy}>Logga in</button>
     </form> : !config ? <p role="status">Hämtar administrationen…</p> : <>
-      <nav className="arena-admin-tabs" aria-label="Arena-administration">{[["activities", "Aktiviteter"], ["campaigns", "Kampanj / fokus"], ["goals", "Stationsmål & personliga mål"]].map(([value, label]) => <button key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setNotice(""); }}>{label}</button>)}<a href="/">Personal hanteras i Tvättligan → Admin → Personal</a></nav>
+      <nav className="arena-admin-tabs" aria-label="Arena-administration">{[["activities", "Aktiviteter"], ["campaigns", "Kampanj / fokus"], ["goals", "Stationsmål & personliga mål"],...(bootstrap?.station.kind==="arena" ? [["sellers","Säljare"]]:[])].map(([value, label]) => <button key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setNotice(""); }}>{label}</button>)}{bootstrap?.station.kind!=="arena" && <a href="/">Personal hanteras i Tvättligan → Admin → Personal</a>}</nav>
+      {tab==="sellers" && bootstrap?.station.kind==="arena" && <div className="arena-admin-grid"><section className="arena-panel"><h2>Stationens säljare</h2><p>Arkivering bevarar säljarens historik.</p><button className="arena-action" onClick={()=>setSeller({id:"",name:"",color:"#49caff",active:1})}>Ny säljare</button><ul className="arena-admin-list">{config.sellers?.map(s=><li key={s.id}><button aria-label={`Redigera säljare: ${s.name}`} onClick={()=>setSeller({id:s.id,name:s.name,color:s.color,active:s.active})}>{s.name}<small>{s.active ? "Aktiv":"Arkiverad"}</small></button></li>)}</ul></section><form className="arena-panel arena-form" onSubmit={e=>{e.preventDefault();void action(async()=>{const {id,...values}=seller;const r=await api<{id:string}>(`/admin/arena/sellers${id ? `/${id}`:""}`,send(id?"PATCH":"POST",values));setSeller(s=>({...s,id:r.id}));});}}><h2>{seller.id ? "Redigera säljare":"Ny säljare"}</h2><label>Säljarnamn<input value={seller.name} onChange={e=>setSeller(s=>({...s,name:e.target.value}))} maxLength={80} required /></label><label>Färg<input type="color" value={seller.color} onChange={e=>setSeller(s=>({...s,color:e.target.value}))} /></label><label className="arena-check"><input type="checkbox" checked={seller.active===1} onChange={e=>setSeller(s=>({...s,active:e.target.checked ? 1:0}))} />Aktiv säljare</label>{save}</form></div>}
       {tab === "activities" && <div className="arena-admin-grid"><section className="arena-panel"><h2>Aktiviteter</h2><p>Välj en post för att redigera. Arkivering bevarar alla historiska registreringar.</p><button className="arena-action" onClick={() => { setActivity(blankActivity()); setTbKronor("0,00");setBlob(null); }}><Plus size={18} /> Ny aktivitet</button>
         <ul className="arena-admin-list">{config.activities.map(a => <li key={a.id}><button className="arena-edit-item" aria-label={`Redigera aktivitet: ${a.name}`} aria-pressed={activity.id === a.id} onClick={() => { setActivity(a);setTbKronor(arenaDecimalMoney(a.tb_ore??0)); setBlob(null); }}><span>{a.name}<small>{a.category || "Utan kategori"} · Ordning {a.sort_order + 1} · {a.active ? "Aktiv" : "Arkiverad"}</small></span><strong>{num(a.points)} p<small>{arenaMoney(a.tb_ore??0)} TB</small></strong><Pencil className="arena-edit-icon" aria-hidden="true" /></button></li>)}</ul>
       </section><form className="arena-panel arena-form" onSubmit={e => { e.preventDefault(); void action(async () => {

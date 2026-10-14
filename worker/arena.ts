@@ -3,7 +3,8 @@ import { body, checkFields, fail, json, text } from "./http";
 import { arenaUUID } from "./arena-model";
 import { arenaStats, currentCampaign } from "./arena-stats";
 import type { ArenaRegistration } from "../shared/arena";
-import { stationId } from "./station-config";
+import { resolveArenaStation } from "./arena-auth";
+import { arenaGroupApi } from "./arena-network";
 import { achievementScopes } from "./arena-achievements";
 import { evaluateArenaAchievements, type EvaluatedAchievement } from "../shared/arena-achievements";
 
@@ -22,6 +23,7 @@ export async function arenaApi(
   const method = request.method;
 
   if (!path.startsWith("/api/arena/")) return null;
+  if(url.searchParams.has("station_id")) fail(400,"Stationsidentiteten kan inte väljas i anropet.");
 
   if (!env.ARENA_DB) {
     return json(
@@ -31,8 +33,9 @@ export async function arenaApi(
   }
 
   const arena = env.ARENA_DB;
-  const key = stationId(env);
+  const identity=await resolveArenaStation(request,env),key=identity.key;
   const now = new Date().toISOString();
+  if(path.startsWith("/api/arena/groups")) return arenaGroupApi(request,arena,key);
 
   if (path === "/api/arena/stats" && method === "GET") return json(await arenaStats(arena, key, url));
   const image = path.match(/^\/api\/arena\/activity-images\/([a-f0-9-]{36})$/);
@@ -41,7 +44,7 @@ export async function arenaApi(
       .bind(image[1], key).first<{ mime_type: string; image_bytes: ArrayBuffer }>();
     if (!row) return fail(404, "Bilden finns inte.");
     return new Response(new Uint8Array(row.image_bytes), { headers: {
-      "Content-Type": row.mime_type, "Cache-Control": "private, max-age=86400, immutable", "X-Content-Type-Options": "nosniff",
+      "Content-Type": row.mime_type, "Cache-Control": "private, max-age=86400, immutable", "Vary":"Cookie", "X-Content-Type-Options": "nosniff",
     } });
   }
   if (path === "/api/arena/registrations" && method === "POST") {
@@ -52,21 +55,24 @@ export async function arenaApi(
       .bind(requestId, key).first<ArenaRegistration>();
     let registration = await lookup();
     if (!registration) {
-      const seller = await arena.prepare("SELECT external_staff_id FROM arena_sellers WHERE id=? AND station_id=? AND active=1 AND source='station'")
-        .bind(sellerId, key).first<{ external_staff_id: string }>();
-      if (!seller || !await env.DB.prepare("SELECT id FROM staff WHERE id=? AND active=1 AND deleted_at IS NULL").bind(seller.external_staff_id).first())
+      const seller = await arena.prepare("SELECT external_staff_id,source FROM arena_sellers WHERE id=? AND station_id=? AND active=1")
+        .bind(sellerId, key).first<{ external_staff_id: string | null;source:string }>();
+      if(identity.kind==="integrated" && !identity.staffDB) fail(503,"Stationens personaldatabas är inte konfigurerad på den här Arena-servern.");
+      if (!seller || (identity.kind==="arena" ? seller.source!=="arena" : seller.source!=="station" || !await identity.staffDB!.prepare("SELECT id FROM staff WHERE id=? AND active=1 AND deleted_at IS NULL").bind(seller.external_staff_id).first()))
         fail(400, "Säljaren är inte aktiv. Uppdatera Arenan.");
       // SELECT snapshots points and campaign at the same instant as the atomic insert.
-      const scopes=await achievementScopes(arena,key,activityId,data.achievement_context,new Date(now));
-      const result=await arena.batch([scopes.statement(),arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,tb_ore_awarded,registered_at,created_at)
+      const scopes=await achievementScopes(arena,key,activityId,data.achievement_context,new Date(now),sellerId);
+      const beforeQueries=scopes.statements();
+      const result=await arena.batch([...beforeQueries,arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,tb_ore_awarded,registered_at,created_at)
         SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=? AND c.end_at>? ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,a.tb_ore,?,?
         FROM arena_sellers s JOIN arena_activities a ON a.station_id=s.station_id
-        WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND a.active=1`)
-        .bind(crypto.randomUUID(), key, now, now, requestId, now, now, sellerId, activityId, key),scopes.statement()]);
+        WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND a.active=1
+        AND EXISTS(SELECT 1 FROM arena_stations station WHERE station.id=s.station_id AND station.status='active')`)
+        .bind(crypto.randomUUID(), key, now, now, requestId, now, now, sellerId, activityId, key),...scopes.statements()]);
       registration = await lookup();
-      if (registration && result[1].meta.changes) {
-        const before=scopes.snapshot(result[0].results as unknown as Parameters<typeof scopes.snapshot>[0]);
-        const after=scopes.snapshot(result[2].results as unknown as Parameters<typeof scopes.snapshot>[0]);
+      if (registration && result[beforeQueries.length].meta.changes) {
+        const before=scopes.snapshot(result.slice(0,beforeQueries.length).flatMap(r=>r.results) as unknown as Parameters<typeof scopes.snapshot>[0]);
+        const after=scopes.snapshot(result.slice(beforeQueries.length+1).flatMap(r=>r.results) as unknown as Parameters<typeof scopes.snapshot>[0]);
         const events=evaluateArenaAchievements(before,after,sellerId);
         await arena.prepare("INSERT OR IGNORE INTO arena_registration_achievements(registration_id,station_id,events_json,created_at) VALUES(?,?,?,?)")
           .bind(registration.id,key,JSON.stringify(events),now).run();
@@ -92,6 +98,8 @@ export async function arenaApi(
   }
 
   if (path === "/api/arena/bootstrap" && method === "GET") {
+    if(identity.kind==="integrated" && !identity.staffDB) fail(503,"Stationens personaldatabas är inte konfigurerad på den här Arena-servern.");
+    if(identity.kind==="integrated") {
     await arena
       .prepare(
         `INSERT INTO arena_stations(
@@ -112,7 +120,7 @@ export async function arenaApi(
       )
       .run();
 
-    const localStaff = await env.DB
+    const localStaff = await identity.staffDB!
       .prepare(
         `SELECT id,name,color
          FROM staff
@@ -172,11 +180,12 @@ export async function arenaApi(
     ];
 
     await arena.batch(syncStatements);
+    }
 
     const [station, sellers, activities, campaign] = await Promise.all([
       arena
         .prepare(
-          `SELECT id,station_key,name,status
+          `SELECT id,station_key,name,status,kind
            FROM arena_stations
            WHERE id=?`,
         )

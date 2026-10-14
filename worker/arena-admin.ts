@@ -1,12 +1,13 @@
 import type { Env } from "./index";
-import { body, fail, json } from "./http";
+import { body, checkFields, fail, json, text } from "./http";
 import { activityInput, arenaImage, campaignInput, goalInput } from "./arena-model";
-import { stationId } from "./station-config";
+import { resolveArenaStation } from "./arena-auth";
 
 // Called only after requireAdmin in worker/index.ts.
 export async function arenaAdminApi(request: Request, env: Env): Promise<Response> {
   if (!env.ARENA_DB) return fail(503, "Arena-databasen är inte konfigurerad.");
-  const db = env.ARENA_DB, key = stationId(env), path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
+  const identity=await resolveArenaStation(request,env);
+  const db = env.ARENA_DB, key = identity.key, path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
   if (path === "/api/admin/arena/config" && method === "GET") {
     const queries = [
       "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active FROM arena_activities WHERE station_id=? ORDER BY sort_order,id",
@@ -15,7 +16,20 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
       "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? ORDER BY start_date DESC",
     ];
     const [activities, campaigns, station_goals, personal_goals] = await Promise.all(queries.map(sql => db.prepare(sql).bind(key).all()));
-    return json({ activities: activities.results, campaigns: campaigns.results, station_goals: station_goals.results, personal_goals: personal_goals.results });
+    const sellers=identity.kind==="arena" ? await db.prepare("SELECT id,external_staff_id,name,color,active,source FROM arena_sellers WHERE station_id=? ORDER BY name COLLATE NOCASE,id").bind(key).all() : {results:[]};
+    return json({ activities: activities.results, campaigns: campaigns.results, station_goals: station_goals.results, personal_goals: personal_goals.results,sellers:sellers.results });
+  }
+  const sellerRoute=path.match(/^\/api\/admin\/arena\/sellers(?:\/([a-zA-Z0-9:_-]{1,120}))?$/);
+  if(sellerRoute) {
+    if(identity.kind!=="arena") fail(403,"Integrerade stationer hanterar personal i sin stationsdashboard.");
+    const id=sellerRoute[1];if(!((method==="POST" && !id) || (method==="PATCH" && id))) fail(405,"Metoden stöds inte.");
+    const data=await body(request);checkFields(data,["name","color","active"]);
+    const name=text(data.name,"Säljarnamn"),color=text(data.color,"Färg",7);
+    if(!/^#[a-f0-9]{6}$/i.test(color) || ![0,1].includes(data.active as number)) fail(400,"Välj en giltig färg och aktiv status.");
+    const sellerId=id??crypto.randomUUID();
+    const result=id ? await db.prepare("UPDATE arena_sellers SET name=?,color=?,active=?,updated_at=? WHERE id=? AND station_id=? AND source='arena'").bind(name,color,data.active as number,now,sellerId,key).run()
+      : await db.prepare("INSERT INTO arena_sellers(id,station_id,external_staff_id,source,name,color,active,created_at,updated_at) VALUES(?,?,NULL,'arena',?,?,?,?,?)").bind(sellerId,key,name,color,data.active as number,now,now).run();
+    if(!result.meta.changes) fail(404,"Säljaren finns inte.");return json({id:sellerId},id?200:201);
   }
   if (path === "/api/admin/arena/activity-images" && method === "POST") {
     if (!await db.prepare("SELECT id FROM arena_stations WHERE id=?").bind(key).first()) fail(409, "Öppna Arenan först för att synka stationen.");
