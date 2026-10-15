@@ -15,7 +15,7 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   if(path.startsWith("/api/admin/arena/reports"))return reportsApi(request,db,key,{id:key,display_name:identity.station?.name??key,role:"station"});
   if (path === "/api/admin/arena/config" && method === "GET") {
     const queries = [
-      "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active,arena_category_id FROM arena_activities WHERE station_id=? ORDER BY sort_order,id",
+      "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active,arena_category_id FROM arena_activities WHERE station_id=? AND id NOT LIKE 'temp:%' ORDER BY sort_order,id",
       "SELECT id,name,activity_id,start_at,end_at,target_count,target_points,active FROM arena_campaigns WHERE station_id=? ORDER BY start_at DESC",
       "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? ORDER BY start_date DESC",
       "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? ORDER BY start_date DESC",
@@ -60,6 +60,7 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   }
   const data = await body(request);
   if (kind === "activities") {
+    if(itemId?.startsWith("temp:"))fail(403,"Fight-aktiviteten hanteras av tävlingen, inte ordinarie aktivitetsregister.");
     const a = activityInput(data);
     if (a.image_key && !await db.prepare("SELECT id FROM arena_activity_images WHERE id=? AND station_id=?").bind(a.image_key, key).first()) fail(400, "Bilden tillhör inte stationen.");
     const result = itemId ? await db.prepare(`UPDATE arena_activities SET name=?,offer_text=?,price_text=?,points=?,image_key=?,category=?,sort_order=?,active=?,tb_ore=COALESCE(?,tb_ore),display_mode=COALESCE(?,display_mode),arena_category_id=?,updated_at=? WHERE id=? AND station_id=?`)

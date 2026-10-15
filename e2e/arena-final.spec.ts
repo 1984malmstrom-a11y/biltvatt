@@ -15,7 +15,7 @@ for(const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]){
   await page.setViewportSize({width,height});
   await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:{station,sellers:people,activities,campaign:null}}));
   await page.route('**/api/admin/arena/config',r=>r.fulfill({json:{activities,campaigns:[],station_goals:[],personal_goals:[],sellers:people}}));
-  await page.goto('/arena/admin');await page.getByRole('button',{name:'Profilbilder',exact:true}).click();await expect(page.locator('.arena-people-grid [data-avatar-kind=demo]')).toHaveCount(5);await capture(page,`admin-profile-upload-${width}x${height}`);
+  await page.goto('/arena/admin');await page.getByRole('button',{name:'Profilbilder',exact:true}).click();await expect(page.locator('.arena-people-grid [data-avatar-kind=initial]')).toHaveCount(5);await capture(page,`admin-profile-upload-${width}x${height}`);
   await page.route('**/api/arena/auth/superadmin/session',r=>r.fulfill({json:{authenticated:true,actor:owner}}));
   await page.route('**/api/arena/superadmin/stations',r=>r.fulfill({json:{stations:[station]}}));
   await page.route('**/api/arena/superadmin/groups',r=>r.fulfill({json:{groups:[]}}));
@@ -46,7 +46,7 @@ test('Final: native local Worker verifies Owner, invites/revokes Superadmin, upl
  expect((await page.request.patch(`/api/arena/superadmin/accounts/${session.actor.id}`,{data:{status:'disabled',confirm:'CONFIRM'}})).status()).toBe(403);
  const testHeaders={'CF-Connecting-IP':`198.18.${Math.floor(Math.random()*200)}.${Math.floor(Math.random()*200)}`};const other=await browser.newContext({extraHTTPHeaders:testHeaders}),stationPage=await other.newPage();const stationPassword='Native local station password!';const signup=await stationPage.request.post('/api/arena/auth/signup',{data:{name:'Final local review station',email:`station-${suffix}@example.test`,password:stationPassword}});expect(signup.status()).toBe(201);const stationId=(await signup.json()).station.id;expect((await page.request.patch(`/api/arena/superadmin/stations/${stationId}`,{data:{status:'active'}})).status()).toBe(200);
  const seller=await (await stationPage.request.post('/api/admin/arena/sellers',{data:{name:'Review Peter',color:'#123456',active:1}})).json();
- await stationPage.goto('/arena/admin');await stationPage.getByRole('button',{name:'Profilbilder',exact:true}).click();await expect(stationPage.locator('[data-avatar-kind=demo]')).toHaveCount(1);
+ await stationPage.goto('/arena/admin');await stationPage.getByRole('button',{name:'Profilbilder',exact:true}).click();await expect(stationPage.locator('[data-avatar-kind=initial]')).toHaveCount(1);
  const png=await stationPage.evaluate(async()=>{const img=new Image();img.src='/arena-showroom/portraits.webp';await img.decode();const c=document.createElement('canvas');c.width=c.height=384;c.getContext('2d')!.drawImage(img,0,0,img.naturalWidth/4,img.naturalHeight/2,0,0,384,384);return c.toDataURL('image/png').split(',')[1];});
  await stationPage.getByLabel('Profilbild för Review Peter').setInputFiles({name:'local-test-portrait.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await expect(stationPage.locator('[data-avatar-kind=uploaded]')).toHaveCount(1);await capture(stationPage,'native-profile-upload-success');
  const boot=await (await stationPage.request.get('/api/arena/bootstrap')).json(),profile=boot.sellers.find((s:{id:string})=>s.id===seller.id).profile_url;expect((await stationPage.request.get(profile)).status()).toBe(200);

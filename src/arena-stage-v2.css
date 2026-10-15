@@ -1,0 +1,54 @@
+/* Static stage layers are painted once. Only the focus perimeter moves. */
+.arena-stage-atmosphere{position:absolute;inset:-3% -2% -3%;z-index:-1;pointer-events:none;overflow:hidden;border-radius:38% 38% 15% 15%;contain:paint;background:radial-gradient(ellipse at 50% 40%,#18533f66,transparent 63%),linear-gradient(180deg,#020d0980,transparent 42%,#010906a0)}
+.arena-stage-atmosphere i{position:absolute;display:block;pointer-events:none}.arena-stage-architecture{inset:5% 7% 14%;border:1px solid #80b59919;border-bottom:0;border-radius:48% 48% 5% 5%;background:repeating-linear-gradient(90deg,transparent 0 15%,#5eac8614 15.1% 15.35%,transparent 15.5% 30%);box-shadow:inset 0 22px 35px #0005}
+.arena-stage-beams{inset:0;background:linear-gradient(112deg,transparent 9%,#daca7b0a 15%,#c5d5a21f 17%,transparent 27%),linear-gradient(248deg,transparent 9%,#6bcc8c0a 15%,#67d3981c 17%,transparent 27%),radial-gradient(ellipse at 50% 4%,#ecdc8d24,transparent 32%);clip-path:polygon(0 0,100% 0,87% 100%,13% 100%)}
+.arena-stage-floor{left:4%;right:4%;bottom:-3%;height:32%;border:1px solid #d6c57738;border-radius:50%;transform:perspective(450px) rotateX(54deg);transform-origin:center;background:radial-gradient(ellipse,#66cf9938,transparent 68%),repeating-radial-gradient(ellipse at center,transparent 0 23%,#a8cb9a18 23.5% 24%,transparent 24.5% 34%);box-shadow:0 -3px 16px #57a97e15,inset 0 2px 0 #cdbd7533}
+.arena-stage-sparks{inset:6%;opacity:.6;background:radial-gradient(circle at 18% 32%,#d9d28a 0 1px,transparent 2px),radial-gradient(circle at 79% 16%,#a8ceac 0 1px,transparent 2px),radial-gradient(circle at 42% 70%,#e6d28b 0 1px,transparent 2px),radial-gradient(circle at 89% 72%,#5ace98 0 1px,transparent 2px),radial-gradient(circle at 6% 54%,#a1d5b2 0 1px,transparent 2px),radial-gradient(circle at 66% 93%,#bdbb78 0 1px,transparent 2px)}
+@media(min-width:951px){
+ .arena-shell{--arena-left-width:clamp(242px,22.75vw,433px)}
+ .arena-stage-start .arena-satellite{width:min(24.5cqw,32cqh);height:min(24.5cqw,32cqh)}
+ .arena-stage-start .arena-focus-slot{width:min(39.8cqw,50cqh);height:min(39.8cqw,50cqh)}
+ .arena-cluster,.arena-main:has(.arena-state-panel.is-fight) .arena-cluster{transform:none}
+ .arena-shell .arena-leaderboard,.arena-shell .arena-recent{border-color:#6fa08740;background:linear-gradient(125deg,#0b2419b8,#04110bb8);box-shadow:inset 0 1px 0 #d8cf8b10,0 8px 25px #0002;border-radius:15px}
+ .arena-shell .arena-leaderboard>header,.arena-shell .arena-recent>header{padding-inline:16px}
+ .arena-shell .arena-leaderboard .arena-leader-list button{padding-inline:15px;gap:10px;grid-template-columns:30px minmax(0,1fr) auto}
+ .arena-shell .arena-seller-cell{gap:10px}.arena-shell .arena-recent>.arena-recent-list{margin-inline:16px}.arena-shell .arena-leaderboard .arena-leader-avatar{width:43px;height:43px}
+ .arena-shell .arena-person-station{font-size:12px;line-height:1.2;margin:2px 0}.arena-shell .arena-recent-list li{gap:7px}.arena-shell .arena-recent-list .arena-feed-seller{gap:9px}.arena-shell .arena-recent-list time{font-size:12px}
+}
+@media(min-width:951px) and (max-height:900px){.arena-shell{--arena-left-width:22.75vw}.arena-shell .arena-leaderboard .arena-leader-list button{font-size:16px;padding-inline:12px;gap:8px}.arena-shell .arena-leaderboard .arena-leader-avatar{width:36px;height:36px}.arena-shell .arena-leader-list strong{font-size:23px}.arena-shell .arena-panel h2{font-size:17px}.arena-shell .arena-recent-list strong{font-size:15px}.arena-shell .arena-recent-list small{font-size:12px}}
+@media(min-width:951px) and (max-aspect-ratio:7/5){
+ .arena-shell{--arena-left-width:22vw}.arena-stage-start .arena-satellite{width:min(25.8cqw,28cqh);height:min(25.8cqw,28cqh)}.arena-stage-start .arena-focus-slot{width:min(40cqw,43cqh);height:min(40cqw,43cqh)}.arena-stage-start .satellite-2{left:13%}.arena-stage-start .satellite-3{left:87%}
+ .arena-shell .arena-leaderboard .arena-leader-list button{padding-inline:9px;gap:7px;grid-template-columns:24px minmax(0,1fr) auto}.arena-shell .arena-seller-cell{gap:7px}.arena-shell .arena-leaderboard .arena-leader-avatar{width:34px;height:34px}.arena-shell .arena-recent>.arena-recent-list{margin-inline:10px}.arena-shell .arena-leaderboard>header,.arena-shell .arena-recent>header{padding-inline:11px}.arena-shell .arena-person-station{font-size:11px}.arena-shell .arena-recent-list time{font-size:11px}
+}
+/* Sharp material edges, medium glow and a restrained wider halo. */
+.arena-stage-start .arena-orb{box-shadow:0 0 2px #e9e4af,0 0 7px #63dbab99,0 0 22px #36b87a50,0 0 36px #319b681c,inset 0 1px 8px #f4df9e35,inset 0 -12px 22px #0007}
+.arena-stage-start .arena-orb::after{inset:-4px;border:1px solid #e5cf7a66;opacity:1;box-shadow:0 0 9px #c8bd7040}
+.arena-stage-start .arena-orb-focus{box-shadow:0 0 3px #ffefb8,0 0 13px #e8cf7599,0 0 32px #3cc48f66,0 0 55px #39b6812b,inset 0 0 18px #d4bd6140}
+.arena-stage-start .arena-orb-focus::after{inset:-13px;border-color:#d9c67e66;box-shadow:0 0 14px #8acb8933;opacity:.55;animation:arena-feature-aura 8s ease-in-out infinite}
+@keyframes arena-feature-aura{50%{opacity:1;transform:scale(1.012)}}
+.arena-stage-start .arena-orb:not(:disabled):hover{box-shadow:0 0 3px #fff4c7,0 0 14px #d8c17480,0 0 30px #52cc9280,inset 0 0 18px #a6d49b35}.arena-stage-start .arena-orb:active{transform:scale(.98)}
+.arena-left-column{animation:arena-context-enter .24s ease both}.arena-shell .arena-leader-list button:disabled{opacity:1;cursor:default}.arena-shell .arena-recent-list li{animation:arena-feed-enter .3s ease both}
+@keyframes arena-context-enter{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}@keyframes arena-feed-enter{from{opacity:.55}to{opacity:1}}
+/* The crown and a true circular text baseline are one responsive insignia. */
+.arena-stage-start .arena-focus-cap{top:-29%;gap:0;width:100%;height:auto;overflow:visible}
+.arena-focus-insignia{position:relative;display:block;width:116%;height:48cqw;flex:none;pointer-events:none}
+.arena-focus-arc{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 2px #000)}
+.arena-focus-arc text{font:750 22px "Segoe UI",sans-serif;letter-spacing:1.45px;fill:var(--arena-gold);stroke:#efe3ac33;stroke-width:.3px;paint-order:stroke fill}
+.arena-stage-start .arena-focus-insignia .arena-crown{position:absolute;left:50%;top:-18%;transform:translateX(-50%);width:16cqw;height:16cqw;max-height:none;filter:drop-shadow(0 0 7px #ddcd7570)}
+.arena-stage-start .arena-focus-name{top:calc(100% + 31cqw)}
+@media(max-width:950px){.arena-stage-atmosphere{inset:4% 0 0}.arena-stage-start .arena-focus-cap{top:-28%}.arena-focus-arc text{font-size:22px;letter-spacing:1.2px}.arena-stage-start .arena-focus-name{top:calc(100% + 31cqw)}}
+/* Production identities have no invented face, including personal hero art. */
+[data-avatar-kind=initial]{display:inline-flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 45% 20%,#1c4735,#071a11 75%);border:1px solid var(--arena-gold-soft);box-shadow:inset 0 1px 0 #e8d68b25,0 0 10px #3fad7718;color:var(--arena-text);font-weight:650}
+.arena-avatar-letter{font-size:1em;line-height:1}.arena-seller-initial[data-avatar-kind=initial]{font-size:clamp(32px,4vw,64px)}.arena-leader-avatar[data-avatar-kind=initial]{font-size:22px}.arena-person-avatar[data-avatar-kind=initial]{font-size:52px}
+.arena-real-champion{border-radius:50%;aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse,#285440,#04140c);border:2px solid var(--arena-gold-soft);font-size:clamp(80px,16vh,180px)}.arena-real-champion img{width:100%;height:100%;object-fit:cover}.arena-real-champion>svg{width:40%;height:50%;fill:var(--arena-gold)}
+@media(prefers-reduced-motion:reduce){.arena-left-column,.arena-shell .arena-recent-list li,.arena-stage-start .arena-orb-focus::after{animation:none}.arena-stage-start .arena-orb{transition:none}}
+.arena-nav .has-fight-notice .arena-fight-nav-badge{background:linear-gradient(140deg,#f4e2a6,#b4953d);color:#06150d;border:1px solid #ead68b;box-shadow:0 0 9px #d7c37450,0 0 17px #52b87930}
+
+.arena-fight-sale-confirmation{font-size:10px;letter-spacing:.12em;color:var(--arena-muted)}
+/* Three real text lines in fight feed, with room for all five rows. */
+@media(min-width:951px){.arena-left-column[data-context=fight]{grid-template-rows:minmax(0,.99fr) minmax(0,1.09fr)}.arena-left-column[data-context=fight] .arena-feed-seller .arena-person-name{display:flex;gap:0}.arena-left-column[data-context=fight] .arena-person-name>strong{line-height:1.15}.arena-left-column[data-context=fight] .arena-recent-list .arena-person-station{margin:0;line-height:1.1}.arena-left-column[data-context=fight] .arena-recent-list .arena-feed-seller>span>small{margin-top:0;line-height:1.1}}
+@media(min-width:951px) and (max-height:900px){.arena-left-column[data-context=fight] .arena-recent>header,.arena-left-column[data-context=fight] .arena-leaderboard>header{min-height:50px;padding-block:6px}.arena-left-column[data-context=fight] .arena-leaderboard h2{font-size:16px;line-height:1.15}.arena-left-column[data-context=fight] .arena-recent h2{font-size:14px;line-height:1.1;white-space:normal;text-align:left}.arena-left-column[data-context=fight] .arena-recent>header>button{flex:1;min-width:0;padding:0}.arena-left-column[data-context=fight] .arena-live{flex:none;font-size:10px}.arena-left-column[data-context=fight] .arena-recent-list .arena-person-station{font-size:11px}.arena-left-column[data-context=fight] .arena-recent-list .arena-feed-seller>span>small{font-size:11px}.arena-left-column[data-context=fight] .arena-recent-list li{padding-block:2px}}
+/* One bounded cache surface for the unchanged static stage artwork. */
+.arena-stage-atmosphere{transform:translateZ(0)}
+.arena-state-panel .arena-fight-widget-teams em{width:100%;height:auto;aspect-ratio:1;max-width:40px;min-width:0;align-self:center;justify-self:center}
+@media(min-width:951px) and (max-aspect-ratio:7/5){.arena-state-panel .arena-fight-widget-teams{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)}}

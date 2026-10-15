@@ -1,5 +1,5 @@
 // Curated fictional showroom cast. These are demo art choices, not gender or
-// identity inference for real people. Production assignments stay ID-based.
+// identity inference for real people. Production uses uploaded photos or initials.
 export const arenaDemoIdentities:Readonly<Record<string,number>>=Object.freeze({
  peter:0,alva:1,sofia:5,erik:2,linnea:3,anton:11,julia:7,oskar:6,
  maja:14,felix:8,jonas:4,sara:10,emma:12,alex:13,marcus:15,lina:9,

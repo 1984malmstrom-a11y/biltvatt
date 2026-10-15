@@ -107,8 +107,8 @@ export async function arenaFightSummary(db:D1Database,station:string):Promise<Ar
     WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))
     ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1`).bind(station,instant,recent,instant).first<{id:string}>();
   if(!row)return null;const fight=await arenaFightView(db,row.id);
-  const {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,scoring_mode,day_win_points,day_tie_points,current_day,sudden_death,tie_break_reason,competition_id}=fight;
-  return {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,sudden_death,tie_break_reason,competition_id,...(scoring_mode==='daily'?{scoring_mode,day_win_points,day_tie_points,current_day}:{})};
+  const {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,scoring_mode,day_win_points,day_tie_points,current_day,sudden_death,tie_break_reason,competition_id,effective_start_at}=fight;
+  return {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,sudden_death,tie_break_reason,competition_id,effective_start_at,...(scoring_mode==='daily'?{scoring_mode,day_win_points,day_tie_points,current_day}:{})};
 }
 export async function refreshStationFights(db:D1Database,station:string) {
   const now=new Date().toISOString(),rows=await db.prepare(`SELECT f.id FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id WHERE s.station_id=? AND f.status IN ('scheduled','active') AND f.start_at<=? ORDER BY f.end_at LIMIT 32`).bind(station,now).all<{id:string}>();

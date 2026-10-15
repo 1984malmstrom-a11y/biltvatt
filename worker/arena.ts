@@ -1,3 +1,4 @@
+import {prepareTemporarySale} from './arena-temporary-activities';
 import {fightCenter} from './arena-challenges';
 import {competitionApi} from './arena-competitions';
 import {assignArenaIdentities} from "./arena-identities";
@@ -63,11 +64,12 @@ export async function arenaApi(
   if (path === "/api/arena/registrations" && method === "POST") {
     const data = await body(request);
     checkFields(data, ["request_id", "activity_id", "seller_id", "achievement_context"]);
-    const requestId = arenaUUID(data.request_id), activityId = text(data.activity_id, "Aktivitet", 80), sellerId = text(data.seller_id, "Säljare", 120);
+    const requestId = arenaUUID(data.request_id), activityId = text(data.activity_id, "Aktivitet", 360), sellerId = text(data.seller_id, "Säljare", 120);
     const lookup = () => arena.prepare(`SELECT id,seller_id,activity_id,points_awarded,tb_ore_awarded,registered_at,voided_at FROM arena_registrations WHERE request_id=? AND station_id=?`)
       .bind(requestId, key).first<ArenaRegistration>();
     let registration = await lookup();
     if (!registration) {
+      if(activityId.startsWith("temp:"))await prepareTemporarySale(arena,key,activityId);
       const seller = await arena.prepare("SELECT external_staff_id,source FROM arena_sellers WHERE id=? AND station_id=? AND active=1")
         .bind(sellerId, key).first<{ external_staff_id: string | null;source:string }>();
       if(identity.kind==="integrated" && !identity.staffDB) fail(503,"Stationens personaldatabas är inte konfigurerad på den här Arena-servern.");
@@ -79,7 +81,7 @@ export async function arenaApi(
       const result=await arena.batch([...beforeQueries,arena.prepare(`INSERT OR IGNORE INTO arena_registrations(id,station_id,seller_id,activity_id,campaign_id,request_id,points_awarded,tb_ore_awarded,registered_at,created_at)
         SELECT ?,?,s.id,a.id,(SELECT c.id FROM arena_campaigns c WHERE c.station_id=a.station_id AND c.activity_id=a.id AND c.active=1 AND c.start_at<=clock.instant AND c.end_at>clock.instant ORDER BY c.start_at DESC,c.id LIMIT 1),?,a.points,a.tb_ore,clock.instant,clock.instant
         FROM arena_sellers s JOIN arena_activities a ON a.station_id=s.station_id CROSS JOIN (SELECT strftime('%Y-%m-%dT%H:%M:%fZ','now') instant) clock
-        WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND a.active=1
+        WHERE s.id=? AND a.id=? AND s.station_id=? AND s.active=1 AND (a.active=1 OR (a.id LIKE 'temp:%' AND EXISTS(SELECT 1 FROM arena_temporary_fight_activities t JOIN arena_fights f ON f.id=t.fight_id WHERE t.id=substr(a.id,6) AND t.station_id=a.station_id AND t.start_at<=clock.instant AND (t.end_at>clock.instant OR json_extract(f.live_json,'$.sudden_death')=1) AND f.status<>'cancelled' AND f.result_json IS NULL)))
         AND EXISTS(SELECT 1 FROM arena_stations station WHERE station.id=s.station_id AND station.status='active')`)
         .bind(crypto.randomUUID(), key, requestId, sellerId, activityId, key),...scopes.statements()]);
       registration = await lookup();

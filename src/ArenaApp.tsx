@@ -16,9 +16,10 @@ import { arenaStartActivities } from "./arena-start";
 import type { EvaluatedAchievement } from "../shared/arena-achievements";
 import { arenaMoney, arenaReward } from "../shared/arena-money";
 import ArenaAvatar, {ArenaShowcaseProvider,useArenaShowcase} from "./ArenaAvatar";
+import ArenaFocusTitle from './ArenaFocusTitle';
 import ArenaStatePanel from "./ArenaStatePanel";
 import ArenaChampion from "./ArenaChampion";
-import {ArenaPersonName} from "./ArenaPersonContext";
+import {ArenaPersonName,ArenaPersonContext} from "./ArenaPersonContext";
 import {ArenaEmblem,ArenaCustomerBrandSlot} from "./ArenaBrand";
 import "./arena-theme.css";
 import "./arena.css";
@@ -27,9 +28,9 @@ import "./arena-brand.css";
 import "./arena-premium.css";
 import "./arena-identity.css";
 import "./arena-fight-nav.css";
+import "./arena-stage-v2.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
-const ArenaTemporaryConcept=lazy(()=>import("./ArenaTemporaryConcept"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
 const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
 const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
@@ -44,7 +45,7 @@ export const ArenaActivityButton = memo(function ArenaActivityButton({ activity,
 }) {
   return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
     aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${arenaReward(activity).replace("POÄNG","poäng")}`}>
-    {focus && <span className="arena-focus-cap"><Crown className="arena-crown" aria-hidden="true" /><span className="arena-focus-title">{campaignName || "LAGETS FOKUS"}</span><strong className="arena-focus-name">{activity.name}</strong></span>}
+    {focus && <span className="arena-focus-cap"><ArenaFocusTitle label={campaignName || "LAGETS FOKUS"}/><strong className="arena-focus-name">{activity.name}</strong></span>}
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
     </span>
@@ -68,24 +69,24 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
-const People=memo(function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
+const People=memo(function People({ stats, onPerson, highlightId, newLeaderId, limit,emptyMessage }: { stats: ArenaStats | null; onPerson?: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number;emptyMessage?:string }) {
   const value=(p:ArenaPerson)=>stats?.metric === "tb" ? arenaMoney(p.tb_ore??0) : num(stats?.metric === "count" ? p.count : p.points);
   const unit=stats?.metric === "tb" ? "TB" : stats?.metric === "count" ? "st" : "p";
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
-    <button onClick={() => onPerson(p)} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} avatarIndex={p.avatar_index} /><span><ArenaPersonName name={p.name}/>{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
-    </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
+    <button onClick={onPerson?() => onPerson(p):undefined} disabled={!onPerson} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
+      {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} avatarIndex={p.avatar_index} /><span><ArenaPersonName name={p.name} stationName={p.station_name}/>{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
+    </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">{emptyMessage??"Lägg till personal i stationens personalregister."}</li>}</ol>;
 });
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
 function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean }) {
   return <span className={`arena-live${error ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`}><i aria-hidden="true" />{error ? "PAUSAD" : !stats ? "HÄMTAR" : stats.recent ? "Live" : "SAKNAS"}</span>;
 }
-const RecentActivities=memo(function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
+const RecentActivities=memo(function RecentActivities({ stats, limit,fightMode=false }: { stats: ArenaStats | null; limit?: number;fightMode?:boolean }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
   return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id} className={row.display_mode === "tb" && row.tb_ore_awarded != null ? "is-tb" : undefined}>
-    <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} avatarIndex={row.avatar_index} /><span><ArenaPersonName name={row.seller_name}/><small>{row.activity_name}</small></span></span>
+    <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} avatarIndex={row.avatar_index} /><span><ArenaPersonName name={row.seller_name} stationName={row.station_name}/><small>{row.activity_name}</small></span></span>
     <b>{row.display_mode === "tb" && row.tb_ore_awarded != null ? `+${arenaMoney(row.tb_ore_awarded)} TB` : `+${num(row.points_awarded)} p`}</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
-  </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
+  </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? fightMode?"Fightens första kvalificerande försäljning väntar. Kör på!":"Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 });
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
@@ -115,13 +116,13 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
   if(event.fightEvent)return <FightAnnouncement event={event.fightEvent} seller={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}} activity={event.activity.name} reward={reward} secondary={event.secondary} />;
   if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-victory-hero">
-      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b>{event.kind==="leader" ? <ArenaChampion eventKey={event.key}/> : <ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" />}<Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
+      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b>{event.kind==="leader" ? <ArenaChampion eventKey={event.key} identity={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}}/> : <ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" />}<Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
       <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
         {event.kind!=="leader" && <strong className="arena-reward-seller">{event.name}</strong>}
         <div className="arena-victory-sale"><strong className="arena-reward-points">{reward}!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
         {isGoal && event.goal && <div className="arena-reward-goal"><Check aria-hidden="true" />{num(event.goal.points)} / {num(event.goal.target_points)} {event.goalMetric === "count" ? "försäljningar" : "poäng"}</div>}
         {event.secondary?.length ? <p className="arena-victory-secondary">{event.secondary.join(" · ")}</p> : null}
-        <span className="arena-reward-confirmation">SÄLJNINGEN REGISTRERAD</span><strong className="arena-reward-pep">SNYGGT JOBBAT!</strong>
+        <span className="arena-reward-confirmation">FÖRSÄLJNINGEN REGISTRERAD</span><strong className="arena-reward-pep">SNYGGT JOBBAT!</strong>
       </div>
       {Array.from({length:16},(_,i)=><i key={i} className="arena-confetti" style={{"--i":i} as React.CSSProperties} aria-hidden="true" />)}
     </div>
@@ -136,7 +137,7 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
       {heading && <><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span></>}
       <strong className="arena-reward-points">{reward}!</strong>
       <strong className="arena-reward-seller">{event.name}</strong>
-      <span className="arena-reward-confirmation">SÄLJNINGEN REGISTRERAD</span>
+      <span className="arena-reward-confirmation">FÖRSÄLJNINGEN REGISTRERAD</span>
       <div className="arena-reward-check" aria-hidden="true"><Check /></div>
       <strong className="arena-reward-pep">BRA JOBBAT!</strong>
       {!event.special && <span className="arena-reward-encouragement">{encouragement}</span>}
@@ -159,6 +160,7 @@ function ArenaRoutes() {
 }
 function ArenaHome() {
   const showcase=useArenaShowcase();
+  const [fightPerson,setFightPerson]=useState<ArenaPerson|null>(null);
   const [data, setData] = useState<ArenaBootstrap | null>(null);
   const [stats, setStats] = useState<ArenaStats | null>(null);
   const [todayStats, setTodayStats] = useState<ArenaStats | null>(null);
@@ -171,7 +173,7 @@ function ArenaHome() {
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
   const [metric,setMetric]=useState("points");
   const [attempt, setAttempt] = useState<Attempt | null>(null), [busy, setBusy] = useState(false), [saleError, setSaleError] = useState("");
-  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | null>(null);
+  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | "fight" | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const lock = useRef(false), statsRef = useRef(stats), attemptRef = useRef<Attempt | null>(null), statsVersion = useRef(0);
@@ -202,6 +204,8 @@ function ArenaHome() {
     return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
   }, [bootstrap]);
   const activeFight=todayStats?.fight?.phase==="active";
+  const fightContext=activeFight?todayStats?.fight_dashboard:undefined;
+  const dashboardStats=useMemo(()=>fightContext&&todayStats?{...todayStats,metric:fightContext.metric,leaderboard:fightContext.leaderboard,recent:fightContext.recent}:todayStats,[fightContext,todayStats]);
   useEffect(()=>{
     let lastBootstrap=Date.now();
     const stopPolling=visibleArenaPolling(async()=>{
@@ -311,6 +315,7 @@ function ArenaHome() {
     finalTimer.current=setTimeout(()=>setFightFinal(null),event.kind==="tie" ? 2600:3600);
   },[todayStats?.fight,data?.station.id,busy,celebration,attempt,fightFinal]);
   const personStats = personScope === "today" ? todayStats : stats;
+  useEffect(()=>{setFightPerson(null);},[fightContext?.fight_id]);
   const person = personStats?.leaderboard.find(p => p.id === personId);
   const onTodayPerson=useCallback((p:ArenaPerson)=>{setPersonScope("today");setPersonId(p.id);},[]);
   const onSelectedPerson=useCallback((p:ArenaPerson)=>{setPanel(null);setPersonScope("selected");setPersonId(p.id);},[]);
@@ -321,7 +326,6 @@ function ArenaHome() {
     {period === "custom" && <div className="arena-dates"><label>Från<input type="date" value={start} onChange={e => setStart(e.target.value)} /></label><label>Till<input type="date" value={end} onChange={e => setEnd(e.target.value)} /></label></div>}
   </>;
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
-    {import.meta.env.DEV&&new URLSearchParams(location.search).has("fightconcept")&&<Suspense fallback={null}><ArenaTemporaryConcept/></Suspense>}
     <header className="arena-header">
       <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><ArenaEmblem/><span><strong>ARENAN</strong><small>SÄLJ MER. TILLSAMMANS.</small></span></a>
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
@@ -329,19 +333,20 @@ function ArenaHome() {
     </header>
     {(error || statsUnavailable) && <div className="arena-error" role="alert">{error || "Statistiken är tillfälligt otillgänglig."}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
-      <div className="arena-left-column">
-        <aside className="arena-leaderboard arena-panel" aria-label="Topplista idag"><header><h2>TOPPLISTA – IDAG</h2><button className="arena-panel-more" onClick={()=>setPanel("leaders")}>Visa alla</button></header><People stats={todayStats} limit={5} onPerson={onTodayPerson} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
-        <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>SENASTE AKTIVITETER</h2></button><FeedStatus stats={todayStats} error={statsUnavailable} /></header><RecentActivities stats={todayStats} limit={5} /></aside>
-      </div>
+      <ArenaPersonContext stationIds={fightContext?.station_ids??[data?.station.id??'']}><div className="arena-left-column" data-context={fightContext?'fight':'local'} key={fightContext?.fight_id??'local'}>
+        <aside className="arena-leaderboard arena-panel" aria-label={fightContext?"Butiksfight live":"Topplista idag"}><header><h2>{fightContext?"BUTIKSFIGHT – LIVE":"TOPPLISTA – IDAG"}</h2><button className="arena-panel-more" onClick={()=>setPanel(fightContext?"fight":"leaders")}>Visa alla</button></header><People stats={dashboardStats} limit={5} emptyMessage={fightContext?"Fightens första kvalificerande försäljning väntar.":undefined} onPerson={fightContext?p=>{setPanel(null);setFightPerson(p);}:onTodayPerson} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
+        <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>SENASTE AKTIVITETER</h2></button><FeedStatus stats={todayStats} error={statsUnavailable} /></header><RecentActivities stats={dashboardStats} fightMode={!!fightContext} limit={5} /></aside>
+      </div></ArenaPersonContext>
       <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
+        <div className="arena-stage-atmosphere" aria-hidden="true"><i className="arena-stage-architecture"/><i className="arena-stage-beams"/><i className="arena-stage-floor"/><i className="arena-stage-sparks"/></div>
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
-        <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel("leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
+        <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel(fightContext?"fight":"leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <div className="arena-cluster">
           <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? activityActions.get(focus.activity.id) : undefined} /></div>
           <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
         </div> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
-      <ArenaStatePanel stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />
+      <ArenaStatePanel sellers={data?.sellers} stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />
     </main>
     <div className="arena-utility"><div className="arena-utility-links">{data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>
@@ -355,13 +360,15 @@ function ArenaHome() {
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />
     </ArenaDialog>}
+    {fightPerson&&<ArenaDialog title={`${fightPerson.name} · Butiksfight`} heading="MIN FIGHT" eyebrow={fightPerson.station_name} onClose={()=>setFightPerson(null)}><div className="arena-person-heading"><ArenaAvatar id={fightPerson.id} name={fightPerson.name} imageUrl={fightPerson.profile_url} avatarIndex={fightPerson.avatar_index} className="arena-person-avatar"/><h3>{fightPerson.name}</h3></div><p>#{fightPerson.rank} i den aktuella fighten · {num(fightPerson.points)} poäng · {arenaMoney(fightPerson.tb_ore??0)} TB · {fightPerson.count} registreringar</p><p>Endast försäljningar som räknas i denna fight.</p></ArenaDialog>}
+    {panel==='fight'&&<ArenaDialog title="Butiksfight – Live" eyebrow="FIGHTENS PERSONPRESTATIONER" onClose={()=>setPanel(null)}><ArenaPersonContext stationIds={fightContext?.station_ids??[]}><People stats={dashboardStats} emptyMessage="Fightens första kvalificerande försäljning väntar." onPerson={p=>{setPanel(null);setFightPerson(p);}}/></ArenaPersonContext><p>Stationens interna tävling fortsätter som vanligt. Öppna TOPPLISTOR för lokala resultat.</p></ArenaDialog>}
     {panel === "leaders" && <ArenaDialog title="Topplistor & statistik" className="arena-dialog-leaders" eyebrow="LAGETS RESULTAT" onClose={() => setPanel(null)}>{controls}
       <a className="arena-network-link" href="/arena/groups"><Users /> Gemensamma topplistor</a>
       <label>Mått<select aria-label="Mått" value={metric} onChange={e=>setMetric(e.target.value)}><option value="points">Poäng</option><option value="tb">TB</option><option value="count">Antal registreringar</option></select></label>
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
       <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={onSelectedPerson} />
     </ArenaDialog>}
-    {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><FeedStatus stats={stats} error={statsUnavailable} /><RecentActivities stats={stats} /></ArenaDialog>}
+    {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><ArenaPersonContext stationIds={fightContext?.station_ids??[data?.station.id??'']}><FeedStatus stats={dashboardStats} error={statsUnavailable} /><RecentActivities stats={dashboardStats} fightMode={!!fightContext} /></ArenaPersonContext></ArenaDialog>}
     {panel === "campaign" && <ArenaDialog title="Lagets kampanj & mål" className="arena-dialog-campaign" eyebrow="TILLSAMMANS MOT NÄSTA MÅL" onClose={() => setPanel(null)}>{campaign ? <>
       <h3>{campaign.name}</h3><p>{data?.activities.find(a => a.id === campaign.activity_id)?.name}</p><p>{new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm", dateStyle: "medium" }).format(new Date(campaign.start_at))} – {new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm", dateStyle: "medium" }).format(new Date(Date.parse(campaign.end_at) - 1))}</p>
       {campaign.target_points && <Progress points={campaign.points} target={campaign.target_points} label="KAMPANJMÅL" />}{campaign.target_count && <Progress points={campaign.count} target={campaign.target_count} label="MERFÖRSÄLJNINGAR" suffix="st" />}

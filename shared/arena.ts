@@ -14,6 +14,7 @@ export type ArenaGoal = {
   start_date: string; end_date: string; target_points: number; points: number;
 };
 export type ArenaPerson = ArenaSeller & {
+  station_id?:string;station_name?:string;
   rank: number; points: number; count: number;
   tb_ore?:number; unknown_tb_count?:number;
   activities: { id: string; name: string; category: string; count: number; points: number; tb_ore?:number }[];
@@ -23,6 +24,7 @@ export type ArenaBootstrap = {
   activities: ArenaActivity[]; campaign: ArenaCampaign | null;
 };
 export type ArenaRecentActivity = {
+  station_id?:string;station_name?:string;
   id: string; seller_id?:string; profile_url?:string | null; avatar_index?:number|null; seller_name: string; activity_name: string; points_awarded: number; registered_at: string;
   tb_ore_awarded?:number | null;
   display_mode?:"points" | "tb";
@@ -35,6 +37,8 @@ export type ArenaStats = {
   campaign: (ArenaCampaign & { points: number; count: number }) | null;
   station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
   tb_ore?:number; unknown_tb_count?:number; metric?:"points" | "tb" | "count";
+  fight_activities?:ArenaFightActivity[];
+  fight_dashboard?:{fight_id:string;station_ids:string[];metric:'points'|'tb'|'count';leaderboard:ArenaPerson[];recent:ArenaRecentActivity[]};
   fight_notices?:{incoming:number;unread:number;outgoing?:number;scheduled?:number};
   fight?:import("./arena-fights").ArenaFightSummary | null;
 };
@@ -62,3 +66,5 @@ export function arenaAchievement(before: ArenaStats | null, after: ArenaStats, s
   if (next && person) return { text: `${person.name}: ${arenaNumber(roundedPoints(next.points - person.points))} poäng till nästa placering!`, special: false, kind: "points" };
   return { text: `${person?.name ?? "Laget"}, tillsammans säljer vi mer!`, special: false, kind: "points" };
 }
+
+export type ArenaFightActivity=ArenaActivity&{fight_id:string;start_at:string;end_at:string};

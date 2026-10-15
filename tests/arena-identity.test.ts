@@ -2,6 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {ArenaPersonContext,ArenaPersonName,isMultistation} from '../src/ArenaPersonContext';
+import {ArenaShowcaseContext} from '../src/ArenaAvatar';
 import ArenaChampion from '../src/ArenaChampion';
 import {arenaChampion,arenaChampions} from '../src/arena-champions';
 import {arenaDemoIdentity} from '../src/arena-demo-identities';
@@ -21,10 +22,10 @@ describe('Person station context is opt-in and based on the complete competition
  });
 });
 describe('Champion art is separate from all employee identities',()=>{
- it('selects one of two stable, local optimized characters by event key only',()=>{expect(arenaChampions).toHaveLength(2);expect(arenaChampion('event-1')).toEqual(arenaChampion('event-1'));const html=renderToStaticMarkup(h(ArenaChampion,{eventKey:'event-1'}));expect(html).toContain('fictional-celebration-art');expect(html).toContain('/arena-brand/champion-');expect(html).not.toContain('data-avatar');expect(html).not.toContain('portraits/');});
+ it('selects one of two stable, local optimized characters by event key only',()=>{expect(arenaChampions).toHaveLength(2);expect(arenaChampion('event-1')).toEqual(arenaChampion('event-1'));const html=renderToStaticMarkup(h(ArenaShowcaseContext.Provider,{value:true,children:h(ArenaChampion,{eventKey:'event-1'})}));expect(html).toContain('fictional-celebration-art');expect(html).toContain('/arena-brand/champion-');expect(html).not.toContain('data-avatar');expect(html).not.toContain('portraits/');});
  it('keeps uploaded avatars first and applies curated casting only to explicit showroom identities',()=>{
   for(const [name,index] of [['Peter',0],['Alva',1],['Sofia',5],['Erik',2],['Linnea',3]] as const){expect(arenaDemoIdentity(name)).toBe(index);expect(resolveArenaAvatar({id:'s-9',name},true)).toMatchObject({index});}
-  expect(resolveArenaAvatar({id:'real-id',name:'Erik',avatarIndex:14},true)).toMatchObject({index:14});expect(resolveArenaAvatar({id:'s-1',name:'Erik',avatarIndex:14},false)).toMatchObject({index:14});expect(resolveArenaAvatar({id:'s-1',name:'Erik',imageUrl:'/my-photo.webp'},true)).toMatchObject({kind:'uploaded'});
+  expect(resolveArenaAvatar({id:'real-id',name:'Erik',avatarIndex:14},true)).toMatchObject({index:14});expect(resolveArenaAvatar({id:'s-1',name:'Erik',avatarIndex:14},false)).toMatchObject({kind:'initial',initial:'E'});expect(resolveArenaAvatar({id:'s-1',name:'Erik',imageUrl:'/my-photo.webp'},true)).toMatchObject({kind:'uploaded'});
  });
 });
 describe('Stationspuls is calculated, never invented or duplicated KPIs',()=>{

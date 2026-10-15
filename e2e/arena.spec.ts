@@ -114,7 +114,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
     await page.goto("/arena");
     await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
     await expect(page.locator(".arena-team-goal .arena-progress>span")).toHaveText("MÅNADENS MÅL");
-    await expect(page.locator(".arena-focus-title")).toHaveText("MÅNADENS FOKUS");
+    await expect(page.locator(".arena-focus-arc textPath")).toHaveText("MÅNADENS FOKUS");
     for (let i=0; i<productAssets.length; i++) {
       const [name,file] = productAssets[i], activity = cleanProducts[i];
       const button = page.getByRole("button", { name:`${name}${i === 2 || i === 6 ? ":-" : ""}, +${activity.points} poäng`, exact:true });
@@ -162,7 +162,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
     }));
     expect(labels.every(label => label.fits)).toBe(true);
     expect(labels[4].lines).toBeLessThan(1.1);
-    const heading=page.locator(".arena-focus-title");
+    const heading=page.locator(".arena-focus-arc textPath");
     const crownBox=(await page.locator(".arena-crown").boundingBox())!,headingBox=(await heading.boundingBox())!;
     expect(crownBox.y+crownBox.height).toBeLessThanOrEqual(headingBox.y);
     expect(demos).toEqual([]);
@@ -254,7 +254,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390]]) {
     await expect(panel.locator(".arena-rank")).toHaveText(shown.map(p => String(p.rank)));
     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
-    await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+    await expect(panel.locator(".arena-leader-list .arena-person-name>strong")).toHaveText(shown.map(p => p.name));
     for (const person of shown) {
       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
     }
@@ -442,7 +442,7 @@ for (const source of ["station", "campaign-points", "campaign-count"] as const) 
     await expect(progress).toHaveAttribute("aria-valuenow",source === "station" ? "742" : source === "campaign-points" ? "148" : "70");
     await expect(progress).toContainText(source === "campaign-count" ? "70 / 100 försäljningar" : source === "campaign-points" ? "148 / 200 poäng" : "742 / 1 000 poäng");
     await expect(page.locator(".arena-team-goal")).not.toContainText("MÅNADENS FOKUS");
-    await expect(page.locator(".arena-focus-title")).toHaveText("MÅNADENS FOKUS");
+    await expect(page.locator(".arena-focus-arc textPath")).toHaveText("MÅNADENS FOKUS");
     await expect(page.locator(".arena-focus-cap .arena-crown")).toBeVisible();
   });
 }

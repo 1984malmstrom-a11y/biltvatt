@@ -12,7 +12,7 @@ export type ArenaFight={
   scoring_mode?:ArenaFightMode;day_win_points?:number;day_tie_points?:number;
   days?:ArenaFightDay[];current_day?:ArenaFightDay|null;
 };
-export type ArenaFightSummary=Pick<ArenaFight,"id" | "name" | "metric" | "phase" | "standings" | "version"> & Partial<Pick<ArenaFight,"start_at"|"end_at"|"snapshot_at"|"leader_ids"|"winner_ids"|"latest_lead_change"|"scoring_mode"|"day_win_points"|"day_tie_points"|"current_day"|"sudden_death"|"tie_break_reason"|"competition_id">>;
+export type ArenaFightSummary=Pick<ArenaFight,"id" | "name" | "metric" | "phase" | "standings" | "version"> & Partial<Pick<ArenaFight,"start_at"|"end_at"|"snapshot_at"|"leader_ids"|"winner_ids"|"latest_lead_change"|"scoring_mode"|"day_win_points"|"day_tie_points"|"current_day"|"sudden_death"|"tie_break_reason"|"competition_id"|"effective_start_at">>;
 export type ArenaFightListing={id:string;name:string;start_at:string;end_at:string;metric:ArenaMetric;status:string;scoring_mode?:ArenaFightMode;participants?:{id:string;name:string}[];leader_names?:string[]};
 export const fightScore=(s:ArenaStationStanding,metric:ArenaMetric,mode:ArenaFightMode='total')=>mode==='daily' ? s.match_points??0 : metric==="tb" ? s.tb_ore : metric==="count" ? s.count:s.points;
 export function fightPhase(start:string,end:string,status:string,now=new Date()):ArenaFight["phase"] {
