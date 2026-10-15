@@ -1,0 +1,66 @@
+
+> tvattligan@1.0.0 test
+> vitest run tests/arena-achievements.test.ts tests/arena-avatars.test.ts tests/arena-competition-builder.test.ts tests/arena-competition-migrations.test.ts tests/arena-competition-notifications.test.ts tests/arena-copy.test.ts tests/arena-daily-leagues.test.ts tests/arena-dates.test.ts tests/arena-fight-feedback.test.ts tests/arena-fights.test.ts tests/arena-identity.test.ts tests/arena-migrations.test.ts tests/arena-money.test.ts tests/arena-network.test.ts tests/arena-owner-maintenance.test.ts tests/arena-pdf.test.ts tests/arena-portraits.test.ts tests/arena-product-images.test.ts tests/arena-pulse.test.ts tests/arena-query-plans.test.ts tests/arena-realtime.test.ts tests/arena-reports.test.ts tests/arena-route-id.test.ts tests/arena-security.test.ts tests/arena-start.test.ts tests/arena.test.ts
+
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ✓ tests/arena-owner-maintenance.test.ts (3 tests) 1373ms
+   ✓ Offline infra bootstrap and break glass > bootstraps exactly one Owner, with an unverified email, salted KDF and audit event  667ms
+   ✓ Offline infra bootstrap and break glass > requires an existing matching Owner for recovery and produces a traceable security event  647ms
+ ✓ tests/arena-competition-builder.test.ts (34 tests) 1129ms
+ ✓ tests/arena-network.test.ts (13 tests) 3788ms
+   ✓ Arena station authentication and tenant isolation > a reset racing a successful password check cannot issue a new session with the old credential  457ms
+   ✓ Arena station authentication and tenant isolation > suspension revokes station sessions and reactivation requires a fresh valid login  342ms
+   ✓ Arena station authentication and tenant isolation > rate limits login and signup, and preserves same-origin CSRF protection  955ms
+   ✓ multi-station groups > opt-in people/feed projection respects group membership, metric, range, undo and station suspension  379ms
+   ✓ multi-station groups > groups support multiple memberships, station permission checks and separate total metrics  308ms
+ ✓ tests/arena.test.ts (17 tests) 637ms
+ ✓ tests/arena-fights.test.ts (16 tests) 518ms
+stderr | tests/arena-daily-leagues.test.ts > Round robin leagues > rolls back a whole league if any fixture fails to insert
+API error: test atomic fixture failure
+
+ ✓ tests/arena-daily-leagues.test.ts (20 tests) 557ms
+ ✓ tests/arena-reports.test.ts (7 tests) 418ms
+ ✓ tests/arena-pdf.test.ts (12 tests) 537ms
+ ✓ tests/arena-query-plans.test.ts (1 test) 81ms
+ ✓ tests/arena-portraits.test.ts (4 tests) 245ms
+ ✓ tests/arena-competition-migrations.test.ts (2 tests) 39ms
+ ✓ tests/arena-competition-notifications.test.ts (3 tests) 79ms
+ ✓ tests/arena-migrations.test.ts (2 tests) 40ms
+ ✓ tests/arena-security.test.ts (18 tests) 6801ms
+   ✓ Individual Superadmins and Owner protection > invites an individual account; only a hashed one-time token persists outside dev delivery  567ms
+   ✓ Individual Superadmins and Owner protection > operational Superadmin cannot mutate Owner, accounts, recovery codes or ownership  516ms
+   ✓ Individual Superadmins and Owner protection > disabling an account immediately invalidates all of its sessions and reenable does not restore them  494ms
+   ✓ Individual Superadmins and Owner protection > requires recent reauth and explicit confirmation for sensitive actions  313ms
+   ✓ Individual Superadmins and Owner protection > transfers ownership only explicitly to a verified active individual and revokes sessions  656ms
+   ✓ Recovery, audit and security boundaries > email reset is single use, expires and revokes sessions; responses do not enumerate accounts  464ms
+   ✓ Recovery, audit and security boundaries > expired reset links fail without changing credentials  377ms
+   ✓ Recovery, audit and security boundaries > concurrent reset consumption succeeds exactly once  343ms
+   ✓ Recovery, audit and security boundaries > recovery codes are hashed, single use, regenerated and audited  490ms
+   ✓ Recovery, audit and security boundaries > session inventory does not expose bearer tokens and revocation is owned  307ms
+   ✓ Recovery, audit and security boundaries > upgrades existing 100k credentials on successful login without breaking existing passwords  334ms
+   ✓ Recovery, audit and security boundaries > accepts legacy hashes and versioned PBKDF2 hashes without exposing new credentials  471ms
+ ✓ tests/arena-identity.test.ts (7 tests) 18ms
+ ✓ tests/arena-copy.test.ts (2 tests) 20ms
+ ✓ tests/arena-avatars.test.ts (4 tests) 9ms
+ ✓ tests/arena-realtime.test.ts (3 tests) 15ms
+ ✓ tests/arena-money.test.ts (17 tests) 7ms
+ ✓ tests/arena-start.test.ts (3 tests) 4ms
+ ✓ tests/arena-achievements.test.ts (13 tests) 5ms
+ ✓ tests/arena-fight-feedback.test.ts (6 tests) 7ms
+ ✓ tests/arena-product-images.test.ts (4 tests) 4ms
+ ✓ tests/arena-pulse.test.ts (4 tests) 7ms
+ ✓ tests/arena-dates.test.ts (3 tests) 4ms
+ ✓ tests/arena-route-id.test.ts (2 tests) 3ms
+
+ Test Files  26 passed (26)
+      Tests  220 passed (220)
+   Start at  18:11:56
+   Duration  9.04s (transform 1.09s, setup 0ms, collect 4.43s, tests 16.35s, environment 5ms, prepare 1.68s)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

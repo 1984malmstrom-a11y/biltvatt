@@ -1,0 +1,11 @@
+{
+  "viewports": [
+    "1920x1080",
+    "1536x864",
+    "1024x768",
+    "390x844",
+    "844x390"
+  ],
+  "stage_orbs_left_column_state_panel_and_nav_outer_geometry_identical": true,
+  "expected_changes": "State content now uses the former logo space; mobile stats are three equal columns."
+}

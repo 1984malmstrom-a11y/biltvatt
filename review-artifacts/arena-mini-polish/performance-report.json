@@ -1,0 +1,12 @@
+{
+  "new_brand_assets": 0,
+  "removed_arena_customer_webp_bytes": 15774,
+  "customer_image_decodes_removed": true,
+  "additional_css_bytes": 5950,
+  "additional_css_gzip_bytes": 1547,
+  "additional_libraries": 0,
+  "additional_timers": 0,
+  "additional_api_requests": 0,
+  "effects": "Static bounded borders, small shadows and gradients; no backdrop blur or particle library. Existing reduced-motion behavior retained.",
+  "timing_note": "Earlier mini-pass 4x CPU comparison is archived with the superseded customer-logo review; no fresh timing claim is made for customer removal."
+}

@@ -1,0 +1,18 @@
+{
+  "customer_brand_component_and_config_removed": true,
+  "customer_brand_containers_and_css_removed": true,
+  "arena_specific_preem_asset_removed": true,
+  "quote_reintroduced": false,
+  "new_brand_assets": 0,
+  "new_libraries": 0,
+  "new_timers": 0,
+  "new_api_requests": 0,
+  "migration_changes": false,
+  "shared_and_worker_changes": false,
+  "approved_hero_composition_changed": false,
+  "push": false,
+  "deploy": false,
+  "remote_migration": false,
+  "merge": false,
+  "branch_switch": false
+}

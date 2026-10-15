@@ -1,0 +1,13 @@
+
+Running 5 tests using 1 worker
+
+(node:395456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/5] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation sprint
+[2/5] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation daily
+[3/5] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation league
+[4/5] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation playoffs
+[5/5] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation cup
+  5 passed (10.9s)

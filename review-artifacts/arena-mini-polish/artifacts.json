@@ -1,0 +1,128 @@
+{
+  "start_head": "7e9ea4fdb18bcc2d1ced7dc256d7f54eb6c8826e",
+  "final_head": "f091bd4d8e448a17d983771301fb72526c526027",
+  "branch": "feat/arena-v1",
+  "status": "complete_local_checkpoint",
+  "customer_brand_removed": true,
+  "curated_png_count": 14,
+  "screenshots": [
+    {
+      "file": "active-fight-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Active Fight",
+      "sha256": "4191d2b670c05e4dea288f591c3b88e7ce774c40ad63a0a859b65212e21bfc8d"
+    },
+    {
+      "file": "after-bottom-nav-1920x1080.png",
+      "width": 1920,
+      "height": 86,
+      "group": "Navigation",
+      "sha256": "5ed5f48972190dda5f6ca205ea38ff0c1d7419ea2ae2eea4cf7f2fbcdf6d1277"
+    },
+    {
+      "file": "after-bottom-nav-390x844.png",
+      "width": 390,
+      "height": 64,
+      "group": "Navigation",
+      "sha256": "7c3a408b38ba23b9411e828c91be875e1bc27d8d993d4bda62bebbef6f9b885b"
+    },
+    {
+      "file": "after-bottom-nav-844x390.png",
+      "width": 844,
+      "height": 48,
+      "group": "Navigation",
+      "sha256": "e0c04de82921e32380b47c2cae451f9384a9cf4ddfec6ae7fb302b79b885482d"
+    },
+    {
+      "file": "after-leaderboard-1920x1080.png",
+      "width": 434,
+      "height": 440,
+      "group": "Topplista",
+      "sha256": "8079f1f1b3d81ddf14535498d9966aa410714915a41c46325a077da86e138b9a"
+    },
+    {
+      "file": "after-station-pulse-1920x1080.png",
+      "width": 448,
+      "height": 758,
+      "group": "Stationspuls",
+      "sha256": "f47dfe3553896bfeeb432950b46735fd271742d3648f1e22fcf43442f6fb8cac"
+    },
+    {
+      "file": "after-station-pulse-390x844.png",
+      "width": 366,
+      "height": 66,
+      "group": "Stationspuls",
+      "sha256": "788d1230761618334f7cd81eebe1a97d9073d69e2225fa9174bfde44aed9ba1e"
+    },
+    {
+      "file": "normal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "group": "Startscreen",
+      "sha256": "53a285f28eeadb3e0c5d3783b572804da008fac18b35da4b957d3b522642c747"
+    },
+    {
+      "file": "normal-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "group": "Startscreen",
+      "sha256": "2652217d61b70d53753b63d37418f60a11c103427a67f8b7cbed41b2ef7a862f"
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Startscreen",
+      "sha256": "24ba61c2dfbc44c8e7c667d5383440c7b49520b5c2d0a029e760780e1e0a164a"
+    },
+    {
+      "file": "normal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Startscreen",
+      "sha256": "660033ff02ad28743777b732c9dc4503e283494d80ed680614bd934243e19018"
+    },
+    {
+      "file": "normal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "group": "Startscreen",
+      "sha256": "8b8775f901049fd0a477a944ef6789eaadd3cb78362f89bc7d82e152446a63be"
+    },
+    {
+      "file": "pulse-empty-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Stationspuls",
+      "sha256": "1a965435812c0cefd700345faffb1be9aa167041d38f3a0bcf9d6b31e39deb20"
+    },
+    {
+      "file": "pulse-goal-reached-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "group": "Stationspuls",
+      "sha256": "1c84e030ba787b40f238a58c7e098d00b5d8c9db4a82bc08b57f4701e2174a95"
+    }
+  ],
+  "working_tree_clean": true,
+  "reports": [
+    "arena-playwright.log",
+    "arena-unit.log",
+    "artifacts.json",
+    "build.log",
+    "changed-files.txt",
+    "competition-builder-smoke.log",
+    "final-report.md",
+    "geometry-verification.json",
+    "git-verification.json",
+    "index.html",
+    "layout-leaderboard-regression.log",
+    "mini-tests.log",
+    "performance-report.json",
+    "responsive-report.md",
+    "scope-verification.json",
+    "test-report.txt",
+    "typecheck.log"
+  ]
+}

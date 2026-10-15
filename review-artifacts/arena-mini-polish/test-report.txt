@@ -1,0 +1,11 @@
+PASS typecheck.
+PASS build.
+PASS relevant Arena unit suite: 26 files, 220 tests.
+PASS mini smoke: 7 tests (all five required viewports, no customer DOM/requests, empty/reached goal, active fight).
+PASS Arena identity/hero/Visual V2 regression: 36 tests.
+PASS layout/leaderboard/hero/touch/overflow regression: 26 tests.
+PASS Competition Builder smoke: 5 tests.
+Total: 74 unique relevant Playwright cases PASS, no failures/skips in these selected runs.
+
+No customer-asset identity test remains: customer branding is removed by the latest locked decision. Absence of the customer logo/container and zero customer-logo network requests are tested instead.
+Full npm test was run earlier in this same mini pass and left only the pre-existing CSV UTF-8 failure. Latest request asks relevant Arena tests, which are all green. CSV/worker code is unchanged.

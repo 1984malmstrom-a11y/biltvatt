@@ -1,0 +1,44 @@
+
+Running 36 tests using 1 worker
+
+(node:393924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1920x1080
+[2/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1536x864
+[3/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1448x1086
+[4/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1024x768
+[5/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 390x844
+[6/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 844x390
+[7/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1920x1080
+[8/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1536x864
+[9/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1448x1086
+[10/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1024x768
+[11/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 390x844
+[12/36] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 844x390
+[13/36] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: leader reduced motion and automatic dismissal
+[14/36] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: station-goal reduced motion and automatic dismissal
+[15/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080
+[16/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864
+[17/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086
+[18/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768
+[19/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844
+[20/36] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390
+[21/36] e2e/arena-identity.spec.ts:22:1 › Identity: multi-station names, period totals and cross-station recent feed use the same context
+[22/36] e2e/arena-identity.spec.ts:27:1 › Identity: fake character and static reduced-motion hero remain independent of the credited seller
+[23/36] e2e/arena-identity.spec.ts:31:1 › Identity: cinematic reveal paints on the real animation timeline
+[24/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[25/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[26/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[27/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[28/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[29/36] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[30/36] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 1920x1080
+[31/36] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 390x844
+[32/36] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 1920x1080
+[33/36] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 390x844
+[34/36] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 1920x1080
+[35/36] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 390x844
+[36/36] e2e/arena-visual-v2.spec.ts:40:1 › Visual V2: production uploaded portrait, initial, failed image and explicit showroom
+  36 passed (2.1m)

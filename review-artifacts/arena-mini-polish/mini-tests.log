@@ -1,0 +1,15 @@
+
+Running 7 tests using 1 worker
+
+(node:393026) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/7] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1920x1080
+[2/7] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1536x864
+[3/7] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1024x768
+[4/7] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 390x844
+[5/7] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 844x390
+[6/7] e2e/arena-mini-polish.spec.ts:17:1 › Mini polish: sourced pulse handles no goal, no sales and reached target
+[7/7] e2e/arena-mini-polish.spec.ts:21:1 › Mini polish: active fight remains a separate match state without customer branding and with nav intact
+  7 passed (12.5s)

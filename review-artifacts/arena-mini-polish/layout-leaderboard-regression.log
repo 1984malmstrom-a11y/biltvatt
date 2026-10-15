@@ -1,0 +1,34 @@
+
+Running 26 tests using 1 worker
+
+(node:393769) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/26] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[2/26] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[3/26] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[4/26] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[5/26] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[6/26] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[7/26] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[8/26] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[9/26] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[10/26] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+[11/26] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1920x1080
+[12/26] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1024x768
+[13/26] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 390x844
+[14/26] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 844x390
+[15/26] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+[16/26] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+[17/26] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+[18/26] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+[19/26] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+[20/26] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+[21/26] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[22/26] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+[23/26] e2e/arena.spec.ts:785:3 › Arena: touch och ingen vertikal overflow 1920x1080
+[24/26] e2e/arena.spec.ts:785:3 › Arena: touch och ingen vertikal overflow 1024x768
+[25/26] e2e/arena.spec.ts:785:3 › Arena: touch och ingen vertikal overflow 390x844
+[26/26] e2e/arena.spec.ts:785:3 › Arena: touch och ingen vertikal overflow 844x390
+  26 passed (1.1m)

@@ -1,0 +1,13 @@
+{
+  "start_head": "7e9ea4fdb18bcc2d1ced7dc256d7f54eb6c8826e",
+  "final_head": "f091bd4d8e448a17d983771301fb72526c526027",
+  "branch": "feat/arena-v1",
+  "clean_working_tree": true,
+  "commit_message": "Arena V1: polish leaderboard station pulse and navigation",
+  "origin_tracking_ref_unchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "push_performed": false,
+  "deploy_performed": false,
+  "remote_migration_performed": false,
+  "merge_performed": false,
+  "branch_switch_performed": false
+}
