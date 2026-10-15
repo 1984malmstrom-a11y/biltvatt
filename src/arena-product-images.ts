@@ -9,7 +9,7 @@ const products = new Map([
   ["spolarvätska", "05_arena-spolarvatska.webp"],
   ["räksallad", "06_arena-raksallad.webp"],
   ["två för 30", "07_arena-tva-for-30.webp"],
-  ["extra dryck", "07_arena-tva-for-30.webp"],
+  ["extra dryck", "08_arena-extra-dryck.webp"],
 ]);
 
 export function arenaProductImage(activity: Pick<ArenaActivity, "name" | "image_key"> & Partial<Pick<ArenaActivity, "price_text">>, previewUrl?: string) {

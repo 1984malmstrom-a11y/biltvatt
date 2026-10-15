@@ -59,12 +59,12 @@ async function expectDesktopOrbit(page: Page, positions: { x:number; y:number; r
 }
 
 for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,390]]) {
-  test(`Arena: compact Butiksfight link preserves locked layout ${width}x${height}`,async({page})=>{
+  test(`Arena: Butiksfight state panel preserves activity hit areas ${width}x${height}`,async({page})=>{
     await page.setViewportSize({width,height});const current={...stats,fight:{id:"live-fight",name:"Sydost",metric:"points" as const,phase:"active" as const,version:1,standings:[{id:"mastertest",name:"STATIONEN",rank:1,count:87,points:342,tb_ore:48000,unknown_tb_count:0},{id:"other",name:"Karlskrona",rank:2,count:82,points:327,tb_ore:46000,unknown_tb_count:0}]}};
     await visualData(page,()=>current);await page.goto("/arena");await expect(page.locator(".arena-stage .arena-orb")).toHaveCount(7);
     const link=page.getByRole("link",{name:"Öppna Butiksfight: Sydost",exact:true});await expect(link).toBeVisible();await expect(link).toHaveAttribute("href","/arena/fights/live-fight");
     expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
-    const fit=await link.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest(".arena-utility")!.getBoundingClientRect();if(innerWidth<1600 || innerHeight<900)return r.left>=p.left && r.right<=p.right && r.top>=p.top && r.bottom<=p.bottom;return [...document.querySelectorAll(".arena-stage .arena-orb")].every(orb=>{const b=orb.getBoundingClientRect(),x=Math.max(r.left,Math.min(b.x+b.width/2,r.right)),y=Math.max(r.top,Math.min(b.y+b.height/2,r.bottom));return Math.hypot(x-b.x-b.width/2,y-b.y-b.height/2)-b.width/2>=2;});});expect(fit).toBe(true);await stateScreenshot(page,`fight-indicator-${width}x${height}`);
+    const fit=await link.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest(".arena-state-panel")!.getBoundingClientRect();if(!(r.left>=p.left && r.right<=p.right && r.top>=p.top && r.bottom<=p.bottom))return false;return [...document.querySelectorAll(".arena-stage .arena-orb")].every(orb=>{const b=orb.getBoundingClientRect(),x=Math.max(r.left,Math.min(b.x+b.width/2,r.right)),y=Math.max(r.top,Math.min(b.y+b.height/2,r.bottom));return Math.hypot(x-b.x-b.width/2,y-b.y-b.height/2)-b.width/2>=2;});});expect(fit).toBe(true);await stateScreenshot(page,`fight-indicator-${width}x${height}`);
   });
 }
 
@@ -134,16 +134,20 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
         }
         const copy = el.querySelector(".arena-product-copy")?.getBoundingClientRect();
         const badge = el.querySelector(".arena-points")!.getBoundingClientRect();
+        const focusLabel=el.querySelector(".arena-focus-name")?.getBoundingClientRect();
         const scale = style.transform === "none" ? 1 : new DOMMatrixReadOnly(style.transform).a;
         const px = (side: string) => parseFloat(style.getPropertyValue(`padding-${side}`)) * scale;
-        const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom"), size = Math.min(width,height);
-        const left = box.left+px("left")+(width-size)/2, top = box.top+px("top")+(height-size)/2;
-        const motif = { left:left+alpha[0]*size/canvas.width, top:top+alpha[1]*size/canvas.height, right:left+alpha[2]*size/canvas.width, bottom:top+alpha[3]*size/canvas.height };
+        const width = box.width-px("left")-px("right"), height = box.height-px("top")-px("bottom");
+        const fitScale=Math.min(width/image.naturalWidth,height/image.naturalHeight);
+        const left = box.left+px("left")+(width-image.naturalWidth*fitScale)/2, top = box.top+px("top")+(height-image.naturalHeight*fitScale)/2;
+        const motif = { left:left+alpha[0]*fitScale, top:top+alpha[1]*fitScale, right:left+alpha[2]*fitScale, bottom:top+alpha[3]*fitScale };
         // Larger coffee, salad and energy motifs may lift into the existing halo above the ring.
         const upperAllowance=largerMotif ? orb.height*.07 : 0;
-        return { fit:style.objectFit, position:style.objectPosition, visible:motif.left>=0 && motif.right<=innerWidth && motif.top>=0 && motif.bottom<=innerHeight, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top-upperAllowance && motif.bottom<=orb.bottom-1, clear:copy ? motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1 : motif.bottom<=badge.top+1, motifHeight:motif.bottom-motif.top, orbHeight:orb.height, motifWidth:motif.right-motif.left, orbWidth:orb.width };
+        // The green focus uses a wash photograph with an overlaid label and
+        // integrated reward. Cutout products still must clear both text rows.
+        return { fit:style.objectFit, position:style.objectPosition, visible:motif.left>=0 && motif.right<=innerWidth && motif.top>=0 && motif.bottom<=innerHeight, inside:motif.left>=orb.left+1 && motif.right<=orb.right-1 && motif.top>=orb.top-upperAllowance && motif.bottom<=orb.bottom-1, clear:copy ? motif.bottom<=copy.top+1 && copy.bottom<=badge.top+1 : !!focusLabel && focusLabel.bottom<=badge.top+1 && badge.bottom<=orb.bottom+1, motifHeight:motif.bottom-motif.top, orbHeight:orb.height, motifWidth:motif.right-motif.left, orbWidth:orb.width };
       }, [3,5,6].includes(i));
-      expect(geometry).toMatchObject({ fit:"contain", position:"50% 50%", visible:true, inside:true, clear:true });
+      expect(geometry, `${name} at ${width}x${height}`).toMatchObject({ fit:"contain", position:"50% 50%", visible:true, inside:true, clear:true });
       expect(geometry.motifHeight/geometry.orbHeight).toBeGreaterThan(i === 0 ? .45 : .32);
       expect(geometry.motifWidth/geometry.orbWidth).toBeGreaterThan(i === 0 ? .6 : .25);
       if(i===0){await expect(button.locator(".arena-focus-name")).toHaveText(name);await expect(button.locator(".arena-product-copy,.arena-offer,.arena-price")).toHaveCount(0);await expect(button).not.toContainText("Finast Plus");}
@@ -168,16 +172,17 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
     if (width >= 1024) {
       await expectDesktopOrbit(page, positions);
       const ratio=positions[1].radius/positions[0].radius;
-      expect(ratio).toBeGreaterThan(.56); expect(ratio).toBeLessThan(.6);
+      // Green master B: roughly 122px satellites around a 200px focus.
+      expect(ratio).toBeGreaterThan(.60); expect(ratio).toBeLessThan(.65);
       for (const circle of positions.slice(1)) {
         const gap=Math.hypot(circle.x-positions[0].x,circle.y-positions[0].y)-circle.radius-positions[0].radius;
-        // The locked reference leaves visible air around the focus, with the
-        // middle pair farther out than the diagonal pairs. 4:3 packs more tightly.
+        // Green master B leaves air around the focus. A tall 4:3 canvas
+        // distributes the diagonal pairs vertically without scaling the page.
         const normalized=gap/positions[0].radius;
-        expect(normalized).toBeGreaterThan(.08);
-        expect(normalized).toBeLessThan(width === 1920 ? .46 : .3);
+        expect(normalized).toBeGreaterThan(.1);
+        expect(normalized).toBeLessThan(.8);
       }
-      for(const circle of positions.slice(3,5))expect((Math.hypot(circle.x-positions[0].x,circle.y-positions[0].y)-circle.radius-positions[0].radius)/positions[0].radius).toBeGreaterThan(width === 1920 ? .35:.22);
+      for(const circle of positions.slice(3,5))expect((Math.hypot(circle.x-positions[0].x,circle.y-positions[0].y)-circle.radius-positions[0].radius)/positions[0].radius).toBeGreaterThan(.18);
     }
     if (width === 390) {
       for (const circle of positions.slice(1)) expect(circle.y-circle.radius).toBeGreaterThan(positions[0].y+positions[0].radius);
@@ -206,7 +211,8 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
     }
     const crown = (await page.locator(".arena-focus-slot .arena-crown").boundingBox())!;
     const focus = (await page.locator(".arena-focus-slot .arena-orb").boundingBox())!;
-    expect(crown.y).toBeGreaterThan(focus.y); expect(crown.y+crown.height).toBeLessThan(focus.y+focus.height);
+    // The new green master puts its crown above the outer focus ring.
+    expect(crown.y).toBeLessThan(focus.y); expect(crown.y+crown.height).toBeLessThan(focus.y);
     expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth, height:document.documentElement.scrollHeight }))).toEqual({ width,height });
     await stateScreenshot(page, `products-${width}x${height}`);
     await page.getByRole("button", { name:"Biltvätt, +2 poäng", exact:true }).click();
@@ -224,7 +230,7 @@ for (const [width,height] of [[1920,1080],[1024,768],[390,844],[844,390],[1448,1
         const image=el.querySelector("img")!.getBoundingClientRect(),copy=el.querySelector(".arena-product-copy,.arena-focus-name")!.getBoundingClientRect(),badge=el.querySelector(".arena-points")!.getBoundingClientRect();
         return { fit:getComputedStyle(el.querySelector("img")!).objectFit, readable:copy.bottom<=badge.top+1, art:image.width>0 };
       });
-      expect(usable).toEqual({ fit:"contain", readable:true, art:true });
+      expect(usable, `${name} unavailable at ${width}x${height}`).toEqual({ fit:"contain", readable:true, art:true });
     }
     expect(await page.evaluate(() => ({ width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight }))).toEqual({ width,height });
     await stateScreenshot(page, `unavailable-${width}x${height}`);

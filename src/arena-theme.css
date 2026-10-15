@@ -1,0 +1,22 @@
+/* Independent Arena brand. Product photos and PDF print colours are intentionally separate. */
+.arena-theme {
+ --arena-bg:#06110D;
+ --arena-bg-soft:#07150F;
+ --arena-surface:#0D2117;
+ --arena-surface-raised:#143426;
+ --arena-border:color-mix(in srgb,#4FC88A 28%,transparent);
+ --arena-gold:#E4C76A;
+ --arena-gold-soft:#D8B95C;
+ --arena-gold-deep:#CFAE52;
+ --arena-energy:#4FC88A;
+ --arena-text:#F4F1E8;
+ --arena-muted:#AAB7AE;
+ --arena-success:#5FD39A;
+ --arena-warning:#E1A34A;
+ --arena-danger:#D46555;
+ --arena-glow:color-mix(in srgb,var(--arena-energy) 22%,transparent);
+ /* Compatibility aliases for existing backoffice/celebration components. */
+ --arena-blue:var(--arena-energy);
+ --arena-ink:var(--arena-bg);
+ color:var(--arena-text);
+}

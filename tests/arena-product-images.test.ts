@@ -19,7 +19,8 @@ it("hittar 25-erbjudandet med prisnotation eller separat prisfält utan att giss
 });
 
 it("visar det valda energidrycksmotivet för Extra dryck och gissar ingen bild för Isskrapa", () => {
-  expect(arenaProductImage({ name:"Extra dryck", image_key:null })).toBe("/arena-products/07_arena-tva-for-30.webp");
+  expect(arenaProductImage({ name:"Extra dryck", image_key:null })).toBe("/arena-products/08_arena-extra-dryck.webp");
+  expect(arenaProductImage({ name:"Extra dryck", image_key:null })).not.toBe(arenaProductImage({ name:"Två för 30", image_key:null }));
   expect(arenaProductImage({ name:"Isskrapa", image_key:null })).toBeNull();
 });
 

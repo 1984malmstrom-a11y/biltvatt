@@ -1,3 +1,4 @@
+import {useEffect,useRef,useState} from "react";
 import {Crown,Flag,Trophy,ChevronRight,Check} from "lucide-react";
 import type {ArenaFightSummary,ArenaFightEvent} from "../shared/arena-fights";
 import {fightScore,fightLeaders} from "../shared/arena-fights";
@@ -13,12 +14,24 @@ export function FightWidget({fight,stationId,onBoundary}:{fight:ArenaFightSummar
   const own=fight.standings.find(s=>s.id===stationId),opponent=fight.standings.find(s=>s.id!==stationId),leader=fight.standings[0];
   const leaders=fightLeaders(fight.standings,fight.metric),gap=own && opponent ? fightScore(own,fight.metric)-fightScore(opponent,fight.metric):0;
   const pair=fight.standings.length===2;
-  return <a className={`arena-fight-widget${pair ? " is-duel":" is-ranking"}`} data-fight-metric={fight.metric} data-fight-phase={fight.phase} href={`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}>
-    <span className="arena-fight-widget-title"><Flag aria-hidden="true" /><strong>{fight.phase==="finished" ? "BUTIKSFIGHT · FINAL":"AKTIV BUTIKSFIGHT"}</strong><i aria-hidden="true" />{fight.phase==="active" ? "LIVE":"FINAL"}</span>
+  const leaderKey=[...leaders].sort().join(":"),previous=useRef({id:fight.id,leaderKey,version:fight.version});
+  const [surge,setSurge]=useState(false),surgeTimer=useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(()=>()=>clearTimeout(surgeTimer.current),[]);
+  useEffect(()=>{
+    const before=previous.current;previous.current={id:fight.id,leaderKey,version:fight.version};
+    if(before.id!==fight.id || before.leaderKey===leaderKey || fight.version<=before.version || fight.phase!=="active")return;
+    clearTimeout(surgeTimer.current);setSurge(true);surgeTimer.current=setTimeout(()=>setSurge(false),1600);
+  },[fight.id,fight.version,fight.phase,leaderKey]);
+  const high=fight.standings[0] ? fightScore(fight.standings[0],fight.metric):0;
+  const total=fight.standings.reduce((n,s)=>n+fightScore(s,fight.metric),0);
+  const share=total>0 && own ? 100*fightScore(own,fight.metric)/total:50;
+  return <a className={`arena-fight-widget${pair ? " is-duel":" is-ranking"}${surge ? " is-surging":""}${leaders.length>1 ? " is-tied":""}`} data-fight-metric={fight.metric} data-fight-phase={fight.phase} href={`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}>
+    <span className="arena-fight-perimeter" aria-hidden="true"/><span className="arena-fight-widget-title"><Flag aria-hidden="true" /><strong>{fight.phase==="finished" ? "BUTIKSFIGHT · FINAL":"BUTIKSFIGHT"}</strong><i aria-hidden="true" />{fight.phase==="active" ? "LIVE":fight.phase==="scheduled" ? "SNART":"FINAL"}</span>
     <span className="arena-fight-widget-teams">{pair && own && opponent ? <>{own.name} <em>VS</em> {opponent.name}</>:fight.name}</span>
     <span className="arena-fight-widget-score">{pair && own && opponent ? <><b>{formatFightScore(fightScore(own,fight.metric),fight.metric)}</b><em>–</em><b>{formatFightScore(fightScore(opponent,fight.metric),fight.metric)}</b></>:<><b>#{own?.rank ?? "—"}</b><em>·</em>{own ? formatFightScore(fightScore(own,fight.metric),fight.metric):""}</>}</span>
     <span className="arena-fight-widget-gap">{fight.phase==="finished" ? (fight.winner_ids?.length!==1 ? "OAVGJORT!":`${fight.standings.find(s=>s.id===fight.winner_ids?.[0])?.name ?? "Laget"} vann`):leaders.length>1 ? "DET ÄR LIKA!":`${leader?.name ?? "Laget"} leder`}{pair && gap!==0 ? ` · ${formatFightScore(Math.abs(gap),fight.metric)} skiljer`:""}</span>
-    <ArenaFightClock fight={fight} compact onBoundary={onBoundary} /><ChevronRight className="arena-fight-widget-chevron" aria-hidden="true" />
+    <span className="arena-fight-balance" role="img" aria-label={pair ? `Andel av resultatet: ${Math.round(share)} procent för ${own?.name ?? "laget"}`:`Högsta resultat: ${formatFightScore(high,fight.metric)}`}><i style={{width:`${share}%`}}/></span>
+    <ArenaFightClock fight={fight} compact onBoundary={onBoundary} /><span className="arena-fight-pep">{fight.phase==="finished" ? "STARKT JOBBAT, LAGET!":"Tillsammans tar vi nästa poäng."}</span><ChevronRight className="arena-fight-widget-chevron" aria-hidden="true" />
   </a>;
 }
 export function FightResult({fight}:{fight:ArenaFightSummary}) {
