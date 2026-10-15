@@ -1,0 +1,2194 @@
+{
+  "generated_at": "2026-10-15T00:15:36.410923+02:00",
+  "branch": "feat/arena-v1",
+  "baseline": "09031033f0dddb0ba7c207f8018fb4830352e584",
+  "checkpoint": "90dc4100abcd991a46071e3a2105e690b1dc74b3",
+  "changed_files": [
+    "e2e/arena-fights.spec.ts",
+    "e2e/arena-showroom.spec.ts",
+    "e2e/arena.spec.ts",
+    "public/arena-showroom/README.txt",
+    "public/arena-showroom/champions.webp",
+    "public/arena-showroom/portraits.webp",
+    "public/arena-showroom/station-night.webp",
+    "shared/arena-fights.ts",
+    "shared/arena.ts",
+    "src/ArenaApp.tsx",
+    "src/ArenaAvatar.tsx",
+    "src/ArenaFight.tsx",
+    "src/ArenaFightClock.tsx",
+    "src/ArenaFightManager.tsx",
+    "src/ArenaFightPresentation.tsx",
+    "src/arena-avatars.ts",
+    "src/arena-fight-feedback.ts",
+    "src/arena-showroom.css",
+    "tests/arena-avatars.test.ts",
+    "tests/arena-fight-feedback.test.ts",
+    "tests/arena-fights.test.ts",
+    "worker/arena-fights.ts",
+    "worker/arena-stats.ts"
+  ],
+  "showcase_url": "/arena?showcase=1",
+  "disable_showcase_url": "/arena?showcase=0",
+  "capture": "Real local React/CSS implementation, controlled test data through local API fixtures, plus native local Worker integration tests. No mockup screenshots are used as application assets.",
+  "viewports": [
+    "1920x1080",
+    "1448x1086",
+    "1024x768",
+    "390x844",
+    "844x390"
+  ],
+  "review_images": [
+    {
+      "file": "avatar-min-arena-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 430346,
+      "sha256": "94052eb35c666b5083fac66f584d22742fcf1a428ae2fe8914c1d83ab15f53ed",
+      "category": "Min Arena"
+    },
+    {
+      "file": "avatar-min-arena-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 836348,
+      "sha256": "af59009dec364ba3d83567e0e16dfca6b7cf847b37de1f17e944a50113491813",
+      "category": "Min Arena"
+    },
+    {
+      "file": "avatar-min-arena-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1101524,
+      "sha256": "6bf01ef805d87db6fffdf179626fbcab2ba6e7da83507b6484b618f4ae385416",
+      "category": "Min Arena"
+    },
+    {
+      "file": "avatar-min-arena-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 208565,
+      "sha256": "842aeb5217fe5b10d0161617e176be340db6527691aecd9ab54debd66d8c698c",
+      "category": "Min Arena"
+    },
+    {
+      "file": "avatar-min-arena-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 175226,
+      "sha256": "1aa05b4985042a43817ad11c2438187b2fbcea8be9e940f2a5690f15dfa79489",
+      "category": "Min Arena"
+    },
+    {
+      "file": "avatars-feed-1024x768.png",
+      "width": 247,
+      "height": 298,
+      "bytes": 81894,
+      "sha256": "b9cb75d311c03ec3f690891507b5537f952c6669c2acaac7af0f8d0de21e3554",
+      "category": "Avatarer"
+    },
+    {
+      "file": "avatars-feed-1448x1086.png",
+      "width": 348,
+      "height": 492,
+      "bytes": 167022,
+      "sha256": "1c6545c37334f95bdc774742c798e61be20878610e59b9ca596ab083d4ec56c6",
+      "category": "Avatarer"
+    },
+    {
+      "file": "avatars-feed-1920x1080.png",
+      "width": 440,
+      "height": 423,
+      "bytes": 175384,
+      "sha256": "2d54827bd29635849a2b7a206695a5415393240b0d332bbe22c67432a3c33d24",
+      "category": "Avatarer"
+    },
+    {
+      "file": "avatars-leaderboard-1024x768.png",
+      "width": 247,
+      "height": 303,
+      "bytes": 81786,
+      "sha256": "21ec7ecc8df289a4aaeb9a97d3d4dfd4b332f72c8b9f5bdcc166c37103c8bc71",
+      "category": "Avatarer"
+    },
+    {
+      "file": "avatars-leaderboard-1448x1086.png",
+      "width": 348,
+      "height": 425,
+      "bytes": 134471,
+      "sha256": "ef4b9508b51f9b8f21f70e908cd34006a2cb10ed9ee93c10655fd55d8b238026",
+      "category": "Avatarer"
+    },
+    {
+      "file": "avatars-leaderboard-1920x1080.png",
+      "width": 440,
+      "height": 426,
+      "bytes": 162672,
+      "sha256": "446bf6e1e67470e3a57de56487dd3f76b649e9fd4a9d2637bb368c399cf4607e",
+      "category": "Avatarer"
+    },
+    {
+      "file": "fight-arena-final-loss-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 334302,
+      "sha256": "0a86341e1ae436fa3440bb119c5ac1776c6ad83238d373d613e6b3574fd5d433",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-arena-final-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1832821,
+      "sha256": "01ee5b67ccdfca3bfa581a329afb787f5c4002c7887ef9037e327016985ee9a0",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-final-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 679077,
+      "sha256": "2b34f71574a227bfe775743bd57f4ba0adc7f9bd207ccd6f26a9f4089141b421",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-final-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1407058,
+      "sha256": "97ce1521d606f56c074779d0fd9e9df83f701fd775b6729d5fc86e842407b288",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-final-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1833580,
+      "sha256": "6ea75e52f98ad65e56bcd34c91a341afee6d26b6fa67658b8b96ca1896c07073",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-final-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 342107,
+      "sha256": "198b9536117d04cc1895f8bd817e5291a2ac1555b9538d93ab5fe220edafb326",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-final-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 299085,
+      "sha256": "c984404ac73347442d59e144bf4f1a82c7b574de7cdd6d9e8941d336388cb170",
+      "category": "Final på Arenan"
+    },
+    {
+      "file": "fight-full-duel-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 937447,
+      "sha256": "c51f2637a00081dc127f2753acb0d434203425a8fd32c52dd5174fb79f1b14c8",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-duel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 246700,
+      "sha256": "8020959709144acd2b25c2a93d0c47ea96286b5cacf355035ae31b45309c574d",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-ranking-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 894821,
+      "sha256": "0d9784f12efb51e55f44c672bcbab69acc190aae77d4d1585cc95888b3e3713e",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-ranking-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 243951,
+      "sha256": "65073e15236b6a41d58ea8f48db872a667cf0f03f443726a8ebcf185a82653c8",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-tie-final-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 928643,
+      "sha256": "6bca7a756075f1df4a26e3021423087c5d2d2f9b7d4d90835d8fad5765c59df7",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-tie-final-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 238208,
+      "sha256": "288556fae1331d6c0bfbb8473e054577574ed9160c2528fa70f3f1e0f868dea1",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1058129,
+      "sha256": "64800204e80fdae3fc6d549548d811d35eceed7105d1a255c986df77069e5f00",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-full-winner-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 227479,
+      "sha256": "580632a37a06a562a0815e5b81d5d511abd9407635e168516dae41224661e32f",
+      "category": "Full Butiksfight"
+    },
+    {
+      "file": "fight-lead-change-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 519443,
+      "sha256": "3f4bf7f3f2c9d04ef909061fcd69478d8e5d70e575a3a840babb5792f5e14a9a",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-lead-change-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 851023,
+      "sha256": "4f64eabbfa093242d87a48535bc50f162a0aa860dc3393f7f4453bed4df315c3",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-lead-change-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 995670,
+      "sha256": "158c51b48336987b89b7d9ee5491fb8863b54321200b79835e036b1ec5deae27",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-lead-change-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 284466,
+      "sha256": "6d68771e0ac19a3651b7edb017b78a8b9dfd9aef885720abd14aef247a93125c",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-lead-change-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 256306,
+      "sha256": "d560f3910b3888915d4efd8f8997e4bd92249a992c7b6ce5027bec974a66e396",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-sale-lead-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 654653,
+      "sha256": "93c79f6a49eb079455f4e1e9814f17a91fbfc9d7326ffa633bf42f2d5e6ee7e9",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-sale-lead-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1354254,
+      "sha256": "92acd76d338537c9506e0fd2e4ffc9d74963b02cc0122703e4cbc8904127bae2",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-sale-lead-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1786751,
+      "sha256": "0780a1eea77bc09634a865533ed0a824fc645bb2156719ea900ce0648518e6db",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-sale-lead-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 328695,
+      "sha256": "6f5391464a131a81ec7212d7b712c4f34050be577f2024843f73d3787dce01ad",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-sale-lead-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 300446,
+      "sha256": "59f81007a62692132261a4c439fda7b0920eef6b89b96a769543ece3f3e16c64",
+      "category": "Fight tar ledningen"
+    },
+    {
+      "file": "fight-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 710034,
+      "sha256": "857e9ffd4f4f5d6195df08c9ce7aa370ddf6b62f45523bebb8ac78862f177f64",
+      "category": "Kvittering"
+    },
+    {
+      "file": "fight-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1449240,
+      "sha256": "7f067418c73cacc2a1674d3145c75ffb5fd029f3bcaf8e48eb5b542dd9259858",
+      "category": "Kvittering"
+    },
+    {
+      "file": "fight-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1905054,
+      "sha256": "6f4e6a1e9679e4757875b59459d5bab5545206f065d592e07bbb36afd662aee1",
+      "category": "Kvittering"
+    },
+    {
+      "file": "fight-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 340909,
+      "sha256": "f74a4c59f1d2bceba9ae9631866c90b20146d6c6adad96aae2862a947c08563c",
+      "category": "Kvittering"
+    },
+    {
+      "file": "fight-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 317709,
+      "sha256": "d2fbf9ca907ed36081933e834c500880e7567e496d1a2d51fdbcbc898e10348b",
+      "category": "Kvittering"
+    },
+    {
+      "file": "fight-widget-final-sprint-1280x720.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1196731,
+      "sha256": "814eb70a985e4f395979ee922ba0f909a14c4e1247ac1f4e238f1de6e847cc4f",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-tb-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2477818,
+      "sha256": "ef321b9e4d40f4aeffc5e147487b1318d46b0045dcc70830eb967cb60c01fdf1",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-tb-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477184,
+      "sha256": "83f0d3f76ca412e4f6b1dcc3f603e0f34c3e9ac26ac64779c927b97298b29300",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-urgency-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1047554,
+      "sha256": "422264220bfc5e9595227c21c95b4d242056559016a1d540f3a4ef7a6a3060f8",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-urgency-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1947113,
+      "sha256": "26c7324bdb12b19f5ceadb21dbebf2d0cf7a4d0106ae0c4d1a26e5d3356d9d41",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-urgency-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2478191,
+      "sha256": "7c148de8962767c0cf551dd5b952ff238ffea159da830dcc0775810f8c816aca",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-urgency-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477691,
+      "sha256": "a66bbf8e5fb3f347538b3a528d4c2a7d36bacfce8e175c5f6cf399081fc4b9b4",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "fight-widget-urgency-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 476430,
+      "sha256": "3a27e3c7e3a9acd9ebd7e12c663a89f833dcf965fbca183a566c6154be4992f2",
+      "category": "Fight-widget / slutspurt"
+    },
+    {
+      "file": "goal-hero-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 765007,
+      "sha256": "8d920bad77afd53a209712812747bb1a15bb48a8578930c9f21cf4a9bd77a662",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "goal-hero-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1428513,
+      "sha256": "bbbf7b2e48ce63588b67957b95fa229b1dd5efcd3cfda2e8a34bfc930a1b5172",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "goal-hero-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1864963,
+      "sha256": "0a76842fc2d59ea224388bb3cc712ec0447db3e463f7152bcc158f3f8dee9c6b",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "goal-hero-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 365851,
+      "sha256": "a9189a3d774bf81c8c0d2f2c7a4593385b3c98ba843e70579234de35190b9103",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "goal-hero-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 353786,
+      "sha256": "a8c62e61118c9c7b502925977b00dc36e3629bcd0d622c836d1db3a920a51a8f",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "left-column-1024x768.png",
+      "width": 247,
+      "height": 618,
+      "bytes": 169839,
+      "sha256": "b0e1b95334654c15ec340139def0ed438b786940c9f64d353ce778a79a82e6e7",
+      "category": "Vänsterkolumn"
+    },
+    {
+      "file": "left-column-1448x1086.png",
+      "width": 348,
+      "height": 936,
+      "bytes": 311004,
+      "sha256": "810a1e801a0785878d501b702dee1d402f863128a78489839b168ba7e3e31655",
+      "category": "Vänsterkolumn"
+    },
+    {
+      "file": "left-column-1920x1080.png",
+      "width": 440,
+      "height": 876,
+      "bytes": 353536,
+      "sha256": "8b818e80c48076fb8bd7130bc5764be9e21ef8080fd61c64baf657ef1b05c820",
+      "category": "Vänsterkolumn"
+    },
+    {
+      "file": "mobile-feed-panel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 190025,
+      "sha256": "75075ab7acdb631c0b04fa58797ae7771b96950f94ba0e57112e3553647be416",
+      "category": "Mobilpanel"
+    },
+    {
+      "file": "mobile-feed-panel-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 189347,
+      "sha256": "c329e112c997e356685f482cbc9626195067103a3b4accb382502cc976432600",
+      "category": "Mobilpanel"
+    },
+    {
+      "file": "new-leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 761990,
+      "sha256": "1c8442c0cad375177ba04bc40a7279aaa289582055a269b0eb436bed0b637c0b",
+      "category": "NY ETTA"
+    },
+    {
+      "file": "new-leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1874068,
+      "sha256": "6af3acf6d8a17e5f8bd816ebfd76d7670910ceb89d99363c0a7d44a3117debf8",
+      "category": "NY ETTA"
+    },
+    {
+      "file": "new-leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 359556,
+      "sha256": "02652617fef03783a78a57f7cfadc8a42ef39e193a948afc0107ea76e2450536",
+      "category": "NY ETTA"
+    },
+    {
+      "file": "new-leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 346133,
+      "sha256": "de6097c7b7161515825c8dc2e9972f5a137c688ea7bc513b5badc887d8cd4c84",
+      "category": "NY ETTA"
+    },
+    {
+      "file": "new-leader-activity-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1437788,
+      "sha256": "5d5c5baf890cb4762a37fd760c371cc57f36f2f56f1318969f74cbbf8a3682e5",
+      "category": "NY ETTA"
+    },
+    {
+      "file": "simultaneous-achievements-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1856976,
+      "sha256": "eb06ceecfef020bdc6699c8e948823cd0e50bd17e407789311ad7653bae6b3bf",
+      "category": "Mål och kombinerade achievements"
+    },
+    {
+      "file": "standard-sale-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 761052,
+      "sha256": "7e24c70df7c5ffe595468506cfc11baea08f96abf2a7f1411154bebf0da997ef",
+      "category": "Vanlig försäljning"
+    },
+    {
+      "file": "standard-sale-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1458669,
+      "sha256": "55cb7a0d29479eeec4f6bd314c44ef7c9e70dd51b6f3eb511bb28d81a17049b7",
+      "category": "Vanlig försäljning"
+    },
+    {
+      "file": "standard-sale-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1916205,
+      "sha256": "1ac6c26b50211c971f6b6504e784a8952182a63a62e0ebd4eacebdcd5bffb1aa",
+      "category": "Vanlig försäljning"
+    },
+    {
+      "file": "standard-sale-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 372457,
+      "sha256": "1967afef325815a332987cba76582e90ee90047beb7f801eaa4c8e83f13b901d",
+      "category": "Vanlig försäljning"
+    },
+    {
+      "file": "standard-sale-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 402628,
+      "sha256": "50b7b35245e19d95e88a0b81cced59f9e7a57a7d54643d84b428dff6287722a0",
+      "category": "Vanlig försäljning"
+    },
+    {
+      "file": "start-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1047113,
+      "sha256": "538db06c362799c8bee7f8b937389e2125b090b1554db62f7579aaaf2c80103f",
+      "category": "Start"
+    },
+    {
+      "file": "start-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1944527,
+      "sha256": "a20d7068485da75e322bb00fe600941a53446978b53db2a7fcf7ad4f40083b9a",
+      "category": "Start"
+    },
+    {
+      "file": "start-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2488617,
+      "sha256": "38942b6186b863303762aba967189adf6fe7ba128bec6c9d12533267e7f38089",
+      "category": "Start"
+    },
+    {
+      "file": "start-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 476664,
+      "sha256": "0cf2b49ff07510ba4493627d5699d2639b68fa0e9ff0b0b999f867a2a0344b47",
+      "category": "Start"
+    },
+    {
+      "file": "start-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 478420,
+      "sha256": "1132f5302b3c8dc999ab5bfa2434d70630a56a7026ca093ccd6e2bf42ccb2b64",
+      "category": "Start"
+    },
+    {
+      "file": "superadmin-fight-manager-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 809923,
+      "sha256": "5604163ab64c6e6b57e61a44330d02b106d8ce434ddfbb4b603c796378cbfa4d",
+      "category": "Superadmin"
+    }
+  ],
+  "all_screenshots": [
+    {
+      "file": "admin-goals.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 345577,
+      "sha256": "5d64e8d4a60aa8e46d8756a14ffd7950ceee89f2d9638ec52f3731bfa65b9618"
+    },
+    {
+      "file": "arena-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1043541,
+      "sha256": "eb8e8e085ea3542d21c67fc2a9dbf8f52553b699cd408a902a7434b69764056a"
+    },
+    {
+      "file": "arena-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2455617,
+      "sha256": "da660f080f086100b94e7388b917cbcd01f8013d42694574f8b0327cf61f6af9"
+    },
+    {
+      "file": "arena-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 476383,
+      "sha256": "7a458e409cdc73cc06024cca2a3f924a6be548a53f09fd9335ac78bf18efbd1d"
+    },
+    {
+      "file": "arena-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479656,
+      "sha256": "da7a919c303ca4d90c819f639bb7d4c8619075897cdd25f695669d3c1ab4937c"
+    },
+    {
+      "file": "avatar-min-arena-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 430346,
+      "sha256": "94052eb35c666b5083fac66f584d22742fcf1a428ae2fe8914c1d83ab15f53ed"
+    },
+    {
+      "file": "avatar-min-arena-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 836348,
+      "sha256": "af59009dec364ba3d83567e0e16dfca6b7cf847b37de1f17e944a50113491813"
+    },
+    {
+      "file": "avatar-min-arena-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1101524,
+      "sha256": "6bf01ef805d87db6fffdf179626fbcab2ba6e7da83507b6484b618f4ae385416"
+    },
+    {
+      "file": "avatar-min-arena-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 208565,
+      "sha256": "842aeb5217fe5b10d0161617e176be340db6527691aecd9ab54debd66d8c698c"
+    },
+    {
+      "file": "avatar-min-arena-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 175226,
+      "sha256": "1aa05b4985042a43817ad11c2438187b2fbcea8be9e940f2a5690f15dfa79489"
+    },
+    {
+      "file": "avatars-feed-1024x768.png",
+      "width": 247,
+      "height": 298,
+      "bytes": 81894,
+      "sha256": "b9cb75d311c03ec3f690891507b5537f952c6669c2acaac7af0f8d0de21e3554"
+    },
+    {
+      "file": "avatars-feed-1448x1086.png",
+      "width": 348,
+      "height": 492,
+      "bytes": 167022,
+      "sha256": "1c6545c37334f95bdc774742c798e61be20878610e59b9ca596ab083d4ec56c6"
+    },
+    {
+      "file": "avatars-feed-1920x1080.png",
+      "width": 440,
+      "height": 423,
+      "bytes": 175384,
+      "sha256": "2d54827bd29635849a2b7a206695a5415393240b0d332bbe22c67432a3c33d24"
+    },
+    {
+      "file": "avatars-leaderboard-1024x768.png",
+      "width": 247,
+      "height": 303,
+      "bytes": 81786,
+      "sha256": "21ec7ecc8df289a4aaeb9a97d3d4dfd4b332f72c8b9f5bdcc166c37103c8bc71"
+    },
+    {
+      "file": "avatars-leaderboard-1448x1086.png",
+      "width": 348,
+      "height": 425,
+      "bytes": 134471,
+      "sha256": "ef4b9508b51f9b8f21f70e908cd34006a2cb10ed9ee93c10655fd55d8b238026"
+    },
+    {
+      "file": "avatars-leaderboard-1920x1080.png",
+      "width": 440,
+      "height": 426,
+      "bytes": 162672,
+      "sha256": "446bf6e1e67470e3a57de56487dd3f76b649e9fd4a9d2637bb368c399cf4607e"
+    },
+    {
+      "file": "before/arena-responsive-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1000243,
+      "sha256": "f11b7842d7081867ea42a9664af54907050a0e608d998a0dd52a4f9164f2413f"
+    },
+    {
+      "file": "before/arena-responsive-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1844132,
+      "sha256": "79a831e78b7e9c401682bb1ab93e90045b1ba54a38c7c2d04a1ad518eec62438"
+    },
+    {
+      "file": "before/arena-responsive-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2262448,
+      "sha256": "6e9fe9573d5b73884256cc946c421805b697ac640b4370e95e3d3cc345369dba"
+    },
+    {
+      "file": "before/arena-responsive-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 463908,
+      "sha256": "1d7b91715da5527839248ebd4f6807e8a34d4c154d3756c2a23b671429330c50"
+    },
+    {
+      "file": "before/arena-responsive-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 445996,
+      "sha256": "5e28d5dba8b034f57f0e066d5dcf8c25ecc18ddad72e5b55b6a827bb88edded9"
+    },
+    {
+      "file": "central-leader-Aktuellt-fokus.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1099993,
+      "sha256": "aa410106c52f10bd7cc7eacbec66263ec8ab1c2c96052e669c0a6fa710bff863"
+    },
+    {
+      "file": "central-leader-Den-här-månaden.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1100088,
+      "sha256": "cdf0b29652d9935efa5af3f984358558c2878ced433ce89c77b67f454cd0a6fd"
+    },
+    {
+      "file": "central-leader-Den-här-veckan.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1130417,
+      "sha256": "71535015b4f4bef4d5c1b0f957771f70c5b7793e4551cabfbabec28ed221a5ef"
+    },
+    {
+      "file": "central-leader-Idag.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1067868,
+      "sha256": "7a1a79f07ce09006ba8f45b9ec5f92888fa97781cd3a0d4593bde8f568f3d0e1"
+    },
+    {
+      "file": "central-leader-Kaffe-+-bulle.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1067924,
+      "sha256": "d5520c6c0dc9531dfff77870b1fc4b597e922144fce6668c4688b1857ce0af67"
+    },
+    {
+      "file": "central-leader-Vald-period.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1154408,
+      "sha256": "e287bb40204a9d57f2a256d19a726a2215ee31501411825f091ebf697755e1dd"
+    },
+    {
+      "file": "daily-home-after-month-tb-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1044348,
+      "sha256": "375ac2205a4103d2a4b3dee7e7c24ec83196f05a0a38d0bcc7e782a99723b431"
+    },
+    {
+      "file": "daily-home-after-month-tb-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1936151,
+      "sha256": "ed51fc7f940f1e52e59617d6dad1298ccb3175487c12d23cd7d64662637be84f"
+    },
+    {
+      "file": "daily-home-after-month-tb-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2468264,
+      "sha256": "8e78c2ebc0c99d71a4e5714515775a31070eb3f079f9ed76bd04fc6fd43ad4ec"
+    },
+    {
+      "file": "daily-home-after-month-tb-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477254,
+      "sha256": "9587010a7ee84390a080dd4d6a0aec4367f7cc393f0e2a2953d086c6e1cf3bd6"
+    },
+    {
+      "file": "daily-home-after-month-tb-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479604,
+      "sha256": "b56bb67e1a626bf2b1d37bd739d341e9da62c181137951c4e839acb6fc684adf"
+    },
+    {
+      "file": "desktop-orbit-1280x800.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 1298864,
+      "sha256": "7af0a53a63b854123d2ad58de5d112a6e38709b870dc06f3d0bc9e4c1792dac2"
+    },
+    {
+      "file": "desktop-orbit-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "bytes": 1336546,
+      "sha256": "6725d65f59e00af6efca3796a441f912ec001498b201b46c8f2040db8e92a230"
+    },
+    {
+      "file": "desktop-orbit-1440x900.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 1613066,
+      "sha256": "59eeafaeb2787a18bc998c98a57d4d1928297d8ba181a4a519e22366e5f2211f"
+    },
+    {
+      "file": "desktop-orbit-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1935146,
+      "sha256": "0a913e631007e06ce4b214b3e3b730ea9526f6b4d24478365fb4a68f64318f49"
+    },
+    {
+      "file": "desktop-orbit-1920x1200.png",
+      "width": 1920,
+      "height": 1200,
+      "bytes": 2681418,
+      "sha256": "fca4ad26bee000e98478c7c12eeb12270664687e9b3aaaed226a09838f0015fc"
+    },
+    {
+      "file": "fight-active-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 505988,
+      "sha256": "4d005bd3d819200bbd8a0e8b63ce77b49e00910f0ca843c3f0055491ae09b151"
+    },
+    {
+      "file": "fight-active-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 722916,
+      "sha256": "838de94aa18f7d48103c8a3bc3edc9779806f47788b01ffcf9e6f4872bb076be"
+    },
+    {
+      "file": "fight-active-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 815049,
+      "sha256": "883d4085eb60547762e418d1b4bd683e803bef55ed9d14a3d16bb999ea13f1ac"
+    },
+    {
+      "file": "fight-active-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 253617,
+      "sha256": "742987dbf3b5493fb1b452759e9bb1548d40839967830d6dba143f596548bf4e"
+    },
+    {
+      "file": "fight-active-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 199221,
+      "sha256": "6bfd8709f76b57ec3adbf770c44e15342dbeac04e77c8243ab60c8723584f502"
+    },
+    {
+      "file": "fight-arena-final-loss-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 334302,
+      "sha256": "0a86341e1ae436fa3440bb119c5ac1776c6ad83238d373d613e6b3574fd5d433"
+    },
+    {
+      "file": "fight-arena-final-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1832821,
+      "sha256": "01ee5b67ccdfca3bfa581a329afb787f5c4002c7887ef9037e327016985ee9a0"
+    },
+    {
+      "file": "fight-final-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 679077,
+      "sha256": "2b34f71574a227bfe775743bd57f4ba0adc7f9bd207ccd6f26a9f4089141b421"
+    },
+    {
+      "file": "fight-final-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1407058,
+      "sha256": "97ce1521d606f56c074779d0fd9e9df83f701fd775b6729d5fc86e842407b288"
+    },
+    {
+      "file": "fight-final-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1833580,
+      "sha256": "6ea75e52f98ad65e56bcd34c91a341afee6d26b6fa67658b8b96ca1896c07073"
+    },
+    {
+      "file": "fight-final-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 342107,
+      "sha256": "198b9536117d04cc1895f8bd817e5291a2ac1555b9538d93ab5fe220edafb326"
+    },
+    {
+      "file": "fight-final-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 299085,
+      "sha256": "c984404ac73347442d59e144bf4f1a82c7b574de7cdd6d9e8941d336388cb170"
+    },
+    {
+      "file": "fight-finished-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 458634,
+      "sha256": "64eb12a587a11ea6e32f50d3e32d95417557e20d87fc15a9069a08d201443548"
+    },
+    {
+      "file": "fight-finished-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 882852,
+      "sha256": "fc0523524f63d004ccdb2f5e371b74da283afc8280650018b1ca180a51d2fd7e"
+    },
+    {
+      "file": "fight-finished-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1029199,
+      "sha256": "7ca224652d6a4996038b63001170e13156154ecf3268bd5f09b083b5cd80a360"
+    },
+    {
+      "file": "fight-finished-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 236776,
+      "sha256": "3346f1cab601544935401977b29e4d7695c9c62683c3cc809224c3b7a02b184c"
+    },
+    {
+      "file": "fight-finished-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 186140,
+      "sha256": "7f94c85a2ca751f42e5c2a9bd4ea4f3e094516e2590d3bc87b05bdaaec4c0808"
+    },
+    {
+      "file": "fight-full-duel-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 937447,
+      "sha256": "c51f2637a00081dc127f2753acb0d434203425a8fd32c52dd5174fb79f1b14c8"
+    },
+    {
+      "file": "fight-full-duel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 246700,
+      "sha256": "8020959709144acd2b25c2a93d0c47ea96286b5cacf355035ae31b45309c574d"
+    },
+    {
+      "file": "fight-full-ranking-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 894821,
+      "sha256": "0d9784f12efb51e55f44c672bcbab69acc190aae77d4d1585cc95888b3e3713e"
+    },
+    {
+      "file": "fight-full-ranking-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 243951,
+      "sha256": "65073e15236b6a41d58ea8f48db872a667cf0f03f443726a8ebcf185a82653c8"
+    },
+    {
+      "file": "fight-full-tie-final-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 928643,
+      "sha256": "6bca7a756075f1df4a26e3021423087c5d2d2f9b7d4d90835d8fad5765c59df7"
+    },
+    {
+      "file": "fight-full-tie-final-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 238208,
+      "sha256": "288556fae1331d6c0bfbb8473e054577574ed9160c2528fa70f3f1e0f868dea1"
+    },
+    {
+      "file": "fight-full-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1058129,
+      "sha256": "64800204e80fdae3fc6d549548d811d35eceed7105d1a255c986df77069e5f00"
+    },
+    {
+      "file": "fight-full-winner-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 227479,
+      "sha256": "580632a37a06a562a0815e5b81d5d511abd9407635e168516dae41224661e32f"
+    },
+    {
+      "file": "fight-indicator-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1042473,
+      "sha256": "409b7fa433b5ae034c203e49db8617dd9ec613fa234494e0cdec8b10eebe1297"
+    },
+    {
+      "file": "fight-indicator-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1934134,
+      "sha256": "2d6e23f39541850dc2b672f5c0411d3af2b1095e4c02e9b68118b095c1e0cc6e"
+    },
+    {
+      "file": "fight-indicator-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2465095,
+      "sha256": "410c947925f23ce93fdee0f21bb3f1c067a1305a6cdc23033f8983fef2745ab5"
+    },
+    {
+      "file": "fight-indicator-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477215,
+      "sha256": "79591eaa0042eb7435c9613ec83051f4467f38a25b03f45ea821c893cf2a221d"
+    },
+    {
+      "file": "fight-indicator-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 477383,
+      "sha256": "c78770736c220dd4eddaa0c68d7c61544d5803bfff186b138f70151200d8f8b0"
+    },
+    {
+      "file": "fight-lead-change-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 519443,
+      "sha256": "3f4bf7f3f2c9d04ef909061fcd69478d8e5d70e575a3a840babb5792f5e14a9a"
+    },
+    {
+      "file": "fight-lead-change-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 851023,
+      "sha256": "4f64eabbfa093242d87a48535bc50f162a0aa860dc3393f7f4453bed4df315c3"
+    },
+    {
+      "file": "fight-lead-change-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 995670,
+      "sha256": "158c51b48336987b89b7d9ee5491fb8863b54321200b79835e036b1ec5deae27"
+    },
+    {
+      "file": "fight-lead-change-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 284466,
+      "sha256": "6d68771e0ac19a3651b7edb017b78a8b9dfd9aef885720abd14aef247a93125c"
+    },
+    {
+      "file": "fight-lead-change-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 256306,
+      "sha256": "d560f3910b3888915d4efd8f8997e4bd92249a992c7b6ce5027bec974a66e396"
+    },
+    {
+      "file": "fight-sale-lead-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 654653,
+      "sha256": "93c79f6a49eb079455f4e1e9814f17a91fbfc9d7326ffa633bf42f2d5e6ee7e9"
+    },
+    {
+      "file": "fight-sale-lead-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1354254,
+      "sha256": "92acd76d338537c9506e0fd2e4ffc9d74963b02cc0122703e4cbc8904127bae2"
+    },
+    {
+      "file": "fight-sale-lead-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1786751,
+      "sha256": "0780a1eea77bc09634a865533ed0a824fc645bb2156719ea900ce0648518e6db"
+    },
+    {
+      "file": "fight-sale-lead-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 328695,
+      "sha256": "6f5391464a131a81ec7212d7b712c4f34050be577f2024843f73d3787dce01ad"
+    },
+    {
+      "file": "fight-sale-lead-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 300446,
+      "sha256": "59f81007a62692132261a4c439fda7b0920eef6b89b96a769543ece3f3e16c64"
+    },
+    {
+      "file": "fight-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 710034,
+      "sha256": "857e9ffd4f4f5d6195df08c9ce7aa370ddf6b62f45523bebb8ac78862f177f64"
+    },
+    {
+      "file": "fight-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1449240,
+      "sha256": "7f067418c73cacc2a1674d3145c75ffb5fd029f3bcaf8e48eb5b542dd9259858"
+    },
+    {
+      "file": "fight-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1905054,
+      "sha256": "6f4e6a1e9679e4757875b59459d5bab5545206f065d592e07bbb36afd662aee1"
+    },
+    {
+      "file": "fight-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 340909,
+      "sha256": "f74a4c59f1d2bceba9ae9631866c90b20146d6c6adad96aae2862a947c08563c"
+    },
+    {
+      "file": "fight-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 317709,
+      "sha256": "d2fbf9ca907ed36081933e834c500880e7567e496d1a2d51fdbcbc898e10348b"
+    },
+    {
+      "file": "fight-widget-final-sprint-1280x720.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1196731,
+      "sha256": "814eb70a985e4f395979ee922ba0f909a14c4e1247ac1f4e238f1de6e847cc4f"
+    },
+    {
+      "file": "fight-widget-tb-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2477818,
+      "sha256": "ef321b9e4d40f4aeffc5e147487b1318d46b0045dcc70830eb967cb60c01fdf1"
+    },
+    {
+      "file": "fight-widget-tb-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477184,
+      "sha256": "83f0d3f76ca412e4f6b1dcc3f603e0f34c3e9ac26ac64779c927b97298b29300"
+    },
+    {
+      "file": "fight-widget-urgency-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1047554,
+      "sha256": "422264220bfc5e9595227c21c95b4d242056559016a1d540f3a4ef7a6a3060f8"
+    },
+    {
+      "file": "fight-widget-urgency-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1947113,
+      "sha256": "26c7324bdb12b19f5ceadb21dbebf2d0cf7a4d0106ae0c4d1a26e5d3356d9d41"
+    },
+    {
+      "file": "fight-widget-urgency-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2478191,
+      "sha256": "7c148de8962767c0cf551dd5b952ff238ffea159da830dcc0775810f8c816aca"
+    },
+    {
+      "file": "fight-widget-urgency-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477691,
+      "sha256": "a66bbf8e5fb3f347538b3a528d4c2a7d36bacfce8e175c5f6cf399081fc4b9b4"
+    },
+    {
+      "file": "fight-widget-urgency-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 476430,
+      "sha256": "3a27e3c7e3a9acd9ebd7e12c663a89f833dcf965fbca183a566c6154be4992f2"
+    },
+    {
+      "file": "goal-hero-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 765007,
+      "sha256": "8d920bad77afd53a209712812747bb1a15bb48a8578930c9f21cf4a9bd77a662"
+    },
+    {
+      "file": "goal-hero-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1428513,
+      "sha256": "bbbf7b2e48ce63588b67957b95fa229b1dd5efcd3cfda2e8a34bfc930a1b5172"
+    },
+    {
+      "file": "goal-hero-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1864963,
+      "sha256": "0a76842fc2d59ea224388bb3cc712ec0447db3e463f7152bcc158f3f8dee9c6b"
+    },
+    {
+      "file": "goal-hero-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 365851,
+      "sha256": "a9189a3d774bf81c8c0d2f2c7a4593385b3c98ba843e70579234de35190b9103"
+    },
+    {
+      "file": "goal-hero-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 353786,
+      "sha256": "a8c62e61118c9c7b502925977b00dc36e3629bcd0d622c836d1db3a920a51a8f"
+    },
+    {
+      "file": "hero-burst-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 758624,
+      "sha256": "0990662355cce1d21bdf154dc12f24b65678e59f0c755cb4fe4ac0185468821d"
+    },
+    {
+      "file": "hero-burst-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1910931,
+      "sha256": "1b3346a765e72c5527b808df2af00e3326817a661c4fdddbcd4d1766d74130f8"
+    },
+    {
+      "file": "hero-burst-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 374399,
+      "sha256": "120390eb6298a4b40a2a2bbd66870c166c0fc49c6d80c02be4aa92887bc5bd17"
+    },
+    {
+      "file": "hero-burst-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 403377,
+      "sha256": "ebc5351d958d6e09f5c4cb608a7c2a2f4651eec933f6316aa70830db1695429d"
+    },
+    {
+      "file": "leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 741587,
+      "sha256": "c867a13ab9d4f26e4ad1d058624e93022a685458d403d3ac9821a102511a60ce"
+    },
+    {
+      "file": "leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1850128,
+      "sha256": "b63f130fcfb994e6cbf060d281973aa7c28f755bee0dfa67add8f42b27b992ba"
+    },
+    {
+      "file": "leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 344264,
+      "sha256": "374127e21cf8b828a21cfb6685acd5af4cac19f51d8291f7b4902169399fc8fa"
+    },
+    {
+      "file": "leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 335587,
+      "sha256": "dcbc7d644118e1ce784c4a4d661a7b86c3ea44c26b1c68e5509bea4b7be1b8ca"
+    },
+    {
+      "file": "leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1043836,
+      "sha256": "fa084eedbdaffc0eb3173430ebe7a74ead2d1efa1350ff6ca7bd8246a538744d"
+    },
+    {
+      "file": "leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2478324,
+      "sha256": "dd6993f14308f56dca8eb5f5c357bb44113e589e9ad52f0dbe82db0c5310fa4d"
+    },
+    {
+      "file": "leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477189,
+      "sha256": "cb2090c70312500962f729e063c58036235eaadeebaed1ab7ba38218bd2e84c2"
+    },
+    {
+      "file": "leaderboard-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479473,
+      "sha256": "9213323f4be10e1a8543d70d02a1dde49decc9d16802c9545ba5505b50706d34"
+    },
+    {
+      "file": "left-column-1024x768.png",
+      "width": 247,
+      "height": 618,
+      "bytes": 169839,
+      "sha256": "b0e1b95334654c15ec340139def0ed438b786940c9f64d353ce778a79a82e6e7"
+    },
+    {
+      "file": "left-column-1448x1086.png",
+      "width": 348,
+      "height": 936,
+      "bytes": 311004,
+      "sha256": "810a1e801a0785878d501b702dee1d402f863128a78489839b168ba7e3e31655"
+    },
+    {
+      "file": "left-column-1920x1080.png",
+      "width": 440,
+      "height": 876,
+      "bytes": 353536,
+      "sha256": "8b818e80c48076fb8bd7130bc5764be9e21ef8080fd61c64baf657ef1b05c820"
+    },
+    {
+      "file": "level-2-near-personal-goal.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1166546,
+      "sha256": "f6a54457c5f0be9eb0aa0787c3fc9cc530c1744892353cb7183a77bf615bcc26"
+    },
+    {
+      "file": "mobile-feed-panel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 190025,
+      "sha256": "75075ab7acdb631c0b04fa58797ae7771b96950f94ba0e57112e3553647be416"
+    },
+    {
+      "file": "mobile-feed-panel-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 189347,
+      "sha256": "c329e112c997e356685f482cbc9626195067103a3b4accb382502cc976432600"
+    },
+    {
+      "file": "multi-station-leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 347508,
+      "sha256": "6a7d1d43c3decf530595320229f1bc52fd6a593d1b99e96d7b69eff55185ef40"
+    },
+    {
+      "file": "multi-station-leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 796197,
+      "sha256": "a6f1f53fca9171cfbaf50a89fe2374025198b0793fb5b5f5f0ce8a21bac25de0"
+    },
+    {
+      "file": "multi-station-leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 193625,
+      "sha256": "db47f2009e184b9273b15697bb162e9a619a1d16979174d8b9d0b061e3135338"
+    },
+    {
+      "file": "new-leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 761990,
+      "sha256": "1c8442c0cad375177ba04bc40a7279aaa289582055a269b0eb436bed0b637c0b"
+    },
+    {
+      "file": "new-leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1874068,
+      "sha256": "6af3acf6d8a17e5f8bd816ebfd76d7670910ceb89d99363c0a7d44a3117debf8"
+    },
+    {
+      "file": "new-leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 359556,
+      "sha256": "02652617fef03783a78a57f7cfadc8a42ef39e193a948afc0107ea76e2450536"
+    },
+    {
+      "file": "new-leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 346133,
+      "sha256": "de6097c7b7161515825c8dc2e9972f5a137c688ea7bc513b5badc887d8cd4c84"
+    },
+    {
+      "file": "new-leader-activity-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1437788,
+      "sha256": "5d5c5baf890cb4762a37fd760c371cc57f36f2f56f1318969f74cbbf8a3682e5"
+    },
+    {
+      "file": "onboarding-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 344361,
+      "sha256": "3460643f9ba0426d504997e778c87161d923bb9ba43dd5b12c4b01beb4a2d629"
+    },
+    {
+      "file": "onboarding-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 747308,
+      "sha256": "b10770b102a65d5b89b221a5a05346e443587c9c5de072f80bc8915d0436c603"
+    },
+    {
+      "file": "onboarding-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 176098,
+      "sha256": "5795593343475de61bc89a30f160b784aa9ca81eb4e601433970dba4bc80cca9"
+    },
+    {
+      "file": "pending-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 367785,
+      "sha256": "cb5ff66e040703328719466c27fe63886708a4619cd79e3bd7d6cf06f6e6e08c"
+    },
+    {
+      "file": "pending-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 759934,
+      "sha256": "ede7ba9ab87bf300027e1bc9bb79b4aee3ec7cc4b8a90691fcf1b368e1c2650e"
+    },
+    {
+      "file": "pending-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 197632,
+      "sha256": "3394b1585a89ef91419bfed93eec56aa547407013e7fc586873f34f53faafe44"
+    },
+    {
+      "file": "person-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 427876,
+      "sha256": "a5df65e89de508432a7e3f23a5467a2c6beb8bd1298a9f61f5a20ef5a9c11af1"
+    },
+    {
+      "file": "person-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "bytes": 573093,
+      "sha256": "45794d64ad5c6b1a5853229df557388670aa43e57102dfa51fb3cf7762ea3bec"
+    },
+    {
+      "file": "person-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1059835,
+      "sha256": "51c8a0476d30f94d24e8a2dd65f8e4116809d76d30ffcb244c71e3e8e168522f"
+    },
+    {
+      "file": "person-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 195976,
+      "sha256": "579a1cbe11ffaeef795e4ca77e5fb97b6beba63049c4bd1885a2f01fee25ee2e"
+    },
+    {
+      "file": "person-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 172003,
+      "sha256": "1347ffcd1c341b199183605cd40fa399eee40cefacbe43108ed1f539700315e5"
+    },
+    {
+      "file": "person-empty-desktop.png",
+      "width": 1366,
+      "height": 768,
+      "bytes": 571963,
+      "sha256": "82218195932f2ddfbee3dacd61c1cc939623f73ec36eed62fe080212d28e6142"
+    },
+    {
+      "file": "personal-goal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 740418,
+      "sha256": "a965bcc7804936a2a67421853c1a6976b0cbbfaf11457f0278933b44f3ec7957"
+    },
+    {
+      "file": "personal-goal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1832906,
+      "sha256": "3de71cb6851de6b6ebeac7491cb936fc116c234ff6732aef5d88d696eaa34038"
+    },
+    {
+      "file": "personal-goal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 348450,
+      "sha256": "e47c6fd00bedd978209f5ccfbf5b634089850dd823559c24cf8392926a3dbf4b"
+    },
+    {
+      "file": "personal-goal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 342638,
+      "sha256": "2362275d80ae3dc54eddf6ecdc1b84497a6f6c2b352f8624b360a2de7af703e1"
+    },
+    {
+      "file": "product-upload-preview.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 360948,
+      "sha256": "840b904a17ea2fecbaced13e5b2fdea9b3f5906e5ec946b25f66db1895031bdf"
+    },
+    {
+      "file": "products-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1044062,
+      "sha256": "08f0863f888db89c29d173c082fc77d4dbccdab2e958ea87773a442fef981bd2"
+    },
+    {
+      "file": "products-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1935249,
+      "sha256": "1d4306adbecfa4fe5a8de990c5156d0d5803532cb098f603095405e8927309a7"
+    },
+    {
+      "file": "products-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2479269,
+      "sha256": "c3d6e0fee32c7022454876b6fb9d1eed2cfcfb343a1c845da0e4e5e66e896891"
+    },
+    {
+      "file": "products-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477280,
+      "sha256": "dc30538f17867c630f83e6d91ce31885b828b9818e243c200cc188d7a373fdea"
+    },
+    {
+      "file": "products-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479495,
+      "sha256": "d02f37b3754980032282dc43efaa5b614e8f8ff87dbb3b0ed5b60671f12458a0"
+    },
+    {
+      "file": "registration-reward.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 903862,
+      "sha256": "ad8bad24171b7f7c52ce4b27348fd4277f9e9c4881ece6a044018ba3c04f0611"
+    },
+    {
+      "file": "responsive-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1043519,
+      "sha256": "e66627b863ad959cd87dee6a5bf9a4051719bfda8af1bc953d22bf5796c3d86d"
+    },
+    {
+      "file": "responsive-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1917080,
+      "sha256": "228c3dc7f1ec44e78f54fe335a8ed726154d04f2025d3e716baa066c3b50eb11"
+    },
+    {
+      "file": "responsive-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2460862,
+      "sha256": "1b3b50b2dfb0c9ab0acfdba537c6ab7bc65943ee019c1bf10f4376d31b7414b3"
+    },
+    {
+      "file": "responsive-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 477383,
+      "sha256": "b6e8cfa26694f4c249b9c5e97387633073d15192c95a234c9ab74004420a0847"
+    },
+    {
+      "file": "responsive-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479748,
+      "sha256": "1eff9b0d461d90e9796024b40cc01701cfb42b0cf83fabda198dd17b3b9c0112"
+    },
+    {
+      "file": "sellers-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 471793,
+      "sha256": "e579b8c27691a2e2a063834bc0c15f04a74aa91bd35d8ff63d960f0b59b7f067"
+    },
+    {
+      "file": "sellers-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "bytes": 608322,
+      "sha256": "7161037705038440bfd812b0bca31ca3abc08bb8e26d622dd977354a5fe1a16b"
+    },
+    {
+      "file": "sellers-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1144438,
+      "sha256": "78dd9405178ff5fdb937dd9190177ea5a0bef70f954854adda9be54b1f137bd6"
+    },
+    {
+      "file": "sellers-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 220125,
+      "sha256": "ce7932b1c93f55aed36477004092c02e0ebef410d683b643898609532155ade5"
+    },
+    {
+      "file": "sellers-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 239096,
+      "sha256": "90291f821d8f13bd93c6b8645e2b891e50324bfe866a98944ecca367ae431fe6"
+    },
+    {
+      "file": "simultaneous-achievements-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1856976,
+      "sha256": "eb06ceecfef020bdc6699c8e948823cd0e50bd17e407789311ad7653bae6b3bf"
+    },
+    {
+      "file": "standard-sale-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 761052,
+      "sha256": "7e24c70df7c5ffe595468506cfc11baea08f96abf2a7f1411154bebf0da997ef"
+    },
+    {
+      "file": "standard-sale-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1458669,
+      "sha256": "55cb7a0d29479eeec4f6bd314c44ef7c9e70dd51b6f3eb511bb28d81a17049b7"
+    },
+    {
+      "file": "standard-sale-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1916205,
+      "sha256": "1ac6c26b50211c971f6b6504e784a8952182a63a62e0ebd4eacebdcd5bffb1aa"
+    },
+    {
+      "file": "standard-sale-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 372457,
+      "sha256": "1967afef325815a332987cba76582e90ee90047beb7f801eaa4c8e83f13b901d"
+    },
+    {
+      "file": "standard-sale-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 402628,
+      "sha256": "50b7b35245e19d95e88a0b81cced59f9e7a57a7d54643d84b428dff6287722a0"
+    },
+    {
+      "file": "start-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1047113,
+      "sha256": "538db06c362799c8bee7f8b937389e2125b090b1554db62f7579aaaf2c80103f"
+    },
+    {
+      "file": "start-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1944527,
+      "sha256": "a20d7068485da75e322bb00fe600941a53446978b53db2a7fcf7ad4f40083b9a"
+    },
+    {
+      "file": "start-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2488617,
+      "sha256": "38942b6186b863303762aba967189adf6fe7ba128bec6c9d12533267e7f38089"
+    },
+    {
+      "file": "start-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 476664,
+      "sha256": "0cf2b49ff07510ba4493627d5699d2639b68fa0e9ff0b0b999f867a2a0344b47"
+    },
+    {
+      "file": "start-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 478420,
+      "sha256": "1132f5302b3c8dc999ab5bfa2434d70630a56a7026ca093ccd6e2bf42ccb2b64"
+    },
+    {
+      "file": "station-goal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 738870,
+      "sha256": "f09679829429ea82d6cbcc1a6eef1600bef84dbdb02b872aa184332431e73129"
+    },
+    {
+      "file": "station-goal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1832855,
+      "sha256": "25df33b2e2c2fc004bf5968fcdc3b744d6331475d86a53510f2402d8b89f2f60"
+    },
+    {
+      "file": "station-goal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 347162,
+      "sha256": "bec2e6957fb136ec127896ed5b468c0aeab6db58b4a878da35fe7abc5b83e7cf"
+    },
+    {
+      "file": "station-goal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 341638,
+      "sha256": "f944dc97d81b6e6a5aaa2d37d4a3316e2bcb64927b330f00a6dd0761eadb2149"
+    },
+    {
+      "file": "station-group-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 346757,
+      "sha256": "43c79b249726a2093271c6bbcb44ed86a3c49022579e370ed5612317bc81a3d4"
+    },
+    {
+      "file": "station-group-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 785333,
+      "sha256": "712f66f365e1e2fd5cd45eeb07fb4a0602e0144959337f44d046a9825759ede4"
+    },
+    {
+      "file": "station-group-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 181252,
+      "sha256": "ad2ef541319d598201559c6ef2a755e264e25877706a0d6624cd4572745c38a7"
+    },
+    {
+      "file": "station-login-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 340600,
+      "sha256": "affb548d111400e5380571ace1b953efd616a36894a7f10607c349b5645a82d8"
+    },
+    {
+      "file": "station-login-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 742067,
+      "sha256": "66881437e5c97930e7b4d4068f2c53781ee125b99f2f848e59a25b06e2966697"
+    },
+    {
+      "file": "station-login-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 171902,
+      "sha256": "ebf0996b227d41816de09da3e362921d2d6d227a1cca9b09a74f54aea2dcec3c"
+    },
+    {
+      "file": "superadmin-create-fight.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 789495,
+      "sha256": "bf47b4db25ff273c143f2e5629a475888f95aada27a3758edc5cce890bf61166"
+    },
+    {
+      "file": "superadmin-fight-manager-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 809923,
+      "sha256": "5604163ab64c6e6b57e61a44330d02b106d8ce434ddfbb4b603c796378cbfa4d"
+    },
+    {
+      "file": "superadmin-groups-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 365581,
+      "sha256": "191a2e0383a5fb2c1ac50c8ba00749b23bc61602c8c10707d2ad1c48d9a0466e"
+    },
+    {
+      "file": "superadmin-groups-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 762368,
+      "sha256": "315d21f8daba736126b06472ef52ce4c0dc587e2374826016d50057dcabfe895"
+    },
+    {
+      "file": "superadmin-groups-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 183070,
+      "sha256": "8f73a9e60c254ef60ee2cff6b4c5f88fb165ce28825ba7f0e9fb4838c85ad99a"
+    },
+    {
+      "file": "superadmin-stations-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 344711,
+      "sha256": "41e5e9523eb8902c10617a85445b5881d6d6f9a84fd84f443ee81ae942bfd8d3"
+    },
+    {
+      "file": "superadmin-stations-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 700411,
+      "sha256": "4411ff3f00c99104eea39dda3f25ce014b84cae12ccc225fd1973fcdd5674e21"
+    },
+    {
+      "file": "superadmin-stations-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 194843,
+      "sha256": "26f96e61ff06440f8cdcacce550444c64366380babec2a9d627c015d4242b4cb"
+    },
+    {
+      "file": "tb-admin.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 368948,
+      "sha256": "d24367b2bf22b2fc30e22d6a5681b442638c51efae8dec5644571d6a40584b68"
+    },
+    {
+      "file": "tb-badge-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1044376,
+      "sha256": "5fa832a3cebfc237586f999c34e2ecf882e7f4574bc810be9f6783ec688ca708"
+    },
+    {
+      "file": "tb-badge-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1937675,
+      "sha256": "abee6827972262d67ff773920f2e7cd876991d1707813ff48adccd9c7b6d2495"
+    },
+    {
+      "file": "tb-badge-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2479832,
+      "sha256": "ab88d12baef5e7f35b33bb62e4aa4e049f4ab154bd5e7547d17073f62ad9f3cb"
+    },
+    {
+      "file": "tb-badge-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 478177,
+      "sha256": "6b83d85e87672618c0985ea39dccf97f5c961771577bd0ecb2f9a3aa1502697a"
+    },
+    {
+      "file": "tb-badge-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 479562,
+      "sha256": "cfae902c9d7f5f247febcdd53f2d892bab8b2df161bf2a4f8ed47a7572f8953f"
+    },
+    {
+      "file": "tb-leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 431151,
+      "sha256": "4b8c82b37c4bf29292d0d8f3ab21c88c063e2ba83277338363e0e0fa6bb78e72"
+    },
+    {
+      "file": "tb-leaderboard-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 852736,
+      "sha256": "b5e5524fddad45a29cf1dd5c9b5d33e01643440bb7e314220ab5ee751ddc7774"
+    },
+    {
+      "file": "tb-leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1139325,
+      "sha256": "bc2acbcdf06792efb0b30002b4450dbe6b44c0d2b5476298c5c2b2193dbb4aaa"
+    },
+    {
+      "file": "tb-leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 211902,
+      "sha256": "8167327de188e46a28a0d26adb979850af2d656bacbf793ca6c9eb4dae3cbbbb"
+    },
+    {
+      "file": "tb-leaderboard-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 155072,
+      "sha256": "82e423f37d4ea760d47a37797efab0fc808e0c0e1c597aa50def6397de246de4"
+    },
+    {
+      "file": "tb-person-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 432786,
+      "sha256": "ec6b4472724364b78c30262053352b2c57fd6680b758a6839df593f6e517befe"
+    },
+    {
+      "file": "tb-person-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 827903,
+      "sha256": "c8dcf97f16f9652784b9f2f91702f227071792886abc9b800ab375cb792b16e4"
+    },
+    {
+      "file": "tb-person-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1091879,
+      "sha256": "b672af55297c3810a40c914b8c712ff8cf7cce8172b130915b46f484421d20c2"
+    },
+    {
+      "file": "tb-person-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 212515,
+      "sha256": "8f0f87e0be858a68b6159aeef5e09b3df68df003839b62c74c9fde215fc3f8ce"
+    },
+    {
+      "file": "tb-person-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 171740,
+      "sha256": "05f733b19853003ea018e77a0154987cc48c6d75bf1ae19369cc2a5a4c014ad7"
+    },
+    {
+      "file": "unavailable-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 1039338,
+      "sha256": "f5590d383f560bcfbc53ddd827ce4d7f0c5a6bad05e57df84a763cef6d5bc22b"
+    },
+    {
+      "file": "unavailable-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1933603,
+      "sha256": "906a48c18f41cf39b7ed94d82aee733f0d1ad40b11658e011077b4f9f09512ed"
+    },
+    {
+      "file": "unavailable-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2471208,
+      "sha256": "c863a1ad6c7ba5e8b69379cdb6ab50478abf574395383356013c288368d0e802"
+    },
+    {
+      "file": "unavailable-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 474507,
+      "sha256": "c4b5ae2f6c071dd9ac3ec8f98151bf863379ab29cd34808415ddf5e8eed2257f"
+    },
+    {
+      "file": "unavailable-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 475779,
+      "sha256": "28faa385981baf82269135ace42c842c2bc58994a5f0032482336fcf14feb438"
+    }
+  ],
+  "tests": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unit_tests": {
+      "passed": 298,
+      "failed": 1,
+      "arena_passed": 92,
+      "known_exception": "Unchanged pre-existing CSV UTF-8 header test, tests/api.test.ts:402"
+    },
+    "playwright_unique_cases": 123,
+    "large_run_passed": 118,
+    "additional_coverage": "5 new final/TB/priority cases and responsive reruns; see final test logs.",
+    "runs": {
+      "all_arena_playwright": "118 passed",
+      "showroom_additional_and_widget": "25 passed; TB regression then fixed",
+      "final_visual_and_tb": "13 passed",
+      "fight_backend_and_view": "14 passed",
+      "fight_hero_bounds_and_reduced_motion": "6 passed",
+      "unit": "298 passed, 1 unchanged CSV UTF-8 failure",
+      "arena_unit": "92 passed"
+    }
+  },
+  "performance": [
+    {
+      "cpuThrottle": 4,
+      "viewport": "1920x1080",
+      "openSellerMs": 405,
+      "nextDuringCelebrationMs": 525,
+      "layoutCount": 13,
+      "scriptMs": 515,
+      "animations": "none",
+      "canvasCount": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "viewport": "1024x768",
+      "openSellerMs": 648,
+      "nextDuringCelebrationMs": 721,
+      "layoutCount": 13,
+      "scriptMs": 724,
+      "animations": "none",
+      "canvasCount": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "viewport": "1448x1086",
+      "openSellerMs": 342,
+      "nextDuringCelebrationMs": 832,
+      "layoutCount": 13,
+      "scriptMs": 662,
+      "animations": "none",
+      "canvasCount": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "viewport": "390x844",
+      "openSellerMs": 390,
+      "nextDuringCelebrationMs": 708,
+      "layoutCount": 13,
+      "scriptMs": 652,
+      "animations": "none",
+      "canvasCount": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "viewport": "844x390",
+      "openSellerMs": 333,
+      "nextDuringCelebrationMs": 397,
+      "layoutCount": 13,
+      "scriptMs": 546,
+      "animations": "none",
+      "canvasCount": 0
+    }
+  ],
+  "new_asset_bytes": 410970,
+  "migrations": [],
+  "push": false,
+  "deploy": false,
+  "merge": false,
+  "branch_switch": false,
+  "remaining_differences": [
+    "Existing approved car/food/drink assets and actual Arena branding differ from reference artwork.",
+    "Compact widget remains in the utility strip on 4:3/mobile; large lower-right widget appears on spacious desktops.",
+    "No profile-upload endpoint is added: the avatar component already prioritizes a supplied uploaded image before demo/fallback."
+  ],
+  "source_hashes": {
+    "e2e/arena-fights.spec.ts": "7c34a9369ac2634d65f995b3e028ff5d42ee81a6478b8c6d4dfcbc9c9843b7fd",
+    "e2e/arena-showroom.spec.ts": "614aea6ca589c43294a11a61945e66fdfc38687d0b1ef1199881cb839e993612",
+    "e2e/arena.spec.ts": "926131be6633b91a52b0803cf1138cc1a381bf4f8627972e53aed31f0ec0de7e",
+    "public/arena-showroom/README.txt": "e56d47d2d7e55723e1dfb9ee77fe8e7eaf028cfde5e88d04fa8608e2de13bd12",
+    "public/arena-showroom/champions.webp": "ca2c66e9ca02cc7457991ae206b5a8010277f56d7dc7f06af8f800a7f11465ef",
+    "public/arena-showroom/portraits.webp": "6e86c932110af806576614901117f042f5afe4771a4fb6812544aef8eb6a01b5",
+    "public/arena-showroom/station-night.webp": "40cf84f16d780f9e9ca99aa1a805df54ffb5f3b516dc50648800ba0c393a003f",
+    "shared/arena-fights.ts": "08e7c245b011799fec33ebea486a6b92423037fdb1b1f1d3359fa9eb57578d5e",
+    "shared/arena.ts": "2c5722fd5aae0953ba770e46ddea7eed6d220a57614815e66a60ba2e9b26e301",
+    "src/ArenaApp.tsx": "b1987f9114eb4ae420ade2ebb029057d442d9d881a76a75c18c6c22a947ad64f",
+    "src/ArenaAvatar.tsx": "7639f43029e8ec913973886526dba61cd719a813755d96a9f0888a155e2b03dd",
+    "src/ArenaFight.tsx": "6a567e91a632aa4354ec20a89c6b47252b525cb7ec36843ffddb6c241808f273",
+    "src/ArenaFightClock.tsx": "327dbf0f13df975538bc9a9a502f3c5208087df547bcc814de074e4b80c44d66",
+    "src/ArenaFightManager.tsx": "3e611ae3f35443ad846f882df4c020c0ea3a7d29cd06ecdc55484fd92d89f983",
+    "src/ArenaFightPresentation.tsx": "43ace997adabf64b9ecf2a7cecb5b935d75cea96cf40bb4ace33ed278d825d79",
+    "src/arena-avatars.ts": "7a9b4f7233a543717512be4ba9b368fdb59c6875198b5d5c2aa504969806e964",
+    "src/arena-fight-feedback.ts": "f7f97c2361d16f9a56804fb9a62cdf2a794d7ed70a0cda1268830e7d8856176e",
+    "src/arena-showroom.css": "6f1a6ca9cea533c9121ed3e67d9bbe764c523ff5f76f032f5a8c0e9381b79adf",
+    "tests/arena-avatars.test.ts": "af407c54de6b2f81c425bcb5c187aa7d65005514269e38813e52deea4370dc08",
+    "tests/arena-fight-feedback.test.ts": "712f6f81077146b2a4b31dbc020d678f19bd28f1a05b3c3b83e311c236846992",
+    "tests/arena-fights.test.ts": "d3bf9c4f9dec65dbe9acce979073bca73ebcdc2162a00361cd47e090c8434ef3",
+    "worker/arena-fights.ts": "527a4f62092427fe7343cf5f1bf54edfed67608ecf1cfe9be9c4687b7923b15e",
+    "worker/arena-stats.ts": "92c1327f6f636aa54a3252fb573dfd9541281d63cb7880406b56ca006eaaf3c5"
+  },
+  "csv_unchanged_blob": "5b7e973e35dbc778eee5b4c9d614ea5357a36e6a",
+  "working_tree": "clean",
+  "local_checkpoint_only": true
+}
