@@ -1,14 +1,13 @@
-import ArenaRecovery from "./ArenaRecovery";
-import { useCallback, useEffect, useRef, useState } from "react";
+import ArenaSellerSelector,{type ArenaSellerSelectorHandle} from "./ArenaSellerSelector";
+import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
+import {arenaLocalSale} from "./arena-local-sale";
+
+import { lazy, memo, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Flag, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, UserRound, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
 import ArenaDialog from "./ArenaDialog";
-import ArenaAdmin from "./ArenaAdmin";
-import ArenaAccount from "./ArenaAccount";
-import { ArenaGroups, ArenaSuperadmin } from "./ArenaNetwork";
-import ArenaFight from "./ArenaFight";
 import {FightAnnouncement,FightWidget} from "./ArenaFightPresentation";
 import {fightTransition,type FightFeedback} from "./arena-fight-feedback";
 import { arenaPeriodLabel } from "./arena-dates";
@@ -20,12 +19,15 @@ import ArenaAvatar, {ArenaShowcaseProvider,useArenaShowcase} from "./ArenaAvatar
 import "./arena.css";
 import "./arena-showroom.css";
 
+const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
+const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
+
 function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: ArenaActivity; imageUrl?: string; loading?: "eager" | "lazy" }) {
   const src = arenaProductImage(activity, imageUrl);
   return src ? <img src={src} alt="" loading={loading} decoding="sync" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
-export function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
+export const ArenaActivityButton = memo(function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
   activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;
 }) {
   return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
@@ -37,7 +39,7 @@ export function ArenaActivityButton({ activity, focus = false, campaignName, onC
     {!focus && <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>}
     <span className="arena-points">{unavailable ? "EJ UPPLAGD" : arenaReward(activity)}</span>
   </button>;
-}
+});
 function Progress({ points, target, label, suffix = "poäng", hud = false }: { points: number; target: number; label: string; suffix?: string; hud?: boolean }) {
   const percent = Math.min(100, Math.round(100 * points / target));
   const previous = useRef({ points, target, label });
@@ -54,25 +56,25 @@ function Progress({ points, target, label, suffix = "poäng", hud = false }: { p
 function GoalProgress({ goal, label, hud = false }: { goal: ArenaGoal; label?: string; hud?: boolean }) {
   return <><Progress points={goal.points} target={goal.target_points} label={label ?? (goal.period_type === "week" ? "VECKOMÅLET" : goal.period_type === "month" ? "MÅNADENS MÅL" : "LAGETS MÅL")} hud={hud} /><small>{arenaPeriodLabel(goal.start_date, goal.end_date, goal.period_type)}</small></>;
 }
-function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
+const People=memo(function People({ stats, onPerson, highlightId, newLeaderId, limit }: { stats: ArenaStats | null; onPerson: (p: ArenaPerson) => void; highlightId?: string; newLeaderId?: string; limit?: number }) {
   const value=(p:ArenaPerson)=>stats?.metric === "tb" ? arenaMoney(p.tb_ore??0) : num(stats?.metric === "count" ? p.count : p.points);
   const unit=stats?.metric === "tb" ? "TB" : stats?.metric === "count" ? "st" : "p";
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
       {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} avatarIndex={p.avatar_index} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
-}
+});
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
 function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean }) {
   return <span className={`arena-live${error ? " is-paused" : stats?.recent === undefined ? " is-loading" : ""}`}><i aria-hidden="true" />{error ? "PAUSAD" : !stats ? "HÄMTAR" : stats.recent ? "Live" : "SAKNAS"}</span>;
 }
-function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
+const RecentActivities=memo(function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
   return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id} className={row.display_mode === "tb" && row.tb_ore_awarded != null ? "is-tb" : undefined}>
     <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} avatarIndex={row.avatar_index} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
     <b>{row.display_mode === "tb" && row.tb_ore_awarded != null ? `+${arenaMoney(row.tb_ore_awarded)} TB` : `+${num(row.points_awarded)} p`}</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
-}
+});
 type Attempt = { activity: ArenaActivity; requestId: string; sellerId?: string };
 type Receipt = { registration: ArenaRegistration; requestId: string; name: string };
 type Celebration = ArenaAchievement & { key: string; points: number; tbOre?:number | null; sellerId: string; name: string; activity: ArenaActivity; secondary?: string[]; profileUrl?:string | null; avatarIndex?:number|null; fightEvent?:FightFeedback };
@@ -92,7 +94,7 @@ function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats:
     <footer className="arena-person-footer"><Trophy /><span><strong>DU GÖR SKILLNAD!</strong><small>Varje registrering räknas.</small></span><button className="arena-gold-action" onClick={onClose}>Fortsätt sälja <ArrowRight /></button></footer>
   </>;
 }
-function CelebrationCard({ event }: { event: Celebration }) {
+const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebration }) {
   const isGoal = event.kind === "personal-goal" || event.kind === "station-goal" || event.kind === "focus-goal";
   const heading = event.kind === "leader" ? "NY ETTA!" : event.kind === "focus-goal" ? "FOKUSMÅL UPPNÅTT!" : isGoal ? event.goal?.period_type === "week" ? "VECKOMÅL UPPNÅTT!" : "MÅL UPPNÅTT!" : event.kind === "milestone" ? "VILKET DRIV!" : null;
   const encouragement = event.kind === "leader" ? event.previousLeader ? `${event.name} går om ${event.previousLeader}` : `${event.name} tar förstaplatsen!` : event.kind === "personal-goal" ? `${event.name} · ${event.text}` : event.kind === "station-goal" ? "Hela laget nådde målet!" : event.text;
@@ -130,8 +132,8 @@ function CelebrationCard({ event }: { event: Celebration }) {
       {Array.from({ length: event.special ? 12 : 6 }, (_, i) => <i key={i} className="arena-confetti" style={{ "--i": i } as React.CSSProperties} aria-hidden="true" />)}
     </div>
   </div>;
-}
-export default function ArenaApp() { return <ArenaShowcaseProvider><ArenaRoutes /></ArenaShowcaseProvider>; }
+});
+export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
   if(window.location.pathname.startsWith("/arena/fights/") || window.location.pathname.startsWith("/arena/superadmin/fights/"))return <ArenaFight />;
@@ -170,7 +172,7 @@ function ArenaHome() {
       const todayRequest = api<ArenaStats>("/arena/stats?period=today&metric=points");
       const selectedRequest = queryRef.current === "period=today&metric=points" ? todayRequest : api<ArenaStats>(`/arena/stats?${queryRef.current}`);
       const [next, today] = await Promise.all([selectedRequest, todayRequest]);
-      if (version === statsVersion.current) { statsRef.current = next; setStats(next); todayRef.current=today; setTodayStats(today); setStatsUnavailable(false); setError(""); }
+      if (version === statsVersion.current) { statsRef.current = next; todayRef.current=today; startTransition(()=>{setStats(next);setTodayStats(today);setStatsUnavailable(false);setError("");}); }
       return next;
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, []);
@@ -180,28 +182,53 @@ function ArenaHome() {
   useEffect(() => {
     document.documentElement.classList.add("arena-view");
     void bootstrap();
-    const timer = setInterval(() => { if (!document.hidden && !lock.current && !attemptRef.current) { void bootstrap(); void refresh(); } }, 30000);
-    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearInterval(timer); clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
-  }, [bootstrap, refresh]);
+    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
+  }, [bootstrap]);
+  const activeFight=todayStats?.fight?.phase==="active";
+  useEffect(()=>{
+    let lastBootstrap=Date.now();
+    const stopPolling=visibleArenaPolling(async()=>{
+      if(lock.current)return;
+      const reloadPeople=Date.now()-lastBootstrap>=60000;
+      if(reloadPeople){lastBootstrap=Date.now();await Promise.all([bootstrap(),refresh()]);}else await refresh();
+    },()=>todayRef.current?.fight?.phase==="active"?ARENA_FIGHT_SYNC_MS:ARENA_SYNC_MS);
+    return stopPolling;
+  }, [bootstrap,refresh,activeFight]);
   useEffect(() => { if (period !== "custom" || (start && end)) { setStats(null); void refresh(); } }, [query, period, start, end, refresh]);
-  const setSelection = (next: Attempt | null) => { attemptRef.current = next; setAttempt(next); };
-  const [focus, ...other] = arenaStartActivities(data?.activities ?? []);
-  const begin = (activity: ArenaActivity) => {
+  const selectorRef=useRef<ArenaSellerSelectorHandle|null>(null);
+  const setSelection = useCallback((next: Attempt | null) => { attemptRef.current = next; selectorRef.current?.select(next);startTransition(()=>setAttempt(next)); },[]);
+  const [focus, ...other] = useMemo(()=>arenaStartActivities(data?.activities ?? []),[data?.activities]);
+  const begin = useCallback((activity: ArenaActivity) => {
     if (lock.current || attemptRef.current) return;
-    celebrationAllowed.current = ""; setFightFinal(null);
-    setSaleError(""); setSelection({ activity, requestId: crypto.randomUUID() });
-  };
+    celebrationAllowed.current = "";
+    setSelection({ activity, requestId: crypto.randomUUID() });
+    startTransition(()=>{setFightFinal(null);setSaleError("");});
+  },[setSelection]);
+  const activityActions=useMemo(()=>new Map((data?.activities??[]).map(activity=>[activity.id,()=>begin(activity)])),[data?.activities,begin]);
   async function register(sellerId: string) {
     const selected = attemptRef.current;
     if (!selected || lock.current || (selected.sellerId && selected.sellerId !== sellerId)) return;
     lock.current = true; setBusy(true); setSaleError("");
     const pending = { ...selected, sellerId }; setSelection(pending);
-    const before = statsRef.current,beforeFight=todayRef.current?.fight;
+    const before = statsRef.current,beforeToday=todayRef.current,beforeFight=beforeToday?.fight;
+    const seller=data?.sellers.find(s=>s.id===sellerId);
+    const localSale=(registration:ArenaRegistration)=>{
+      // An uncertain retry may already be in the server snapshot. Reconcile it
+      // via the idempotent receipt + refresh rather than showing a second gain.
+      if(!seller || selected.sellerId)return;
+      const query=new URLSearchParams(queryRef.current);
+      const next=arenaLocalSale(before,seller,pending.activity,registration,{activityId:query.get("activity_id")??"",category:query.get("category")??""});
+      const today=arenaLocalSale(beforeToday,seller,pending.activity,registration);
+      statsRef.current=next;todayRef.current=today;setStats(next);setTodayStats(today);
+    };
+    ++statsVersion.current; // Reject a poll started before this optimistic transaction.
+    localSale({id:pending.requestId,seller_id:sellerId,activity_id:pending.activity.id,points_awarded:pending.activity.points,tb_ore_awarded:pending.activity.tb_ore,registered_at:new Date().toISOString(),voided_at:null});
     try {
       const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
         request_id: pending.requestId, activity_id: pending.activity.id, seller_id: sellerId,
         achievement_context:{period:period === "custom" && (!start || !end) ? "today" : period,metric,...(period === "custom" && start && end ? {start,end} : {})},
       }));
+      localSale({...registration,registered_at:registration.registered_at??new Date().toISOString()});
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
       const primary=achievements?.[0];
@@ -233,6 +260,7 @@ function ArenaHome() {
         });
       }, 180);
     } catch (e) {
+      statsRef.current=before;todayRef.current=beforeToday;setStats(before);setTodayStats(beforeToday);
       const definitive = e instanceof HttpError && e.status >= 400 && e.status < 500;
       setSaleError(definitive ? (e as Error).message : "Svaret kunde inte bekräftas. Försök igen med samma registrering så räknas den bara en gång.");
       if (definitive) { setSelection({ ...pending, requestId: crypto.randomUUID(), sellerId: undefined }); void bootstrap(); }
@@ -248,7 +276,7 @@ function ArenaHome() {
   }
   useEffect(()=>{
     const fight=todayStats?.fight,stationId=data?.station.id;
-    if(!fight || fight.phase!=="finished" || !fight.winner_ids?.length || !stationId || celebration || attempt || fightFinal)return;
+    if(!fight || fight.phase!=="finished" || !fight.winner_ids?.length || !stationId || celebration || attempt || attemptRef.current || fightFinal)return;
     const key=`arena:fight-final:${stationId}:${fight.id}`;
     if(fightSeen.current.has(key))return;
     try{if(localStorage.getItem(key))return;localStorage.setItem(key,"1");}catch{/* In-memory dedupe remains available. */}
@@ -257,6 +285,8 @@ function ArenaHome() {
   },[todayStats?.fight,data?.station.id,celebration,attempt,fightFinal]);
   const personStats = personScope === "today" ? todayStats : stats;
   const person = personStats?.leaderboard.find(p => p.id === personId);
+  const onTodayPerson=useCallback((p:ArenaPerson)=>{setPersonScope("today");setPersonId(p.id);},[]);
+  const onSelectedPerson=useCallback((p:ArenaPerson)=>{setPanel(null);setPersonScope("selected");setPersonId(p.id);},[]);
   const campaign = todayStats?.campaign;
   const goal = todayStats?.station_goals[0];
   const controls = <>
@@ -272,15 +302,15 @@ function ArenaHome() {
     {(error || statsUnavailable) && <div className="arena-error" role="alert">{error || "Statistiken är tillfälligt otillgänglig."}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
       <div className="arena-left-column">
-        <aside className="arena-leaderboard arena-panel" aria-label="Topplista idag"><h2><Trophy aria-hidden="true" />TOPPLISTA – IDAG</h2><People stats={todayStats} limit={5} onPerson={p => { setPersonScope("today"); setPersonId(p.id); }} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
+        <aside className="arena-leaderboard arena-panel" aria-label="Topplista idag"><h2><Trophy aria-hidden="true" />TOPPLISTA – IDAG</h2><People stats={todayStats} limit={5} onPerson={onTodayPerson} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
         <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>SENASTE AKTIVITETER</h2></button><FeedStatus stats={todayStats} error={statsUnavailable} /></header><RecentActivities stats={todayStats} limit={5} /></aside>
       </div>
       <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel("leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <>
-          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? () => begin(focus.activity!) : undefined} /></div>
-          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? () => begin(activity) : undefined} /></div>)}</div>
+          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? activityActions.get(focus.activity.id) : undefined} /></div>
+          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
         </> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
     </main>
@@ -292,14 +322,7 @@ function ArenaHome() {
       <p>Små merförsäljningar skapar stora resultat!</p>
     </section>
     <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
-    {attempt && <ArenaDialog title="Vem gjorde försäljningen?" className="arena-dialog-sellers" eyebrow="EN FÖRSÄLJNING. TVÅ TRYCK." locked={busy || Boolean(attempt.sellerId)} onClose={() => { setSelection(null); setSaleError(""); }}>
-      <div className="arena-modal-summary"><span className="arena-selected-product" aria-hidden="true"><ActivityImage activity={attempt.activity} /></span><span>{attempt.activity.name}<small>VALD AKTIVITET</small></span><strong>{arenaReward(attempt.activity)}</strong></div>
-      <div className="arena-sellers">{data?.sellers.map(seller => <button key={seller.id} aria-label={seller.name} onClick={() => void register(seller.id)} disabled={busy || Boolean(attempt.sellerId)} style={{ "--seller-color": seller.color } as React.CSSProperties}><ArenaAvatar id={seller.id} name={seller.name} imageUrl={seller.profile_url} avatarIndex={seller.avatar_index} className="arena-seller-initial" /><span className="arena-seller-name">{seller.name}</span></button>)}</div>
-      <p className="arena-seller-hint"><Check aria-hidden="true" /> Tryck på ditt namn – sedan är det klart.</p>
-      {!data?.sellers.length && <p>Lägg till aktiva säljare i stationens personalregister.</p>}
-      {busy && <p role="status">Sparar…</p>}{saleError && <p className="arena-error" role="alert">{saleError}</p>}
-      {saleError && attempt.sellerId && <button className="arena-action" onClick={() => void register(attempt.sellerId!)} disabled={busy}>Försök igen</button>}
-    </ArenaDialog>}
+    <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />
     </ArenaDialog>}
@@ -307,7 +330,7 @@ function ArenaHome() {
       <a className="arena-network-link" href="/arena/groups"><Users /> Gemensamma topplistor</a>
       <label>Mått<select aria-label="Mått" value={metric} onChange={e=>setMetric(e.target.value)}><option value="points">Poäng</option><option value="tb">TB</option><option value="count">Antal registreringar</option></select></label>
       <div className="arena-filters"><label>Aktivitet<select value={activityFilter} onChange={e => setActivityFilter(e.target.value)}><option value="">Alla aktiviteter</option>{data?.activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label><label>Kategori<select value={category} onChange={e => setCategory(e.target.value)}><option value="">Alla kategorier</option>{[...new Set(data?.activities.map(a => a.category).filter(Boolean))].map(c => <option key={c}>{c}</option>)}</select></label></div>
-      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={p => { setPanel(null); setPersonScope("selected"); setPersonId(p.id); }} />
+      <p>{stats ? `${num(stats.points)} poäng · ${num(stats.count)} merförsäljningar · ${arenaMoney(stats.tb_ore??0)} TB` : "Hämtar statistik…"}</p>{!!stats?.unknown_tb_count && <p>{stats.unknown_tb_count} äldre registreringar saknar historiskt TB.</p>}<People stats={stats} onPerson={onSelectedPerson} />
     </ArenaDialog>}
     {panel === "recent" && <ArenaDialog title="Senaste aktiviteter" className="arena-dialog-recent" eyebrow="DAGENS FÖRSÄLJNINGAR" onClose={() => setPanel(null)}><FeedStatus stats={stats} error={statsUnavailable} /><RecentActivities stats={stats} /></ArenaDialog>}
     {panel === "campaign" && <ArenaDialog title="Lagets kampanj & mål" className="arena-dialog-campaign" eyebrow="TILLSAMMANS MOT NÄSTA MÅL" onClose={() => setPanel(null)}>{campaign ? <>

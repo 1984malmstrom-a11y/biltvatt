@@ -37,7 +37,8 @@ export type ArenaStats = {
   fight?:import("./arena-fights").ArenaFightSummary | null;
 };
 export type ArenaRegistration = { id: string; seller_id: string; activity_id: string; points_awarded: number; registered_at: string; voided_at: string | null; tb_ore_awarded?:number | null };
-export const arenaNumber = (n: number) => new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 2 }).format(n);
+const arenaNumberFormat = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 2 });
+export const arenaNumber = (n: number) => arenaNumberFormat.format(n);
 export const roundedPoints = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 // Small event function shared by all celebrations. No animation controls the sale flow.

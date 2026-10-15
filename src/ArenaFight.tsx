@@ -1,3 +1,4 @@
+import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
 import {useEffect,useRef,useState} from "react";
 import {ArrowLeft,Crown,Flag} from "lucide-react";
 import {api} from "./api";
@@ -29,12 +30,13 @@ export default function ArenaFight() {
       }
       cursor.current=next;setFight(next);setError("");
     }catch(e){if(active)setError((e as Error).message);}};
-    refresh.current=load;void load();const polling=setInterval(()=>void load(),30000);
-    const visible=()=>{if(!document.hidden)void load();};document.addEventListener("visibilitychange",visible);
-    return()=>{active=false;refresh.current=null;clearInterval(polling);clearTimeout(timer.current);document.removeEventListener("visibilitychange",visible);};
+    refresh.current=load;
+    let stopPolling=()=>{};
+    void load().then(()=>{if(active)stopPolling=visibleArenaPolling(load,()=>cursor.current?.phase==="active"?ARENA_FIGHT_SYNC_MS:ARENA_SYNC_MS);});
+    return()=>{active=false;refresh.current=null;stopPolling();clearTimeout(timer.current);};
   },[id,superadmin]);
   const highest=fight?.standings.length ? fightScore(fight.standings[0],fight.metric):0;
-  return <div className={`arena-page arena-theme arena-fight-page${fight?.standings.length===2 ? " is-head-to-head":" is-multistation"}`}><header className="arena-page-header"><a href={superadmin ? "/arena/superadmin":"/arena"}><ArrowLeft /> {superadmin ? "Till Superadmin":"Till Arenan"}</a><h1><Flag /> Butiksfight</h1><span className={`arena-status${fight?.phase==="active" && !error ? " status-active":""}`}>{error ? "PAUSAD":fight?.phase==="active" ? "LIVE":fight?.phase==="finished" ? "SLUTRESULTAT":fight?.phase==="scheduled" ? "SNART START":fight?.phase==="cancelled" ? "AVBRUTEN":"BUTIKSFIGHT"}</span></header>
+  return <div className={`arena-page arena-theme arena-fight-page${fight?.phase==="active" ? " is-live-fight":""}${fight?.standings.length===2 ? " is-head-to-head":" is-multistation"}`}><header className="arena-page-header"><a href={superadmin ? "/arena/superadmin":"/arena"}><ArrowLeft /> {superadmin ? "Till Superadmin":"Till Arenan"}</a><h1><Flag /> Butiksfight</h1><span className={`arena-status${fight?.phase==="active" && !error ? " status-active":""}`}>{error ? "PAUSAD":fight?.phase==="active" ? "LIVE":fight?.phase==="finished" ? "SLUTRESULTAT":fight?.phase==="scheduled" ? "SNART START":fight?.phase==="cancelled" ? "AVBRUTEN":"BUTIKSFIGHT"}</span></header>
     {error && <p className="arena-error" role="alert">{error}</p>}
     {!fight ? !error && <p role="status">Hämtar Butiksfight…</p>:<main className="arena-fight-main"><section className="arena-fight-heading"><span className="arena-eyebrow">SAMMA LAGKÄNSLA. STÖRRE RESULTAT.</span><h2>{fight.name}</h2><p>{fight.description}</p><small>{periodTime.format(new Date(fight.start_at))} – {periodTime.format(new Date(fight.end_at))} · Stockholm</small><ArenaFightClock fight={fight} onBoundary={()=>void refresh.current?.()} /></section>
       {fight.phase==="finished" && <FightResult fight={fight} />}

@@ -176,3 +176,26 @@
 @media print{body:has(.arena-report-paper){background:white!important}.arena-reports-layout{display:block}.arena-reports-layout>section:first-child,.arena-report-actions,.arena-admin-header,.arena-page-header,.arena-admin-tabs,.arena-security-console>.arena-reauth{display:none!important}.arena-report-paper{color:#102030!important;background:white!important;border:0;box-shadow:none}.arena-report-paper :is(h2,h3,strong,span,small,footer){color:#182b3b!important}.arena-report-paper{break-inside:auto}.arena-report-paper tr{break-inside:avoid}.arena-report-paper header{color:#182b3b}.arena-report-paper footer{font-size:10px}@page{size:A4;margin:16mm}}
 
 .arena-account-identity{display:flex;align-items:center;gap:14px;min-width:0}.arena-account-identity .arena-leader-avatar{width:42px;height:42px;flex:none}.arena-report-person-cell{display:flex;align-items:center;gap:8px}.arena-report-person-cell .arena-leader-avatar{width:28px;height:28px;flex:none}
+
+/* Portraits are real touch targets, not zero-sized inline sprite spans. */
+.arena-sellers button{position:relative;overflow:hidden;padding:0;isolation:isolate}
+.arena-sellers .arena-seller-initial{display:block;position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);border-radius:50%;overflow:hidden}
+.arena-seller-initial img{display:block;width:100%;height:100%;object-fit:cover}
+.arena-sellers .arena-seller-name{position:absolute;inset:auto 0 0;z-index:1;margin:0;padding:18px 5px 10px;background:linear-gradient(transparent,#020b19e8 55%);font-size:clamp(13px,1.15vw,18px);line-height:1.2;color:#fff;text-shadow:0 1px 3px #000;font-weight:700}
+.arena-sellers button:focus-visible,.arena-sellers button[aria-pressed=true]{outline:3px solid #ffe09a;outline-offset:3px;border-color:#ffe09a;box-shadow:0 0 16px #edca7755}
+.arena-sellers button:disabled{opacity:1}.arena-sellers button[aria-pressed=false]:disabled{opacity:.65}
+@media(max-height:500px) and (orientation:landscape){.arena-sellers .arena-seller-name{font-size:12px;padding-bottom:7px}}
+/* Lift the mobile copy into the portrait fade, keeping landscape intact. */
+@media(max-width:600px) and (orientation:portrait){
+ .arena-celebration.level-3 .arena-victory-hero{height:min(690px,87dvh);padding-bottom:24px}
+ .arena-victory-hero .arena-victory-art{height:52%}
+ .arena-victory-hero .arena-victory-copy{gap:7px}
+}
+/* Static live-event emphasis; no continuous animation or layout changes. */
+.is-live-fight .arena-fight-scoreboard{border-top:1px solid #5ec8ff66;padding-top:16px}
+.is-live-fight .arena-fight-standings article.is-fight-leader{border-color:#e7cb81;box-shadow:inset 0 1px 0 #ffe7aa55,0 0 24px #bf943422}
+.is-live-fight .arena-fight-standings article:not(.is-fight-leader) .arena-fight-rank{color:#8fcfff}
+.is-live-fight .arena-fight-relative{background:#03111f;border:1px solid #71b3d32e}
+.is-live-fight .arena-fight-relative i{background:linear-gradient(90deg,#247ac1,#68d7ff);box-shadow:0 0 8px #48bfff55}
+.is-live-fight .is-fight-leader .arena-fight-relative i{background:linear-gradient(90deg,#ac8140,#ffe4a0);box-shadow:0 0 8px #e8c16a55}
+.is-live-fight .arena-status.status-active{border-color:#30e39a;color:#a3ffd0;box-shadow:0 0 12px #28d99a20}

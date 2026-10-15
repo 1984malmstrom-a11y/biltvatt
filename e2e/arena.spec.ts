@@ -1,3 +1,4 @@
+import {expectSellerPortraits} from "./arena-portrait-assertions";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import type { ArenaActivity, ArenaBootstrap, ArenaStats } from "../shared/arena";
@@ -649,6 +650,7 @@ for (const [width,height] of [[1920,1080],[1366,768],[1024,768],[390,844],[844,3
     const circle = (await popup.locator(".arena-sellers button").first().boundingBox())!;
     expect(Math.abs(circle.width-circle.height)).toBeLessThanOrEqual(1);
     expect(circle.width).toBeGreaterThanOrEqual(44);
+    await expectSellerPortraits(popup.locator(".arena-sellers button"));
     await stateScreenshot(page, `sellers-${width}x${height}`);
     await page.keyboard.press("Escape"); await expect(popup).not.toBeVisible();
     await page.getByRole("button", { name:"TOPPLISTOR", exact:true }).click();

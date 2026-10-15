@@ -1,6 +1,7 @@
 import { arenaNumber, type ArenaActivity } from "./arena";
 
-export const arenaMoney = (ore:number) => `${new Intl.NumberFormat("sv-SE",{minimumFractionDigits:ore%100 ? 2:0,maximumFractionDigits:2}).format(ore/100)} kr`;
+const wholeMoney=new Intl.NumberFormat("sv-SE",{maximumFractionDigits:2}),fractionMoney=new Intl.NumberFormat("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2});
+export const arenaMoney = (ore:number) => `${(ore%100 ? fractionMoney:wholeMoney).format(ore/100)} kr`;
 export const arenaDecimalMoney = (ore:number) => `${Math.floor(ore/100)},${String(ore%100).padStart(2,"0")}`;
 export function parseArenaMoney(value:unknown):number | null {
   if(typeof value!=="string" || !/^\d{1,7}(?:[.,]\d{1,2})?$/.test(value.trim())) return null;

@@ -1,0 +1,52 @@
+import {test,expect,type Page} from '@playwright/test';
+import {writeFileSync} from 'node:fs';
+import {expectSellerPortraits} from './arena-portrait-assertions';
+import {boot,initial,now,fight,sampleReport} from './arena-release-fixture';
+import {arenaReportPDF} from '../shared/arena-pdf';
+const dir=process.env.ARENA_RELEASE_SCREENSHOT_DIR??process.env.ARENA_SCREENSHOT_DIR;
+async function capture(page:Page,name:string){if(!dir)return;await page.evaluate(()=>{document.querySelectorAll('.arena-celebration').forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=350;a.pause();}));});await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});if(await page.locator('.arena-celebration').count())await expect(page.locator('.arena-celebration')).toHaveCSS('opacity','1');await page.screenshot({path:`${dir}/${name}.png`});}
+async function setup(page:Page){await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:boot}));await page.route('**/api/arena/stats*',r=>r.fulfill({json:initial}));}
+async function noOverflow(page:Page,w:number,h:number){expect(await page.evaluate(()=>({w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight}))).toEqual({w,h});}
+for(const [width,height] of [[1920,1080],[1536,864],[1448,1086],[1024,768],[844,390],[390,844]]){
+ test(`Release: actual seller faces, start and hero ${width}x${height}`,async({page})=>{
+  await page.setViewportSize({width,height});await page.clock.install({time:now});await setup(page);
+  await page.goto('/arena?showcase=0');await expect(page.locator('.arena-stage-start .arena-orb')).toHaveCount(7);await noOverflow(page,width,height);await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now())+100));await capture(page,`start-${width}x${height}`);
+  if(width>=951){const layout=await page.evaluate(()=>({left:document.querySelector('.arena-left-column')!.getBoundingClientRect().toJSON(),stats:document.querySelector('.arena-stats-bar')!.getBoundingClientRect().toJSON(),nav:document.querySelector('.arena-nav')!.getBoundingClientRect().toJSON()}));expect(layout.stats.x).toBeGreaterThanOrEqual(layout.left.right);expect(Math.abs(layout.left.bottom-layout.nav.y)).toBeLessThan(12);}
+  await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await capture(page,`sellers-${width}x${height}`);
+  await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[]}}));
+  await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.level-1')).toBeVisible();await page.clock.runFor(300);await capture(page,`standard-sale-${width}x${height}`);await page.clock.runFor(1600);
+  await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'Idag',previousLeader:'Alva'}]}}));
+  await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.arena-victory-hero h2')).toHaveText('NY ETTA!');await page.clock.runFor(350);await capture(page,`new-leader-${width}x${height}`);await noOverflow(page,width,height);
+  if(width===390){const box=await page.locator('.arena-victory-hero').boundingBox();expect(box!.height).toBeLessThanOrEqual(700);}
+ });
+}
+test('Release: portrait QA rejects zero-size and hidden portraits; uploaded images recover',async({page})=>{
+ await setup(page);await page.goto('/arena?showcase=0');await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();const button=page.locator('.arena-sellers button').first();await expectSellerPortraits(button);
+ await button.locator('[data-avatar-kind]').evaluate(el=>{(el as HTMLElement).style.width='0px';});await expect(expectSellerPortraits(button)).rejects.toThrow();await button.locator('[data-avatar-kind]').evaluate(el=>{(el as HTMLElement).style.removeProperty('width');(el as HTMLElement).style.opacity='0';});await expect(expectSellerPortraits(button)).rejects.toThrow();
+ await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:{...boot,sellers:boot.sellers.map((s,i)=>({...s,profile_url:i===0?'/arena-showroom/portraits.webp':i===1?'/bad-face.webp':null}))}}));await page.route('**/bad-face.webp',r=>r.fulfill({status:404,body:''}));await page.reload();await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expect(page.locator('.arena-sellers [data-avatar-kind=uploaded]')).toHaveCount(1);await expectSellerPortraits(page.locator('.arena-sellers button'));const uploaded=page.locator('.arena-sellers button').first();await uploaded.locator('img').evaluate(el=>{el.style.opacity='0';});await expect(expectSellerPortraits(uploaded)).rejects.toThrow();await uploaded.locator('img').evaluate(el=>{el.style.opacity='1';});await expectSellerPortraits(uploaded);
+});
+test('Release: polling cadence, hidden pause/resume and active fight mode in React',async({page})=>{
+ await page.clock.install({time:now});let statsCalls=0,bootCalls=0,active=false;
+ await page.route('**/api/arena/bootstrap',r=>{bootCalls++;return r.fulfill({json:boot});});await page.route('**/api/arena/stats*',r=>{statsCalls++;return r.fulfill({json:{...initial,fight:active?fight:null}});});
+ await page.goto('/arena?showcase=0');await expect(page.locator('.arena-leaderboard li')).toHaveCount(5);const first=statsCalls;
+ await page.clock.runFor(10000);expect(statsCalls).toBe(first);await page.clock.runFor(2500);await expect.poll(()=>statsCalls).toBe(first+1);
+ await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});const hidden=statsCalls,hiddenBoot=bootCalls;await page.clock.runFor(60000);expect(statsCalls).toBe(hidden);expect(bootCalls).toBe(hiddenBoot);
+ active=true;await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});await expect.poll(()=>statsCalls).toBe(hidden+1);await expect(page.locator('.arena-fight-widget')).toBeVisible();const visible=statsCalls;
+ await page.clock.runFor(5000);await expect.poll(()=>statsCalls).toBe(visible+1);active=false;await page.clock.runFor(5000);await expect(page.locator('.arena-fight-widget')).toHaveCount(0);const normal=statsCalls;await page.clock.runFor(6000);expect(statsCalls).toBe(normal);await page.clock.runFor(7000);await expect.poll(()=>statsCalls).toBe(normal+1);
+});
+test('Release: immediate optimistic board/feed, selected state and rollback',async({page})=>{
+ await page.clock.install({time:now});await setup(page);let reject:(()=>Promise<void>)|undefined;
+ await page.route('**/api/arena/registrations',async r=>new Promise<void>(resolve=>{reject=async()=>{await r.fulfill({status:400,json:{error:'Lokal testavvisning'}});resolve();};}));
+ await page.goto('/arena?showcase=0');await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.arena-leaderboard li').first()).toContainText('36');await expect(page.locator('.arena-recent li').first()).toContainText('Peter');await expect(page.getByRole('button',{name:'Peter',exact:true})).toHaveAttribute('aria-pressed','true');await capture(page,'seller-selected-pending');await expect.poll(()=>!!reject).toBe(true);await reject!();await expect(page.getByRole('dialog')).toContainText('Lokal testavvisning');await expect(page.locator('.arena-leaderboard li').first()).toContainText('34');await expect(page.locator('.arena-celebration')).toHaveCount(0);
+});
+test('Release: fight polling, event feed, lead change and final',async({page})=>{
+ await page.setViewportSize({width:1920,height:1080});await page.clock.install({time:now});let current=structuredClone(fight),calls=0;
+ await page.route('**/api/arena/fights/release',r=>{calls++;return r.fulfill({json:current});});await page.goto('/arena/fights/release?showcase=0');await expect(page.locator('.arena-fight-feed li')).toHaveCount(5);await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now())+100));await capture(page,'fight-active-duel');if(dir)await page.locator('.arena-fight-feed').screenshot({path:`${dir}/fight-event-feed.png`});
+ current={...current,version:2,leader_ids:['review'],latest_lead_change:{version:2,station_id:'review',station_name:'Tingsryd',created_at:now.toISOString()},standings:[{...current.standings[1],rank:1,points:344},{...current.standings[0],rank:2}]};await page.clock.runFor(5000);await expect(page.locator('.fight-celebration-lead')).toBeVisible();await page.clock.runFor(350);await capture(page,'fight-lead-change');await page.clock.runFor(4000);
+ current={...current,phase:'finished',winner_ids:['review']};await page.clock.runFor(5000);await expect(page.locator('.arena-fight-winner')).toContainText('Tingsryd vinner!');await capture(page,'fight-final');const final=calls;await page.clock.runFor(5000);expect(calls).toBe(final);await page.clock.runFor(12000);await expect.poll(()=>calls).toBeGreaterThan(final);
+});
+test('Release: downloaded PDF bytes from frozen report renderer',async({page})=>{
+ // Same renderer as native Worker exports. Native security/snapshot tests run separately.
+ await setup(page);
+ for(const type of ['diploma','summary','seller','station','fight'] as const){const pdf=arenaReportPDF(sampleReport(type));await page.route(`**/api/review-${type}.pdf`,r=>r.fulfill({body:Buffer.from(pdf),contentType:'application/pdf',headers:{'Content-Disposition':`attachment; filename="sample-${type}.pdf"`}}));await page.goto('/arena?showcase=0');const [download]=await Promise.all([page.waitForEvent('download'),page.evaluate(t=>{const a=document.createElement('a');a.href=`/api/review-${t}.pdf`;a.click();},type)]);if(dir){await download.saveAs(`${dir}/sample-${type}.pdf`);writeFileSync(`${dir}/snapshot-${type}.json`,JSON.stringify(sampleReport(type),null,2));}expect(await download.failure()).toBeNull();}
+});

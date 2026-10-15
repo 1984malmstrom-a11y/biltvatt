@@ -1,8 +1,9 @@
 export type ArenaPeriod = "week" | "month" | "custom";
 
-export const arenaDay = (value = new Date()) => new Intl.DateTimeFormat("sv-SE", {
+const dayFormatter = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm", year: "numeric", month: "2-digit", day: "2-digit",
-}).format(value);
+});
+export const arenaDay = (value = new Date()) => dayFormatter.format(value);
 const date = (value: string) => new Date(`${value}T12:00:00Z`);
 const offset = (value: string, days: number) => {
   const d = date(value); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10);
@@ -19,10 +20,10 @@ export function arenaPeriodDates(period: "week" | "month", now = new Date()) {
   return { start_date, end_date: offset(next.toISOString().slice(0, 10), -1) };
 }
 
+const dateWithoutYear=new Intl.DateTimeFormat("sv-SE",{timeZone:"UTC",day:"numeric",month:"short"});
+const dateWithYear=new Intl.DateTimeFormat("sv-SE",{timeZone:"UTC",day:"numeric",month:"short",year:"numeric"});
 export function arenaDateSpan(start: string, end: string, now = new Date()) {
-  const short = (value: string, year = false) => new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "UTC", day: "numeric", month: "short", ...(year ? { year: "numeric" as const } : {}),
-  }).format(date(value)).replace(/\./g, "");
+  const short = (value: string, year = false) => (year?dateWithYear:dateWithoutYear).format(date(value)).replace(/\./g, "");
   const sameYear = start.slice(0, 4) === end.slice(0, 4);
   const showYear = !sameYear || start.slice(0, 4) !== arenaDay(now).slice(0, 4);
   if (start === end) return short(start, showYear);
