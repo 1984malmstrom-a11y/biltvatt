@@ -1,0 +1,13 @@
+{
+  "runtime": "local Workerd/Miniflare",
+  "results": [
+    {
+      "iterations": 100000,
+      "supported": true
+    },
+    {
+      "iterations": 600000,
+      "supported": true
+    }
+  ]
+}

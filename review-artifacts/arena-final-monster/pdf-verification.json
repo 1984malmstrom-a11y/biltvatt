@@ -1,0 +1,32 @@
+[
+  {
+    "path": "sample-diploma.pdf",
+    "bytes": 1864,
+    "pages": 1,
+    "swedish_text_verified": true
+  },
+  {
+    "path": "sample-fight.pdf",
+    "bytes": 2023,
+    "pages": 1,
+    "swedish_text_verified": true
+  },
+  {
+    "path": "sample-seller.pdf",
+    "bytes": 1878,
+    "pages": 1,
+    "swedish_text_verified": true
+  },
+  {
+    "path": "sample-station.pdf",
+    "bytes": 2183,
+    "pages": 1,
+    "swedish_text_verified": true
+  },
+  {
+    "path": "sample-summary.pdf",
+    "bytes": 2191,
+    "pages": 1,
+    "swedish_text_verified": true
+  }
+]

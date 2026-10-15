@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ✓ tests/arena-reports.test.ts (7 tests) 253ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  06:47:25
+   Duration  976ms (transform 390ms, setup 0ms, collect 527ms, tests 253ms, environment 0ms, prepare 56ms)
+

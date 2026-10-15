@@ -1,0 +1,3497 @@
+{
+  "version": 1,
+  "start_head": "90dc4100abcd991a46071e3a2105e690b1dc74b3",
+  "final_head": "93d677ca56ac7b6c18f5ae93f27b1ac7b5a6a344",
+  "branch": "feat/arena-v1",
+  "changed_file_count": 57,
+  "png_count": 245,
+  "pdf_count": 5,
+  "screenshots": [
+    {
+      "path": "admin-goals.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 350683,
+      "sha256": "9e6f52b96041d71a478e4cc0e8f699a08dbea29efd798bbb3a14cda6d988f95d"
+    },
+    {
+      "path": "admin-profile-upload-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 445296,
+      "sha256": "c72500801ab378137fe613245a52abbec95159dff258b05f923c5cb1b534ef23"
+    },
+    {
+      "path": "admin-profile-upload-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 703889,
+      "sha256": "7774e9a9475a20c589a27627d3a562fa1a9aca316b7d5c49e80868eb691a3a6a"
+    },
+    {
+      "path": "admin-profile-upload-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 202959,
+      "sha256": "b0afe1d28a3fd9ea7923cef48c8cd97adecbf9f29f8dd4897d72e5cdc6e349fa"
+    },
+    {
+      "path": "admin-profile-upload-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 177923,
+      "sha256": "b7fe144bd249e5812157eebdbeb33913efd920d4336b8796c9925ed9b8c775e8"
+    },
+    {
+      "path": "arena-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1047620,
+      "sha256": "808cb858e27afc41e1e1be0077f37f2301ed33d71f3c70dcf974067ff6a5210a"
+    },
+    {
+      "path": "arena-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2465250,
+      "sha256": "0c623b052fe5d60081a17a845f52e3e8a96bf999176c77fec77d24f61637dac6"
+    },
+    {
+      "path": "arena-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 476609,
+      "sha256": "8623ef1907a3a9bfeed0d77535f45f1fa0e5d8b8a09fe2a4a386b65338feb730"
+    },
+    {
+      "path": "arena-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479663,
+      "sha256": "52ece4bb3e4af282efec5c0b28ab1a6e0a10f1bd63c3d6a32176959889d457b5"
+    },
+    {
+      "path": "auth-forgot-password-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 321122,
+      "sha256": "b174692e4ac010e6efaafd000d1901d06726c0a6879c7936df2915a3812e43bb"
+    },
+    {
+      "path": "auth-forgot-password-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 702787,
+      "sha256": "f8eb8e57379903b1ab2deb741018427853c1a1df954198fd02052a9d6b31b4a7"
+    },
+    {
+      "path": "auth-forgot-password-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 152897,
+      "sha256": "6fb79bfdb99e8168d1705911be48d4009a651f3699f9c8b231f1066366716364"
+    },
+    {
+      "path": "auth-forgot-password-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 145907,
+      "sha256": "879bd3641712254572020b6fbdfbde6eac2323f765f983bcaaa8c6e9232ad0ad"
+    },
+    {
+      "path": "auth-recovery-codes-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 303626,
+      "sha256": "49d8ff4330e0ac8d99a4d710e7423db138c4f70b01b84051abfe6f13b2021769"
+    },
+    {
+      "path": "auth-recovery-codes-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 809508,
+      "sha256": "4460cf42621ee3247f58d0b279364c25a604b5d4e3512baec78e1a3618545657"
+    },
+    {
+      "path": "auth-recovery-codes-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 172808,
+      "sha256": "d06880bf67076fdfb90ddd1042b752f3fee7344275c140e51c52ee5d9605fc8a"
+    },
+    {
+      "path": "auth-recovery-codes-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 143194,
+      "sha256": "704ca236b6f205b00628efa075c334ecd8827514202d934ab00d51224be39d29"
+    },
+    {
+      "path": "auth-session-management-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 343142,
+      "sha256": "4129129dfaba4c38fe7098995e4fdd320c407dc9e9318c0ce7ebee9a71926be1"
+    },
+    {
+      "path": "auth-session-management-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 755872,
+      "sha256": "3461c0498e6f9e32cade23eb971a64bd0ae8a4fbe8ef7764ba616bcf687edb35"
+    },
+    {
+      "path": "auth-session-management-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 190548,
+      "sha256": "82db6c69fe6d05b3814bf79e4318057507a489bd50785dd77827e63cf6fc1b8b"
+    },
+    {
+      "path": "auth-session-management-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 174986,
+      "sha256": "180943116dc47bb4a3ced00da75640cd7a6328358e21a057d84e91908e91b237"
+    },
+    {
+      "path": "avatar-min-arena-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 430346,
+      "sha256": "94052eb35c666b5083fac66f584d22742fcf1a428ae2fe8914c1d83ab15f53ed"
+    },
+    {
+      "path": "avatar-min-arena-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 836332,
+      "sha256": "a659da0385a40d9fb006bf4289b02f3faacb1e54229b9d75f66da26237b65c60"
+    },
+    {
+      "path": "avatar-min-arena-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1101452,
+      "sha256": "7220e98aa8d7d38168420754416f8e3fd599d535a76c26a9fc3fb012dce6f8bf"
+    },
+    {
+      "path": "avatar-min-arena-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 208565,
+      "sha256": "842aeb5217fe5b10d0161617e176be340db6527691aecd9ab54debd66d8c698c"
+    },
+    {
+      "path": "avatar-min-arena-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 175226,
+      "sha256": "1aa05b4985042a43817ad11c2438187b2fbcea8be9e940f2a5690f15dfa79489"
+    },
+    {
+      "path": "avatars-feed-1024x768.png",
+      "pixels": [
+        247,
+        298
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "component",
+      "bytes": 81894,
+      "sha256": "b9cb75d311c03ec3f690891507b5537f952c6669c2acaac7af0f8d0de21e3554"
+    },
+    {
+      "path": "avatars-feed-1448x1086.png",
+      "pixels": [
+        348,
+        492
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "component",
+      "bytes": 167022,
+      "sha256": "1c6545c37334f95bdc774742c798e61be20878610e59b9ca596ab083d4ec56c6"
+    },
+    {
+      "path": "avatars-feed-1920x1080.png",
+      "pixels": [
+        440,
+        423
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "component",
+      "bytes": 175384,
+      "sha256": "2d54827bd29635849a2b7a206695a5415393240b0d332bbe22c67432a3c33d24"
+    },
+    {
+      "path": "avatars-leaderboard-1024x768.png",
+      "pixels": [
+        247,
+        303
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "component",
+      "bytes": 81786,
+      "sha256": "21ec7ecc8df289a4aaeb9a97d3d4dfd4b332f72c8b9f5bdcc166c37103c8bc71"
+    },
+    {
+      "path": "avatars-leaderboard-1448x1086.png",
+      "pixels": [
+        348,
+        425
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "component",
+      "bytes": 134471,
+      "sha256": "ef4b9508b51f9b8f21f70e908cd34006a2cb10ed9ee93c10655fd55d8b238026"
+    },
+    {
+      "path": "avatars-leaderboard-1920x1080.png",
+      "pixels": [
+        440,
+        426
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "component",
+      "bytes": 162672,
+      "sha256": "446bf6e1e67470e3a57de56487dd3f76b649e9fd4a9d2637bb368c399cf4607e"
+    },
+    {
+      "path": "central-leader-Aktuellt-fokus.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1151157,
+      "sha256": "3a8470e011b01dbc1a9440c20e91d4097f6ff8044000b365e06d51de5bdfc590"
+    },
+    {
+      "path": "central-leader-Den-här-månaden.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1100190,
+      "sha256": "ada8d5a4b42b164ae314f2103c45fb46d07b43444dd44de1bfce641e51aad80c"
+    },
+    {
+      "path": "central-leader-Den-här-veckan.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1092820,
+      "sha256": "6d12cbcb6520541c8c3d328bc154dbcb630ca4c7fa8262c8e6c11538be3f3318"
+    },
+    {
+      "path": "central-leader-Idag.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1127942,
+      "sha256": "b3c3029f919e1f700dc56fb6f3e1d141c3f1bb6ef203abcf7680a33d5768a3e3"
+    },
+    {
+      "path": "central-leader-Kaffe-+-bulle.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1152250,
+      "sha256": "721f84fe96acb2f10e035ecf65fcf711a34e4813cccabcafe616ad0364cc64ab"
+    },
+    {
+      "path": "central-leader-Vald-period.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1128355,
+      "sha256": "283b6ddb1cccbd6beefc201e8f56f66af7fdf190b642ae7e5931c054798f0a2e"
+    },
+    {
+      "path": "daily-home-after-month-tb-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1048291,
+      "sha256": "72286a17557a03fd7ae208fa6c2d1188dab7db61ea79cea6462fce190bbdaa2f"
+    },
+    {
+      "path": "daily-home-after-month-tb-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1946071,
+      "sha256": "c9b8c1381e540e0286764336d6c89212d00dc50d712f793bc0d56ca4f552def5"
+    },
+    {
+      "path": "daily-home-after-month-tb-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2471488,
+      "sha256": "a440fd5540e07615cbda886c99c2a1d15961b0bc0d4e83d82d4cb5e15dc98737"
+    },
+    {
+      "path": "daily-home-after-month-tb-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477265,
+      "sha256": "56d2a169dd6679ac885057a4b48d85bb9aa697af841cc004805953bfa0efbd35"
+    },
+    {
+      "path": "daily-home-after-month-tb-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479454,
+      "sha256": "a06b6cf3fa86eab0d843b7168fd3e13345e453a11e6b224c97ec44c78d748c55"
+    },
+    {
+      "path": "desktop-orbit-1280x800.png",
+      "pixels": [
+        1280,
+        800
+      ],
+      "viewport": [
+        1280,
+        800
+      ],
+      "capture": "viewport",
+      "bytes": 1302793,
+      "sha256": "5b4a45a06617654e44dc169639ce7d56becde3bd897aad3e1f4d5bda4b192fd2"
+    },
+    {
+      "path": "desktop-orbit-1366x768.png",
+      "pixels": [
+        1366,
+        768
+      ],
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1340626,
+      "sha256": "17cbb35ced172a582e120aa5d11c4533c36bcc387665cfc105f896e4c83ad7ed"
+    },
+    {
+      "path": "desktop-orbit-1440x900.png",
+      "pixels": [
+        1440,
+        900
+      ],
+      "viewport": [
+        1440,
+        900
+      ],
+      "capture": "viewport",
+      "bytes": 1622508,
+      "sha256": "73d803ae1e79e200a04bfabcb78b44e6c13aab601e0b1fa1ca4cac3e1653b7e6"
+    },
+    {
+      "path": "desktop-orbit-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1945205,
+      "sha256": "67518f744c432d7975a7ec47d788e6bd290e6ea86e1d3568c4b46a19738def40"
+    },
+    {
+      "path": "desktop-orbit-1920x1200.png",
+      "pixels": [
+        1920,
+        1200
+      ],
+      "viewport": [
+        1920,
+        1200
+      ],
+      "capture": "viewport",
+      "bytes": 2691921,
+      "sha256": "4cbe7bc01be9eb72854947b17d5a7ea1ef030602ca80e5561b8b79b572d36df9"
+    },
+    {
+      "path": "fight-active-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 505988,
+      "sha256": "4d005bd3d819200bbd8a0e8b63ce77b49e00910f0ca843c3f0055491ae09b151"
+    },
+    {
+      "path": "fight-active-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 722996,
+      "sha256": "4f03092aefb0976b7c8f4493961997670d06d1cd1492439aab3fc54b2b9e9fc3"
+    },
+    {
+      "path": "fight-active-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 815049,
+      "sha256": "883d4085eb60547762e418d1b4bd683e803bef55ed9d14a3d16bb999ea13f1ac"
+    },
+    {
+      "path": "fight-active-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 253617,
+      "sha256": "742987dbf3b5493fb1b452759e9bb1548d40839967830d6dba143f596548bf4e"
+    },
+    {
+      "path": "fight-active-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 199221,
+      "sha256": "6bfd8709f76b57ec3adbf770c44e15342dbeac04e77c8243ab60c8723584f502"
+    },
+    {
+      "path": "fight-arena-final-loss-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 334241,
+      "sha256": "714f32cbd5191f635582af2f6a6dcb9d1a9e5badcd2545ffb822e43833037867"
+    },
+    {
+      "path": "fight-arena-final-winner-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1833162,
+      "sha256": "2acf57ba3f062179b3b09c647c75afa63e65c24afe8f89bec5035f680834ca9c"
+    },
+    {
+      "path": "fight-final-tie-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 679001,
+      "sha256": "d7a94404ed991a5ab4a978f48fd9716da82e3068fa6cb1ca67020bc2547dead1"
+    },
+    {
+      "path": "fight-final-tie-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1407209,
+      "sha256": "32b0bda9e3ce3cbf0c04a38673c53db8b91f3bc396dc9c015e479af9175b88e9"
+    },
+    {
+      "path": "fight-final-tie-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1833673,
+      "sha256": "595643306286c9ec445ecf6c2d24494d24cfb7050b7c7cc689f8fc9d3497d67d"
+    },
+    {
+      "path": "fight-final-tie-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 342170,
+      "sha256": "5dee47d0f7c9cf6d6405857cef457f7c6552aec5190749d8538f404a142d300e"
+    },
+    {
+      "path": "fight-final-tie-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 299064,
+      "sha256": "d60d94e4da7a3c82f0090c7a23c5d7a09afddbb5624a48ff0082645a15245a31"
+    },
+    {
+      "path": "fight-finished-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 458634,
+      "sha256": "64eb12a587a11ea6e32f50d3e32d95417557e20d87fc15a9069a08d201443548"
+    },
+    {
+      "path": "fight-finished-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 882852,
+      "sha256": "fc0523524f63d004ccdb2f5e371b74da283afc8280650018b1ca180a51d2fd7e"
+    },
+    {
+      "path": "fight-finished-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1029199,
+      "sha256": "7ca224652d6a4996038b63001170e13156154ecf3268bd5f09b083b5cd80a360"
+    },
+    {
+      "path": "fight-finished-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 236776,
+      "sha256": "3346f1cab601544935401977b29e4d7695c9c62683c3cc809224c3b7a02b184c"
+    },
+    {
+      "path": "fight-finished-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 186140,
+      "sha256": "7f94c85a2ca751f42e5c2a9bd4ea4f3e094516e2590d3bc87b05bdaaec4c0808"
+    },
+    {
+      "path": "fight-full-duel-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 937447,
+      "sha256": "c51f2637a00081dc127f2753acb0d434203425a8fd32c52dd5174fb79f1b14c8"
+    },
+    {
+      "path": "fight-full-duel-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 246700,
+      "sha256": "8020959709144acd2b25c2a93d0c47ea96286b5cacf355035ae31b45309c574d"
+    },
+    {
+      "path": "fight-full-ranking-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 894821,
+      "sha256": "0d9784f12efb51e55f44c672bcbab69acc190aae77d4d1585cc95888b3e3713e"
+    },
+    {
+      "path": "fight-full-ranking-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 243951,
+      "sha256": "65073e15236b6a41d58ea8f48db872a667cf0f03f443726a8ebcf185a82653c8"
+    },
+    {
+      "path": "fight-full-tie-final-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 928643,
+      "sha256": "6bca7a756075f1df4a26e3021423087c5d2d2f9b7d4d90835d8fad5765c59df7"
+    },
+    {
+      "path": "fight-full-tie-final-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 238208,
+      "sha256": "288556fae1331d6c0bfbb8473e054577574ed9160c2528fa70f3f1e0f868dea1"
+    },
+    {
+      "path": "fight-full-winner-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1058129,
+      "sha256": "64800204e80fdae3fc6d549548d811d35eceed7105d1a255c986df77069e5f00"
+    },
+    {
+      "path": "fight-full-winner-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 227479,
+      "sha256": "580632a37a06a562a0815e5b81d5d511abd9407635e168516dae41224661e32f"
+    },
+    {
+      "path": "fight-indicator-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1046707,
+      "sha256": "97f64b3dd582e57516529bcc9fa00ed0ee227770a432d1ec94fcb22e708f7667"
+    },
+    {
+      "path": "fight-indicator-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1944338,
+      "sha256": "b9dc9156b35d39285c2b3d45af3d5372f3e6473786054204cf326ea15031ede4"
+    },
+    {
+      "path": "fight-indicator-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2475281,
+      "sha256": "90e0faa990a20c66487f09219971ee04c0b0a74abf4e6b6bd82b0a00d758ca05"
+    },
+    {
+      "path": "fight-indicator-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477294,
+      "sha256": "ed59f15e5b3a4e088a0bcdaa8b12d8c7aeaee3a5c3e48b0fc27c0b2e2f09a93a"
+    },
+    {
+      "path": "fight-indicator-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 477383,
+      "sha256": "c78770736c220dd4eddaa0c68d7c61544d5803bfff186b138f70151200d8f8b0"
+    },
+    {
+      "path": "fight-lead-change-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 519382,
+      "sha256": "33493582d7f140c0f974c45d7b3563a40bc931a39749665a62dbd64500e02d69"
+    },
+    {
+      "path": "fight-lead-change-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 851023,
+      "sha256": "c056558781bb128595787d0f32d789bbebbb44a55bdca67829b818ef737dff07"
+    },
+    {
+      "path": "fight-lead-change-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 995729,
+      "sha256": "400ce38aa42ad02f9173a999fd069ca78310a1d9aca6decadde2949d003ebda1"
+    },
+    {
+      "path": "fight-lead-change-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 284439,
+      "sha256": "96968c921bf7f8069cc86834a2a868ee3b19c7b176b9b158f4dc11619fc7e060"
+    },
+    {
+      "path": "fight-lead-change-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 256306,
+      "sha256": "d560f3910b3888915d4efd8f8997e4bd92249a992c7b6ce5027bec974a66e396"
+    },
+    {
+      "path": "fight-sale-lead-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 654638,
+      "sha256": "006b7524cbe806a8180aff9eb15d726ad40fefcca1496337bd88839821a590e1"
+    },
+    {
+      "path": "fight-sale-lead-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1354429,
+      "sha256": "fb420aa3b1746e9646498ef786fded3c251e2290419f8cb9682a3b98f03b3a56"
+    },
+    {
+      "path": "fight-sale-lead-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1786722,
+      "sha256": "d8414cc39146cadb1c752d731de48e5eee3944d69280f9e3e09e799680fd16b2"
+    },
+    {
+      "path": "fight-sale-lead-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 328580,
+      "sha256": "f3e185036f7df5b5091980f56aac76d37f73f4e948a1be96d0138aa4b7811fb0"
+    },
+    {
+      "path": "fight-sale-lead-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 300553,
+      "sha256": "aea1bedfee02a781e882ac6e5ff679250c7ca7ca26baa1bb28412d7af725c82d"
+    },
+    {
+      "path": "fight-tie-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 709990,
+      "sha256": "aaa1bdbf2928aa3ee17e8d15092a8503b6f9fd614d4241b85f8d8d46e3cc1abf"
+    },
+    {
+      "path": "fight-tie-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1449436,
+      "sha256": "fcb3afd03c421df76ed447b1dea18b3a6b2aa4c5ee398dfd31b05bfaeef0d3f5"
+    },
+    {
+      "path": "fight-tie-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1904860,
+      "sha256": "273e5f84d4ffa16219b2ac125a64fe73d679429f1456108bb42bfb2339936d89"
+    },
+    {
+      "path": "fight-tie-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 340788,
+      "sha256": "79becb452628f3a724d01160bb5ecb6a8c5c71c831308ae31710389602fb664a"
+    },
+    {
+      "path": "fight-tie-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 317709,
+      "sha256": "d2fbf9ca907ed36081933e834c500880e7567e496d1a2d51fdbcbc898e10348b"
+    },
+    {
+      "path": "fight-widget-final-sprint-1280x720.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1196813,
+      "sha256": "053cf8eace71b6a7a3fdec583c173cbf3e5952a84a9dca673c512ce7bd91f19e"
+    },
+    {
+      "path": "fight-widget-tb-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2477995,
+      "sha256": "74d744bbcbcfb7fe66872e7e2cce1a50647e58f5848758c19547487d93b09dba"
+    },
+    {
+      "path": "fight-widget-tb-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477241,
+      "sha256": "3e9c7719b1d9e75036c4ca6bab68f7377ef2855859b557e063652cb52cca153e"
+    },
+    {
+      "path": "fight-widget-urgency-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1047580,
+      "sha256": "152d0613f90876bd21f7d0d8ec47f2e1729a58b3e4461be621493447c82038f9"
+    },
+    {
+      "path": "fight-widget-urgency-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1947461,
+      "sha256": "9688cf97a5c69e9283afe5e0105a0259a1d1232b475ef1a1472141e8b6fe3442"
+    },
+    {
+      "path": "fight-widget-urgency-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2478352,
+      "sha256": "e0da005374220e7b477e2f3b37add10eeb705833af7687fac37a8b1f4c97ce04"
+    },
+    {
+      "path": "fight-widget-urgency-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477673,
+      "sha256": "5c608d38e8860991009d34ebe6a19e10f368665d42ce5501d0b43a000fb7a2e2"
+    },
+    {
+      "path": "fight-widget-urgency-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 476413,
+      "sha256": "862ef8c0c0fea71d7cec213ac3b145af287152597fb8c09c5e80300d3d7d076d"
+    },
+    {
+      "path": "goal-hero-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 779987,
+      "sha256": "f11adb6d3b602850219f6d81a76d58d02ae5bc8bd174a80e450e064d440aa443"
+    },
+    {
+      "path": "goal-hero-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1455469,
+      "sha256": "50c19b551957853895bc55f7cfd6d12f6ae353ce2f25343edaa01617bc54e585"
+    },
+    {
+      "path": "goal-hero-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1887290,
+      "sha256": "56a521c28dec9aef4a90ac5b292bc0d6bf36fa8c8bf1c30fb87b4f55645aa94d"
+    },
+    {
+      "path": "goal-hero-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 377404,
+      "sha256": "71e6c1c6b522aa40d6e108c91add8bc0dc90ca1e2ccdf417bd7ba1c189f10d7e"
+    },
+    {
+      "path": "goal-hero-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 368624,
+      "sha256": "4ce46af67349505e6346d0b0486b3a22727aa63d289706fc1fb60ad5c2c6b1da"
+    },
+    {
+      "path": "hero-burst-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 791938,
+      "sha256": "fabb0c704496593e5a6bf9c3ce5eaad3986aa65e10874c44ea773291ee662696"
+    },
+    {
+      "path": "hero-burst-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1964434,
+      "sha256": "4324459fbbfa121a2e635b00e58af95c1b4047d8037e3ee6c10c82c76b35c112"
+    },
+    {
+      "path": "hero-burst-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 386483,
+      "sha256": "b8c5e63f8c169fe3087be5f9ebedaae053642ccfa30342f49f4096a9349e4f21"
+    },
+    {
+      "path": "hero-burst-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 405172,
+      "sha256": "871f5f9a0990d3e8a89cc92913c5fdefab2be8886175e3afbb0aa56752590448"
+    },
+    {
+      "path": "leader-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 780322,
+      "sha256": "7934ca43d2acfe6568d3dad3b81db4da9f912b84b4644fcf9ca703208829c615"
+    },
+    {
+      "path": "leader-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1892597,
+      "sha256": "4e78f88834ae95e343b74a41e803f7b24acf573235e9d5e344779ccddd29120e"
+    },
+    {
+      "path": "leader-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 371381,
+      "sha256": "4b943aaac5b0678b8a2430640cbe6d6f8f5759d2b59929a4b71d774fdd3bd161"
+    },
+    {
+      "path": "leader-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 360461,
+      "sha256": "88122fbf038623d9e31999c506af830440f2d4db45b3e1324c0d62dce20e027a"
+    },
+    {
+      "path": "leader-activity-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1458064,
+      "sha256": "5e8109f907da720b749c94e4a129dd6bc04ee65f32bbe541598db3eae06477c0"
+    },
+    {
+      "path": "leaderboard-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1048103,
+      "sha256": "fa005577f1c9dea4cb24efec298c0e39cbfdf7773512ede803b821177f29c773"
+    },
+    {
+      "path": "leaderboard-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2488033,
+      "sha256": "013ae6b14949f6c4301ace1ee17c124a479aeaee7466e9a367264a3c4812fefd"
+    },
+    {
+      "path": "leaderboard-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477289,
+      "sha256": "0edba42fda1283c801e98ab3026d9968940ce4f157cb6571321aa1af8173fae9"
+    },
+    {
+      "path": "leaderboard-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479553,
+      "sha256": "e5fb28d6a6e208b915815537321884f6c240efc9cfa2a358647c288d97fadbbe"
+    },
+    {
+      "path": "left-column-1024x768.png",
+      "pixels": [
+        247,
+        618
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "component",
+      "bytes": 169839,
+      "sha256": "b0e1b95334654c15ec340139def0ed438b786940c9f64d353ce778a79a82e6e7"
+    },
+    {
+      "path": "left-column-1448x1086.png",
+      "pixels": [
+        348,
+        936
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "component",
+      "bytes": 311004,
+      "sha256": "810a1e801a0785878d501b702dee1d402f863128a78489839b168ba7e3e31655"
+    },
+    {
+      "path": "left-column-1920x1080.png",
+      "pixels": [
+        440,
+        876
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "component",
+      "bytes": 353536,
+      "sha256": "8b818e80c48076fb8bd7130bc5764be9e21ef8080fd61c64baf657ef1b05c820"
+    },
+    {
+      "path": "level-2-near-personal-goal.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 1174675,
+      "sha256": "5b43bd701dab7123d4ee1f4c734cedd765fb10ef1e9ebef14a74be46d7954293"
+    },
+    {
+      "path": "mobile-feed-panel-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 190004,
+      "sha256": "1c4704d29d4ddcd0ff90f29fa5e5ab675a0516bb74b8b4f498851dbe07e68c78"
+    },
+    {
+      "path": "mobile-feed-panel-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 189347,
+      "sha256": "c329e112c997e356685f482cbc9626195067103a3b4accb382502cc976432600"
+    },
+    {
+      "path": "multi-station-leaderboard-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 354643,
+      "sha256": "77f39a3405810fa0509ea7e37a541f074334c4a5750cba0c088d17c9daea3599"
+    },
+    {
+      "path": "multi-station-leaderboard-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 804029,
+      "sha256": "8903ad6b328821ea1bfa6b33a7e0e183301cc2641af2db59e1ccf2f5294bf977"
+    },
+    {
+      "path": "multi-station-leaderboard-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 193172,
+      "sha256": "69142184470c8737c359f5af83c32a93f47bbd4ef6ad43ce883b6db32b446e6f"
+    },
+    {
+      "path": "native-profile-upload-success.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 382617,
+      "sha256": "2eb8c5878dff16050cb6c30a2f48bb84be00d371567bf687ab3ce131e5ebb1ae"
+    },
+    {
+      "path": "onboarding-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 348433,
+      "sha256": "d782aad182938006c3f7b54efbcd5e9a00adc93ccf33adba5af9fb96748f4ec0"
+    },
+    {
+      "path": "onboarding-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 753762,
+      "sha256": "4581a939e1b80f05221e5f4a4800f68852164bfc95fd80391db132947f39e78e"
+    },
+    {
+      "path": "onboarding-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 175195,
+      "sha256": "38c8c60ce017c1af851adf34bff74464a71a3969d938f3fd248267bfe5832028"
+    },
+    {
+      "path": "pdf-diploma-preview-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 437860,
+      "sha256": "d752c885be2bf8ff16d6b467f134430e678d14dfb04cef03122075bfb334f102"
+    },
+    {
+      "path": "pdf-diploma-preview-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 906987,
+      "sha256": "c44de5645d164468a798c84ef50cacb8f1982ae16a23c0d180f858c47684e389"
+    },
+    {
+      "path": "pdf-diploma-preview-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 186735,
+      "sha256": "dcf656fa3f190ce43f2b0f2712d3a15be9a533ab8109bd2f81eff96967caef35"
+    },
+    {
+      "path": "pdf-diploma-preview-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 145416,
+      "sha256": "19a7568dc9f9bf2de55d6f0867b6312d504c15097e747a897520e488ef21f4b0"
+    },
+    {
+      "path": "pdf-fight-preview-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 382661,
+      "sha256": "109b197784361d59f1e694fa6780a484b7835eecd6fbfa2dadab4b2e91f8c7a3"
+    },
+    {
+      "path": "pdf-fight-preview-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 796449,
+      "sha256": "819e39234b8e8bf54a6d0a92b4e9438f447faec584dd620be05eedaa29bbb7e9"
+    },
+    {
+      "path": "pdf-fight-preview-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 154602,
+      "sha256": "c77450315ac58bba7a9c3203a68caa7b23d84fb2493d8507552ff8190c7056d0"
+    },
+    {
+      "path": "pdf-fight-preview-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 180704,
+      "sha256": "efc11e2519e6f2af36596ce9b39fb077e63db1db4280ea7868c732f407de88b3"
+    },
+    {
+      "path": "pdf-seller-preview-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 438867,
+      "sha256": "1e9c51bbed22dcbd6e8be8dd3b01b62c2ab26bb1e2bf5874e96f6366fd0ed4ae"
+    },
+    {
+      "path": "pdf-seller-preview-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 907181,
+      "sha256": "f956596d5ffb6b5600988870f2e00adac5ac0c17802943fb8203abd2113b0725"
+    },
+    {
+      "path": "pdf-seller-preview-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 187550,
+      "sha256": "6fdf824f90c48d14f181734166584457cfc92ef59871425a8c2c4dbe89ede29f"
+    },
+    {
+      "path": "pdf-seller-preview-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 145573,
+      "sha256": "f16e47d0f179c248af2d2478ab4078ce7d1ab09bfa7dd546a7413791833b83d5"
+    },
+    {
+      "path": "pdf-station-preview-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 367031,
+      "sha256": "b6c26f3f0c27059d556e5071e890c9b03ec16c57ba1b6f76a26770b13d338fb5"
+    },
+    {
+      "path": "pdf-station-preview-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 768395,
+      "sha256": "e75039967afeb26532e152bd63df83c433b9e048cc9c8dae9f23eb4141fca688"
+    },
+    {
+      "path": "pdf-station-preview-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 145677,
+      "sha256": "e84dd512061c40de3553abe8ca2c835fcc21dcf4cf886d73a25c933fa9e28d7e"
+    },
+    {
+      "path": "pdf-station-preview-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 183261,
+      "sha256": "ef7b7bb6604cedadaae77a5e44562650153f145b2415b60270f5c9bf14ae202f"
+    },
+    {
+      "path": "pdf-summary-preview-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 368529,
+      "sha256": "13b8c9e9135aed907cd55651822179f3eecebb2886c9effa5a8e61a4545f95f9"
+    },
+    {
+      "path": "pdf-summary-preview-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 770551,
+      "sha256": "222b4c57d33f0e329b7abf5a61265de9e6395de9a70d88fa20fb69b47b21af52"
+    },
+    {
+      "path": "pdf-summary-preview-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 148767,
+      "sha256": "41030f92f4800ea89f11e0bcd45fbc58e0af6bcbbb585f8027a5b488430fc9cb"
+    },
+    {
+      "path": "pdf-summary-preview-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 65348,
+      "sha256": "e1f4a4497aabb862a9c4e0d740fd6ef4cbd84e143bc8b4486c1cf9ec5e7ed273"
+    },
+    {
+      "path": "pending-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 384920,
+      "sha256": "c77003a6b00f97229d4e9c8a5e75a26bdcd845bf872761fe570e32abd83786f3"
+    },
+    {
+      "path": "pending-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 779030,
+      "sha256": "8911e767b531dc9d9dbce631b95b9e94fa7468fadeb2d7e0a5d59b4195b1e631"
+    },
+    {
+      "path": "pending-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 215397,
+      "sha256": "578dd068aa87c9f4ad3acbefa748a09c726c56fffd352c8d580ad7f59b518616"
+    },
+    {
+      "path": "person-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 432917,
+      "sha256": "fdc566b101bd31eeabcb8b164e9d398171142f5884c407493303b39d81d4efbb"
+    },
+    {
+      "path": "person-1366x768.png",
+      "pixels": [
+        1366,
+        768
+      ],
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 577370,
+      "sha256": "05db9a23ffe6b900cdde530f5c91345634d95064dde330f355c9762f631d0a9d"
+    },
+    {
+      "path": "person-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1068843,
+      "sha256": "653d4884b5b3a94af08ae1421c0ab63212eedaa90273d6d8e80226fb80719560"
+    },
+    {
+      "path": "person-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 197870,
+      "sha256": "7ad33f9f7e5845a355c960b4457c41169a5b55f46bf313009c4c4f559b7ba5dd"
+    },
+    {
+      "path": "person-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 173990,
+      "sha256": "164cca039dcc6eaa0bc2a3ae88065f38722729f2683dd3b127264533c847c744"
+    },
+    {
+      "path": "person-empty-desktop.png",
+      "pixels": [
+        1366,
+        768
+      ],
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 576683,
+      "sha256": "39630d52962bf35b0ff818091f1b8fb999f467882b0ecf0c4f7c9aba4b779e36"
+    },
+    {
+      "path": "personal-goal-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 785823,
+      "sha256": "05b8e1718091dd48d8c3073111ad0cdbab7543b247c1b4d3d285192b5ea401d2"
+    },
+    {
+      "path": "personal-goal-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1884873,
+      "sha256": "312ba2ab514510b013590fb0dd3deb32d06a87fd50997c6ac275bd6afc33bb9a"
+    },
+    {
+      "path": "personal-goal-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 377614,
+      "sha256": "daa25d81959dbdd9944ad0042144af208c0a507513774a4c30a02730d27f298d"
+    },
+    {
+      "path": "personal-goal-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 368074,
+      "sha256": "68742bfc0530df79f3c1011abfa3262206d7ed6a895764c3794cb3bd7fa162be"
+    },
+    {
+      "path": "product-upload-preview.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 360997,
+      "sha256": "fccacfd9eeed45636c53f7f30dab594815dcf7c11365c91d3c4eeb98d7913644"
+    },
+    {
+      "path": "products-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1048152,
+      "sha256": "17260ffe67f5dc7c2c1e042572a35d190f0885416616336c6da4b416670ab038"
+    },
+    {
+      "path": "products-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1945239,
+      "sha256": "4d99d4e1d2682281511ea22cdce2f85d626c243e447949f5ff0b3515d152eedd"
+    },
+    {
+      "path": "products-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2488503,
+      "sha256": "280b0a6f4713b243e55656d4f74b48f964589307ab9a6705323ce03240fd8c06"
+    },
+    {
+      "path": "products-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477216,
+      "sha256": "263453595f2c9f7c49c230b9796866152f53bd8b79c0ffd20ac6e2d47c34a071"
+    },
+    {
+      "path": "products-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479412,
+      "sha256": "552dcc00370c989e9c5e507a2f0b1b5c23a0fa30f421c7b84e42813c505c05bd"
+    },
+    {
+      "path": "registration-reward.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 935511,
+      "sha256": "a60066fe77534ba6fa8631921850d5c8c9d98917b24678267bd6f405fba1015d"
+    },
+    {
+      "path": "responsive-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1047746,
+      "sha256": "982597f34ae0950ff96017e82dea67e3a169617f7423e6731a96e2e56f2fc353"
+    },
+    {
+      "path": "responsive-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1929105,
+      "sha256": "0f8ade4f43186ccda3f5aefc46c438592b6638ecc59fadb83b63e17d8456fbd4"
+    },
+    {
+      "path": "responsive-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2470463,
+      "sha256": "5dab5bace07c151ab5035381ea67773bcef203466a531dc0131bcb40b840e4cf"
+    },
+    {
+      "path": "responsive-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 477308,
+      "sha256": "90ff80b254ce1d21026ca1bfeee44ed83583cae8679c35e1e25a678aa82ae133"
+    },
+    {
+      "path": "responsive-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479758,
+      "sha256": "10ede69d0fc293a1b582a24bc872f30d44e67c8ded7c22e79bbcb34b0efe7b2e"
+    },
+    {
+      "path": "sellers-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 471286,
+      "sha256": "48ea85cf8a08459890b485b8d468ed69784d6b280c7ecafd05da603ad194dbd2"
+    },
+    {
+      "path": "sellers-1366x768.png",
+      "pixels": [
+        1366,
+        768
+      ],
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 608463,
+      "sha256": "3cdf4320355a4ebd30b3e6eaa2f68105a0994f9936685ff7d5dc4c9506f8ef9d"
+    },
+    {
+      "path": "sellers-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 869629,
+      "sha256": "d1a0c6f302a0723fdfe440f9d23bc2be8538b399e59f60dc71e6427837534b9e"
+    },
+    {
+      "path": "sellers-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1148166,
+      "sha256": "5a09bec0ce4a700cabcc3bf40285b5784a82922e5ebad9afa264afb1e99407cc"
+    },
+    {
+      "path": "sellers-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 216632,
+      "sha256": "2cbc2307393d861d111112efc550d0405dbf47d7bb4d8f0ac8c69a891be700d2"
+    },
+    {
+      "path": "sellers-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 236387,
+      "sha256": "7e362fb322be45817c45765b53d304d16b2fb0b107a9cdf62e37753c8a6839f1"
+    },
+    {
+      "path": "simultaneous-achievements-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1887421,
+      "sha256": "cd237f3cea51978583ca5cac8b0d6416f6083b845150d78a7b109cfd275be285"
+    },
+    {
+      "path": "standard-sale-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 791658,
+      "sha256": "9efb91c8522f71850155605d075f95c71e0f83985f670281b49170acc6c7a217"
+    },
+    {
+      "path": "standard-sale-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1501426,
+      "sha256": "673e10353aba7781261a19215c6b9783088b055ba6c328667745f77a82878d0d"
+    },
+    {
+      "path": "standard-sale-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1964183,
+      "sha256": "ca524899475a4625b0d4502cbd9df16c41e77f505fc68ea11b763d05a26521dc"
+    },
+    {
+      "path": "standard-sale-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 384614,
+      "sha256": "33874441e13708346f4492190f63f40ac85defce649b4790e0f15867726acd83"
+    },
+    {
+      "path": "standard-sale-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 404558,
+      "sha256": "afc20cc45414eab91d8e19ca20a5bafe0485c33282420a8e275d9d4d4ac797c8"
+    },
+    {
+      "path": "start-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1047088,
+      "sha256": "343b83f7abaa6a1985480de4be19a8e24f120af4bef837b93c6ff04061269051"
+    },
+    {
+      "path": "start-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1944454,
+      "sha256": "5efa9dd3b073e8bbaeb5270384519a05e13f701338a4c308c6f8d7c81cfcf2bf"
+    },
+    {
+      "path": "start-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2488511,
+      "sha256": "df462c340f01aa22df35548938e6d346d70f79a2ac15efe3d2c4627121700d53"
+    },
+    {
+      "path": "start-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 476664,
+      "sha256": "0cf2b49ff07510ba4493627d5699d2639b68fa0e9ff0b0b999f867a2a0344b47"
+    },
+    {
+      "path": "start-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 478491,
+      "sha256": "fb36b7e2a9a8f098d9feaf5517157763e9a256dc65ff654e569dad25eb87f1e8"
+    },
+    {
+      "path": "station-goal-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 784664,
+      "sha256": "2bf7d3783a4cf6d4418c432e0e990e475a71ca19662a11666e25855651367a36"
+    },
+    {
+      "path": "station-goal-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1886455,
+      "sha256": "916b4d9179b37117000ded829dc0b79bfc71a3438576047683b7df984679c9df"
+    },
+    {
+      "path": "station-goal-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 377174,
+      "sha256": "3b930923c4ab5e404171e0f01bc0de08c1c75b7d4bfc1c208a4b47a5f5f9fae6"
+    },
+    {
+      "path": "station-goal-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 367353,
+      "sha256": "0bfcdba57cd35b2c321e5ade33c86ea655a63ce6d03c5e962ce333891cf18633"
+    },
+    {
+      "path": "station-group-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 346757,
+      "sha256": "43c79b249726a2093271c6bbcb44ed86a3c49022579e370ed5612317bc81a3d4"
+    },
+    {
+      "path": "station-group-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 785333,
+      "sha256": "712f66f365e1e2fd5cd45eeb07fb4a0602e0144959337f44d046a9825759ede4"
+    },
+    {
+      "path": "station-group-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 181252,
+      "sha256": "ad2ef541319d598201559c6ef2a755e264e25877706a0d6624cd4572745c38a7"
+    },
+    {
+      "path": "station-login-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 344554,
+      "sha256": "ef7cae536839247d1f2c1f613e1434eec26f6df1bd50242522944bc2e243d174"
+    },
+    {
+      "path": "station-login-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 746235,
+      "sha256": "6d18cbd28c67bc9c297cbc4e03f9a2f80214c48aebf4053d980e5b0ea195599e"
+    },
+    {
+      "path": "station-login-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 175376,
+      "sha256": "1be8866e0e3122234c8836cdfc55e7ea329c3230caf7e412567e460f0d97ca48"
+    },
+    {
+      "path": "superadmin-accounts-roles-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 323259,
+      "sha256": "f78d1b3bac2bbb87d48234b6366c56fdb4e531dc7b30f4e2ee4b41518b6d5815"
+    },
+    {
+      "path": "superadmin-accounts-roles-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 688452,
+      "sha256": "cbb81614346bdae360186bd3a4ef11824d9e7411174c19eb69908f8b9da56116"
+    },
+    {
+      "path": "superadmin-accounts-roles-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 178932,
+      "sha256": "fdad5000f85c6f3ecac4b39ca9b2691fc47d82275e9d008a78e1ab6d303f8115"
+    },
+    {
+      "path": "superadmin-accounts-roles-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 176270,
+      "sha256": "06d321a6eba37aae76171091e4e750793cb516ddf4a0e22627fb478acd39ebc8"
+    },
+    {
+      "path": "superadmin-audit-log-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 342090,
+      "sha256": "049d76b4633d9a9a6f711bf044583186ec6cc4fe038e627269ea7c7469ff3981"
+    },
+    {
+      "path": "superadmin-audit-log-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 738860,
+      "sha256": "7394a350d005ce416023c882c8b986c5294057a97e59d1e0651081636645f428"
+    },
+    {
+      "path": "superadmin-audit-log-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 180096,
+      "sha256": "4e8625f00d9917d40c6abc4ebe7b832cf89c9b65383e50a099dc87aaf6ed03a9"
+    },
+    {
+      "path": "superadmin-audit-log-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 174509,
+      "sha256": "9ead97074fbd74c406df2e1d0ec6876bad0531f3307200b9fb6c8f62c9beb271"
+    },
+    {
+      "path": "superadmin-create-fight.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 796907,
+      "sha256": "6723d9adf29ab9b0e813727d644e9089037dbf2d1257c7722204cccd167b59f5"
+    },
+    {
+      "path": "superadmin-fight-manager-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 818010,
+      "sha256": "764cb7b3a1ac0bd2913b54bc1b599e59d3870a180d495810e5e28f52866bd326"
+    },
+    {
+      "path": "superadmin-groups-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 372765,
+      "sha256": "0904ff36b9a6c4b42de4f277c4ed5bdd1a3753bda63cc201169bceac8a04e3bb"
+    },
+    {
+      "path": "superadmin-groups-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 769409,
+      "sha256": "83af5b8e3e8dde0b6437486e4921e9fccf3efb021bb73d3b106c60f6e4529ba2"
+    },
+    {
+      "path": "superadmin-groups-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 186665,
+      "sha256": "cc4ed2871816add8d703cd0c84fb1f48d6f93c5f1a8f0e7fab8b2dbf4d1fbac9"
+    },
+    {
+      "path": "superadmin-reports-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 405796,
+      "sha256": "48d93fde74a07002bae915e2a8201ab01af0e199c73f4fc9f522eec1836199d2"
+    },
+    {
+      "path": "superadmin-reports-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 786385,
+      "sha256": "cc4d3a4e99cd0f40f49f3d1187b100956b521732ab3eb0cf77038f085d7ea7cb"
+    },
+    {
+      "path": "superadmin-reports-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 184472,
+      "sha256": "38e7c0400eb76471396826d8a1860a8cb22ebe0b95b7323f45e6d2a4139ac028"
+    },
+    {
+      "path": "superadmin-reports-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 181434,
+      "sha256": "4b0136efd596966180eeee03b15d06c2c3b4d914b9c4603245b2a6c803c51fde"
+    },
+    {
+      "path": "superadmin-stations-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 351870,
+      "sha256": "305474591b86201b12f756237ce1da61f1724399ff61ad6588b32262b433359c"
+    },
+    {
+      "path": "superadmin-stations-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 707107,
+      "sha256": "7c0068cce183dd2d9ebefd6c5d1f92e8813f7a761c2d0950aac83ee912f89e35"
+    },
+    {
+      "path": "superadmin-stations-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 193120,
+      "sha256": "ce0daa6b68d1ca33fd76a65ad813fe436b62a5c07b113ac796344071fa3356f3"
+    },
+    {
+      "path": "tb-admin.png",
+      "pixels": [
+        1280,
+        720
+      ],
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "bytes": 373195,
+      "sha256": "90551a6b6a382eccda1d75a71afca8f84fac932051f43ba66f20cb2324d56e1b"
+    },
+    {
+      "path": "tb-badge-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1048592,
+      "sha256": "d5353a134b818378ecd01c2e7e28bec8e5d6070cad62e168a40755ba031e8a17"
+    },
+    {
+      "path": "tb-badge-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1947725,
+      "sha256": "a163f55410a4be384d862c7efd70aacd527927e0e768c252536c88ff5c945d58"
+    },
+    {
+      "path": "tb-badge-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2489042,
+      "sha256": "ed5b16166825e7bcdd54bb4acf4ed444fa2265baeae94242a8064b10b706c670"
+    },
+    {
+      "path": "tb-badge-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 478095,
+      "sha256": "346abe98ba929864bf6b0763f980f86f82985ea22944498020e088d5ac6cd34e"
+    },
+    {
+      "path": "tb-badge-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 479559,
+      "sha256": "edd2021fe9d582063a6f304ccb15d4b51860bc403c4befd7e437babfbfdc8c2d"
+    },
+    {
+      "path": "tb-leaderboard-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 435942,
+      "sha256": "ed49459ceaf9963afedf639df7649feb99bd4d3a6fe392a04d456c892b0ad28f"
+    },
+    {
+      "path": "tb-leaderboard-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 866481,
+      "sha256": "88f1fd993ccc6bddc08944899b764bf11983a4080e6cfd1dc9f2223f2d673782"
+    },
+    {
+      "path": "tb-leaderboard-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1153230,
+      "sha256": "28d51506d9ac294c1b37ba7a77e465d4fa845b3c5a87e01c3cf812a0714232a1"
+    },
+    {
+      "path": "tb-leaderboard-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 213663,
+      "sha256": "ea98c6d5607dc1893dead991e8beab8196fe9430cb5b35e9f973aa9d8e1d6400"
+    },
+    {
+      "path": "tb-leaderboard-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 155072,
+      "sha256": "82e423f37d4ea760d47a37797efab0fc808e0c0e1c597aa50def6397de246de4"
+    },
+    {
+      "path": "tb-person-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 437827,
+      "sha256": "3ddfc06d29add4b92c7411fbc527c1f6b7edfa11cb6e292a5d14c97a0075531b"
+    },
+    {
+      "path": "tb-person-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 837686,
+      "sha256": "e0625258e1f89b325168bdeebdb6f6b4bb006e088338ba88e32d97bab3c5b083"
+    },
+    {
+      "path": "tb-person-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 1101060,
+      "sha256": "31ca272922cc962ee4be1be85235af34f6127f255e8dd00fee6ca1706cf1d2ae"
+    },
+    {
+      "path": "tb-person-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 214434,
+      "sha256": "96f2a729a21da12d595ec563515f7ef82199fd7aa5d824ea9a06d606f0456ab1"
+    },
+    {
+      "path": "tb-person-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 173609,
+      "sha256": "75f300f9fa9b2f9215ac85f0628e626098af048c5d956569642a105c31252b70"
+    },
+    {
+      "path": "unavailable-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "bytes": 1043490,
+      "sha256": "52f8a2e0e9f37c1890e4e055987139adb77c788458476933b43382b57d05132d"
+    },
+    {
+      "path": "unavailable-1448x1086.png",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "bytes": 1943251,
+      "sha256": "51ddb9050e48e7f3a7dfcd563ce5d1d55d02ec319a4f6027f6ee9ef73ba67e4b"
+    },
+    {
+      "path": "unavailable-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "bytes": 2480446,
+      "sha256": "8c9a1b6f3d3a99c10e3be603361e8da5cab42e47261d74378aea2d8c8eeb9e42"
+    },
+    {
+      "path": "unavailable-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "bytes": 474517,
+      "sha256": "b240314fcbed740db51233e3967ee273d36b3fae25107fef0226205f349eb893"
+    },
+    {
+      "path": "unavailable-844x390.png",
+      "pixels": [
+        844,
+        390
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "bytes": 475855,
+      "sha256": "02e1b4dfdb39c5941178de600838756bc117056a961dc7679983acd41a5331b1"
+    }
+  ],
+  "pdfs": [
+    {
+      "path": "sample-diploma.pdf",
+      "bytes": 1864,
+      "pages": 1,
+      "swedish_text_verified": true
+    },
+    {
+      "path": "sample-fight.pdf",
+      "bytes": 2023,
+      "pages": 1,
+      "swedish_text_verified": true
+    },
+    {
+      "path": "sample-seller.pdf",
+      "bytes": 1878,
+      "pages": 1,
+      "swedish_text_verified": true
+    },
+    {
+      "path": "sample-station.pdf",
+      "bytes": 2183,
+      "pages": 1,
+      "swedish_text_verified": true
+    },
+    {
+      "path": "sample-summary.pdf",
+      "bytes": 2191,
+      "pages": 1,
+      "swedish_text_verified": true
+    }
+  ],
+  "provenance": "Real React/CSS rendered in Chromium. Synthetic/fictitious test identities and local API fixtures/local D1; no mockup substituted for UI.",
+  "tests": {
+    "arena_unit_pass": 128,
+    "npm_pass": 334,
+    "npm_fail_known_csv": 1,
+    "playwright_unique_verified": 128,
+    "playwright_main_pass": 126,
+    "playwright_main_fixture_skips_resolved_in_targeted_run": 2
+  },
+  "boundaries": {
+    "push": false,
+    "deploy": false,
+    "remote_migration": false,
+    "merge": false,
+    "branch_switch": false
+  },
+  "origin_feat_sha_unchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "working_tree_clean": true,
+  "commits_created": [
+    {
+      "sha": "93d677ca56ac7b6c18f5ae93f27b1ac7b5a6a344",
+      "message": "Arena V1: finalize people security reports and production readiness"
+    }
+  ]
+}

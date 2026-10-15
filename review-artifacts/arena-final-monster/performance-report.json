@@ -1,0 +1,190 @@
+{
+  "method": "Synthetic Chromium CDP 4x CPU throttle, real React/CSS, mocked local sale receipt. Not physical cashier hardware.",
+  "results": [
+    {
+      "viewport": "1920x1080",
+      "cpuThrottle": 4,
+      "openSellerMs": 368,
+      "nextDuringCelebrationMs": 507,
+      "layoutCount": 13,
+      "scriptMs": 620,
+      "longTasks": [
+        {
+          "start": 1795.8999999985099,
+          "duration": 201
+        },
+        {
+          "start": 2130,
+          "duration": 116
+        },
+        {
+          "start": 2266.6999999955297,
+          "duration": 105
+        },
+        {
+          "start": 2501.5999999940395,
+          "duration": 130
+        },
+        {
+          "start": 2687.2999999970198,
+          "duration": 182
+        }
+      ],
+      "genericPersonIcons": 0,
+      "celebrationPointerEvents": "none",
+      "canvasCount": 0,
+      "overflow": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "cpuThrottle": 4,
+      "openSellerMs": 342,
+      "nextDuringCelebrationMs": 339,
+      "layoutCount": 13,
+      "scriptMs": 472,
+      "longTasks": [
+        {
+          "start": 1704.3999999985099,
+          "duration": 197
+        },
+        {
+          "start": 2010.7000000029802,
+          "duration": 117
+        },
+        {
+          "start": 2150.7999999970198,
+          "duration": 98
+        },
+        {
+          "start": 2250.60000000149,
+          "duration": 50
+        },
+        {
+          "start": 2512.60000000149,
+          "duration": 122
+        }
+      ],
+      "genericPersonIcons": 0,
+      "celebrationPointerEvents": "none",
+      "canvasCount": 0,
+      "overflow": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "viewport": "1448x1086",
+      "cpuThrottle": 4,
+      "openSellerMs": 334,
+      "nextDuringCelebrationMs": 488,
+      "layoutCount": 13,
+      "scriptMs": 544,
+      "longTasks": [
+        {
+          "start": 1565.0999999940395,
+          "duration": 200
+        },
+        {
+          "start": 1875.8999999985099,
+          "duration": 116
+        },
+        {
+          "start": 2013,
+          "duration": 80
+        },
+        {
+          "start": 2200.5,
+          "duration": 80
+        },
+        {
+          "start": 2415,
+          "duration": 194
+        }
+      ],
+      "genericPersonIcons": 0,
+      "celebrationPointerEvents": "none",
+      "canvasCount": 0,
+      "overflow": {
+        "width": 1448,
+        "height": 1086
+      }
+    },
+    {
+      "viewport": "390x844",
+      "cpuThrottle": 4,
+      "openSellerMs": 270,
+      "nextDuringCelebrationMs": 369,
+      "layoutCount": 13,
+      "scriptMs": 563,
+      "longTasks": [
+        {
+          "start": 1431.8999999985099,
+          "duration": 168
+        },
+        {
+          "start": 1682.6999999955297,
+          "duration": 129
+        },
+        {
+          "start": 1840.5999999940395,
+          "duration": 98
+        },
+        {
+          "start": 2040.5999999940395,
+          "duration": 90
+        },
+        {
+          "start": 2169.89999999851,
+          "duration": 161
+        }
+      ],
+      "genericPersonIcons": 0,
+      "celebrationPointerEvents": "none",
+      "canvasCount": 0,
+      "overflow": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "viewport": "844x390",
+      "cpuThrottle": 4,
+      "openSellerMs": 266,
+      "nextDuringCelebrationMs": 355,
+      "layoutCount": 13,
+      "scriptMs": 511,
+      "longTasks": [
+        {
+          "start": 1499.7000000029802,
+          "duration": 159
+        },
+        {
+          "start": 1730.6000000014901,
+          "duration": 104
+        },
+        {
+          "start": 1855.7000000029802,
+          "duration": 94
+        },
+        {
+          "start": 2057.2999999970198,
+          "duration": 83
+        },
+        {
+          "start": 2171.89999999851,
+          "duration": 157
+        }
+      ],
+      "genericPersonIcons": 0,
+      "celebrationPointerEvents": "none",
+      "canvasCount": 0,
+      "overflow": {
+        "width": 844,
+        "height": 390
+      }
+    }
+  ]
+}

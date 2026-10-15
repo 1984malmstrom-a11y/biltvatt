@@ -1,0 +1,256 @@
+{
+  "mode": "showcase=0",
+  "assertions": "7 slots;5 daily rows;5 recent rows;no extra focus label;no overflow;left column to nav;stats only right;normal seller/person states have faces",
+  "results": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "overflow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "slots": 7,
+      "homeRows": 5,
+      "recentRows": 5,
+      "focusContainsExtraLabel": false,
+      "focus": {
+        "x": 958.28125,
+        "y": 241.984375,
+        "width": 435.4375,
+        "height": 435.4375,
+        "bottom": 677.421875,
+        "right": 1393.71875
+      },
+      "left": {
+        "x": 30,
+        "y": 118.796875,
+        "width": 440,
+        "height": 874.8125,
+        "bottom": 993.609375,
+        "right": 470
+      },
+      "stats": {
+        "x": 490,
+        "y": 921.609375,
+        "width": 1400,
+        "height": 72,
+        "bottom": 993.609375,
+        "right": 1890
+      },
+      "nav": {
+        "x": 0,
+        "y": 993.609375,
+        "width": 1920,
+        "height": 86.390625,
+        "bottom": 1080,
+        "right": 1920
+      },
+      "fallbacks": 0,
+      "sellerFaces": 5,
+      "sellerFallbacks": 0,
+      "personFallbacks": 0
+    },
+    {
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "overflow": {
+        "width": 1448,
+        "height": 1086
+      },
+      "slots": 7,
+      "homeRows": 5,
+      "recentRows": 5,
+      "focusContainsExtraLabel": false,
+      "focus": {
+        "x": 698.1171875,
+        "y": 258.1171875,
+        "width": 415.265625,
+        "height": 415.265625,
+        "bottom": 673.3828125,
+        "right": 1113.3828125
+      },
+      "left": {
+        "x": 23.15625,
+        "y": 90,
+        "width": 347.515625,
+        "height": 936,
+        "bottom": 1026,
+        "right": 370.671875
+      },
+      "stats": {
+        "x": 386.671875,
+        "y": 970,
+        "width": 1038.171875,
+        "height": 56,
+        "bottom": 1026,
+        "right": 1424.84375
+      },
+      "nav": {
+        "x": 0,
+        "y": 1026,
+        "width": 1448,
+        "height": 60,
+        "bottom": 1086,
+        "right": 1448
+      },
+      "fallbacks": 0,
+      "sellerFaces": 5,
+      "sellerFallbacks": 0,
+      "personFallbacks": 0
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "overflow": {
+        "width": 1024,
+        "height": 768
+      },
+      "slots": 7,
+      "homeRows": 5,
+      "recentRows": 5,
+      "focusContainsExtraLabel": false,
+      "focus": {
+        "x": 496.9765625,
+        "y": 179.9296875,
+        "width": 291.796875,
+        "height": 291.796875,
+        "bottom": 471.7265625,
+        "right": 788.7734375
+      },
+      "left": {
+        "x": 16.375,
+        "y": 90,
+        "width": 245.75,
+        "height": 618,
+        "bottom": 708,
+        "right": 262.125
+      },
+      "stats": {
+        "x": 278.125,
+        "y": 652,
+        "width": 729.5,
+        "height": 56,
+        "bottom": 708,
+        "right": 1007.625
+      },
+      "nav": {
+        "x": 0,
+        "y": 708,
+        "width": 1024,
+        "height": 60,
+        "bottom": 768,
+        "right": 1024
+      },
+      "fallbacks": 0,
+      "sellerFaces": 5,
+      "sellerFallbacks": 0,
+      "personFallbacks": 0
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": {
+        "width": 390,
+        "height": 844
+      },
+      "slots": 7,
+      "homeRows": 5,
+      "recentRows": 5,
+      "focusContainsExtraLabel": false,
+      "focus": {
+        "x": 70.5625,
+        "y": 154,
+        "width": 248.875,
+        "height": 248.875,
+        "bottom": 402.875,
+        "right": 319.4375
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0,
+        "right": 0
+      },
+      "stats": {
+        "x": 12,
+        "y": 716,
+        "width": 366,
+        "height": 64,
+        "bottom": 780,
+        "right": 378
+      },
+      "nav": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "bottom": 844,
+        "right": 390
+      },
+      "fallbacks": 0,
+      "sellerFaces": 5,
+      "sellerFallbacks": 0,
+      "personFallbacks": 0
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "overflow": {
+        "width": 844,
+        "height": 390
+      },
+      "slots": 7,
+      "homeRows": 5,
+      "recentRows": 5,
+      "focusContainsExtraLabel": false,
+      "focus": {
+        "x": 334.265625,
+        "y": 83.53125,
+        "width": 175.46875,
+        "height": 175.46875,
+        "bottom": 259,
+        "right": 509.734375
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0,
+        "right": 0
+      },
+      "stats": {
+        "x": 12,
+        "y": 300,
+        "width": 820,
+        "height": 42,
+        "bottom": 342,
+        "right": 832
+      },
+      "nav": {
+        "x": -1.5,
+        "y": 342,
+        "width": 847,
+        "height": 48,
+        "bottom": 390,
+        "right": 845.5
+      },
+      "fallbacks": 0,
+      "sellerFaces": 5,
+      "sellerFallbacks": 0,
+      "personFallbacks": 0
+    }
+  ]
+}

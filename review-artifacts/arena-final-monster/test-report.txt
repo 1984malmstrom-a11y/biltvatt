@@ -1,0 +1,12 @@
+ARENA V1 – TEST REPORT
+Typecheck: PASS
+Build: PASS
+Arena unit tests: 128/128 PASS in15 files (includes auth, portraits, reports/PDF, migrations, isolation, achievements, fights, offline infra).
+Complete npm test:334 PASS /335 total. The sole failure is the historical unchanged CSV UTF-8 header at tests/api.test.ts:402. It is intentionally not fixed.
+Arena Playwright:128 unique cases verified. Main run126 PASS +2 explicit fixture skips. Those two native cases were adapted to the individual Owner fixture and then both PASS in a dedicated run. Five final UI/native cases were rerun after KDF upgrade and all PASS. Latest native auth/photo/report case PASS after the login/reset race guard.
+Actual Workerd: PBKDF2 100000 and600000 supported. Current default600000; legacy hashes upgraded on successful login.
+Migrations:0001–0008 on fresh local D1;0007–0008 on preexisting local D1; SQLite fresh/upgrade/integrity tests PASS. Old migration files unchanged.
+PDF:5 actual synthetic samples validated with pdfinfo/pdftotext, A4 PDF1.4 and Swedish text. Report renderer pagination/determinism tested.
+Responsive/face QA:all5 required viewports;7 slots;5 leaderboard and5 recent rows;no extra focus label;left column to nav;stats only right;no overflow;zero generic seller/person fallbacks in normal showcase=0 states.
+CPU benchmark:synthetic Chromium4x throttle, no claim of physical cashier testing. See performance-report.json.
+NO PUSH. NO DEPLOY. NO REMOTE MIGRATION. NO MERGE. NO BRANCH SWITCH.

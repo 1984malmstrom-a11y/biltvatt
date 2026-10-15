@@ -1,0 +1,142 @@
+
+Running 128 tests using 1 worker
+
+(node:168875) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/128] e2e/arena-fights.spec.ts:10:3 › Butiksfight: active, lead change and finished 1920x1080
+[2/128] e2e/arena-fights.spec.ts:10:3 › Butiksfight: active, lead change and finished 1024x768
+[3/128] e2e/arena-fights.spec.ts:10:3 › Butiksfight: active, lead change and finished 1448x1086
+[4/128] e2e/arena-fights.spec.ts:10:3 › Butiksfight: active, lead change and finished 390x844
+[5/128] e2e/arena-fights.spec.ts:10:3 › Butiksfight: active, lead change and finished 844x390
+[6/128] e2e/arena-fights.spec.ts:19:1 › Butiksfight: correct tie, count metric and reduced-motion announcement
+[7/128] e2e/arena-fights.spec.ts:24:1 › Butiksfight: boundary timer fetches final state without waiting for poll
+[8/128] e2e/arena-fights.spec.ts:28:1 › Butiksfight: Superadmin creates a timezone-safe event for approved stations
+[9/128] e2e/arena-fights.spec.ts:36:1 › Butiksfight: native local Worker scores a sale and freezes result before later undo
+[10/128] e2e/arena-final.spec.ts:13:2 › Final: people admin, accounts, security, audit and reports 1920x1080
+[11/128] e2e/arena-final.spec.ts:13:2 › Final: people admin, accounts, security, audit and reports 1024x768
+[12/128] e2e/arena-final.spec.ts:13:2 › Final: people admin, accounts, security, audit and reports 390x844
+[13/128] e2e/arena-final.spec.ts:13:2 › Final: people admin, accounts, security, audit and reports 844x390
+[14/128] e2e/arena-final.spec.ts:37:1 › Final: native local Worker verifies Owner, invites/revokes Superadmin, uploads photo and exports frozen PDF
+[15/128] e2e/arena-network.spec.ts:10:3 › Arena accounts: signup, pending and login 1920x1080
+[16/128] e2e/arena-network.spec.ts:21:3 › Arena Superadmin: stations, approval, groups and total metrics 1920x1080
+[17/128] e2e/arena-network.spec.ts:33:3 › Arena group: approved membership and premium leaderboard 1920x1080
+[18/128] e2e/arena-network.spec.ts:10:3 › Arena accounts: signup, pending and login 1024x768
+[19/128] e2e/arena-network.spec.ts:21:3 › Arena Superadmin: stations, approval, groups and total metrics 1024x768
+[20/128] e2e/arena-network.spec.ts:33:3 › Arena group: approved membership and premium leaderboard 1024x768
+[21/128] e2e/arena-network.spec.ts:10:3 › Arena accounts: signup, pending and login 390x844
+[22/128] e2e/arena-network.spec.ts:21:3 › Arena Superadmin: stations, approval, groups and total metrics 390x844
+[23/128] e2e/arena-network.spec.ts:33:3 › Arena group: approved membership and premium leaderboard 390x844
+[24/128] e2e/arena-network.spec.ts:38:1 › Arena: real local onboarding, approval, own sellers, TB registration and logout
+[25/128] e2e/arena-showroom.spec.ts:20:3 › Showroom: portraits, profile and distinct champion hero 1920x1080
+[26/128] e2e/arena-showroom.spec.ts:20:3 › Showroom: portraits, profile and distinct champion hero 1448x1086
+[27/128] e2e/arena-showroom.spec.ts:20:3 › Showroom: portraits, profile and distinct champion hero 1024x768
+[28/128] e2e/arena-showroom.spec.ts:20:3 › Showroom: portraits, profile and distinct champion hero 390x844
+[29/128] e2e/arena-showroom.spec.ts:20:3 › Showroom: portraits, profile and distinct champion hero 844x390
+[30/128] e2e/arena-showroom.spec.ts:38:3 › Showroom: fight widget, true sale crossing, tie and final once 1920x1080
+[31/128] e2e/arena-showroom.spec.ts:38:3 › Showroom: fight widget, true sale crossing, tie and final once 1448x1086
+[32/128] e2e/arena-showroom.spec.ts:38:3 › Showroom: fight widget, true sale crossing, tie and final once 1024x768
+[33/128] e2e/arena-showroom.spec.ts:38:3 › Showroom: fight widget, true sale crossing, tie and final once 390x844
+[34/128] e2e/arena-showroom.spec.ts:38:3 › Showroom: fight widget, true sale crossing, tie and final once 844x390
+[35/128] e2e/arena-showroom.spec.ts:56:1 › Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase
+[36/128] e2e/arena-showroom.spec.ts:62:2 › Showroom: premium full fight duel
+[37/128] e2e/arena-showroom.spec.ts:62:2 › Showroom: premium full fight ranking
+[38/128] e2e/arena-showroom.spec.ts:62:2 › Showroom: premium full fight winner
+[39/128] e2e/arena-showroom.spec.ts:62:2 › Showroom: premium full fight tie-final
+[40/128] e2e/arena-showroom.spec.ts:70:1 › Showroom: Superadmin fight manager has participants, phases and leader
+[41/128] e2e/arena-showroom.spec.ts:76:2 › Showroom: Arena final winner and motivating loss, once winner
+[42/128] e2e/arena-showroom.spec.ts:76:2 › Showroom: Arena final winner and motivating loss, once loss
+[43/128] e2e/arena-showroom.spec.ts:83:1 › Showroom: one hero for simultaneous goal, leader and fight, undo clears receipt
+[44/128] e2e/arena-showroom.spec.ts:88:1 › Showroom: countdown alone becomes urgent and respects reduced motion
+[45/128] e2e/arena-showroom.spec.ts:91:1 › Showroom: full TB duel values fit wide and portrait widget
+[46/128] e2e/arena.spec.ts:24:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[47/128] e2e/arena.spec.ts:24:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[48/128] e2e/arena.spec.ts:24:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[49/128] e2e/arena.spec.ts:24:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[50/128] e2e/arena.spec.ts:24:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[51/128] e2e/arena.spec.ts:61:3 › Arena: compact Butiksfight link preserves locked layout 1920x1080
+[52/128] e2e/arena.spec.ts:61:3 › Arena: compact Butiksfight link preserves locked layout 1024x768
+[53/128] e2e/arena.spec.ts:61:3 › Arena: compact Butiksfight link preserves locked layout 1448x1086
+[54/128] e2e/arena.spec.ts:61:3 › Arena: compact Butiksfight link preserves locked layout 390x844
+[55/128] e2e/arena.spec.ts:61:3 › Arena: compact Butiksfight link preserves locked layout 844x390
+[56/128] e2e/arena.spec.ts:81:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1366x768
+[57/128] e2e/arena.spec.ts:81:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1440x900
+[58/128] e2e/arena.spec.ts:81:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1280x800
+[59/128] e2e/arena.spec.ts:81:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1920x1200
+[60/128] e2e/arena.spec.ts:81:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1448x1086
+[61/128] e2e/arena.spec.ts:108:3 › Arena: sju rena produktmotiv med contain och fri text 1920x1080
+[62/128] e2e/arena.spec.ts:108:3 › Arena: sju rena produktmotiv med contain och fri text 1024x768
+[63/128] e2e/arena.spec.ts:108:3 › Arena: sju rena produktmotiv med contain och fri text 390x844
+[64/128] e2e/arena.spec.ts:108:3 › Arena: sju rena produktmotiv med contain och fri text 844x390
+[65/128] e2e/arena.spec.ts:108:3 › Arena: sju rena produktmotiv med contain och fri text 1448x1086
+[66/128] e2e/arena.spec.ts:234:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080
+[67/128] e2e/arena.spec.ts:234:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768
+[68/128] e2e/arena.spec.ts:234:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844
+[69/128] e2e/arena.spec.ts:234:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390
+[70/128] e2e/arena.spec.ts:291:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[71/128] e2e/arena.spec.ts:291:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[72/128] e2e/arena.spec.ts:291:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[73/128] e2e/arena.spec.ts:291:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[74/128] e2e/arena.spec.ts:291:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+[75/128] e2e/arena.spec.ts:333:1 › Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post
+[76/128] e2e/arena.spec.ts:355:1 › Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry
+[77/128] e2e/arena.spec.ts:372:1 › Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion
+[78/128] e2e/arena.spec.ts:394:3 › Arena: vanlig celebration 2,6 s löper ut utan att låsa nästa val
+[79/128] e2e/arena.spec.ts:394:3 › Arena: milestone 3,6 s löper ut utan att låsa nästa val
+[80/128] e2e/arena.spec.ts:427:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden station
+[81/128] e2e/arena.spec.ts:427:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-points
+[82/128] e2e/arena.spec.ts:427:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-count
+[83/128] e2e/arena.spec.ts:443:1 › Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras
+[84/128] e2e/arena.spec.ts:460:1 › Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning
+[85/128] e2e/arena.spec.ts:484:3 › Arena: hero burst är läsbar, kort och klickar igenom 1920x1080
+[86/128] e2e/arena.spec.ts:484:3 › Arena: hero burst är läsbar, kort och klickar igenom 1024x768
+[87/128] e2e/arena.spec.ts:484:3 › Arena: hero burst är läsbar, kort och klickar igenom 390x844
+[88/128] e2e/arena.spec.ts:484:3 › Arena: hero burst är läsbar, kort och klickar igenom 844x390
+[89/128] e2e/arena.spec.ts:510:1 › Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål
+[90/128] e2e/arena.spec.ts:522:1 › Arena-admin: mänskliga listor, vald post, ordning och periodförval
+[91/128] e2e/arena.spec.ts:563:1 › Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry
+[92/128] e2e/arena.spec.ts:597:3 › Arena: långsamt milestone-svar missas inte efter en kort burst
+[93/128] e2e/arena.spec.ts:597:3 › Arena: långsamt milestone-svar stör inte nästa säljarval
+[94/128] e2e/arena.spec.ts:631:3 › Arena: säljarpopup och Min Arena med mål 1920x1080
+[95/128] e2e/arena.spec.ts:631:3 › Arena: säljarpopup och Min Arena med mål 1366x768
+[96/128] e2e/arena.spec.ts:631:3 › Arena: säljarpopup och Min Arena med mål 1024x768
+[97/128] e2e/arena.spec.ts:631:3 › Arena: säljarpopup och Min Arena med mål 390x844
+[98/128] e2e/arena.spec.ts:631:3 › Arena: säljarpopup och Min Arena med mål 844x390
+[99/128] e2e/arena.spec.ts:673:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1920x1080
+[100/128] e2e/arena.spec.ts:673:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1024x768
+[101/128] e2e/arena.spec.ts:673:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1448x1086
+[102/128] e2e/arena.spec.ts:673:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 390x844
+[103/128] e2e/arena.spec.ts:673:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 844x390
+[104/128] e2e/arena.spec.ts:690:1 › Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans
+[105/128] e2e/arena.spec.ts:699:1 › Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom
+[106/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Idag, en hero och dedup
+[107/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Den här veckan, en hero och dedup
+[108/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Den här månaden, en hero och dedup
+[109/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Vald period, en hero och dedup
+[110/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Kaffe + bulle, en hero och dedup
+[111/128] e2e/arena.spec.ts:709:3 › Arena: centralt achievement-kvitto för Aktuellt fokus, en hero och dedup
+[112/128] e2e/arena.spec.ts:726:5 › Arena: leader firar utan att blockera nästa registrering 1920x1080
+[113/128] e2e/arena.spec.ts:726:5 › Arena: leader firar utan att blockera nästa registrering 1024x768
+[114/128] e2e/arena.spec.ts:726:5 › Arena: leader firar utan att blockera nästa registrering 390x844
+[115/128] e2e/arena.spec.ts:726:5 › Arena: leader firar utan att blockera nästa registrering 844x390
+[116/128] e2e/arena.spec.ts:726:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+[117/128] e2e/arena.spec.ts:726:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+[118/128] e2e/arena.spec.ts:726:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+[119/128] e2e/arena.spec.ts:726:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+[120/128] e2e/arena.spec.ts:726:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+[121/128] e2e/arena.spec.ts:726:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+[122/128] e2e/arena.spec.ts:726:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[123/128] e2e/arena.spec.ts:726:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+[124/128] e2e/arena.spec.ts:776:3 › Arena: touch och ingen vertikal overflow 1920x1080
+[125/128] e2e/arena.spec.ts:776:3 › Arena: touch och ingen vertikal overflow 1024x768
+[126/128] e2e/arena.spec.ts:776:3 › Arena: touch och ingen vertikal overflow 390x844
+[127/128] e2e/arena.spec.ts:776:3 › Arena: touch och ingen vertikal overflow 844x390
+[128/128] e2e/arena.spec.ts:802:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI
+  2 skipped
+  126 passed (5.4m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
