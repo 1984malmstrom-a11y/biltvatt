@@ -1,0 +1,10 @@
+e2e/arena-fight-objective.spec.ts
+shared/arena.ts
+src/ArenaApp.tsx
+src/ArenaFightQuickAction.tsx
+src/ArenaStatePanel.tsx
+src/arena-fight-objective.css
+src/arena-fight-objective.ts
+tests/arena-fight-objective.test.ts
+worker/arena-dashboard-context.ts
+worker/arena-stats.ts

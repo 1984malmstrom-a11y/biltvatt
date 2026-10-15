@@ -1,0 +1,21 @@
+
+> tvattligan@1.0.0 test
+> vitest run tests/arena-fight-objective.test.ts tests/arena-competition-builder.test.ts tests/arena-pulse.test.ts
+
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ✓ tests/arena-pulse.test.ts (4 tests) 5ms
+ ✓ tests/arena-fight-objective.test.ts (7 tests) 198ms
+ ✓ tests/arena-competition-builder.test.ts (34 tests) 1435ms
+
+ Test Files  3 passed (3)
+      Tests  45 passed (45)
+   Start at  19:08:19
+   Duration  2.21s (transform 511ms, setup 0ms, collect 1.29s, tests 1.64s, environment 0ms, prepare 197ms)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

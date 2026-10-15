@@ -1,0 +1,50 @@
+
+Running 42 tests using 1 worker
+
+(node:412291) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1920x1080
+[2/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1536x864
+[3/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1448x1086
+[4/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1024x768
+[5/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 390x844
+[6/42] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 844x390
+[7/42] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen all authority only
+[8/42] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen activity authority only
+[9/42] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen focus authority only
+[10/42] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen category authority only
+[11/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1920x1080
+[12/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1536x864
+[13/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1448x1086
+[14/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1024x768
+[15/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 390x844
+[16/42] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 844x390
+[17/42] e2e/arena-fight-objective.spec.ts:37:1 › Fight objectives: live transitions remove frozen emphasis, reduced motion and missing authority fail closed
+[18/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1920x1080
+[19/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1920x1080
+[20/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1920x1080
+[21/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1536x864
+[22/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1536x864
+[23/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1536x864
+[24/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1448x1086
+[25/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1448x1086
+[26/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1448x1086
+[27/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1024x768
+[28/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1024x768
+[29/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1024x768
+[30/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 390x844
+[31/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 390x844
+[32/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 390x844
+[33/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 844x390
+[34/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 844x390
+[35/42] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 844x390
+[36/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1920x1080
+[37/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1536x864
+[38/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1448x1086
+[39/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1024x768
+[40/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 390x844
+[41/42] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 844x390
+[42/42] e2e/arena-fight-objective.spec.ts:49:1 › Fight objectives: lightweight entry with static reduced-motion alternative
+  42 passed (1.2m)

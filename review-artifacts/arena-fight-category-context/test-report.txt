@@ -1,0 +1,9 @@
+PASS npm run typecheck
+PASS npm run build
+PASS npm test -- tests/arena*.test.ts: 27 files, 227 tests
+PASS e2e/arena-fight-objective.spec.ts: 42 tests (six viewports, normal, scopes, temp registration/undo/end, daily points/TB/count, badges, lifecycle, motion)
+PASS existing Mini polish / Compact headers / Visual V2 stage + Concept C: 25
+TOTAL PLAYWRIGHT: 67 passed, 0 failed in final verification runs
+PASS git diff --check
+PASS protected geometry unchanged across all six required viewports
+No remote database, migration, deployment or push was used.

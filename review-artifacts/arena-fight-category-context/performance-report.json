@@ -1,0 +1,53 @@
+{
+  "baseline_build": {
+    "ArenaApp.css": {
+      "kb": 225.26,
+      "gzip_kb": 37.29
+    },
+    "ArenaApp.js": {
+      "kb": 64.5,
+      "gzip_kb": 20.07
+    },
+    "ArenaFightQuickAction.css": {
+      "kb": 1.7,
+      "gzip_kb": 0.56
+    },
+    "ArenaFightQuickAction.js": {
+      "kb": 2.4,
+      "gzip_kb": 1.13
+    }
+  },
+  "current_build": {
+    "ArenaApp.css": {
+      "kb": 233.28,
+      "gzip_kb": 38.51
+    },
+    "ArenaApp.js": {
+      "kb": 64.69,
+      "gzip_kb": 20.13
+    },
+    "ArenaFightQuickAction.css": {
+      "kb": 1.7,
+      "gzip_kb": 0.56
+    },
+    "ArenaFightQuickAction.js": {
+      "kb": 3.45,
+      "gzip_kb": 1.53
+    }
+  },
+  "new_dependencies": 0,
+  "new_assets": 0,
+  "new_poll_loops": 0,
+  "stats_interval_ms": {
+    "normal": 12000,
+    "active_fight": 5000,
+    "hidden": 0
+  },
+  "countdown": "existing local 1s timer unchanged",
+  "active_stats_extra_db_queries": 1,
+  "normal_stats_extra_db_queries": 0,
+  "db_query": "Indexed fight/member/frozen-rule read; no writes or scoring changes.",
+  "effects": "Static perimeter/shadows on 7 small decorative spans; 300ms opacity fade on entry and exit, one 300ms transform/opacity temporary-ring entry. No continuously animated objective. Reduced motion static.",
+  "measurement_limit": "Build sizes and structural verification; no measurement on physical old checkout hardware.",
+  "gzip_delta_kb": 1.68
+}

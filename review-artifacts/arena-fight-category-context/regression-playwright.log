@@ -1,0 +1,33 @@
+
+Running 25 tests using 1 worker
+
+(node:407945) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1920x1080
+[2/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1536x864
+[3/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1448x1086
+[4/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1024x768
+[5/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 390x844
+[6/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 844x390
+[7/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 951x768
+[8/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1100x768
+[9/25] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1200x768
+[10/25] e2e/arena-compact-headers.spec.ts:16:1 › Compact headers: live fight keeps separate header action and status
+[11/25] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1920x1080
+[12/25] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1536x864
+[13/25] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1024x768
+[14/25] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 390x844
+[15/25] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 844x390
+[16/25] e2e/arena-mini-polish.spec.ts:17:1 › Mini polish: sourced pulse handles no goal, no sales and reached target
+[17/25] e2e/arena-mini-polish.spec.ts:21:1 › Mini polish: active fight remains a separate match state without customer branding and with nav intact
+[18/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[19/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[20/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[21/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[22/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[23/25] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[24/25] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 1920x1080
+[25/25] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 390x844
+  25 passed (40.4s)

@@ -1,0 +1,25 @@
+{
+  "start_head": "3b880c25904c67f4b307c62840bc4a53873267ee",
+  "final_head": "6cee8c96910bbe1c7ea437134700bfb0380445c5",
+  "branch": "feat/arena-v1",
+  "working_tree_clean": true,
+  "origin_tracking_ref_unchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "push": false,
+  "deploy": false,
+  "remote_migration": false,
+  "merge": false,
+  "branch_switch": false,
+  "png_count": 19,
+  "changed_files": [
+    "e2e/arena-fight-objective.spec.ts",
+    "shared/arena.ts",
+    "src/ArenaApp.tsx",
+    "src/ArenaFightQuickAction.tsx",
+    "src/ArenaStatePanel.tsx",
+    "src/arena-fight-objective.css",
+    "src/arena-fight-objective.ts",
+    "tests/arena-fight-objective.test.ts",
+    "worker/arena-dashboard-context.ts",
+    "worker/arena-stats.ts"
+  ]
+}

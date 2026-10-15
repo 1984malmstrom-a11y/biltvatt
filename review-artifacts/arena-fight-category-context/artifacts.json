@@ -1,0 +1,199 @@
+{
+  "review": "Arena Fight Category / Stationspuls",
+  "start_head": "3b880c25904c67f4b307c62840bc4a53873267ee",
+  "curated_png_count": 19,
+  "source": "Rendered local React/CSS with synthetic review fixtures; no generated mockup screenshots.",
+  "screenshots": [
+    {
+      "file": "before-stationspuls-1920x1080.png",
+      "group": "Before / after",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "70ade62a530d715f85ac44b037b464c4c150880e1fdf6c9047f5a8023a4f7ce5"
+    },
+    {
+      "file": "compact-stationspuls-1024x768.png",
+      "group": "Stationspuls / normal",
+      "viewport": "1024x768",
+      "pixels": [
+        1024,
+        768
+      ],
+      "sha256": "d1067f13634e94045b93308f6d3806375cbe5946fe311970e488d462e34e2c4a"
+    },
+    {
+      "file": "compact-stationspuls-1448x1086.png",
+      "group": "Stationspuls / normal",
+      "viewport": "1448x1086",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "sha256": "c2818178e0e8d88f6fea224fe715f229dcad978246e9fab775684809a31dd346"
+    },
+    {
+      "file": "compact-stationspuls-1536x864.png",
+      "group": "Stationspuls / normal",
+      "viewport": "1536x864",
+      "pixels": [
+        1536,
+        864
+      ],
+      "sha256": "27efe1d3ea8163e691c6a24c7fbf60e478d71cdaa16cb1270f4762b1bc40a95a"
+    },
+    {
+      "file": "compact-stationspuls-1920x1080.png",
+      "group": "Stationspuls / normal",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "3317390cd43aa866aff4327e21f57406fe4434a206b0585c0895c43d873ae721"
+    },
+    {
+      "file": "compact-stationspuls-390x844.png",
+      "group": "Stationspuls / normal",
+      "viewport": "390x844",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "603ab6cd7aff976ec209c278f29c47007b0c5aa933c8659dd214afb56f4419f2"
+    },
+    {
+      "file": "compact-stationspuls-844x390.png",
+      "group": "Stationspuls / normal",
+      "viewport": "844x390",
+      "pixels": [
+        844,
+        390
+      ],
+      "sha256": "8b8775f901049fd0a477a944ef6789eaadd3cb78362f89bc7d82e152446a63be"
+    },
+    {
+      "file": "fight-all-categories-1920x1080.png",
+      "group": "Qualifying scope",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "43b91f38967f349c21d684d252f9feb8b481b6ec9df68140ebaa70436133edf2"
+    },
+    {
+      "file": "fight-canonical-category-1920x1080.png",
+      "group": "Qualifying scope",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "34f923ea1db1b8a8c5e7c46ed3a6d1f90b4fc2112667dadb8a126fb47918a98c"
+    },
+    {
+      "file": "fight-monthly-focus-1920x1080.png",
+      "group": "Qualifying scope",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "6778beb19adcb13c27d95d92b8fc69eede591df770725f2e3b9311fff3fc3844"
+    },
+    {
+      "file": "fight-single-category-1920x1080.png",
+      "group": "Qualifying scope",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "e4cb8191096b8a9b10046e33e49d2379bda5f4b33b7d78ed1d19204e2a3c73b6"
+    },
+    {
+      "file": "fight-temp-ring-1024x768.png",
+      "group": "Temporary objective / flow",
+      "viewport": "1024x768",
+      "pixels": [
+        1024,
+        768
+      ],
+      "sha256": "461fb288fe0831bca322c7bc844e248e0aa8f18da5fb8a5427f13f9b8af1efca"
+    },
+    {
+      "file": "fight-temp-ring-1448x1086.png",
+      "group": "Temporary objective / flow",
+      "viewport": "1448x1086",
+      "pixels": [
+        1448,
+        1086
+      ],
+      "sha256": "bd035031ec5e6788bb7dfc656ce41c0219d9dea51f9708af278aaa9e49a05341"
+    },
+    {
+      "file": "fight-temp-ring-1536x864.png",
+      "group": "Temporary objective / flow",
+      "viewport": "1536x864",
+      "pixels": [
+        1536,
+        864
+      ],
+      "sha256": "21fe318506a783f2dcf10fe390d9e7ad89f5e42f0667222cda72d2eb7dd273c0"
+    },
+    {
+      "file": "fight-temp-ring-1920x1080.png",
+      "group": "Temporary objective / flow",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "b03de64840829a65e41b9a4c61fc00573363015b57de1bbd7c55af410a07f1e3"
+    },
+    {
+      "file": "fight-temp-ring-390x844.png",
+      "group": "Temporary objective / flow",
+      "viewport": "390x844",
+      "pixels": [
+        390,
+        844
+      ],
+      "sha256": "da09eb594ba949e1325c313b45647aae36e832aadf400b42b32cbccbdab47e63"
+    },
+    {
+      "file": "fight-temp-ring-844x390.png",
+      "group": "Temporary objective / flow",
+      "viewport": "844x390",
+      "pixels": [
+        844,
+        390
+      ],
+      "sha256": "b6bd0b06b4a033cc670e52fb6fe7cdc4a07cf5fd5b942660d8bd57e15c5d76f8"
+    },
+    {
+      "file": "restored-normal-state.png",
+      "group": "Restored normal",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "3317390cd43aa866aff4327e21f57406fe4434a206b0585c0895c43d873ae721"
+    },
+    {
+      "file": "temp-ring-seller-selector.png",
+      "group": "Temporary objective / flow",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "sha256": "80425db56c47158e629d3b3061f63f053e94fdc6d5989b682d05b27392f92e9d"
+    }
+  ],
+  "final_head": "6cee8c96910bbe1c7ea437134700bfb0380445c5"
+}
