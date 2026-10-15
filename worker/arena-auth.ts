@@ -1,11 +1,12 @@
+import {superActor,securityAuthApi} from "./arena-security";
 import type { Env } from "./index";
 import type { ArenaStation } from "../shared/arena-network";
-import { constantEqual, passwordHash, passwordMatches, randomToken, tokenHash } from "../shared/arena-crypto";
+import { PASSWORD_ITERATIONS, passwordHash, passwordMatches, randomToken, tokenHash } from "../shared/arena-crypto";
 import { body, checkFields, fail, json, text } from "./http";
 import { stationId } from "./station-config";
 
-const STATION_COOKIE="arena_station_session",SUPER_COOKIE="arena_superadmin_session";
-const STATION_AGE=365*86400,SUPER_AGE=12*3600;
+const STATION_COOKIE="arena_station_session";
+const STATION_AGE=365*86400;
 const renewedCookies=new WeakMap<Request,string>();
 export const renewedArenaCookie=(request:Request)=>renewedCookies.get(request);
 const cookieValue=(r:Request,name:string)=>r.headers.get("Cookie")?.match(new RegExp(`(?:^|;\\s*)${name}=([^;]*)`))?.[1];
@@ -48,29 +49,28 @@ export async function resolveArenaStation(request:Request,env:Env) {
   }
   if(station && station.status!=="active") fail(403,station.status==="pending" ? "Stationen väntar på godkännande." : "Stationen är pausad. Kontakta administratören.");
   if(session && Date.parse(session.expires_at)-Date.now()<30*86400000) {
-    await db.prepare("UPDATE arena_station_sessions SET expires_at=? WHERE id=? AND revoked_at IS NULL").bind(new Date(Date.now()+STATION_AGE*1000).toISOString(),session.session_id).run();
-    renewedCookies.set(request,cookie(request,STATION_COOKIE,cookieValue(request,STATION_COOKIE)!,STATION_AGE));
+    const replacement=randomToken();
+    const renewed=await db.prepare("UPDATE arena_station_sessions SET expires_at=?,token_hash=? WHERE id=? AND token_hash=? AND revoked_at IS NULL").bind(new Date(Date.now()+STATION_AGE*1000).toISOString(),await tokenHash(replacement),session.session_id,await tokenHash(cookieValue(request,STATION_COOKIE)!)).run();
+    if(renewed.meta.changes)renewedCookies.set(request,cookie(request,STATION_COOKIE,replacement,STATION_AGE));
   }
   const key=station?.id??serverKey,kind=station?.kind??"integrated";
   const source=key===serverKey ? env.DB : key==="tingsryd" ? env.STATION_DB_TINGSRYD : key==="karlshamn" ? env.STATION_DB_KARLSHAMN : key==="karlskrona" ? env.STATION_DB_KARLSKRONA : undefined;
   return {key,kind,station,session,staffDB:kind==="integrated" ? source : undefined};
 }
-async function issueStationSession(request:Request,db:D1Database,station:string) {
+async function issueStationSession(request:Request,db:D1Database,station:string,credentialHash?:string) {
   const token=randomToken(),now=new Date().toISOString();
-  await db.prepare("INSERT INTO arena_station_sessions(id,token_hash,station_id,created_at,expires_at) VALUES(?,?,?,?,?)")
-    .bind(crypto.randomUUID(),await tokenHash(token),station,now,new Date(Date.now()+STATION_AGE*1000).toISOString()).run();
+  const result=await db.prepare(`INSERT INTO arena_station_sessions(id,token_hash,station_id,created_at,expires_at)
+    SELECT ?,?,a.station_id,?,? FROM arena_station_accounts a JOIN arena_stations s ON s.id=a.station_id
+    WHERE a.station_id=? AND s.status<>'suspended' AND (? IS NULL OR a.password_hash=?)`)
+    .bind(crypto.randomUUID(),await tokenHash(token),now,new Date(Date.now()+STATION_AGE*1000).toISOString(),station,credentialHash??null,credentialHash??null).run();
+  if(!result.meta.changes)fail(401,"Kontot ändrades under inloggningen. Logga in igen.");
   return cookie(request,STATION_COOKIE,token,STATION_AGE);
 }
-export async function requireArenaSuperadmin(request:Request,env:Env) {
-  const token=cookieValue(request,SUPER_COOKIE);
-  if(!token || !/^[a-f0-9]{64}$/.test(token)) fail(401,"Logga in som Superadmin.");
-  if(!env.ARENA_SUPERADMIN_SECRET || env.ARENA_SUPERADMIN_SECRET.length<32) fail(503,"Superadmin är inte konfigurerad.");
-  const row=await dbFor(env).prepare("SELECT token_hash FROM arena_superadmin_sessions WHERE token_hash=? AND revoked_at IS NULL AND expires_at>?")
-    .bind(await tokenHash(token!),new Date().toISOString()).first();if(!row) fail(401,"Superadmin-sessionen har avslutats.");
-}
+export const requireArenaSuperadmin=superActor;
 export async function arenaAuthApi(request:Request,env:Env):Promise<Response> {
   const db=dbFor(env),url=new URL(request.url),path=url.pathname,method=request.method;
   if(url.searchParams.size)fail(400,"Kontofunktionen tar inte emot filter.");
+  const secured=await securityAuthApi(request,env);if(secured)return secured;
   if(path==="/api/arena/auth/session" && method==="GET") {
     const session=await stationSession(request,env);
     if(!session) return json({authenticated:false,integrated:env.ARENA_ONLY!=="1"});
@@ -80,8 +80,9 @@ export async function arenaAuthApi(request:Request,env:Env):Promise<Response> {
     // Renew only near expiry; no request-by-request writes or daily logouts.
     const headers:Record<string,string>={};
     if(Date.parse(expires_at)-Date.now()<30*86400000) {
-      await db.prepare("UPDATE arena_station_sessions SET expires_at=? WHERE id=? AND revoked_at IS NULL").bind(new Date(Date.now()+STATION_AGE*1000).toISOString(),session_id).run();
-      headers["Set-Cookie"]=cookie(request,STATION_COOKIE,cookieValue(request,STATION_COOKIE)!,STATION_AGE);
+      const replacement=randomToken();
+      const renewed=await db.prepare("UPDATE arena_station_sessions SET expires_at=?,token_hash=? WHERE id=? AND token_hash=? AND revoked_at IS NULL").bind(new Date(Date.now()+STATION_AGE*1000).toISOString(),await tokenHash(replacement),session_id,await tokenHash(cookieValue(request,STATION_COOKIE)!)).run();
+      if(renewed.meta.changes)headers["Set-Cookie"]=cookie(request,STATION_COOKIE,replacement,STATION_AGE);
     }
     return json({authenticated:true,station,session_id,sessions:sessions.results},200,headers);
   }
@@ -105,7 +106,9 @@ export async function arenaAuthApi(request:Request,env:Env):Promise<Response> {
       .bind(email).first<{station_id:string;password_hash:string;password_salt:string;password_iterations:number;status:string}>();
     const valid=account ? await passwordMatches(pass,account.password_hash,account.password_salt,account.password_iterations) : (await passwordHash(pass),false);
     if(!valid) fail(401,"Fel mejladress eller lösenord.");if(account!.status==="suspended") fail(403,"Stationen är pausad.");
-    return json({ok:true},200,{"Set-Cookie":await issueStationSession(request,db,account!.station_id)});
+    let verifiedHash=account!.password_hash;
+    if(!verifiedHash.startsWith('pbkdf2-sha256$') || account!.password_iterations<PASSWORD_ITERATIONS){const h=await passwordHash(pass);const upgraded=await db.prepare('UPDATE arena_station_accounts SET password_hash=?,password_salt=?,password_iterations=? WHERE station_id=? AND password_hash=?').bind(h.hash,h.salt,h.iterations,account!.station_id,verifiedHash).run();if(!upgraded.meta.changes)fail(401,'Kontot ändrades under inloggningen. Logga in igen.');verifiedHash=h.hash;}
+    return json({ok:true},200,{"Set-Cookie":await issueStationSession(request,db,account!.station_id,verifiedHash)});
   }
   if((path==="/api/arena/auth/logout" || path==="/api/arena/auth/revoke") && method==="POST") {
     const session=await stationSession(request,env);if(!session)fail(401,"Logga in på stationen.");
@@ -114,22 +117,6 @@ export async function arenaAuthApi(request:Request,env:Env):Promise<Response> {
     const changed=await db.prepare("UPDATE arena_station_sessions SET revoked_at=? WHERE id=? AND station_id=? AND revoked_at IS NULL").bind(new Date().toISOString(),id,session!.id).run();
     if(!changed.meta.changes) fail(404,"Sessionen finns inte.");
     return json({ok:true},200,id===session!.session_id ? {"Set-Cookie":cookie(request,STATION_COOKIE,"",0)}:{});
-  }
-  if(path==="/api/arena/auth/superadmin/session" && method==="GET") {
-    if(!cookieValue(request,SUPER_COOKIE))return json({authenticated:false});await requireArenaSuperadmin(request,env);return json({authenticated:true});
-  }
-  if(path==="/api/arena/auth/superadmin/login" && method==="POST") {
-    await rateLimit(db,request,"superadmin",10,900);
-    if(!env.ARENA_SUPERADMIN_SECRET || env.ARENA_SUPERADMIN_SECRET.length<32)fail(503,"Superadmin är inte konfigurerad.");
-    const data=await body(request);checkFields(data,["secret"]);const supplied=text(data.secret,"Superadmin-nyckel",256);
-    if(!constantEqual(await tokenHash(supplied),await tokenHash(env.ARENA_SUPERADMIN_SECRET!)))fail(401,"Fel Superadmin-nyckel.");
-    const token=randomToken(),now=new Date().toISOString();
-    await db.prepare("INSERT INTO arena_superadmin_sessions(token_hash,created_at,expires_at) VALUES(?,?,?)").bind(await tokenHash(token),now,new Date(Date.now()+SUPER_AGE*1000).toISOString()).run();
-    return json({ok:true},200,{"Set-Cookie":cookie(request,SUPER_COOKIE,token,SUPER_AGE)});
-  }
-  if(path==="/api/arena/auth/superadmin/logout" && method==="POST") {
-    await requireArenaSuperadmin(request,env);await db.prepare("UPDATE arena_superadmin_sessions SET revoked_at=? WHERE token_hash=?").bind(new Date().toISOString(),await tokenHash(cookieValue(request,SUPER_COOKIE)!)).run();
-    return json({ok:true},200,{"Set-Cookie":cookie(request,SUPER_COOKIE,"",0)});
   }
   return fail(404,"Kontofunktionen finns inte.");
 }

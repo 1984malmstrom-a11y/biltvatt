@@ -1,6 +1,8 @@
+import {reportsApi} from "./arena-reports";
+import {updateArenaPortrait,readArenaImage} from "./arena-portraits";
 import type { Env } from "./index";
 import { body, checkFields, fail, json, text } from "./http";
-import { activityInput, arenaImage, campaignInput, goalInput } from "./arena-model";
+import { activityInput, campaignInput, goalInput } from "./arena-model";
 import { resolveArenaStation } from "./arena-auth";
 
 // Called only after requireAdmin in worker/index.ts.
@@ -8,6 +10,7 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   if (!env.ARENA_DB) return fail(503, "Arena-databasen är inte konfigurerad.");
   const identity=await resolveArenaStation(request,env);
   const db = env.ARENA_DB, key = identity.key, path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
+  if(path.startsWith("/api/admin/arena/reports"))return reportsApi(request,db,key,{id:key,display_name:identity.station?.name??key,role:"station"});
   if (path === "/api/admin/arena/config" && method === "GET") {
     const queries = [
       "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active FROM arena_activities WHERE station_id=? ORDER BY sort_order,id",
@@ -16,9 +19,11 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
       "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? ORDER BY start_date DESC",
     ];
     const [activities, campaigns, station_goals, personal_goals] = await Promise.all(queries.map(sql => db.prepare(sql).bind(key).all()));
-    const sellers=identity.kind==="arena" ? await db.prepare("SELECT id,external_staff_id,name,color,active,source FROM arena_sellers WHERE station_id=? ORDER BY name COLLATE NOCASE,id").bind(key).all() : {results:[]};
+    const sellers=identity.kind==="arena" ? await db.prepare("SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url,source FROM arena_sellers WHERE station_id=? ORDER BY name COLLATE NOCASE,id").bind(key).all() : {results:[]};
     return json({ activities: activities.results, campaigns: campaigns.results, station_goals: station_goals.results, personal_goals: personal_goals.results,sellers:sellers.results });
   }
+  const portraitRoute=path.match(/^\/api\/admin\/arena\/sellers\/([a-zA-Z0-9:_-]{1,120})\/portrait$/);
+  if(portraitRoute)return updateArenaPortrait(request,env,portraitRoute[1],key);
   const sellerRoute=path.match(/^\/api\/admin\/arena\/sellers(?:\/([a-zA-Z0-9:_-]{1,120}))?$/);
   if(sellerRoute) {
     if(identity.kind!=="arena") fail(403,"Integrerade stationer hanterar personal i sin stationsdashboard.");
@@ -33,20 +38,7 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   }
   if (path === "/api/admin/arena/activity-images" && method === "POST") {
     if (!await db.prepare("SELECT id FROM arena_stations WHERE id=?").bind(key).first()) fail(409, "Öppna Arenan först för att synka stationen.");
-    const mime = request.headers.get("Content-Type") ?? "";
-    if (!["image/webp", "image/png"].includes(mime)) fail(415, "Använd normaliserad WebP eller PNG.");
-    const reader = request.body?.getReader();
-    if (!reader) fail(400, "Bilden saknas.");
-    const chunks: Uint8Array[] = []; let size = 0;
-    while (true) {
-      const part = await reader!.read(); if (part.done) break;
-      size += part.value.byteLength;
-      if (size > 250000) { await reader!.cancel(); fail(413, "Bilden är för stor (max 250 kB)."); }
-      chunks.push(part.value);
-    }
-    const bytes = new Uint8Array(size); let at = 0;
-    for (const chunk of chunks) { bytes.set(chunk, at); at += chunk.length; }
-    const { width, height } = arenaImage(bytes, mime), id = crypto.randomUUID();
+    const {mime,bytes,width,height}=await readArenaImage(request),id=crypto.randomUUID();
     await db.prepare("INSERT INTO arena_activity_images(id,station_id,mime_type,image_bytes,width,height,created_at) VALUES(?,?,?,?,?,?,?)")
       .bind(id, key, mime, bytes.buffer, width, height, now).run();
     return json({ id }, 201);

@@ -1,5 +1,5 @@
 import type { ArenaMetric, ArenaStationStanding } from "./arena-network";
-export type ArenaFightEvent={id:string;kind:"sale"|"lead"|"tie";station_id:string;station_name:string;created_at:string;seller_id?:string;seller_name?:string;activity_name?:string;points_awarded?:number;tb_ore_awarded?:number|null;display_mode?:"points"|"tb"};
+export type ArenaFightEvent={id:string;kind:"sale"|"lead"|"tie";station_id:string;station_name:string;created_at:string;profile_url?:string|null;avatar_index?:number|null; seller_id?:string;seller_name?:string;activity_name?:string;points_awarded?:number;tb_ore_awarded?:number|null;display_mode?:"points"|"tb"};
 export type ArenaFight={
   id:string;name:string;description:string;start_at:string;end_at:string;metric:ArenaMetric;
   phase:"scheduled" | "active" | "finished" | "cancelled";snapshot_at:string;version:number;

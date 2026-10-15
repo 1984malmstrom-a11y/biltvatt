@@ -1,3 +1,4 @@
+import {hasLocalSuperadminCredentials,localSuperadminLogin} from "./arena-test-auth";
 import {test,expect,type Page} from "@playwright/test";
 import {readFileSync,existsSync} from "node:fs";
 import {randomUUID} from "node:crypto";
@@ -34,9 +35,9 @@ test("Butiksfight: Superadmin creates a timezone-safe event for approved station
   await page.getByLabel("Fightnamn",{exact:true}).fill(fight.name);await page.getByLabel("Beskrivning",{exact:true}).fill(fight.description);await page.getByLabel("Start (Stockholm)",{exact:true}).fill("2026-10-14T12:00");await page.getByLabel("Slut (Stockholm)",{exact:true}).fill("2026-10-20T20:00");await page.getByLabel("Tävlingsmått",{exact:true}).selectOption("tb");await page.getByRole("checkbox",{name:"Tingsryd",exact:true}).check();await page.getByRole("checkbox",{name:"Karlskrona",exact:true}).check();await screenshot(page,"superadmin-create-fight");await page.getByRole("button",{name:"Skapa fight",exact:true}).click();await expect(page.getByRole("link",{name:/Sydost · Butiksfight/})).toBeVisible();expect(posted).toMatchObject({start_at:"2026-10-14T10:00:00.000Z",end_at:"2026-10-20T18:00:00.000Z",metric:"tb",station_ids:["t","k"]});
 });
 test("Butiksfight: native local Worker scores a sale and freezes result before later undo",async({page})=>{
-  const secret=process.env.ARENA_E2E_SUPERADMIN_SECRET_FILE,credentials=process.env.ARENA_E2E_DEMO_CREDENTIALS_FILE;
-  test.skip(!secret || !credentials || !existsSync(secret) || !existsSync(credentials),"Requires explicit local-only seeded station and Superadmin credentials.");
-  const account=JSON.parse(readFileSync(credentials!,"utf8"));expect((await page.request.post("/api/arena/auth/login",{data:account})).status()).toBe(200);expect((await page.request.post("/api/arena/auth/superadmin/login",{data:{secret:readFileSync(secret!,"utf8").trim()}})).status()).toBe(200);
+  const credentials=process.env.ARENA_E2E_DEMO_CREDENTIALS_FILE;
+  test.skip(!hasLocalSuperadminCredentials() || !credentials || !existsSync(credentials),"Requires explicit local-only seeded station and Superadmin credentials.");
+  const account=JSON.parse(readFileSync(credentials!,"utf8"));expect((await page.request.post("/api/arena/auth/login",{data:account})).status()).toBe(200);expect((await localSuperadminLogin(page.request)).status()).toBe(200);
   const start=new Date(Date.now()-60000).toISOString(),end=new Date(Date.now()+4000).toISOString(),create=await page.request.post("/api/arena/superadmin/fights",{data:{name:"QA · lokal Butiksfight",description:"Enbart lokal testdata",start_at:start,end_at:end,metric:"tb",station_ids:["local-demo-malmo","local-demo-tingsryd"]}});expect(create.status()).toBe(201);const id=(await create.json()).id;
   const boot=await (await page.request.get("/api/arena/bootstrap")).json(),request_id=randomUUID();const sale=await page.request.post("/api/arena/registrations",{data:{request_id,seller_id:boot.sellers[0].id,activity_id:boot.activities[0].id}});expect(sale.status()).toBe(200);const receipt=(await sale.json()).registration;
   const live=await (await page.request.get(`/api/arena/fights/${id}`)).json();expect(live.standings.find((s:{id:string})=>s.id==="local-demo-malmo")).toMatchObject({count:1,tb_ore:receipt.tb_ore_awarded});

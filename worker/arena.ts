@@ -1,3 +1,5 @@
+import {assignArenaIdentities} from "./arena-identities";
+import {arenaPortrait} from "./arena-portraits";
 import type { Env } from "./index";
 import { body, checkFields, fail, json, text } from "./http";
 import { arenaUUID } from "./arena-model";
@@ -34,6 +36,8 @@ export async function arenaApi(
   }
 
   const arena = env.ARENA_DB;
+  const portrait=path.match(/^\/api\/arena\/portraits\/([a-f0-9-]{36})$/);
+  if(portrait && method==='GET')return arenaPortrait(request,env,portrait[1]);
   const identity=await resolveArenaStation(request,env),key=identity.key;
   const now = new Date().toISOString();
   if(path.startsWith("/api/arena/groups")) return arenaGroupApi(request,arena,key);
@@ -187,6 +191,7 @@ export async function arenaApi(
     await arena.batch(syncStatements);
     }
 
+    await assignArenaIdentities(arena,key);
     const [station, sellers, activities, campaign] = await Promise.all([
       arena
         .prepare(
@@ -199,7 +204,7 @@ export async function arenaApi(
 
       arena
         .prepare(
-          `SELECT id,external_staff_id,name,color,active
+          `SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url
            FROM arena_sellers
            WHERE station_id=? AND active=1
            ORDER BY name COLLATE NOCASE,id`,

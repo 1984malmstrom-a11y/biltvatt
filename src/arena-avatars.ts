@@ -1,17 +1,16 @@
-export type AvatarIdentity = { id?:string; name:string; imageUrl?:string | null };
-export type AvatarSource = { kind:"uploaded"; url:string } | { kind:"demo"; index:number; position:string } | { kind:"fallback" };
+import {demoAvatarIndex} from "../shared/arena-identities";
+export {demoAvatarIndex} from "../shared/arena-identities";
+export type AvatarIdentity = { id?:string; name:string; imageUrl?:string | null; avatarIndex?:number|null };
+export type AvatarSource = { kind:"uploaded"; url:string } | { kind:"demo"; index:number; position:string; sheet:string } | { kind:"fallback" };
 
 // Presentation only. No seller, score or station data is changed by showcase mode.
-export function demoAvatarIndex(identity:string):number {
-  let hash=0;
-  for(const character of identity.normalize("NFC"))hash=(Math.imul(hash,33)+character.codePointAt(0)!)>>>0;
-  return hash%8;
-}
 export function resolveArenaAvatar(person:AvatarIdentity,showcase:boolean):AvatarSource {
   if(person.imageUrl && /^(\/[^/]|https:\/\/)/.test(person.imageUrl))return {kind:"uploaded",url:person.imageUrl};
-  if(!showcase)return {kind:"fallback"};
-  const index=demoAvatarIndex(person.id || person.name.trim().toLocaleLowerCase("sv-SE"));
-  return {kind:"demo",index,position:`${(index%4)*100/3}% ${Math.floor(index/4)*100}%`};
+  // Fictional identities are the normal fallback, independently of showcase mode.
+  void showcase;
+  if(!person.id && !person.name.trim())return {kind:"fallback"};
+  const index=person.avatarIndex!=null && Number.isInteger(person.avatarIndex) && person.avatarIndex>=0 && person.avatarIndex<16 ? person.avatarIndex:demoAvatarIndex(person.id || person.name.trim().toLocaleLowerCase("sv-SE"));
+  return {kind:"demo",index,sheet:index>=8?"-extra":"",position:`${(index%4)*100/3}% ${Math.floor((index%8)/4)*100}%`};
 }
 export function readShowcaseMode(search:string,storage:Pick<Storage,"getItem"|"setItem"|"removeItem">):boolean {
   const value=new URLSearchParams(search).get("showcase");

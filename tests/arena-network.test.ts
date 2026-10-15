@@ -27,7 +27,7 @@ describe("Arena station authentication and tenant isolation",()=>{
     const f=setup();f.env.ARENA_ONLY="1";expect((await f.call("/arena/bootstrap")).status).toBe(401);
     const account=await signup(f);expect(account.station.status).toBe("pending");
     const header=account.response.headers.get("Set-Cookie")!;expect(header).toContain("HttpOnly");expect(header).toContain("Secure");expect(header).toContain("SameSite=Lax");expect(header).toContain("Max-Age=31536000");
-    const stored=f.arena.prepare("SELECT * FROM arena_station_accounts").get()!;expect(stored.password_hash).not.toBe(pass);expect(stored.password_iterations).toBe(100000);expect(String(stored.password_salt)).toHaveLength(64);
+    const stored=f.arena.prepare("SELECT * FROM arena_station_accounts").get()!;expect(stored.password_hash).not.toBe(pass);expect(stored.password_iterations).toBe(600000);expect(String(stored.password_salt)).toHaveLength(64);
     const session=f.arena.prepare("SELECT token_hash FROM arena_station_sessions").get()!;expect(account.cookie).not.toContain(String(session.token_hash));
     expect((await f.call("/arena/bootstrap","GET",undefined,`arena_station_session=${session.token_hash}`)).status).toBe(401);
     expect((await f.call("/arena/bootstrap","GET",undefined,account.cookie)).status).toBe(403);expect((await f.call("/arena/stats","GET",undefined,account.cookie)).status).toBe(403);expect((await f.call("/admin/arena/config","GET",undefined,account.cookie)).status).toBe(403);
@@ -52,7 +52,14 @@ describe("Arena station authentication and tenant isolation",()=>{
     let info=await (await f.call("/arena/auth/session","GET",undefined,cookie)).json() as {sessions:{id:string}[];session_id:string};expect(info.sessions).toHaveLength(2);
     const other=info.sessions.find(s=>s.id!==info.session_id)!;expect((await f.call("/arena/auth/revoke","POST",{session_id:other.id},cookie)).status).toBe(200);expect((await f.call("/arena/bootstrap","GET",undefined,a.cookie)).status).toBe(401);
     vi.setSystemTime(now+340*86400000);const renew=await f.call("/arena/bootstrap","GET",undefined,cookie);expect(renew.status).toBe(200);expect(renew.headers.get("Set-Cookie")).toContain("Max-Age=31536000");
-    expect((await f.call("/arena/auth/logout","POST",undefined,cookie)).status).toBe(200);expect((await f.call("/arena/bootstrap","GET",undefined,cookie)).status).toBe(401);
+    expect(f.cookie(renew)).not.toBe(cookie);expect((await f.call("/arena/bootstrap","GET",undefined,cookie)).status).toBe(401);expect((await f.call("/arena/auth/logout","POST",undefined,f.cookie(renew))).status).toBe(200);expect((await f.call("/arena/bootstrap","GET",undefined,f.cookie(renew))).status).toBe(401);
+  });
+  it("a reset racing a successful password check cannot issue a new session with the old credential",async()=>{
+    const f=setup(),a=await active(f),changed=await passwordHash(pass+" changed"),prepare=f.env.ARENA_DB!.prepare.bind(f.env.ARENA_DB!);let reset=false;
+    f.env.ARENA_DB!.prepare=(sql:string)=>{if(!reset && sql.includes("INSERT INTO arena_station_sessions")){reset=true;f.arena.prepare("UPDATE arena_station_accounts SET password_hash=?,password_salt=?,password_iterations=? WHERE station_id=?").run(changed.hash,changed.salt,changed.iterations,a.station.id);f.arena.prepare("UPDATE arena_station_sessions SET revoked_at=? WHERE station_id=?").run(new Date().toISOString(),a.station.id);}return prepare(sql);};
+    expect((await f.call("/arena/auth/login","POST",{email:"malmo@example.test",password:pass})).status).toBe(401);
+    expect((await f.call("/arena/bootstrap","GET",undefined,a.cookie)).status).toBe(401);
+    expect((await f.call("/arena/auth/login","POST",{email:"malmo@example.test",password:pass+" changed"})).status).toBe(200);
   });
   it("suspension revokes station sessions and reactivation requires a fresh valid login",async()=>{
     const f=setup(),a=await active(f);expect((await f.call(`/arena/superadmin/stations/${a.station.id}`,"PATCH",{status:"suspended"},a.admin)).status).toBe(200);
@@ -82,7 +89,7 @@ describe("Arena station authentication and tenant isolation",()=>{
     const other=setup();other.db.prepare("UPDATE staff SET name='Other source Emma' WHERE id='emma'").run();f.env.STATION_DB_TINGSRYD=other.env.DB;
     const credential=await passwordHash(pass),id="tingsryd",now=new Date().toISOString();
     f.arena.prepare("INSERT INTO arena_stations(id,station_key,name,status,kind,created_at,updated_at) VALUES(?,?,?,'active','integrated',?,?)").run(id,id,"Tingsryd",now,now);
-    f.arena.prepare("INSERT INTO arena_station_accounts VALUES(?,?,?,?,?,?)").run(id,"tingsryd@example.test",credential.hash,credential.salt,credential.iterations,now);
+    f.arena.prepare("INSERT INTO arena_station_accounts(station_id,email_normalized,password_hash,password_salt,password_iterations,created_at) VALUES(?,?,?,?,?,?)").run(id,"tingsryd@example.test",credential.hash,credential.salt,credential.iterations,now);
     const login=await f.call("/arena/auth/login","POST",{email:"tingsryd@example.test",password:pass});const result=await (await f.call("/arena/bootstrap","GET",undefined,f.cookie(login))).json() as ArenaBootstrap;
     expect(result.station.id).toBe(id);expect(result.sellers.find(s=>s.external_staff_id==="emma")?.name).toBe("Other source Emma");
     expect(f.arena.prepare("SELECT name FROM arena_sellers WHERE station_id='mastertest' AND external_staff_id='emma'").get()!.name).not.toBe("Other source Emma");

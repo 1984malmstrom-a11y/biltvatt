@@ -29,6 +29,8 @@ export interface Env {
   STATION_ID?: string;
   ARENA_ONLY?: string;
   ARENA_SUPERADMIN_SECRET?: string;
+  ARENA_AUTH_DEV?:string;
+  ARENA_MAILER?:Fetcher;
   STATION_DB_TINGSRYD?:D1Database;
   STATION_DB_KARLSHAMN?:D1Database;
   STATION_DB_KARLSKRONA?:D1Database;

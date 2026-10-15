@@ -26,7 +26,7 @@ for(const [width,height] of [[1920,1080],[1448,1086],[1024,768],[390,844],[844,3
     if(width<951)await page.getByRole("button",{name:"TOPPLISTOR",exact:true}).click();
     await page.getByRole("button",{name:"Peter 34 p",exact:true}).click();await expect(page.locator(".arena-person-avatar")).toHaveAttribute("data-avatar-index",identity!);await capture(page,`avatar-min-arena-${width}x${height}`);await page.getByRole("dialog").getByRole("button",{name:"Stäng",exact:true}).click();
     if(width<951){await page.getByRole("button",{name:"Öppna senaste aktiviteter",exact:true}).click();await expect(page.locator(".arena-dialog-recent .arena-demo-portrait")).toHaveCount(5);await capture(page,`mobile-feed-panel-${width}x${height}`);await page.getByRole("dialog").getByRole("button",{name:"Stäng",exact:true}).click();}
-    await sale(page);await expect(page.locator(".level-1")).toBeVisible();await expect(page.locator(".arena-victory-art")).toHaveCount(0);await capture(page,`standard-sale-${width}x${height}`);await page.getByRole("button",{name:"Stäng belöning",exact:true}).click();
+    await sale(page);await expect(page.locator(".level-1")).toBeVisible();await expect(page.locator(".arena-victory-art")).toHaveCount(0);await capture(page,`standard-sale-${width}x${height}`);await page.clock.runFor(1400);await expect(page.locator(".level-1")).toHaveCount(0);
     achievements=[{kind:"leader",level:3,special:true,text:"Ny etta!",scope:width===1448 ? "Biltvätt":"Idag",previousLeader:"Alva"}];await sale(page);
     await expect(page.locator(".arena-victory-hero h2")).toHaveText("NY ETTA!");await expect(page.locator(".arena-champion-portrait")).toHaveAttribute("data-avatar-index",identity!);await expect(page.locator(".arena-milestone-subtitle")).toHaveText("Peter går om Alva");expect(await page.locator(".level-3").count()).toBe(1);await capture(page,`new-leader-${width===1448 ? "activity-":""}${width}x${height}`);await noOverflow(page,width,height);
     await page.getByRole("button",{name:"Stäng belöning",exact:true}).click();
@@ -53,10 +53,10 @@ for(const [index,[width,height]] of [[1920,1080],[1448,1086],[1024,768],[390,844
     current.fight={...next,phase:"finished",winner_ids:["k","t"]};await page.clock.fastForward(30000);await expect(page.locator(".fight-celebration-final h2")).toHaveText("OAVGJORT!");await capture(page,`fight-final-tie-${width}x${height}`);await page.clock.runFor(4000);await page.clock.fastForward(30000);await expect(page.locator(".fight-celebration-final")).toHaveCount(0);await page.reload();await expect(widget).toBeVisible();await expect(page.locator(".fight-celebration-final")).toHaveCount(0);
   });
 }
-test("Showroom: uploaded portrait wins, failed upload falls back, showcase is explicit",async({page})=>{
+test("Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase",async({page})=>{
   const current=structuredClone(initial);current.leaderboard[0].profile_url="/arena-showroom/portraits.webp";current.leaderboard[1].profile_url="/broken-portrait.webp";
   await setup(page,()=>current);await page.route("**/broken-portrait.webp",r=>r.fulfill({status:404,body:""}));await page.goto("/arena?showcase=1");
-  await expect(page.locator(".arena-leaderboard [data-avatar-kind=uploaded]")).toHaveCount(1);await expect(page.locator(".arena-leaderboard [data-avatar-kind=demo]")).toHaveCount(4);await page.goto("/arena?showcase=0");await expect(page.locator(".arena-leaderboard [data-avatar-kind=demo]")).toHaveCount(0);await expect(page.locator(".arena-leaderboard [data-avatar-kind=fallback]")).toHaveCount(4);
+  await expect(page.locator(".arena-leaderboard [data-avatar-kind=uploaded]")).toHaveCount(1);await expect(page.locator(".arena-leaderboard [data-avatar-kind=demo]")).toHaveCount(4);await page.goto("/arena?showcase=0");await expect(page.locator(".arena-leaderboard [data-avatar-kind=demo]")).toHaveCount(4);await expect(page.locator(".arena-leaderboard [data-avatar-kind=fallback]")).toHaveCount(0);
 });
 for(const mode of ["duel","ranking","winner","tie-final"]){
  test(`Showroom: premium full fight ${mode}`,async({page})=>{

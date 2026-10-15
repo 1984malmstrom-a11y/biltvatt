@@ -1,3 +1,4 @@
+import {hasLocalSuperadminCredentials,localSuperadminLogin} from "./arena-test-auth";
 import {test,expect,type Page} from "@playwright/test";
 import {readFileSync,existsSync} from "node:fs";
 import {randomUUID,randomBytes} from "node:crypto";
@@ -36,12 +37,12 @@ for(const [width,height] of [[1920,1080],[1024,768],[390,844]]) {
   });
 }
 test("Arena: real local onboarding, approval, own sellers, TB registration and logout",async({page})=>{
-  const path=process.env.ARENA_E2E_SUPERADMIN_SECRET_FILE;test.skip(!path || !existsSync(path),"Requires explicitly configured local-only Superadmin test credentials.");
+  test.skip(!hasLocalSuperadminCredentials(),"Requires explicitly configured local-only Superadmin test credentials.");
   const email=`arena-qa-${randomUUID()}@example.test`,password=randomBytes(20).toString("hex");let station="";
   try {
     const signup=await page.request.post("/api/arena/auth/signup",{data:{name:"Arena QA · lokal station",email,password}});expect(signup.status()).toBe(201);station=(await signup.json()).station.id;
     await page.goto("/arena/account");await expect(page.getByText("VÄNTAR PÅ GODKÄNNANDE",{exact:true})).toBeVisible();
-    const login=await page.request.post("/api/arena/auth/superadmin/login",{data:{secret:readFileSync(path!,"utf8").trim()}});expect(login.status()).toBe(200);
+    const login=await localSuperadminLogin(page.request);expect(login.status()).toBe(200);
     expect((await page.request.patch(`/api/arena/superadmin/stations/${station}`,{data:{status:"active"}})).status()).toBe(200);
     await page.goto("/arena/admin");await page.getByRole("button",{name:"Säljare",exact:true}).click();await page.getByLabel("Säljarnamn",{exact:true}).fill("QA-säljaren");await page.getByRole("button",{name:"Spara",exact:true}).click();await expect(page.getByRole("status")).toContainText("Sparat");
     await page.getByRole("button",{name:"Aktiviteter",exact:true}).click();await page.getByLabel("Namn",{exact:true}).fill("Biltvätt");await page.getByLabel("Poäng",{exact:true}).fill("2");await page.getByLabel("TB (kr)",{exact:true}).fill("35,25");await page.getByLabel("Synlig badge",{exact:true}).selectOption("tb");await page.getByRole("button",{name:"Spara",exact:true}).click();await expect(page.getByRole("status")).toContainText("Sparat");

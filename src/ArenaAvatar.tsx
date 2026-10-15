@@ -9,11 +9,11 @@ export function ArenaShowcaseProvider({children}:{children:ReactNode}) {
   const [showcase]=useState(()=>{try{return readShowcaseMode(window.location.search,window.sessionStorage);}catch{return new URLSearchParams(window.location.search).get("showcase")==="1";}});
   return <ShowcaseContext.Provider value={showcase}>{children}</ShowcaseContext.Provider>;
 }
-export default function ArenaAvatar({id,name,imageUrl,champion=false,className="arena-leader-avatar"}:AvatarIdentity & {champion?:boolean;className?:string}) {
+export default function ArenaAvatar({id,name,imageUrl,avatarIndex,champion=false,className="arena-leader-avatar"}:AvatarIdentity & {champion?:boolean;className?:string}) {
   const showcase=useArenaShowcase(),[failed,setFailed]=useState("");
-  const source=resolveArenaAvatar({id,name,imageUrl:imageUrl===failed ? null:imageUrl},showcase);
-  const style=source.kind==="demo" ? {backgroundImage:`url(/arena-showroom/${champion ? "champions":"portraits"}.webp)`,backgroundPosition:source.position} as CSSProperties:undefined;
-  return <span className={`${className}${source.kind==="demo" ? " arena-demo-portrait":""}`} data-avatar-kind={source.kind} data-avatar-index={source.kind==="demo" ? source.index:undefined} style={style} aria-hidden="true" title={showcase && source.kind==="demo" ? `${name} · fiktivt demoporträtt`:name}>
+  const source=resolveArenaAvatar({id,name,avatarIndex,imageUrl:imageUrl===failed ? null:imageUrl},showcase);
+  const style=source.kind==="demo" ? {backgroundImage:`url(/arena-showroom/${champion ? "champions":"portraits"}${source.sheet}.webp)`,backgroundPosition:source.position} as CSSProperties:undefined;
+  return <span className={`${className}${source.kind==="demo" ? " arena-demo-portrait":""}`} data-avatar-kind={source.kind} data-avatar-index={source.kind==="demo" ? source.index:undefined} style={style} aria-hidden="true" title={source.kind==="demo" ? `${name} · fiktivt demoporträtt`:name}>
     {source.kind==="uploaded" ? <img src={source.url} alt="" decoding="async" onError={()=>setFailed(source.url)} />:source.kind==="fallback" ? <UserRound />:null}
   </span>;
 }

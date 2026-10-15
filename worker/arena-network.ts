@@ -1,3 +1,6 @@
+import {reportsApi} from "./arena-reports";
+import {audit,auditApi,auditStatement} from "./arena-audit";
+import {securityAdminApi} from "./arena-security";
 import type { Env } from "./index";
 import type { ArenaGroupBoard, ArenaMetric, ArenaStationStanding } from "../shared/arena-network";
 import { roundedPoints } from "../shared/arena";
@@ -37,20 +40,25 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
   if(!group)fail(404,"Topplistan finns inte för stationen.");return json(await arenaGroupBoard(db,url,group!.id,group!.name));
 }
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
-  await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
-  if(path.startsWith("/api/arena/superadmin/fights"))return arenaFightAdminApi(request,db);
+  const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
+  if(path.startsWith("/api/arena/superadmin/reports"))return reportsApi(request,db,null,actor);
+  const security=await securityAdminApi(request,env,actor);if(security)return security;
+  if(path==='/api/arena/superadmin/audit'&&method==='GET')return auditApi(request,db);
+  if(path.startsWith("/api/arena/superadmin/fights"))return arenaFightAdminApi(request,db,actor);
   if(path==="/api/arena/superadmin/stations" && method==="GET") {
     const rows=await db.prepare("SELECT id,name,email,status,kind,created_at,updated_at FROM arena_stations ORDER BY status='pending' DESC,name,id").all();return json({stations:rows.results});
   }
   const station=path.match(/^\/api\/arena\/superadmin\/stations\/([a-zA-Z0-9:_-]{1,120})(?:\/(revoke))?$/);
   if(station && ((method==="PATCH" && !station[2]) || (method==="POST" && station[2]==="revoke"))) {
-    if(!await db.prepare("SELECT id FROM arena_stations WHERE id=?").bind(station[1]).first())fail(404,"Stationen finns inte.");
-    if(station[2]==="revoke") {await db.prepare("UPDATE arena_station_sessions SET revoked_at=? WHERE station_id=? AND revoked_at IS NULL").bind(now,station[1]).run();return json({ok:true});}
+    const previous=await db.prepare("SELECT id,name,status FROM arena_stations WHERE id=?").bind(station[1]).first();
+    if(!previous)fail(404,"Stationen finns inte.");
+    if(station[2]==="revoke") {await db.batch([db.prepare("UPDATE arena_station_sessions SET revoked_at=? WHERE station_id=? AND revoked_at IS NULL").bind(now,station[1]),auditStatement(db,actor,"sessions.revoked","station",station[1],null,null,station[1])]);return json({ok:true});}
     const data=await body(request);checkFields(data,["status"]);
     if(!["pending","active","suspended"].includes(String(data.status)))fail(400,"Välj väntande, aktiv eller pausad station.");
     await db.batch([
       db.prepare("UPDATE arena_stations SET status=?,updated_at=? WHERE id=?").bind(String(data.status),now,station[1]),
       db.prepare("UPDATE arena_station_sessions SET revoked_at=? WHERE station_id=? AND revoked_at IS NULL AND ?='suspended'").bind(now,station[1],String(data.status)),
+      auditStatement(db,actor,String(data.status)==="active"?"station.approved":"station.status.changed","station",station[1],previous,{status:data.status},station[1]),
     ]);return json({ok:true});
   }
   if(path==="/api/arena/superadmin/groups" && method==="GET") {
@@ -64,10 +72,12 @@ export async function arenaSuperadminApi(request:Request,env:Env):Promise<Respon
     const stationIds=ids as string[];
     if(stationIds.length) {const found=await db.prepare(`SELECT id FROM arena_stations WHERE id IN (${stationIds.map(()=>"?").join(",")})`).bind(...stationIds).all();if(found.results.length!==stationIds.length)fail(400,"En deltagarstation finns inte.");}
     const id=group[1]??crypto.randomUUID();if(group[1] && !await db.prepare("SELECT id FROM arena_groups WHERE id=?").bind(id).first())fail(404,"Gruppen finns inte.");
+    const previous=group[1]?await db.prepare("SELECT id,name FROM arena_groups WHERE id=?").bind(id).first():null;
     await db.batch([
       group[1] ? db.prepare("UPDATE arena_groups SET name=?,updated_at=? WHERE id=?").bind(name,now,id) : db.prepare("INSERT INTO arena_groups(id,name,created_at,updated_at) VALUES(?,?,?,?)").bind(id,name,now,now),
       db.prepare("DELETE FROM arena_group_members WHERE group_id=?").bind(id),
       ...stationIds.map(stationId=>db.prepare("INSERT INTO arena_group_members(group_id,station_id,joined_at) VALUES(?,?,?)").bind(id,stationId,now)),
+      auditStatement(db,actor,group[1]?"group.changed":"group.created","group",id,previous,{name,station_ids:stationIds}),
     ]);return json({id},group[1]?200:201);
   }
   if(path==="/api/arena/superadmin/leaderboard" && method==="GET") {

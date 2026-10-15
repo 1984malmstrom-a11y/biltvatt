@@ -126,3 +126,53 @@
 .arena-fight-feed .fight-feed-tie>.arena-fight-tie-icon { font-size:26px;color:#a8dfff;text-align:center; }
 .arena-fight-lead-event .arena-fight-event-score { font-size:clamp(22px,3.5vw,46px); }
 .arena-fight-lead-event .arena-fight-event-emblem>span,.arena-fight-lead-event .arena-fight-event-hero>.arena-eyebrow { margin-top:0; }
+/* Final people pass: real portraits first, consistent synthetic identities otherwise. */
+.arena-people-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin-top:24px}
+.arena-people-grid article{display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px;border:1px solid #7199bd40;border-radius:16px;background:linear-gradient(145deg,#102a40aa,#030f1c)}
+.arena-people-grid .arena-person-avatar{width:108px;height:108px;border-radius:50%;border:1px solid #c2a96f}
+.arena-people-grid small{color:#a9c6dc}.arena-people-grid .arena-upload{font-size:13px}
+.arena-celebration.level-1 .arena-reward-product{width:44cqw;height:34cqw;max-height:22dvh;margin:0 0 2cqw}
+.arena-celebration.level-1 .arena-reward-product img{padding:0;transform:none}
+.arena-milestone-avatar{width:24cqw;height:24cqw;border-radius:50%;border:1px solid #ebd39a;overflow:hidden;flex:none}
+.arena-milestone-avatar img{width:100%;height:100%;object-fit:cover}
+.arena-victory-hero .arena-victory-art{height:56%;inset:0 0 auto}
+.arena-victory-art .arena-champion-portrait{width:min(570px,58%);top:0;aspect-ratio:1;mask-image:linear-gradient(90deg,transparent,#000 13%,#000 86%,transparent),linear-gradient(#000 55%,transparent 96%);mask-composite:intersect;transform:translateX(-50%) rotate(-3deg)}
+.arena-victory-art>b.arena-champion-number{left:13%;top:5%;font-size:clamp(200px,34dvh,390px);opacity:.95}
+.arena-victory-art>.arena-champion-crown{left:14%;top:0;width:150px;height:115px}
+.arena-victory-art::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 68% 24%,#79caff22,transparent 48%);box-shadow:inset 0 -35px 35px #041326;pointer-events:none}
+.arena-victory-hero .arena-victory-copy{position:relative;padding-top:0;max-width:100%}
+.arena-victory-hero .arena-reward-pep{letter-spacing:.15em}
+@media(max-width:950px) and (orientation:portrait){
+ .arena-victory-hero .arena-victory-art{height:49%}
+ .arena-victory-art .arena-champion-portrait{width:94%;top:0;left:57%}
+ .arena-victory-art>b.arena-champion-number{left:1%;top:5%;font-size:220px}
+ .arena-victory-art>.arena-champion-crown{left:2%;width:85px;height:68px}
+ .arena-victory-hero .arena-victory-copy{gap:6px}
+ .arena-victory-hero h2{font-size:clamp(32px,10vw,48px)}
+ .arena-victory-hero .arena-reward-points{font-size:31px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ .arena-celebration.level-1 .arena-reward-product{width:29cqw;height:20cqw;max-height:21dvh;margin:0}
+ .arena-celebration.level-1 .arena-reward-ring{gap:2px}
+ .arena-celebration.level-3 .arena-victory-hero{grid-template-columns:.9fr 1fr}
+ .arena-victory-hero .arena-victory-art{position:relative;height:100%;width:100%;inset:auto}
+ .arena-victory-art .arena-champion-portrait{width:110%;left:54%;top:8%}
+ .arena-victory-art>b.arena-champion-number{font-size:195px;left:0;top:4%}
+ .arena-victory-art>.arena-champion-crown{width:65px;height:50px;left:0}
+ .arena-victory-hero .arena-victory-copy{width:100%;margin-left:0;padding:0;gap:4px}
+ .arena-victory-hero h2{font-size:34px}
+ .arena-victory-hero .arena-reward-pep{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.arena-victory-art .arena-champion-portrait{transform:translateX(-50%)} }
+/* Sober backoffice and A4 reports; scoped away from the locked start composition. */
+.arena-security-console{max-width:1250px;margin:24px auto;padding:clamp(18px,3vw,36px)}
+.arena-security-console h3{color:#eddaaa;margin-top:28px}
+.arena-reauth{max-width:600px;padding:16px;border:1px solid #668eaf45;border-radius:12px;margin:20px 0}
+.arena-account-cards{display:grid;gap:14px;margin-top:24px}.arena-account-cards article{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:20px;border:1px solid #7598b944;border-radius:12px;background:#091e30}.arena-account-cards h3{margin:0}.arena-account-cards p{margin:6px 0}
+.arena-audit-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}.arena-audit-list{list-style:none;padding:0}.arena-audit-list li{border-top:1px solid #6c97b742;padding:16px 0;display:grid;gap:6px}.arena-audit-list time,.arena-audit-list span{font-size:12px;color:#abc5d9}.arena-audit-list pre{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;font-size:12px}
+.arena-recovery-form{max-width:580px;margin:35px auto;padding:30px}.arena-recovery-codes{padding:20px;margin:20px 0;border:1px solid #d6b36b;border-radius:12px}.arena-recovery-codes li{padding:6px 0}.arena-recovery-codes code{font-size:13px;overflow-wrap:anywhere}
+.arena-reports-layout{display:grid;grid-template-columns:minmax(270px,340px) minmax(0,1fr);gap:24px;max-width:1400px;margin:24px auto}.arena-reports-layout>.arena-panel{padding:24px;align-self:start}.arena-report-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}.arena-report-actions small{color:#b8ccdc}.arena-report-paper{padding:clamp(20px,3vw,48px);border:1px solid #bda36d;border-radius:10px;background:radial-gradient(ellipse at 50% 0,#173e5c,#061321 70%);color:#edf2f7;box-shadow:0 12px 40px #0004}.arena-report-paper header{display:flex;flex-direction:column;gap:5px;border-bottom:1px solid #bba16e;padding-bottom:20px;margin-bottom:25px}.arena-report-paper header>span{font-size:26px;font-weight:800;letter-spacing:.22em;color:#f9df9f}.arena-report-paper header small{font-size:9px;letter-spacing:.15em}.arena-report-paper h2{font-size:clamp(22px,2.3vw,34px);color:#ffdf95}.arena-report-winner{text-align:center;padding:24px}.arena-report-winner>span{display:block;color:#e7c77e;font-size:11px;letter-spacing:.15em}.arena-report-winner h3{font-size:36px;margin:10px}.arena-report-avatar{display:block;margin:0 auto 20px;width:140px;height:140px;border:2px solid #edcb79;border-radius:50%;overflow:hidden}.arena-report-avatar img{width:100%;height:100%;object-fit:cover}.arena-report-totals{display:flex;justify-content:space-around;gap:12px;flex-wrap:wrap;margin:28px 0;padding:20px 0;border-block:1px solid #6e92b044}.arena-report-totals strong{font-size:24px;color:#fae3ae}.arena-report-totals small{display:block;font-size:9px;letter-spacing:.1em;color:#b1c9db;margin-top:6px}.arena-report-table-wrap{overflow-x:auto}.arena-report-paper table{width:100%;border-collapse:collapse;font-size:13px}.arena-report-paper td,.arena-report-paper th{padding:12px 8px;border-bottom:1px solid #7295b244;text-align:left}.arena-report-paper footer{margin-top:35px;font-size:11px;color:#a2bccf}.arena-report-paper footer small{overflow-wrap:anywhere}
+@media(max-width:850px){.arena-reports-layout{grid-template-columns:1fr}.arena-account-cards article{align-items:flex-start}.arena-security-console{margin:16px 0}.arena-recovery-form{margin:20px 12px}.arena-report-paper .arena-eyebrow{font-size:9px}}
+@media print{body:has(.arena-report-paper){background:white!important}.arena-reports-layout{display:block}.arena-reports-layout>section:first-child,.arena-report-actions,.arena-admin-header,.arena-page-header,.arena-admin-tabs,.arena-security-console>.arena-reauth{display:none!important}.arena-report-paper{color:#102030!important;background:white!important;border:0;box-shadow:none}.arena-report-paper :is(h2,h3,strong,span,small,footer){color:#182b3b!important}.arena-report-paper{break-inside:auto}.arena-report-paper tr{break-inside:avoid}.arena-report-paper header{color:#182b3b}.arena-report-paper footer{font-size:10px}@page{size:A4;margin:16mm}}
+
+.arena-account-identity{display:flex;align-items:center;gap:14px;min-width:0}.arena-account-identity .arena-leader-avatar{width:42px;height:42px;flex:none}.arena-report-person-cell{display:flex;align-items:center;gap:8px}.arena-report-person-cell .arena-leader-avatar{width:28px;height:28px;flex:none}

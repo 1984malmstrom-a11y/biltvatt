@@ -1,3 +1,5 @@
+import {auditStatement,type ArenaActor} from "./arena-audit";
+import {freezeFightReport} from "./arena-reports";
 import type { ArenaFight, ArenaFightSummary, ArenaFightEvent, ArenaFightListing } from "../shared/arena-fights";
 import { fightLeaders, fightPhase, uniqueFightLeader } from "../shared/arena-fights";
 import type { ArenaMetric, ArenaStationStanding } from "../shared/arena-network";
@@ -19,14 +21,14 @@ async function fightRows(db:D1Database,fight:FightRow,now:string,finished:boolea
   return rankStations(rows.results,fight.score_metric);
 }
 async function fightEvents(db:D1Database,f:FightRow,now:string,finished:boolean):Promise<ArenaFightEvent[]> {
-  const rows=await db.prepare(`SELECT 'sale:'||r.id id,'sale' kind,r.station_id,station.name station_name,r.registered_at created_at,r.seller_id,seller.name seller_name,a.name activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode
+  const rows=await db.prepare(`SELECT 'sale:'||r.id id,'sale' kind,r.station_id,station.name station_name,r.registered_at created_at,r.seller_id,seller.name seller_name,seller.avatar_index,CASE WHEN seller.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||seller.profile_image_id END profile_url,a.name activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode
     FROM arena_fight_stations member JOIN arena_registrations r ON r.station_id=member.station_id
     JOIN arena_stations station ON station.id=r.station_id
     JOIN arena_sellers seller ON seller.id=r.seller_id AND seller.station_id=r.station_id
     JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id
     WHERE member.fight_id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?
       AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))
-    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL
+    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
     FROM arena_fight_lead_events WHERE fight_id=? AND created_at>=? AND created_at<? AND created_at<=?
     ORDER BY created_at DESC,id DESC LIMIT 20`)
     .bind(f.id,f.start_at,f.end_at,finished ? f.end_at:now,finished?1:0,f.end_at,f.id,f.start_at,f.end_at,now).all<ArenaFightEvent>();
@@ -47,7 +49,7 @@ export async function arenaFightView(db:D1Database,id:string,now=new Date()):Pro
       // but is intentionally ignored by final fight scores, even before first read.
       const result=await db.prepare("UPDATE arena_fights SET status='finished',result_json=?,finished_at=?,updated_at=?,revision=revision+1 WHERE id=? AND result_json IS NULL")
         .bind(JSON.stringify(view),f.end_at,snapshot,id).run();
-      if(result.meta.changes)return view;continue;
+      if(result.meta.changes){await freezeFightReport(db,view);return view;}continue;
     }
     if(phase!=="active")return view;
     if(f.leader_checked_at>snapshot && f.live_json){const current=JSON.parse(f.live_json) as ArenaFight;current.latest_lead_change=await leadEvent(db,id);return current;}
@@ -100,7 +102,7 @@ export async function arenaFightApi(request:Request,db:D1Database,station:string
   return json(await arenaFightView(db,match![1]));
 }
 // Only called after the separate Superadmin authentication gate.
-export async function arenaFightAdminApi(request:Request,db:D1Database):Promise<Response> {
+export async function arenaFightAdminApi(request:Request,db:D1Database,actor:ArenaActor):Promise<Response> {
   const path=new URL(request.url).pathname,method=request.method;
   if(path==="/api/arena/superadmin/fights" && method==="GET") {
     const [rows,members]=await Promise.all([
@@ -126,5 +128,6 @@ export async function arenaFightAdminApi(request:Request,db:D1Database):Promise<
   await db.batch([
     db.prepare("INSERT INTO arena_fights(id,name,description,start_at,end_at,scoring,score_metric,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)").bind(id,name,description,start,end,data.metric==="count" ? "count":"points",String(data.metric),status,now,now),
     ...ids.map(station=>db.prepare("INSERT INTO arena_fight_stations(fight_id,station_id) VALUES(?,?)").bind(id,station)),
+    auditStatement(db,actor,"fight.created","fight",id,null,{name,description,start_at:start,end_at:end,metric:data.metric,status,station_ids:ids}),
   ]);return json({id},201);
 }

@@ -409,14 +409,14 @@ for (const special of [false,true]) {
     await page.getByRole("button", { name:"Biltvätt, +2 poäng",exact:true }).click();
     await page.getByRole("dialog").getByRole("button", { name:"Peter",exact:true }).click();
     await expect(page.locator(".celebration-points")).toBeVisible();
-    await page.clock.runFor(special ? 180 : 1500);
+    await page.clock.runFor(special ? 180 : 500);
     const reward=page.locator(special ? ".celebration-leader" : ".celebration-points");
     await expect(reward).toBeVisible();
-    expect(await reward.evaluate(el => el.style.getPropertyValue("--reward-life"))).toBe(special ? "3600ms" : "2600ms");
+    expect(await reward.evaluate(el => el.style.getPropertyValue("--reward-life"))).toBe(special ? "3600ms" : "1300ms");
     expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
     await page.getByRole("button", { name:"Korv med mos, +1 poäng",exact:true }).click();
     await expect(page.getByRole("dialog", { name:"Vem gjorde försäljningen?" })).toBeVisible();
-    await page.clock.runFor(special ? 3599 : 1099);
+    await page.clock.runFor(special ? 3599 : 799);
     await expect(reward).toBeVisible(); await page.clock.runFor(1);
     await expect(reward).toHaveCount(0);
     await expect(page.getByRole("dialog").getByRole("button", { name:"Peter",exact:true })).toBeEnabled();

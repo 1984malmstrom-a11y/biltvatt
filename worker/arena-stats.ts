@@ -21,7 +21,7 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
   const day = stockholmDay(now);
   const todayRange = arenaRange(new URL("https://arena.test/?period=today"), now);
   const [sellers, grouped, today, campaign, stationGoals, personalGoals, recent] = await Promise.all([
-    db.prepare("SELECT id,external_staff_id,name,color,active FROM arena_sellers WHERE station_id=?").bind(key).all<ArenaSeller>(),
+    db.prepare("SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url FROM arena_sellers WHERE station_id=?").bind(key).all<ArenaSeller>(),
     db.prepare(`SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count
       FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id
       WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?
@@ -35,7 +35,7 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     db.prepare("SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     db.prepare("SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id").bind(key, day, day).all<ArenaGoal>(),
     // A bounded, station-scoped feed follows today's sales independently of leaderboard filters.
-    db.prepare(`SELECT r.id,r.seller_id,s.name seller_name,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at
+    db.prepare(`SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at
       FROM arena_registrations r
       JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id
       JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id
