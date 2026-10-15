@@ -1,0 +1,160 @@
+{
+  "start_head": "74768ac46606c96ab11a092dbf1c1d23d96ae6de",
+  "branch": "feat/arena-v1",
+  "curated_png_count": 19,
+  "screenshots": [
+    {
+      "file": "before-goal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Före / efter",
+      "sha256": "507c7a198d7aed8a6bd0faf5e1a86c6f97c00ed6e92501f4e58a1ed9daa0ea73"
+    },
+    {
+      "file": "before-ny-etta-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Före / efter",
+      "sha256": "cca5768d9b8f2000c3ecd8dc51b512590882d1c8f2203fedc4abf51dc0595b63"
+    },
+    {
+      "file": "goal-hero-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "group": "Mål uppnått",
+      "sha256": "7fe590921ccc6fad351f62046b948c86dc0bf2cb5361962f3fa98b920979dc7e"
+    },
+    {
+      "file": "goal-hero-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "group": "Mål uppnått",
+      "sha256": "24af70b33dad1205d77d86bec69c8907a978024e7a86f77adde824225b2982c4"
+    },
+    {
+      "file": "goal-hero-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "group": "Mål uppnått",
+      "sha256": "965673e4f31670302869a678d6fa39d33778adb082c592d255c69dd76743adfb"
+    },
+    {
+      "file": "goal-hero-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Mål uppnått",
+      "sha256": "fcd0508652be87ab669595dc0b9ac8d4656e719603153096d258684fa0a1a7be"
+    },
+    {
+      "file": "goal-hero-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Mål uppnått",
+      "sha256": "7048fc5bb627332b97101a5e11916c0227b52fbdbae4f6d07c2c2353bd033185"
+    },
+    {
+      "file": "goal-hero-844x390.png",
+      "width": 844,
+      "height": 390,
+      "group": "Mål uppnått",
+      "sha256": "2b006e099d6e5c435b16381cf63839f3aef893d393a9c68579edbffccb46913b"
+    },
+    {
+      "file": "ny-etta-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "group": "NY ETTA",
+      "sha256": "2dde3d32f12ac0e931d6742c4bca04c8843df0e3820ed7f43633d12be29df3b1"
+    },
+    {
+      "file": "ny-etta-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "group": "NY ETTA",
+      "sha256": "5192a535ed5775646f74eb6eefbd7d932036a7dab53f3d6c679bb29bb5a83f04"
+    },
+    {
+      "file": "ny-etta-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "group": "NY ETTA",
+      "sha256": "6b8c19ab47af94d1179f7c12f762888292dbf60cf847cff97f62f971ce7e97f4"
+    },
+    {
+      "file": "ny-etta-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "NY ETTA",
+      "sha256": "c9f96b0caad7dd27965e63b15b746c3feba0ea94f188c5ab17dadf36b281c426"
+    },
+    {
+      "file": "ny-etta-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "NY ETTA",
+      "sha256": "e01718e3ec6da32164596544a49969537e6f364f4c896e45163172f39de2fa7a"
+    },
+    {
+      "file": "ny-etta-844x390.png",
+      "width": 844,
+      "height": 390,
+      "group": "NY ETTA",
+      "sha256": "162f6364bc16362148486d6e66e41f0572af5e96d74660476e9810a0aad9d78b"
+    },
+    {
+      "file": "playoffs-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Slutspel",
+      "sha256": "6af123909dccbba0e732d389a48c0e455bace944315d764558d06f81a27906aa"
+    },
+    {
+      "file": "playoffs-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Slutspel",
+      "sha256": "d840e53e81a8cc8d5afa3d99199dc43a1f36bd0796ab601c26ffdd2eb06d5f4f"
+    },
+    {
+      "file": "playoffs-final-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Slutspel",
+      "sha256": "4b3198bc7e779230737ce5b7bdba1a0b201feb4b3f1a399dd5583d1e0b21dcbd"
+    },
+    {
+      "file": "temporary-fight-quick-action-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "group": "Fight quick action",
+      "sha256": "805d1b97e0c2fa0b9bf051e3d568635006f868146c6750a2621ac6e37eaf27f9"
+    },
+    {
+      "file": "temporary-fight-quick-action-390x844.png",
+      "width": 390,
+      "height": 844,
+      "group": "Fight quick action",
+      "sha256": "8e457346a03f6935c1499e42e8b61adccebb6def856aac1d4ded586535ef3bf8"
+    }
+  ],
+  "final_head": "7e9ea4fdb18bcc2d1ced7dc256d7f54eb6c8826e",
+  "working_tree_clean": true,
+  "reports": [
+    "arena-playwright.log",
+    "artifacts.json",
+    "build.log",
+    "changed-files.txt",
+    "final-report.md",
+    "git-verification.json",
+    "goal-regression-confirm.log",
+    "hero-tests.log",
+    "index.html",
+    "native-worker-confirm.log",
+    "quick-action-verification.json",
+    "responsive-report.md",
+    "test-report.txt",
+    "typecheck.log",
+    "unit-tests.log",
+    "visual-comparison.md"
+  ]
+}

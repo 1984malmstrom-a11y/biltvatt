@@ -1,0 +1,22 @@
+{
+  "start_head": "74768ac46606c96ab11a092dbf1c1d23d96ae6de",
+  "final_head": "7e9ea4fdb18bcc2d1ced7dc256d7f54eb6c8826e",
+  "branch": "feat/arena-v1",
+  "clean_working_tree": true,
+  "commit_message": "Arena V1: refine champion heroes and temporary fight desktop state",
+  "changed_files": [
+    "e2e/arena-hero-correction.spec.ts",
+    "e2e/arena-visual-v2.spec.ts",
+    "e2e/arena.spec.ts",
+    "src/ArenaApp.tsx",
+    "src/arena-competition.css",
+    "src/arena-victory.css"
+  ],
+  "protected_paths_unchanged": true,
+  "origin_tracking_ref_unchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "push_performed": false,
+  "deploy_performed": false,
+  "remote_migration_performed": false,
+  "merge_performed": false,
+  "branch_switch_performed": false
+}

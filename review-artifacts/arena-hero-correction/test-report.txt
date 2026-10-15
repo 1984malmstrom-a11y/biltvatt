@@ -1,0 +1,13 @@
+FINAL VERIFICATION
+Typecheck: PASS.
+Build: PASS.
+Relevant Vitest: 9 files, 103 tests PASS.
+Focused champion heroes: 14/14 PASS (12 responsive scenes, 2 reduced-motion/expiry tests).
+Arena Playwright: 145 distinct cases PASS, 1 SKIPPED; plus 14 focused hero cases = 159 distinct cases PASS.
+Initial broad run: 138 passed, 7 failed, 1 skipped. Six failures were outdated VECKOMÅL UPPNÅTT heading expectations; assertions now check MÅL UPPNÅTT and the separate VECKA label. All eight personal/station-goal cases pass in goal-regression-confirm.log.
+The seventh failure used the frontend-only server for a real-Worker test (404). The same test passes on the existing local Worker at port 5192; see native-worker-confirm.log.
+One Competition 2.0 native test was skipped by its existing explicit Owner fixture gate. No remote service/migration was used.
+
+Coverage includes ready-state quick action desktop/mobile, retry/idempotency/undo, standard and goal/leader celebrations, true animation timeline, reduced motion, immediate next registration, responsive overflow, unchanged start hierarchy, Dynamic Fight Context, bracket/competition presentation.
+
+Review: 19 selected PNG, 12 heroes + 2 quick-action + 3 playoffs + 2 before images. Current captures show real React/CSS with synthetic fixture data; no animation styles were injected for the new curated captures.

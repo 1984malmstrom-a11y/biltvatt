@@ -1,0 +1,374 @@
+
+Running 146 tests using 1 worker
+
+(node:369066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/146] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation sprint
+[2/146] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation daily
+[3/146] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation league
+[4/146] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation playoffs
+[5/146] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation cup
+[6/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1920x1080
+[7/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1536x864
+[8/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1448x1086
+[9/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1024x768
+[10/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 390x844
+[11/146] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 844x390
+[12/146] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 1920x1080
+[13/146] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 390x844
+[14/146] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 844x390
+[15/146] e2e/arena-competition-builder.spec.ts:32:1 › Competition: homepage badge and no eighth production ring; old concepts retired
+[16/146] e2e/arena-competition-builder.spec.ts:36:1 › Native local Competition 2.0: challenge accept, cancel and simultaneous conflict use real Worker
+[17/146] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 390x844
+[18/146] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 844x390
+[19/146] e2e/arena-competition-builder.spec.ts:43:1 › Fight Center polling: one scoped payload, 5s active cadence, hidden pause and immediate resume
+[20/146] e2e/arena-competition-builder.spec.ts:44:1 › Competition: TB uses kronor in tables and brackets; multi-station Sprint lists every participant
+[21/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080
+[22/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864
+[23/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086
+[24/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768
+[25/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844
+[26/146] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390
+[27/146] e2e/arena-identity.spec.ts:22:1 › Identity: multi-station names, period totals and cross-station recent feed use the same context
+[28/146] e2e/arena-identity.spec.ts:27:1 › Identity: fake character and static reduced-motion hero remain independent of the credited seller
+[29/146] e2e/arena-identity.spec.ts:31:1 › Identity: cinematic reveal paints on the real animation timeline
+[30/146] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1920x1080
+[31/146] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1448x1086
+[32/146] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1024x768
+[33/146] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 390x844
+[34/146] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 844x390
+[35/146] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1920x1080
+[36/146] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1448x1086
+[37/146] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1024x768
+[38/146] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 390x844
+[39/146] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 844x390
+[40/146] e2e/arena-showroom.spec.ts:58:1 › Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase
+[41/146] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight duel
+[42/146] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight ranking
+[43/146] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight winner
+[44/146] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight tie-final
+[45/146] e2e/arena-showroom.spec.ts:72:1 › Showroom: Superadmin fight manager has participants, phases and leader
+[46/146] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once winner
+[47/146] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once loss
+[48/146] e2e/arena-showroom.spec.ts:85:1 › Showroom: one hero for simultaneous goal, leader and fight, undo clears receipt
+[49/146] e2e/arena-showroom.spec.ts:90:1 › Showroom: countdown alone becomes urgent and respects reduced motion
+[50/146] e2e/arena-showroom.spec.ts:93:1 › Showroom: full TB duel values fit wide and portrait widget
+[51/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[52/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[53/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[54/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[55/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[56/146] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[57/146] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 1920x1080
+[58/146] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 390x844
+[59/146] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 1920x1080
+[60/146] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 390x844
+[61/146] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 1920x1080
+[62/146] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 390x844
+[63/146] e2e/arena-visual-v2.spec.ts:40:1 › Visual V2: production uploaded portrait, initial, failed image and explicit showroom
+[64/146] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[65/146] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[66/146] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[67/146] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[68/146] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[69/146] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1920x1080
+[70/146] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1024x768
+[71/146] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1448x1086
+[72/146] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 390x844
+[73/146] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 844x390
+[74/146] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1366x768
+[75/146] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1440x900
+[76/146] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1280x800
+[77/146] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1920x1200
+[78/146] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1448x1086
+[79/146] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1920x1080
+[80/146] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1024x768
+[81/146] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 390x844
+[82/146] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 844x390
+[83/146] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1448x1086
+[84/146] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080
+[85/146] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768
+[86/146] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844
+[87/146] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390
+[88/146] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[89/146] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[90/146] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[91/146] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[92/146] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+[93/146] e2e/arena.spec.ts:340:1 › Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post
+[94/146] e2e/arena.spec.ts:362:1 › Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry
+[95/146] e2e/arena.spec.ts:379:1 › Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion
+[96/146] e2e/arena.spec.ts:401:3 › Arena: vanlig celebration 2,6 s löper ut utan att låsa nästa val
+[97/146] e2e/arena.spec.ts:401:3 › Arena: milestone 3,6 s löper ut utan att låsa nästa val
+[98/146] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden station
+[99/146] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-points
+[100/146] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-count
+[101/146] e2e/arena.spec.ts:450:1 › Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras
+[102/146] e2e/arena.spec.ts:467:1 › Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning
+[103/146] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 1920x1080
+[104/146] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 1024x768
+[105/146] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 390x844
+[106/146] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 844x390
+[107/146] e2e/arena.spec.ts:517:1 › Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål
+[108/146] e2e/arena.spec.ts:529:1 › Arena-admin: mänskliga listor, vald post, ordning och periodförval
+[109/146] e2e/arena.spec.ts:570:1 › Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry
+[110/146] e2e/arena.spec.ts:604:3 › Arena: långsamt milestone-svar missas inte efter en kort burst
+[111/146] e2e/arena.spec.ts:604:3 › Arena: långsamt milestone-svar stör inte nästa säljarval
+[112/146] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1920x1080
+[113/146] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1366x768
+[114/146] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1024x768
+[115/146] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 390x844
+[116/146] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 844x390
+[117/146] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1920x1080
+[118/146] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1024x768
+[119/146] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1448x1086
+[120/146] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 390x844
+[121/146] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 844x390
+[122/146] e2e/arena.spec.ts:698:1 › Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans
+[123/146] e2e/arena.spec.ts:707:1 › Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom
+[124/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Idag, en hero och dedup
+[125/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Den här veckan, en hero och dedup
+[126/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Den här månaden, en hero och dedup
+[127/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Vald period, en hero och dedup
+[128/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Kaffe + bulle, en hero och dedup
+[129/146] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Aktuellt fokus, en hero och dedup
+[130/146] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1920x1080
+[131/146] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1024x768
+[132/146] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 390x844
+[133/146] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 844x390
+[134/146] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+  1) e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-personal-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-personal-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-personal-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      757 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-personal-goal--049e2-ästa-registrering-1920x1080/error-context.md
+
+
+(node:375187) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[135/146] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+  2) e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-personal-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-personal-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-personal-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      757 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-personal-goal--51313-nästa-registrering-1024x768/error-context.md
+
+
+(node:375325) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[136/146] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+  3) e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-personal-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-personal-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-personal-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      757 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-personal-goal--17a82--nästa-registrering-390x844/error-context.md
+
+
+(node:375465) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[137/146] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+  4) e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-personal-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-personal-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-personal-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      757 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-personal-goal--5bba7--nästa-registrering-844x390/error-context.md
+
+
+(node:375604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[138/146] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+  5) e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-station-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-station-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-station-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "MÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       if (kind !== "leader") await expect(reward.locator(".arena-eyebrow")).toContainText("VECKA");
+      757 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-station-goal-f-781c8-ästa-registrering-1920x1080/error-context.md
+
+
+(node:375751) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[139/146] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+  6) e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.celebration-station-goal').getByRole('heading')
+    Expected: "VECKOMÅL UPPNÅTT!"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.celebration-station-goal').getByRole('heading') with timeout 5000ms
+      - waiting for locator('.celebration-station-goal').getByRole('heading')
+        11 × locator resolved to <h2>MÅL UPPNÅTT!</h2>
+           - unexpected value "MÅL UPPNÅTT!"
+
+
+      753 |       const reward=page.locator(`.celebration-${kind}`);
+      754 |       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
+    > 755 |       await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "MÅL UPPNÅTT!");
+          |                                                 ^
+      756 |       if (kind !== "leader") await expect(reward.locator(".arena-eyebrow")).toContainText("VECKA");
+      757 |       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+      758 |     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
+        at /workspace/biltvatt/e2e/arena.spec.ts:755:49
+
+    Error Context: test-results/arena-Arena-station-goal-f-2a492-nästa-registrering-1024x768/error-context.md
+
+
+(node:375917) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[140/146] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[141/146] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+[142/146] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 1920x1080
+[143/146] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 1024x768
+[144/146] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 390x844
+[145/146] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 844x390
+[146/146] e2e/arena.spec.ts:810:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI
+  7) e2e/arena.spec.ts:810:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      811 | test("Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI", async ({ page }) => {
+      812 |   const pin = readFileSync(new URL("../.dev.vars", import.meta.url), "utf8").match(/^ADMIN_PIN=(\d+)$/m)![1];
+    > 813 |   expect((await page.request.post("/api/admin/login", { data: { pin } })).status()).toBe(200);
+          |                                                                                     ^
+      814 |   const staffName = `Arena E2E ${Date.now()}`;
+      815 |   const staffCreated = await page.request.post("/api/admin/staff", { data: { name: staffName, color: "#48d4ff" } });
+      816 |   expect(staffCreated.status()).toBe(201);
+        at /workspace/biltvatt/e2e/arena.spec.ts:813:85
+
+    Error Context: test-results/arena-Arena-riktig-lokal-W-29881-undo-och-adminbild-genom-UI/error-context.md
+
+
+  7 failed
+    e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080 
+    e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768 
+    e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844 
+    e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390 
+    e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080 
+    e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768 
+    e2e/arena.spec.ts:810:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI 
+  1 skipped
+  138 passed (5.8m)

@@ -1,0 +1,16 @@
+
+Running 8 tests using 1 worker
+
+(node:375909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/8] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+[2/8] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+[3/8] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+[4/8] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+[5/8] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+[6/8] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+[7/8] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[8/8] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+  8 passed (21.8s)

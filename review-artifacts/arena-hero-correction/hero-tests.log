@@ -1,0 +1,22 @@
+
+Running 14 tests using 1 worker
+
+(node:368568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1920x1080
+[2/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1536x864
+[3/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1448x1086
+[4/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1024x768
+[5/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 390x844
+[6/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 844x390
+[7/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1920x1080
+[8/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1536x864
+[9/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1448x1086
+[10/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1024x768
+[11/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 390x844
+[12/14] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 844x390
+[13/14] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: leader reduced motion and automatic dismissal
+[14/14] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: station-goal reduced motion and automatic dismissal
+  14 passed (1.3m)
