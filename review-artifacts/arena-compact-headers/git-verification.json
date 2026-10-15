@@ -1,0 +1,15 @@
+{
+  "branch": "feat/arena-v1",
+  "start_head": "f091bd4d8e448a17d983771301fb72526c526027",
+  "final_head": "3b880c25904c67f4b307c62840bc4a53873267ee",
+  "working_tree_clean": true,
+  "origin_tracking_ref_unchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "changed_files": [
+    "e2e/arena-compact-headers.spec.ts",
+    "src/arena-mini-polish.css"
+  ],
+  "push_performed": false,
+  "deploy_performed": false,
+  "migration_performed": false,
+  "branch_switch_performed": false
+}

@@ -1,0 +1,18 @@
+
+Running 10 tests using 1 worker
+
+(node:398690) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1920x1080
+[2/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1536x864
+[3/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1448x1086
+[4/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1024x768
+[5/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 390x844
+[6/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 844x390
+[7/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 951x768
+[8/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1100x768
+[9/10] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1200x768
+[10/10] e2e/arena-compact-headers.spec.ts:16:1 › Compact headers: live fight keeps separate header action and status
+  10 passed (14.6s)

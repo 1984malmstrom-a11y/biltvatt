@@ -1,0 +1,7 @@
+PASS npm run typecheck
+PASS npm run build
+PASS npm test -- tests/arena*.test.ts: 26 files, 220 tests
+PASS e2e/arena-compact-headers.spec.ts: 10 tests
+PASS relevant mini-polish, Visual V2 and Arena responsive regressions: 23 tests
+Total Playwright: 33 passed, 0 failed
+PASS git diff --check

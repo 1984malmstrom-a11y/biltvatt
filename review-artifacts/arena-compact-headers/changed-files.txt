@@ -1,0 +1,2 @@
+src/arena-mini-polish.css
+e2e/arena-compact-headers.spec.ts

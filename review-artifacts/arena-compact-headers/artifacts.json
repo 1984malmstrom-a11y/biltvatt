@@ -1,0 +1,68 @@
+{
+  "review": "Arena compact desktop leaderboard headers",
+  "start_head": "f091bd4d8e448a17d983771301fb72526c526027",
+  "curated_png_count": 6,
+  "screenshots": [
+    {
+      "file": "normal-1024x768.png",
+      "pixels": [
+        1024,
+        768
+      ],
+      "viewport": "1024x768",
+      "kind": "full viewport",
+      "sha256": "8540b8c84af221f5f3050053c964abdaa9519a04ac2fc88bff42c64c49ac3ab5"
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "viewport": "1920x1080",
+      "kind": "full viewport",
+      "sha256": "24ba61c2dfbc44c8e7c667d5383440c7b49520b5c2d0a029e760780e1e0a164a"
+    },
+    {
+      "file": "normal-1536x864.png",
+      "pixels": [
+        1536,
+        864
+      ],
+      "viewport": "1536x864",
+      "kind": "full viewport",
+      "sha256": "6596a4f3017c9dd3e3d2531d61853a6bb79bda940ebf8e26e15e82c23f7c69f4"
+    },
+    {
+      "file": "normal-390x844.png",
+      "pixels": [
+        390,
+        844
+      ],
+      "viewport": "390x844",
+      "kind": "full viewport",
+      "sha256": "43b269adeb6685cf6ada18734b171e9a3b1cc0b119976e75464a9baa9c345289"
+    },
+    {
+      "file": "leaderboard-1024x768-close.png",
+      "pixels": [
+        226,
+        300
+      ],
+      "viewport": "1024x768",
+      "kind": "element close-up",
+      "sha256": "260c80be58eb7e89d9b8423584becea4b6207049dee0f19e7a053ad9ac39d25f"
+    },
+    {
+      "file": "recent-activities-1024x768-close.png",
+      "pixels": [
+        226,
+        277
+      ],
+      "viewport": "1024x768",
+      "kind": "element close-up",
+      "sha256": "703200e2be1390f4aa8d825d359245369684b60cc526efe72d93c5d1e5741c9c"
+    }
+  ],
+  "final_head": "3b880c25904c67f4b307c62840bc4a53873267ee"
+}

@@ -1,0 +1,36 @@
+{
+  "viewports": [
+    {
+      "viewport": "1920x1080",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": true
+    },
+    {
+      "viewport": "1536x864",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": true
+    },
+    {
+      "viewport": "1448x1086",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": true
+    },
+    {
+      "viewport": "1024x768",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": false
+    },
+    {
+      "viewport": "390x844",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": true
+    },
+    {
+      "viewport": "844x390",
+      "protected_geometry_unchanged": true,
+      "headers_unchanged": true
+    }
+  ],
+  "desktop_1920_pixel_identical_with_and_without_compact_rule": true,
+  "pixel_comparison_method": "Same rendered page, completed animations; remove only new compact CSS media rule in browser. Identical pixels at 1920x1080. Earlier independent before/after captures differed only in transient recent-row animation phase."
+}

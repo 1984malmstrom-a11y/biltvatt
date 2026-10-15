@@ -1,0 +1,31 @@
+
+Running 23 tests using 1 worker
+
+(node:399812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/23] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1920x1080
+[2/23] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1536x864
+[3/23] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1024x768
+[4/23] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 390x844
+[5/23] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 844x390
+[6/23] e2e/arena-mini-polish.spec.ts:17:1 › Mini polish: sourced pulse handles no goal, no sales and reached target
+[7/23] e2e/arena-mini-polish.spec.ts:21:1 › Mini polish: active fight remains a separate match state without customer branding and with nav intact
+[8/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[9/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[10/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[11/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[12/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[13/23] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[14/23] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[15/23] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[16/23] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[17/23] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[18/23] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[19/23] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[20/23] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[21/23] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[22/23] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[23/23] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+  23 passed (47.6s)
