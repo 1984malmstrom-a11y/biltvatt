@@ -1,0 +1,766 @@
+{
+  "start_head": "ba515b19f5815fd6ef33aa4f978502494b6722c5",
+  "final_head": "74768ac46606c96ab11a092dbf1c1d23d96ae6de",
+  "branch": "feat/arena-v1",
+  "working_tree_clean": true,
+  "selected_human_review_png": 45,
+  "internally_saved_unique_browser_png": 52,
+  "internal_note": "9 smoke geometry captures + 43 curated-source captures; finite entry/reveal animations committed at their completed CSS pose for clear review, with runtime motion independently tested; repeated test runs overwrite the same filenames. Final package uses 2 baseline smoke + 43 selected current images. No duplicated animation frames.",
+  "screenshots": [
+    {
+      "file": "active-fight-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Dynamic Fight Context"
+      ],
+      "bytes": 760598,
+      "sha256": "adea6d79c22901e236f46ac2db561e22011008a7f8e229542778eb5631c7d369",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "active-fight-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Dynamic Fight Context"
+      ],
+      "bytes": 1762032,
+      "sha256": "d359ba703db726a256cb5194651c81c4d70f61a168c058956bbc47fe8d4be82e",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "active-fight-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Dynamic Fight Context"
+      ],
+      "bytes": 374616,
+      "sha256": "fd2548d68c04db8aec1cc7b35a2bd14917b98b9501deb35d56dc08e493b168cd",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "after-center-1920x1080.png",
+      "width": 928,
+      "height": 758,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 915376,
+      "sha256": "0fe04f856be555d6354a0813eefc7011a8562e4c5e4daf8999eb8016aeb3462d",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "avatar-production-initial.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Production vs Showcase Avatars"
+      ],
+      "bytes": 684701,
+      "sha256": "55efe4cf390a0486637aa1f5cc508fa95fd6a5b7f342a5adb6426c4a6f0b176d",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "avatar-production-uploaded.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Production vs Showcase Avatars"
+      ],
+      "bytes": 701495,
+      "sha256": "410806f19e0591cc9065ac012f2d6fa2e06439b02125216bb72e314728298416",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "baseline-center-1920x1080.png",
+      "width": 866,
+      "height": 758,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 723429,
+      "sha256": "c5a149c726f4cda21715d98770fc38d9ea4760de0a6591b187bb8ca587a91fee",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "baseline-normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 1406456,
+      "sha256": "5e8485e6547c1eb3b9b052bba2dad795b1d87f6bf705a5f1f9dfd750bbe1c401",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-cup-bracket-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 407183,
+      "sha256": "8fe4a9a336d29be434fbabf4d0c6424c58062eb54b2eefddf31b720378ee665c",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-cup-bracket-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 115915,
+      "sha256": "404bddf62fbc35b23b911f1a5f87d1d0eefe1d1c21fb595842adc64b886b51b2",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-cup-champion-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 578929,
+      "sha256": "6cbba53927599c505fc7d069d23f75e5529ed27a140b66b496440d6c8440ca4e",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-cup-champion-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 169622,
+      "sha256": "29c14ab3e92e2548871cb4a709ae5d65336041f02452aebff06bf699e1ce5b3a",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-league-champion-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 578237,
+      "sha256": "06571cdb0e3620c70dc1a7d698a2a046af8bacb4cc1d09f28400a61f0d283c88",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-league-champion-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 167934,
+      "sha256": "8827859ab383414ea1c2f04d70eed062effa64ed5aaa55a04f6ac0e13d696a25",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-league-table-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 345011,
+      "sha256": "e0c3ae9e9bf36db0be86f05ba413ef1564e3ef2e16dce436e501a994b02942e7",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-league-table-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 131332,
+      "sha256": "5992fd301d4615d435d6546232b8b7cfe529d89dbe04cde2539898838b15616f",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-my-match-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 623955,
+      "sha256": "843d0abbe7ed555016f92f0f295513b39fc6cc9a22f048a79ce1f3ace63f1f64",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-my-match-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 173953,
+      "sha256": "24937e65f906e9a171c37bc35df8cb438c0df8adec166c4c29d283e1101f95de",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-playoffs-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 386701,
+      "sha256": "71771bb4387200fd841b3e47b66d26ae163459d1e2eb0d9105a68227f7de535d",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-playoffs-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 116587,
+      "sha256": "f3af4166adbd479bbaa431a616941aac267af67241a2f641ba6e1f706a79c85b",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-schedule-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 440928,
+      "sha256": "d6b33988304e3bc373a0e53a9048c4f6827c50d34fc3ccaa1c8d244aadaffb82",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "center-today-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 368602,
+      "sha256": "97566907e1ae70a3a13939e4996da4cccf7401058c32473a59accc7adcc9d223",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "challenge-incoming-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Challenges"
+      ],
+      "bytes": 601516,
+      "sha256": "8ae0c196964680c00e9f8a0b5b24d4a285c50abad8d8bb9e1f97efc2b0c93bd9",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "challenge-incoming-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Challenges"
+      ],
+      "bytes": 204246,
+      "sha256": "5b8cb03f9015301c94c51c5c3315d658ddaad9692504a475a22492177b078eb4",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "fight-dashboard-context-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Dynamic Fight Context"
+      ],
+      "bytes": 167398,
+      "sha256": "747f6ab01f4c7ad64ab03ccad882c5fc7b252de8e543403814e64b7b4e403a99",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "fight-lead-correct-swedish.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 1743711,
+      "sha256": "ee8a23650beba8a083eea8e3c83de08964f783cd00690bd6fe8aab5ede5c7b3c",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "goal-hero-correct-swedish.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 1719441,
+      "sha256": "507c7a198d7aed8a6bd0faf5e1a86c6f97c00ed6e92501f4e58a1ed9daa0ea73",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "local-dashboard-context-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Dynamic Fight Context"
+      ],
+      "bytes": 163546,
+      "sha256": "f0079e1c8225c1a4b49e35ba08efc89cc1547f284af7d41063a42d0527471b24",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "monthly-focus-1024x768.png",
+      "width": 229,
+      "height": 276,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 108165,
+      "sha256": "1cae9a780f70d859e8aceef9ecb565f27931ed1e9a89fa5c6c396829f16521fa",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "monthly-focus-1536x864.png",
+      "width": 339,
+      "height": 405,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 228570,
+      "sha256": "a1d728f46b4e2103bf6a3b873c7074b71d341407ba1fb6cd31ec483b9e82ea80",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "monthly-focus-1920x1080.png",
+      "width": 422,
+      "height": 504,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 331665,
+      "sha256": "7d62b70f44bd8db18b51cf8453289156ddd01f73546578eb56b17a5c89e88ede",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "monthly-focus-390x844.png",
+      "width": 235,
+      "height": 278,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 102921,
+      "sha256": "5d17fe2d54c928028c3dc9df4dec44f458a67a86c3fd17653dfee380883b2035",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "monthly-focus-844x390.png",
+      "width": 194,
+      "height": 229,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "element/union crop",
+      "groups": [
+        "Center / Arena Visuals"
+      ],
+      "bytes": 74524,
+      "sha256": "98128afda42fee3e72d82d5c1e69c4ec6c94894cb031b8222763223e8b9ee27b",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen"
+      ],
+      "bytes": 730883,
+      "sha256": "7f9efe65ab3665d9bb2a3cd8e2744396cd4adce994d0f76499d5cab97d0a1818",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen"
+      ],
+      "bytes": 1295505,
+      "sha256": "9ce8cc5d65a4778750373b53f939ed6f00c8103357adb6094380c624f8898cd0",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen"
+      ],
+      "bytes": 1147912,
+      "sha256": "8eaa72bcc740497b7ef4d12b0abe72d8fc1ae432ff6a38497c9d124a33d69c64",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen",
+        "Production vs Showcase Avatars"
+      ],
+      "bytes": 1653584,
+      "sha256": "f15536ada37cecb6b27073f5992d4a08dcb595acc1ad272c3bbe99eab34eeee0",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen"
+      ],
+      "bytes": 358098,
+      "sha256": "dd87e5c71a78320ae261f2ae00d4aa8ea5d60527b027d6027fb93b8897b22517",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "normal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Startscreen"
+      ],
+      "bytes": 327734,
+      "sha256": "552cef6d873b932c4a19ee81ad97102f87f132bc0a54145fc364b0303fc20ad3",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "ny-etta-correct-swedish-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 1620955,
+      "sha256": "cca5768d9b8f2000c3ecd8dc51b512590882d1c8f2203fedc4abf51dc0595b63",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "ny-etta-correct-swedish-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 386440,
+      "sha256": "8f6111811a0cf32c26b648985a4d1d11b9c7167d4192b67196d7bbb26840c009",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "standard-sale-correct-swedish-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 1715581,
+      "sha256": "a396bf8839f17fc67f2a195cd783f2a3be67b2fe970fd2b617c70e8912b38364",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "standard-sale-correct-swedish-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Celebrations"
+      ],
+      "bytes": 382675,
+      "sha256": "bce35278043262bebcec8275af774e63786c6902c4dca89be89220a2f0a964b3",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "temporary-fight-quick-action-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 10421,
+      "sha256": "e03746d23e62ddb494075062fde47a70483a763141b5756965d447cffe9d12d3",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    },
+    {
+      "file": "temporary-fight-quick-action-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "groups": [
+        "Fight Center"
+      ],
+      "bytes": 249477,
+      "sha256": "50be508d72b04aafaf8669b3a59cadd40044af35cbdfdaee8a6fdef326fa79ad",
+      "data": "Deterministic fictional review fixtures; uploaded example is synthetic test data, not employee identity."
+    }
+  ],
+  "groups": [
+    "Startscreen",
+    "Dynamic Fight Context",
+    "Center / Arena Visuals",
+    "Celebrations",
+    "Fight Center",
+    "Challenges",
+    "Production vs Showcase Avatars"
+  ],
+  "reports": [
+    "browser-cache.log",
+    "browser-confirm.log",
+    "browser-empty.log",
+    "browser-full.log",
+    "build.log",
+    "changed-files.txt",
+    "final-report.md",
+    "final-target-unit.log",
+    "full-unit.log",
+    "gallery-verification.json",
+    "geometry-verification.json",
+    "git-verification.json",
+    "migration-report.md",
+    "pdf-check.log",
+    "performance-report.json",
+    "performance-summary.md",
+    "responsive-report.md",
+    "schema-integrity.json",
+    "security-review.md",
+    "test-report.txt",
+    "typecheck.log",
+    "visual-comparison.md"
+  ],
+  "qa_note": "211 unique Playwright cases verified through broad run plus targeted confirmations, independently of gallery selection."
+}

@@ -1,0 +1,17 @@
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ✓ tests/arena-avatars.test.ts (4 tests) 4ms
+ ✓ tests/arena-copy.test.ts (2 tests) 20ms
+ ✓ tests/arena-competition-builder.test.ts (34 tests) 949ms
+
+ Test Files  3 passed (3)
+      Tests  40 passed (40)
+   Start at  16:24:28
+   Duration  1.63s (transform 511ms, setup 0ms, collect 820ms, tests 973ms, environment 0ms, prepare 185ms)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

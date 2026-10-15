@@ -1,0 +1,13 @@
+TYPECHECK: PASS, npm run typecheck.
+BUILD: PASS, npm run build (local client/server build, no deployment).
+ARENA UNIT: 217 PASS across 25 Arena files, including real SQLite Worker-route tests.
+FULL NPM TEST: 423 PASS + 1 unchanged known CSV UTF-8 failure = 424 total, 44 test files. Poppler PDF checks run, no skips. CSV worker/index.ts is byte-identical to START_HEAD.
+BROAD ARENA PLAYWRIGHT: 211 scenarios run: 201 PASS, 10 old assertions failed. Six cinematic assertions depended on screenshot-export committing the virtual-clock CSS pose; finishChampionCapture is now explicit before those assertions. Four name assertions included new aria-hidden avatar initial text; they now select the actual name element. No runtime check was deleted or weakened.
+FINAL BROWSER CONFIRMATION: 23/23 PASS (all ten prior failing scenarios + 13 new visual/context/avatar/quick-action scenarios).
+AFTER SAFE CACHE/INITIAL/COMPACT-VS ADJUSTMENT: 9/9 PASS (six viewports with real textPath/accessibility/row containment/VS separation/page overflow/context transition, two temp retry/undo/expiry paths, production/showroom avatars).
+FINAL EMPTY-CONTEXT CONFIRMATION: 6/6 PASS, including appropriate qualifying-first-sale message without changing local empty-staff guidance.
+UNIQUE VERIFIED ARENA BROWSER SCENARIOS: 211. Repeated confirmations not added to the total.
+Native local Worker: challenge accept race 200/409, actual Concept C activity→seller→save, score, undo, cancellation; existing native sale/undo/frozen PDF/Owner/recovery/profile upload/league/daily flow also passed.
+New backend tests: qualifying-only cross-station context; local totals continue; unrelated tenant excluded; completion/cancel return to local; temp descriptor materializes inactive hidden ledger row, uses same receipt/idempotency/undo; foreign station and expiry rejected; sudden death allows own active temp action until winner freezes.
+Avatar unit: uploaded first, production initial, explicit showroom face only, Unicode grapheme handling. Browser checks uploaded/missing image→initial, all ten names touch-readable. Source-copy audit rejects standalone säljning; correct försäljning in new UI. textPath has true A-radius path, centered offset, title/aria label.
+Migration/round robin/playoff/cup/security/tenant/notification/PDF/realtime regression retained. No schema migration added or edited.

@@ -1,0 +1,16 @@
+{
+  "start_head": "ba515b19f5815fd6ef33aa4f978502494b6722c5",
+  "final_head": "74768ac46606c96ab11a092dbf1c1d23d96ae6de",
+  "parent_head": "ba515b19f5815fd6ef33aa4f978502494b6722c5",
+  "branch": "feat/arena-v1",
+  "local_commit_count": 1,
+  "working_tree_clean": true,
+  "origin_tracking_ref_unchanged": true,
+  "origin_tracking_ref": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "new_migrations": 0,
+  "no_push": true,
+  "no_deploy": true,
+  "no_remote_migration": true,
+  "no_merge": true,
+  "no_branch_switch": true
+}

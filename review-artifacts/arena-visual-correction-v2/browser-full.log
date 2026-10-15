@@ -1,0 +1,576 @@
+
+Running 211 tests using 1 worker
+
+(node:342007) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/211] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation sprint
+[2/211] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation daily
+[3/211] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation league
+[4/211] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation playoffs
+[5/211] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation cup
+[6/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1920x1080
+[7/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1536x864
+[8/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1448x1086
+[9/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1024x768
+[10/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 390x844
+[11/211] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 844x390
+[12/211] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 1920x1080
+[13/211] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 390x844
+[14/211] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 844x390
+[15/211] e2e/arena-competition-builder.spec.ts:32:1 › Competition: homepage badge and no eighth production ring; old concepts retired
+[16/211] e2e/arena-competition-builder.spec.ts:36:1 › Native local Competition 2.0: challenge accept, cancel and simultaneous conflict use real Worker
+[17/211] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 390x844
+[18/211] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 844x390
+[19/211] e2e/arena-competition-builder.spec.ts:43:1 › Fight Center polling: one scoped payload, 5s active cadence, hidden pause and immediate resume
+[20/211] e2e/arena-competition-builder.spec.ts:44:1 › Competition: TB uses kronor in tables and brackets; multi-station Sprint lists every participant
+[21/211] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1920x1080
+[22/211] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1024x768
+[23/211] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1448x1086
+[24/211] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 390x844
+[25/211] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 844x390
+[26/211] e2e/arena-fights.spec.ts:20:1 › Butiksfight: correct tie, count metric and reduced-motion announcement
+[27/211] e2e/arena-fights.spec.ts:25:1 › Butiksfight: boundary timer fetches final state without waiting for poll
+[28/211] e2e/arena-fights.spec.ts:29:1 › Butiksfight: Superadmin creates a timezone-safe event for approved stations
+[29/211] e2e/arena-fights.spec.ts:37:1 › Butiksfight: native local Worker scores a sale and freezes result before later undo
+[30/211] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 1920x1080
+[31/211] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 1024x768
+[32/211] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 390x844
+[33/211] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 844x390
+[34/211] e2e/arena-final.spec.ts:38:1 › Final: native local Worker verifies Owner, invites/revokes Superadmin, uploads photo and exports frozen PDF
+[35/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1920x1080
+[36/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1920x1080
+[37/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1536x864
+[38/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1536x864
+[39/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1448x1086
+[40/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1448x1086
+[41/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1024x768
+[42/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1024x768
+[43/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 390x844
+[44/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 390x844
+[45/211] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 844x390
+[46/211] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 844x390
+[47/211] e2e/arena-green-brand.spec.ts:34:1 › Green brand: exact TB, urgency, perimeter motion, lead surge, final and return to pulse
+[48/211] e2e/arena-green-brand.spec.ts:50:1 › Green brand: sale hierarchy, portraits, Min Arena and full leaderboard
+[49/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080
+  1) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-03885-ictional-champion-1920x1080/error-context.md
+
+
+(node:344242) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[50/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864
+  2) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-9d9e7-fictional-champion-1536x864/error-context.md
+
+
+(node:344381) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[51/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086
+  3) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-0b8b6-ictional-champion-1448x1086/error-context.md
+
+
+(node:344523) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[52/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768
+  4) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-9a770-fictional-champion-1024x768/error-context.md
+
+
+(node:344660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[53/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844
+  5) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-30af6--fictional-champion-390x844/error-context.md
+
+
+(node:344800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[54/211] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390
+  6) e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390 
+
+    Error: .arena-champion-art
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.9
+    Received:   0
+
+      15 |   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'TOPPLISTA – IDAG',previousLeader:'Alva'}]}}));
+      16 |   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await expectSellerPortraits(page.locator('.arena-sellers button'));await expect(page.locator('.arena-sellers button').filter({hasText:'Sofia'}).locator('[data-avatar-kind]')).toHaveAttribute('data-avatar-index','5');await capture(page,`identity-sellers-${width}x${height}`);await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.celebration-leader h2')).toHaveText('NY ETTA!');await page.clock.runFor(900);await expect(page.locator('.arena-champion-art')).toHaveAttribute('data-champion-kind','fictional-celebration-art');await expect(page.locator('.celebration-leader [data-avatar-kind]')).toHaveCount(0);await expect(page.locator('.arena-champion-art img')).toHaveAttribute('src',/\/arena-brand\/champion-[ab]\.webp/);await expect(page.locator('.celebration-leader')).toContainText('Peter går om Alva');await expect(page.locator('.celebration-leader .arena-person-station')).toHaveCount(0);await capture(page,`identity-new-leader-${width}x${height}`);expect(championRequests).toHaveLength(1);
+    > 17 |   for(const selector of ['.arena-champion-art','.celebration-leader h2','.arena-milestone-subtitle','.arena-victory-sale'])expect(await page.locator(selector).evaluate(e=>Number(getComputedStyle(e).opacity)),selector).toBeGreaterThan(.9);
+         |                                                                                                                                                                                                                           ^
+      18 |   const boxes=await page.locator('.celebration-leader').evaluate(el=>[...el.querySelectorAll('h2,.arena-milestone-subtitle,.arena-reward-points,.arena-reward-activity,.arena-champion-art img')].map(x=>x.getBoundingClientRect().toJSON()));for(const b of boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width);expect(b.y).toBeGreaterThanOrEqual(0);expect(b.bottom).toBeLessThanOrEqual(height);}
+      19 |   await page.getByRole('button',{name:'Korv med mos, +1 poäng',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Stäng',exact:true}).click();
+      20 |  });
+        at /workspace/biltvatt/e2e/arena-identity.spec.ts:17:219
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-identity-Identity-re-3f30f--fictional-champion-844x390/error-context.md
+
+
+(node:344940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[55/211] e2e/arena-identity.spec.ts:22:1 › Identity: multi-station names, period totals and cross-station recent feed use the same context
+[56/211] e2e/arena-identity.spec.ts:27:1 › Identity: fake character and static reduced-motion hero remain independent of the credited seller
+[57/211] e2e/arena-identity.spec.ts:31:1 › Identity: cinematic reveal paints on the real animation timeline
+[58/211] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 1920x1080
+[59/211] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 1920x1080
+[60/211] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 1920x1080
+[61/211] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 1024x768
+[62/211] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 1024x768
+[63/211] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 1024x768
+[64/211] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 390x844
+[65/211] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 390x844
+[66/211] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 390x844
+[67/211] e2e/arena-network.spec.ts:39:1 › Arena: real local onboarding, approval, own sellers, TB registration and logout
+[68/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1920x1080
+[69/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1536x864
+[70/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1024x768
+[71/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1448x1086
+[72/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 390x844
+[73/211] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 844x390
+[74/211] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 1920x1080
+[75/211] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 1024x768
+[76/211] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 390x844
+[77/211] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 844x390
+[78/211] e2e/arena-premium-series.spec.ts:32:1 › Premium: daily sale crossing is distinct from series lead, shows station under seller and never repeats
+[79/211] e2e/arena-premium-series.spec.ts:37:1 › Premium: combined achievement hierarchy, reduced motion and local station-name rule
+[80/211] e2e/arena-premium-series.spec.ts:42:1 › Premium: Superadmin configures daily rules and previews a ten-team round robin
+[81/211] e2e/arena-premium-series.spec.ts:48:1 › Premium: hub lists own fights and series, frozen daily PDF retains both result types
+[82/211] e2e/arena-premium-series.spec.ts:53:1 › Premium: full fight announces the catching station at a tie, independently of stale lead metadata
+[83/211] e2e/arena-premium-series.spec.ts:57:1 › Premium: native local Worker supports daily undo and private series without changing total fights
+[84/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1920x1080
+[85/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1536x864
+[86/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1448x1086
+[87/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1024x768
+[88/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 844x390
+[89/211] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 390x844
+[90/211] e2e/arena-release.spec.ts:24:1 › Release: portrait QA rejects zero-size and hidden portraits; uploaded images recover
+[91/211] e2e/arena-release.spec.ts:29:1 › Release: polling cadence, hidden pause/resume and active fight mode in React
+[92/211] e2e/arena-release.spec.ts:38:1 › Release: immediate optimistic board/feed, selected state and rollback
+[93/211] e2e/arena-release.spec.ts:43:1 › Release: fight polling, event feed, lead change and final
+[94/211] e2e/arena-release.spec.ts:49:1 › Release: downloaded PDF bytes from frozen report renderer
+[95/211] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1920x1080
+[96/211] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1448x1086
+[97/211] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1024x768
+[98/211] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 390x844
+[99/211] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 844x390
+[100/211] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1920x1080
+[101/211] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1448x1086
+[102/211] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1024x768
+[103/211] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 390x844
+[104/211] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 844x390
+[105/211] e2e/arena-showroom.spec.ts:58:1 › Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase
+[106/211] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight duel
+[107/211] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight ranking
+[108/211] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight winner
+[109/211] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight tie-final
+[110/211] e2e/arena-showroom.spec.ts:72:1 › Showroom: Superadmin fight manager has participants, phases and leader
+[111/211] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once winner
+[112/211] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once loss
+[113/211] e2e/arena-showroom.spec.ts:85:1 › Showroom: one hero for simultaneous goal, leader and fight, undo clears receipt
+[114/211] e2e/arena-showroom.spec.ts:90:1 › Showroom: countdown alone becomes urgent and respects reduced motion
+[115/211] e2e/arena-showroom.spec.ts:93:1 › Showroom: full TB duel values fit wide and portrait widget
+[116/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[117/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[118/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[119/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[120/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[121/211] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[122/211] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 1920x1080
+[123/211] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 390x844
+[124/211] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 1920x1080
+[125/211] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 390x844
+[126/211] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 1920x1080
+[127/211] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 390x844
+[128/211] e2e/arena-visual-v2.spec.ts:40:1 › Visual V2: production uploaded portrait, initial, failed image and explicit showroom
+[129/211] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[130/211] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[131/211] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[132/211] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[133/211] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[134/211] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1920x1080
+[135/211] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1024x768
+[136/211] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1448x1086
+[137/211] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 390x844
+[138/211] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 844x390
+[139/211] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1366x768
+[140/211] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1440x900
+[141/211] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1280x800
+[142/211] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1920x1200
+[143/211] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1448x1086
+[144/211] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1920x1080
+[145/211] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1024x768
+[146/211] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 390x844
+[147/211] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 844x390
+[148/211] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1448x1086
+[149/211] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080
+  7) e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)')
+    Timeout: 5000ms
+    - Expected  - 5
+    + Received  + 5
+
+      Array [
+    -   "Peter",
+    -   "Alva",
+    -   "Sofia",
+    -   "Erik",
+    -   "Linnea",
+    +   "PPeter",
+    +   "AAlva",
+    +   "SSofia",
+    +   "EErik",
+    +   "LLinnea",
+      ]
+
+    Call log:
+      - Expect "toHaveText" locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)') with timeout 5000ms
+      - waiting for locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)')
+        14 × locator resolved to 5 elements
+
+
+      255 |     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+      256 |     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
+    > 257 |     await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+          |                                                                                ^
+      258 |     for (const person of shown) {
+      259 |       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
+      260 |     }
+        at /workspace/biltvatt/e2e/arena.spec.ts:257:80
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-Arena-premium-toppli-0e0a4-äng-och-Min-Arena-1920x1080/error-context.md
+
+
+(node:349352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[150/211] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768
+  8) e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)')
+    Timeout: 5000ms
+    - Expected  - 5
+    + Received  + 5
+
+      Array [
+    -   "Peter",
+    -   "Alva",
+    -   "Sofia",
+    -   "Erik",
+    -   "Linnea",
+    +   "PPeter",
+    +   "AAlva",
+    +   "SSofia",
+    +   "EErik",
+    +   "LLinnea",
+      ]
+
+    Call log:
+      - Expect "toHaveText" locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)') with timeout 5000ms
+      - waiting for locator('.arena-leaderboard').locator('.arena-leader-list button>span:nth-child(2)')
+        14 × locator resolved to 5 elements
+
+
+      255 |     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+      256 |     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
+    > 257 |     await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+          |                                                                                ^
+      258 |     for (const person of shown) {
+      259 |       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
+      260 |     }
+        at /workspace/biltvatt/e2e/arena.spec.ts:257:80
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-Arena-premium-toppli-1e96f-oäng-och-Min-Arena-1024x768/error-context.md
+
+
+(node:349491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[151/211] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844
+  9) e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)')
+    Timeout: 5000ms
+    - Expected  - 10
+    + Received  + 10
+
+      Array [
+    -   "Peter",
+    -   "Alva",
+    -   "Sofia",
+    -   "Erik",
+    -   "Linnea",
+    -   "Anton",
+    -   "Julia",
+    -   "Oskar",
+    -   "Maja",
+    -   "Felix",
+    +   "PPeter",
+    +   "AAlva",
+    +   "SSofia",
+    +   "EErik",
+    +   "LLinnea",
+    +   "AAnton",
+    +   "JJulia",
+    +   "OOskar",
+    +   "MMaja",
+    +   "FFelix",
+      ]
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)')
+        14 × locator resolved to 10 elements
+
+
+      255 |     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+      256 |     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
+    > 257 |     await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+          |                                                                                ^
+      258 |     for (const person of shown) {
+      259 |       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
+      260 |     }
+        at /workspace/biltvatt/e2e/arena.spec.ts:257:80
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-Arena-premium-toppli-6a8ec-poäng-och-Min-Arena-390x844/error-context.md
+
+
+(node:349634) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[152/211] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390
+  10) e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)')
+    Timeout: 5000ms
+    - Expected  - 10
+    + Received  + 10
+
+      Array [
+    -   "Peter",
+    -   "Alva",
+    -   "Sofia",
+    -   "Erik",
+    -   "Linnea",
+    -   "Anton",
+    -   "Julia",
+    -   "Oskar",
+    -   "Maja",
+    -   "Felix",
+    +   "PPeter",
+    +   "AAlva",
+    +   "SSofia",
+    +   "EErik",
+    +   "LLinnea",
+    +   "AAnton",
+    +   "JJulia",
+    +   "OOskar",
+    +   "MMaja",
+    +   "FFelix",
+      ]
+
+    Call log:
+      - Expect "toHaveText" getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)') with timeout 5000ms
+      - waiting for getByRole('dialog', { name: 'Topplistor & statistik' }).locator('.arena-leader-list button>span:nth-child(2)')
+        14 × locator resolved to 10 elements
+
+
+      255 |     await expect(panel.locator(".arena-rank svg")).toHaveCount(0);
+      256 |     await expect(panel.locator(".arena-leader-avatar")).toHaveCount(shown.length);
+    > 257 |     await expect(panel.locator(".arena-leader-list button>span:nth-child(2)")).toHaveText(shown.map(p => p.name));
+          |                                                                                ^
+      258 |     for (const person of shown) {
+      259 |       await expect(panel.getByRole("button", { name:`${person.name} ${person.points} p`, exact:true })).toBeAttached();
+      260 |     }
+        at /workspace/biltvatt/e2e/arena.spec.ts:257:80
+
+    Error Context: ../work/arena-visual-correction-v2/browser-full-results/arena-Arena-premium-toppli-e76d2-poäng-och-Min-Arena-844x390/error-context.md
+
+
+(node:349816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[153/211] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[154/211] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[155/211] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[156/211] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[157/211] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+[158/211] e2e/arena.spec.ts:340:1 › Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post
+[159/211] e2e/arena.spec.ts:362:1 › Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry
+[160/211] e2e/arena.spec.ts:379:1 › Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion
+[161/211] e2e/arena.spec.ts:401:3 › Arena: vanlig celebration 2,6 s löper ut utan att låsa nästa val
+[162/211] e2e/arena.spec.ts:401:3 › Arena: milestone 3,6 s löper ut utan att låsa nästa val
+[163/211] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden station
+[164/211] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-points
+[165/211] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-count
+[166/211] e2e/arena.spec.ts:450:1 › Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras
+[167/211] e2e/arena.spec.ts:467:1 › Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning
+[168/211] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 1920x1080
+[169/211] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 1024x768
+[170/211] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 390x844
+[171/211] e2e/arena.spec.ts:491:3 › Arena: hero burst är läsbar, kort och klickar igenom 844x390
+[172/211] e2e/arena.spec.ts:517:1 › Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål
+[173/211] e2e/arena.spec.ts:529:1 › Arena-admin: mänskliga listor, vald post, ordning och periodförval
+[174/211] e2e/arena.spec.ts:570:1 › Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry
+[175/211] e2e/arena.spec.ts:604:3 › Arena: långsamt milestone-svar missas inte efter en kort burst
+[176/211] e2e/arena.spec.ts:604:3 › Arena: långsamt milestone-svar stör inte nästa säljarval
+[177/211] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1920x1080
+[178/211] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1366x768
+[179/211] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 1024x768
+[180/211] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 390x844
+[181/211] e2e/arena.spec.ts:638:3 › Arena: säljarpopup och Min Arena med mål 844x390
+[182/211] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1920x1080
+[183/211] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1024x768
+[184/211] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1448x1086
+[185/211] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 390x844
+[186/211] e2e/arena.spec.ts:681:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 844x390
+[187/211] e2e/arena.spec.ts:698:1 › Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans
+[188/211] e2e/arena.spec.ts:707:1 › Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom
+[189/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Idag, en hero och dedup
+[190/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Den här veckan, en hero och dedup
+[191/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Den här månaden, en hero och dedup
+[192/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Vald period, en hero och dedup
+[193/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Kaffe + bulle, en hero och dedup
+[194/211] e2e/arena.spec.ts:717:3 › Arena: centralt achievement-kvitto för Aktuellt fokus, en hero och dedup
+[195/211] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1920x1080
+[196/211] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 1024x768
+[197/211] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 390x844
+[198/211] e2e/arena.spec.ts:734:5 › Arena: leader firar utan att blockera nästa registrering 844x390
+[199/211] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+[200/211] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+[201/211] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+[202/211] e2e/arena.spec.ts:734:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+[203/211] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+[204/211] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+[205/211] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[206/211] e2e/arena.spec.ts:734:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+[207/211] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 1920x1080
+[208/211] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 1024x768
+[209/211] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 390x844
+[210/211] e2e/arena.spec.ts:784:3 › Arena: touch och ingen vertikal overflow 844x390
+[211/211] e2e/arena.spec.ts:810:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI
+  10 failed
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080 
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864 
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086 
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768 
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844 
+    e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390 
+    e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080 
+    e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768 
+    e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844 
+    e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390 
+  201 passed (7.7m)
