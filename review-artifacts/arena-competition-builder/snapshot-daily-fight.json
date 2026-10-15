@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "release-fight",
+  "type": "fight",
+  "title": "BUTIKSFIGHT · SYDOSTFINAL",
+  "created_at": "2026-10-18T22:00:00Z",
+  "period": {
+    "start": "2026-10-13T22:00:00Z",
+    "end": "2026-10-18T22:00:00Z"
+  },
+  "station": null,
+  "totals": {
+    "count": 173,
+    "points": 682,
+    "tb_ore": 245000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Tingsryd"
+  ],
+  "metric": "points",
+  "source": "synthetic-frozen-review",
+  "leaderboard": [
+    {
+      "id": "review",
+      "name": "Tingsryd",
+      "rank": 1,
+      "points": 340,
+      "count": 86,
+      "tb_ore": 120000,
+      "unknown_tb_count": 0,
+      "match_points": 3
+    },
+    {
+      "id": "k",
+      "name": "Karlskrona",
+      "rank": 2,
+      "points": 342,
+      "count": 87,
+      "tb_ore": 125000,
+      "unknown_tb_count": 0,
+      "match_points": 0
+    }
+  ],
+  "activities": [],
+  "goals": [],
+  "scoring_mode": "daily",
+  "day_win_points": 3,
+  "day_tie_points": 1
+}

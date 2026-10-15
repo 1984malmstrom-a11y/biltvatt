@@ -1,0 +1,1796 @@
+{
+  "method": "Paired immutable checkpoint 168278ef4ae4dac18e47e379e050e3c356afd168 versus Competition Builder working tree: identical React/Vite-only servers (5197 baseline/5198 current), Chromium CDP 4x CPU throttle, median of 3 trials each, same 5-seller fixture and simulated server receipt/stat update. No branch checkout. Not physical hardware. Only the employee portrait sheet is predecoded in both variants. Neither the baseline champion sprite nor the current independent champion WebP is prefetched. Both variants include their first-use hero load/decode cost. Historical seller-selector numbers use different runtime/server and sampling; the paired baseline is used for this comparison.",
+  "results": [
+    {
+      "variant": "baseline",
+      "viewport": "1920x1080",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 317,
+      "nextDuringCelebrationMs": 431,
+      "initialStartRenderMs": 1734,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 335,
+          "nextDuringCelebrationMs": 431,
+          "initialStartRenderMs": 3546,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 708,
+          "longTasks": [
+            {
+              "start": 3652.6000000089407,
+              "duration": 141
+            },
+            {
+              "start": 4046,
+              "duration": 150
+            },
+            {
+              "start": 4381.5,
+              "duration": 118
+            },
+            {
+              "start": 4504.9000000059605,
+              "duration": 62
+            },
+            {
+              "start": 4784.9000000059605,
+              "duration": 50
+            },
+            {
+              "start": 4845.800000011921,
+              "duration": 106
+            }
+          ]
+        },
+        {
+          "openSellerMs": 239,
+          "nextDuringCelebrationMs": 435,
+          "initialStartRenderMs": 1724,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 695,
+          "longTasks": [
+            {
+              "start": 1801.199999988079,
+              "duration": 99
+            },
+            {
+              "start": 2115.5999999940395,
+              "duration": 172
+            },
+            {
+              "start": 2438.3999999910593,
+              "duration": 113
+            },
+            {
+              "start": 2552.199999988079,
+              "duration": 74
+            },
+            {
+              "start": 2886.5999999940395,
+              "duration": 105
+            }
+          ]
+        },
+        {
+          "openSellerMs": 317,
+          "nextDuringCelebrationMs": 396,
+          "initialStartRenderMs": 1734,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 675,
+          "longTasks": [
+            {
+              "start": 1807.7999999970198,
+              "duration": 175
+            },
+            {
+              "start": 2173.8999999910593,
+              "duration": 146
+            },
+            {
+              "start": 2470.2999999970198,
+              "duration": 113
+            },
+            {
+              "start": 2583.5999999940395,
+              "duration": 57
+            },
+            {
+              "start": 2880.199999988079,
+              "duration": 105
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1920x1080",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 265,
+      "nextDuringCelebrationMs": 442,
+      "initialStartRenderMs": 1679,
+      "before": {
+        "openSellerMs": 317,
+        "nextDuringCelebrationMs": 431
+      },
+      "trials": [
+        {
+          "openSellerMs": 265,
+          "nextDuringCelebrationMs": 584,
+          "initialStartRenderMs": 3121,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 721,
+          "longTasks": [
+            {
+              "start": 3203,
+              "duration": 114
+            },
+            {
+              "start": 3531.4000000059605,
+              "duration": 157
+            },
+            {
+              "start": 3855.7000000029802,
+              "duration": 101
+            },
+            {
+              "start": 3956.9000000059605,
+              "duration": 65
+            },
+            {
+              "start": 4185.70000000298,
+              "duration": 63
+            },
+            {
+              "start": 4366.5999999940395,
+              "duration": 176
+            }
+          ]
+        },
+        {
+          "openSellerMs": 311,
+          "nextDuringCelebrationMs": 442,
+          "initialStartRenderMs": 1679,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 710,
+          "longTasks": [
+            {
+              "start": 1762,
+              "duration": 149
+            },
+            {
+              "start": 2178.1000000089407,
+              "duration": 201
+            },
+            {
+              "start": 2498.2000000029802,
+              "duration": 104
+            },
+            {
+              "start": 2602.7000000029802,
+              "duration": 71
+            },
+            {
+              "start": 2814.1000000089407,
+              "duration": 51
+            },
+            {
+              "start": 2963,
+              "duration": 97
+            }
+          ]
+        },
+        {
+          "openSellerMs": 242,
+          "nextDuringCelebrationMs": 416,
+          "initialStartRenderMs": 1677,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 580,
+          "longTasks": [
+            {
+              "start": 1753.7000000029802,
+              "duration": 106
+            },
+            {
+              "start": 2065,
+              "duration": 123
+            },
+            {
+              "start": 2297.6000000089407,
+              "duration": 91
+            },
+            {
+              "start": 2667.7000000029802,
+              "duration": 120
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1536x864",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 283,
+      "nextDuringCelebrationMs": 441,
+      "initialStartRenderMs": 1596,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 281,
+          "nextDuringCelebrationMs": 419,
+          "initialStartRenderMs": 1583,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 650,
+          "longTasks": [
+            {
+              "start": 1664.7000000029802,
+              "duration": 130
+            },
+            {
+              "start": 2033,
+              "duration": 150
+            },
+            {
+              "start": 2306.7999999970198,
+              "duration": 112
+            },
+            {
+              "start": 2423.0999999940395,
+              "duration": 55
+            },
+            {
+              "start": 2586.4000000059605,
+              "duration": 54
+            },
+            {
+              "start": 2725.5,
+              "duration": 105
+            }
+          ]
+        },
+        {
+          "openSellerMs": 303,
+          "nextDuringCelebrationMs": 441,
+          "initialStartRenderMs": 1596,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 683,
+          "longTasks": [
+            {
+              "start": 1691.5,
+              "duration": 152
+            },
+            {
+              "start": 2048.7999999970198,
+              "duration": 146
+            },
+            {
+              "start": 2337.7000000029802,
+              "duration": 115
+            },
+            {
+              "start": 2453.2000000029802,
+              "duration": 59
+            },
+            {
+              "start": 2718,
+              "duration": 191
+            }
+          ]
+        },
+        {
+          "openSellerMs": 283,
+          "nextDuringCelebrationMs": 468,
+          "initialStartRenderMs": 1778,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 665,
+          "longTasks": [
+            {
+              "start": 1857.0999999940395,
+              "duration": 121
+            },
+            {
+              "start": 2238.7999999970198,
+              "duration": 121
+            },
+            {
+              "start": 2459.2999999970198,
+              "duration": 87
+            },
+            {
+              "start": 2547,
+              "duration": 56
+            },
+            {
+              "start": 2856.5,
+              "duration": 118
+            },
+            {
+              "start": 3059.5,
+              "duration": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1536x864",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 265,
+      "nextDuringCelebrationMs": 458,
+      "initialStartRenderMs": 1704,
+      "before": {
+        "openSellerMs": 283,
+        "nextDuringCelebrationMs": 441
+      },
+      "trials": [
+        {
+          "openSellerMs": 255,
+          "nextDuringCelebrationMs": 459,
+          "initialStartRenderMs": 1691,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 610,
+          "longTasks": [
+            {
+              "start": 1791,
+              "duration": 109
+            },
+            {
+              "start": 2104.1000000089407,
+              "duration": 137
+            },
+            {
+              "start": 2336.4000000059605,
+              "duration": 92
+            },
+            {
+              "start": 2428.5,
+              "duration": 53
+            },
+            {
+              "start": 2643.300000011921,
+              "duration": 67
+            },
+            {
+              "start": 2731.7000000029802,
+              "duration": 148
+            }
+          ]
+        },
+        {
+          "openSellerMs": 269,
+          "nextDuringCelebrationMs": 458,
+          "initialStartRenderMs": 1704,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 665,
+          "longTasks": [
+            {
+              "start": 1785.7000000029802,
+              "duration": 116
+            },
+            {
+              "start": 2108.7999999970198,
+              "duration": 156
+            },
+            {
+              "start": 2412.0999999940395,
+              "duration": 101
+            },
+            {
+              "start": 2515.8999999910593,
+              "duration": 58
+            },
+            {
+              "start": 2734.7000000029802,
+              "duration": 52
+            },
+            {
+              "start": 2842.5999999940395,
+              "duration": 112
+            }
+          ]
+        },
+        {
+          "openSellerMs": 265,
+          "nextDuringCelebrationMs": 409,
+          "initialStartRenderMs": 1704,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 631,
+          "longTasks": [
+            {
+              "start": 1787.0999999940395,
+              "duration": 108
+            },
+            {
+              "start": 2112.5999999940395,
+              "duration": 156
+            },
+            {
+              "start": 2365.3999999910593,
+              "duration": 92
+            },
+            {
+              "start": 2459.5999999940395,
+              "duration": 55
+            },
+            {
+              "start": 2630.5999999940395,
+              "duration": 51
+            },
+            {
+              "start": 2760.2999999970198,
+              "duration": 102
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1024x768",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 247,
+      "nextDuringCelebrationMs": 430,
+      "initialStartRenderMs": 1610,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 230,
+          "nextDuringCelebrationMs": 449,
+          "initialStartRenderMs": 1610,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 575,
+          "longTasks": [
+            {
+              "start": 1689.1000000089407,
+              "duration": 101
+            },
+            {
+              "start": 1969.7000000029802,
+              "duration": 127
+            },
+            {
+              "start": 2200.2000000029802,
+              "duration": 90
+            },
+            {
+              "start": 2614.800000011921,
+              "duration": 103
+            }
+          ]
+        },
+        {
+          "openSellerMs": 247,
+          "nextDuringCelebrationMs": 424,
+          "initialStartRenderMs": 1660,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 598,
+          "longTasks": [
+            {
+              "start": 1734.7000000029802,
+              "duration": 109
+            },
+            {
+              "start": 2050.2999999970198,
+              "duration": 145
+            },
+            {
+              "start": 2301.2999999970198,
+              "duration": 95
+            },
+            {
+              "start": 2398,
+              "duration": 54
+            },
+            {
+              "start": 2604.9000000059605,
+              "duration": 52
+            },
+            {
+              "start": 2708.5,
+              "duration": 109
+            }
+          ]
+        },
+        {
+          "openSellerMs": 247,
+          "nextDuringCelebrationMs": 430,
+          "initialStartRenderMs": 1591,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 595,
+          "longTasks": [
+            {
+              "start": 1667.4000000059605,
+              "duration": 116
+            },
+            {
+              "start": 1982.9000000059605,
+              "duration": 159
+            },
+            {
+              "start": 2280.2999999970198,
+              "duration": 85
+            },
+            {
+              "start": 2598.4000000059605,
+              "duration": 51
+            },
+            {
+              "start": 2650.7999999970198,
+              "duration": 135
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1024x768",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 267,
+      "nextDuringCelebrationMs": 500,
+      "initialStartRenderMs": 1729,
+      "before": {
+        "openSellerMs": 247,
+        "nextDuringCelebrationMs": 430
+      },
+      "trials": [
+        {
+          "openSellerMs": 288,
+          "nextDuringCelebrationMs": 500,
+          "initialStartRenderMs": 1729,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 718,
+          "longTasks": [
+            {
+              "start": 1807.7000000029802,
+              "duration": 132
+            },
+            {
+              "start": 2189.300000011921,
+              "duration": 164
+            },
+            {
+              "start": 2505.6000000089407,
+              "duration": 111
+            },
+            {
+              "start": 2621.5,
+              "duration": 64
+            },
+            {
+              "start": 2823.800000011921,
+              "duration": 64
+            },
+            {
+              "start": 2970.5,
+              "duration": 153
+            }
+          ]
+        },
+        {
+          "openSellerMs": 267,
+          "nextDuringCelebrationMs": 557,
+          "initialStartRenderMs": 1643,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 743,
+          "longTasks": [
+            {
+              "start": 1709.5,
+              "duration": 124
+            },
+            {
+              "start": 2058.2000000029802,
+              "duration": 138
+            },
+            {
+              "start": 2344.7000000029802,
+              "duration": 117
+            },
+            {
+              "start": 2462.6000000089407,
+              "duration": 52
+            },
+            {
+              "start": 2710.6000000089407,
+              "duration": 66
+            },
+            {
+              "start": 2851.7000000029802,
+              "duration": 129
+            }
+          ]
+        },
+        {
+          "openSellerMs": 222,
+          "nextDuringCelebrationMs": 437,
+          "initialStartRenderMs": 1752,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 623,
+          "longTasks": [
+            {
+              "start": 1828.4000000059605,
+              "duration": 94
+            },
+            {
+              "start": 2117.5,
+              "duration": 149
+            },
+            {
+              "start": 2376.7000000029802,
+              "duration": 94
+            },
+            {
+              "start": 2471.300000011921,
+              "duration": 51
+            },
+            {
+              "start": 2748.2000000029802,
+              "duration": 148
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1448x1086",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 256,
+      "nextDuringCelebrationMs": 420,
+      "initialStartRenderMs": 1720,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 319,
+          "nextDuringCelebrationMs": 420,
+          "initialStartRenderMs": 1720,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 688,
+          "longTasks": [
+            {
+              "start": 1802.2999999970198,
+              "duration": 167
+            },
+            {
+              "start": 2180.4000000059605,
+              "duration": 147
+            },
+            {
+              "start": 2493.2999999970198,
+              "duration": 114
+            },
+            {
+              "start": 2607.9000000059605,
+              "duration": 100
+            },
+            {
+              "start": 2963.9000000059605,
+              "duration": 132
+            }
+          ]
+        },
+        {
+          "openSellerMs": 256,
+          "nextDuringCelebrationMs": 449,
+          "initialStartRenderMs": 1644,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 622,
+          "longTasks": [
+            {
+              "start": 1717.2999999970198,
+              "duration": 114
+            },
+            {
+              "start": 2035.2999999970198,
+              "duration": 131
+            },
+            {
+              "start": 2273.8999999910593,
+              "duration": 95
+            },
+            {
+              "start": 2372.2000000029802,
+              "duration": 52
+            },
+            {
+              "start": 2548.3999999910593,
+              "duration": 56
+            },
+            {
+              "start": 2688,
+              "duration": 106
+            }
+          ]
+        },
+        {
+          "openSellerMs": 239,
+          "nextDuringCelebrationMs": 417,
+          "initialStartRenderMs": 1774,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 612,
+          "longTasks": [
+            {
+              "start": 1854.4000000059605,
+              "duration": 94
+            },
+            {
+              "start": 2161.2000000029802,
+              "duration": 132
+            },
+            {
+              "start": 2402.7000000029802,
+              "duration": 99
+            },
+            {
+              "start": 2504.5,
+              "duration": 53
+            },
+            {
+              "start": 2663.6000000089407,
+              "duration": 53
+            },
+            {
+              "start": 2809.1000000089407,
+              "duration": 110
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1448x1086",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 258,
+      "nextDuringCelebrationMs": 457,
+      "initialStartRenderMs": 1654,
+      "before": {
+        "openSellerMs": 256,
+        "nextDuringCelebrationMs": 420
+      },
+      "trials": [
+        {
+          "openSellerMs": 235,
+          "nextDuringCelebrationMs": 423,
+          "initialStartRenderMs": 1588,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 589,
+          "longTasks": [
+            {
+              "start": 1650.7999999970198,
+              "duration": 112
+            },
+            {
+              "start": 1994.7000000029802,
+              "duration": 113
+            },
+            {
+              "start": 2212.2999999970198,
+              "duration": 89
+            },
+            {
+              "start": 2304.9000000059605,
+              "duration": 51
+            },
+            {
+              "start": 2484.1000000089407,
+              "duration": 51
+            },
+            {
+              "start": 2609,
+              "duration": 116
+            }
+          ]
+        },
+        {
+          "openSellerMs": 264,
+          "nextDuringCelebrationMs": 457,
+          "initialStartRenderMs": 1654,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 614,
+          "longTasks": [
+            {
+              "start": 1720.9000000059605,
+              "duration": 128
+            },
+            {
+              "start": 2034.9000000059605,
+              "duration": 138
+            },
+            {
+              "start": 2284.2000000029802,
+              "duration": 89
+            },
+            {
+              "start": 2572.4000000059605,
+              "duration": 55
+            },
+            {
+              "start": 2695.7999999970198,
+              "duration": 116
+            }
+          ]
+        },
+        {
+          "openSellerMs": 258,
+          "nextDuringCelebrationMs": 468,
+          "initialStartRenderMs": 1742,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 694,
+          "longTasks": [
+            {
+              "start": 1832,
+              "duration": 94
+            },
+            {
+              "start": 2153.1000000089407,
+              "duration": 157
+            },
+            {
+              "start": 2454.7000000029802,
+              "duration": 106
+            },
+            {
+              "start": 2723.4000000059605,
+              "duration": 58
+            },
+            {
+              "start": 2882.9000000059605,
+              "duration": 132
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "390x844",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 218,
+      "nextDuringCelebrationMs": 435,
+      "initialStartRenderMs": 1581,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 222,
+          "nextDuringCelebrationMs": 409,
+          "initialStartRenderMs": 1596,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 577,
+          "longTasks": [
+            {
+              "start": 1689.2000000029802,
+              "duration": 91
+            },
+            {
+              "start": 1968.2999999970198,
+              "duration": 118
+            },
+            {
+              "start": 2172,
+              "duration": 84
+            },
+            {
+              "start": 2417.9000000059605,
+              "duration": 50
+            },
+            {
+              "start": 2566.9000000059605,
+              "duration": 73
+            }
+          ]
+        },
+        {
+          "openSellerMs": 218,
+          "nextDuringCelebrationMs": 446,
+          "initialStartRenderMs": 1581,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 632,
+          "longTasks": [
+            {
+              "start": 1674.2999999970198,
+              "duration": 96
+            },
+            {
+              "start": 1985.7000000029802,
+              "duration": 148
+            },
+            {
+              "start": 2241.0999999940395,
+              "duration": 100
+            },
+            {
+              "start": 2683.7000000029802,
+              "duration": 80
+            }
+          ]
+        },
+        {
+          "openSellerMs": 214,
+          "nextDuringCelebrationMs": 435,
+          "initialStartRenderMs": 1570,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 696,
+          "longTasks": [
+            {
+              "start": 1651.7999999970198,
+              "duration": 93
+            },
+            {
+              "start": 1936.7000000029802,
+              "duration": 155
+            },
+            {
+              "start": 2233,
+              "duration": 128
+            },
+            {
+              "start": 2525.2000000029802,
+              "duration": 50
+            },
+            {
+              "start": 2687.5,
+              "duration": 93
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "390x844",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 218,
+      "nextDuringCelebrationMs": 473,
+      "initialStartRenderMs": 1641,
+      "before": {
+        "openSellerMs": 218,
+        "nextDuringCelebrationMs": 435
+      },
+      "trials": [
+        {
+          "openSellerMs": 218,
+          "nextDuringCelebrationMs": 404,
+          "initialStartRenderMs": 1640,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 602,
+          "longTasks": [
+            {
+              "start": 1720.7999999970198,
+              "duration": 103
+            },
+            {
+              "start": 2012.1000000089407,
+              "duration": 128
+            },
+            {
+              "start": 2224.2000000029802,
+              "duration": 95
+            },
+            {
+              "start": 2635.5,
+              "duration": 99
+            }
+          ]
+        },
+        {
+          "openSellerMs": 208,
+          "nextDuringCelebrationMs": 473,
+          "initialStartRenderMs": 1641,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 656,
+          "longTasks": [
+            {
+              "start": 1735.3999999910593,
+              "duration": 85
+            },
+            {
+              "start": 1997.7000000029802,
+              "duration": 142
+            },
+            {
+              "start": 2251.5,
+              "duration": 108
+            },
+            {
+              "start": 2558.7999999970198,
+              "duration": 52
+            },
+            {
+              "start": 2721.8999999910593,
+              "duration": 92
+            }
+          ]
+        },
+        {
+          "openSellerMs": 246,
+          "nextDuringCelebrationMs": 490,
+          "initialStartRenderMs": 1643,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 710,
+          "longTasks": [
+            {
+              "start": 1728,
+              "duration": 116
+            },
+            {
+              "start": 2044.2000000029802,
+              "duration": 154
+            },
+            {
+              "start": 2315.4000000059605,
+              "duration": 104
+            },
+            {
+              "start": 2419.7000000029802,
+              "duration": 54
+            },
+            {
+              "start": 2654.7000000029802,
+              "duration": 58
+            },
+            {
+              "start": 2809,
+              "duration": 89
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "844x390",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 222,
+      "nextDuringCelebrationMs": 446,
+      "initialStartRenderMs": 1690,
+      "before": null,
+      "trials": [
+        {
+          "openSellerMs": 222,
+          "nextDuringCelebrationMs": 391,
+          "initialStartRenderMs": 1690,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 610,
+          "longTasks": [
+            {
+              "start": 1780.3999999910593,
+              "duration": 100
+            },
+            {
+              "start": 2076.5,
+              "duration": 138
+            },
+            {
+              "start": 2316,
+              "duration": 90
+            },
+            {
+              "start": 2406,
+              "duration": 58
+            },
+            {
+              "start": 2578.2000000029802,
+              "duration": 50
+            },
+            {
+              "start": 2711.5999999940395,
+              "duration": 99
+            }
+          ]
+        },
+        {
+          "openSellerMs": 222,
+          "nextDuringCelebrationMs": 460,
+          "initialStartRenderMs": 1847,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 643,
+          "longTasks": [
+            {
+              "start": 1967.2000000029802,
+              "duration": 82
+            },
+            {
+              "start": 2243.5,
+              "duration": 156
+            },
+            {
+              "start": 2518.7000000029802,
+              "duration": 90
+            },
+            {
+              "start": 2813,
+              "duration": 51
+            },
+            {
+              "start": 2922.0999999940395,
+              "duration": 110
+            }
+          ]
+        },
+        {
+          "openSellerMs": 221,
+          "nextDuringCelebrationMs": 446,
+          "initialStartRenderMs": 1619,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 642,
+          "longTasks": [
+            {
+              "start": 1709.3999999910593,
+              "duration": 95
+            },
+            {
+              "start": 1983.2999999970198,
+              "duration": 149
+            },
+            {
+              "start": 2246.8999999910593,
+              "duration": 108
+            },
+            {
+              "start": 2355.5999999940395,
+              "duration": 53
+            },
+            {
+              "start": 2548.0999999940395,
+              "duration": 61
+            },
+            {
+              "start": 2692.5999999940395,
+              "duration": 96
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "844x390",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 250,
+      "nextDuringCelebrationMs": 409,
+      "initialStartRenderMs": 1610,
+      "before": {
+        "openSellerMs": 222,
+        "nextDuringCelebrationMs": 446
+      },
+      "trials": [
+        {
+          "openSellerMs": 268,
+          "nextDuringCelebrationMs": 432,
+          "initialStartRenderMs": 1705,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 731,
+          "longTasks": [
+            {
+              "start": 1791.1000000089407,
+              "duration": 134
+            },
+            {
+              "start": 2155.7999999970198,
+              "duration": 154
+            },
+            {
+              "start": 2442.1000000089407,
+              "duration": 117
+            },
+            {
+              "start": 2561.9000000059605,
+              "duration": 51
+            },
+            {
+              "start": 2880.4000000059605,
+              "duration": 143
+            }
+          ]
+        },
+        {
+          "openSellerMs": 250,
+          "nextDuringCelebrationMs": 409,
+          "initialStartRenderMs": 1610,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 675,
+          "longTasks": [
+            {
+              "start": 1694.7000000029802,
+              "duration": 118
+            },
+            {
+              "start": 2026.1000000089407,
+              "duration": 146
+            },
+            {
+              "start": 2296.300000011921,
+              "duration": 108
+            },
+            {
+              "start": 2564.7000000029802,
+              "duration": 60
+            },
+            {
+              "start": 2714.6000000089407,
+              "duration": 91
+            }
+          ]
+        },
+        {
+          "openSellerMs": 234,
+          "nextDuringCelebrationMs": 368,
+          "initialStartRenderMs": 1561,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 578,
+          "longTasks": [
+            {
+              "start": 1650.7999999970198,
+              "duration": 99
+            },
+            {
+              "start": 1965,
+              "duration": 115
+            },
+            {
+              "start": 2169.7999999970198,
+              "duration": 90
+            },
+            {
+              "start": 2529.8999999910593,
+              "duration": 69
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "polling": {
+    "visibleArenaMs": 12000,
+    "activeFightMs": 5000,
+    "bootstrapMs": 60000,
+    "normalRequestsPerMinute": 6,
+    "activeFightHomeRequestsPerMinute": 13,
+    "activeFightPageRequestsPerMinute": 12,
+    "hiddenNormalRequestsPerMinute": 0,
+    "notes": "Steady state estimates excluding initial load, sales, retries, filters and clock boundary refreshes. Cadence/pause/resume are verified with virtual-clock browser and unit tests."
+  },
+  "fightCenter": {
+    "method": "Actual React UI at 4x CDP CPU throttle, deterministic test payloads, median of 3 trials. Initial opens include navigation and lazy JS; tab switches include the actual Playwright click and visible DOM wait. Local development server, not physical cash-register hardware and not a production network benchmark.",
+    "results": [
+      {
+        "viewport": "1920x1080",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1153,
+        "ownMatchInitialOpenMs": 741,
+        "leagueTableOpenMs": 179,
+        "bracketOpenMs": 92,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1232,
+            "ownMatchInitialOpenMs": 741,
+            "leagueTableOpenMs": 149,
+            "bracketOpenMs": 105
+          },
+          {
+            "centerInitialOpenMs": 1153,
+            "ownMatchInitialOpenMs": 746,
+            "leagueTableOpenMs": 179,
+            "bracketOpenMs": 92
+          },
+          {
+            "centerInitialOpenMs": 1139,
+            "ownMatchInitialOpenMs": 719,
+            "leagueTableOpenMs": 186,
+            "bracketOpenMs": 87
+          }
+        ]
+      },
+      {
+        "viewport": "1536x864",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1178,
+        "ownMatchInitialOpenMs": 730,
+        "leagueTableOpenMs": 161,
+        "bracketOpenMs": 111,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1081,
+            "ownMatchInitialOpenMs": 710,
+            "leagueTableOpenMs": 157,
+            "bracketOpenMs": 81
+          },
+          {
+            "centerInitialOpenMs": 1178,
+            "ownMatchInitialOpenMs": 730,
+            "leagueTableOpenMs": 260,
+            "bracketOpenMs": 130
+          },
+          {
+            "centerInitialOpenMs": 1212,
+            "ownMatchInitialOpenMs": 776,
+            "leagueTableOpenMs": 161,
+            "bracketOpenMs": 111
+          }
+        ]
+      },
+      {
+        "viewport": "1448x1086",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1085,
+        "ownMatchInitialOpenMs": 748,
+        "leagueTableOpenMs": 168,
+        "bracketOpenMs": 80,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1085,
+            "ownMatchInitialOpenMs": 748,
+            "leagueTableOpenMs": 168,
+            "bracketOpenMs": 80
+          },
+          {
+            "centerInitialOpenMs": 1078,
+            "ownMatchInitialOpenMs": 716,
+            "leagueTableOpenMs": 185,
+            "bracketOpenMs": 95
+          },
+          {
+            "centerInitialOpenMs": 1188,
+            "ownMatchInitialOpenMs": 791,
+            "leagueTableOpenMs": 144,
+            "bracketOpenMs": 64
+          }
+        ]
+      },
+      {
+        "viewport": "1024x768",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1080,
+        "ownMatchInitialOpenMs": 728,
+        "leagueTableOpenMs": 169,
+        "bracketOpenMs": 83,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1178,
+            "ownMatchInitialOpenMs": 751,
+            "leagueTableOpenMs": 205,
+            "bracketOpenMs": 80
+          },
+          {
+            "centerInitialOpenMs": 1023,
+            "ownMatchInitialOpenMs": 728,
+            "leagueTableOpenMs": 169,
+            "bracketOpenMs": 83
+          },
+          {
+            "centerInitialOpenMs": 1080,
+            "ownMatchInitialOpenMs": 715,
+            "leagueTableOpenMs": 163,
+            "bracketOpenMs": 94
+          }
+        ]
+      },
+      {
+        "viewport": "390x844",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1059,
+        "ownMatchInitialOpenMs": 719,
+        "leagueTableOpenMs": 119,
+        "bracketOpenMs": 78,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1030,
+            "ownMatchInitialOpenMs": 664,
+            "leagueTableOpenMs": 115,
+            "bracketOpenMs": 68
+          },
+          {
+            "centerInitialOpenMs": 1059,
+            "ownMatchInitialOpenMs": 719,
+            "leagueTableOpenMs": 139,
+            "bracketOpenMs": 82
+          },
+          {
+            "centerInitialOpenMs": 1132,
+            "ownMatchInitialOpenMs": 741,
+            "leagueTableOpenMs": 119,
+            "bracketOpenMs": 78
+          }
+        ]
+      },
+      {
+        "viewport": "844x390",
+        "cpuThrottle": 4,
+        "centerInitialOpenMs": 1137,
+        "ownMatchInitialOpenMs": 787,
+        "leagueTableOpenMs": 157,
+        "bracketOpenMs": 79,
+        "trials": [
+          {
+            "centerInitialOpenMs": 1137,
+            "ownMatchInitialOpenMs": 787,
+            "leagueTableOpenMs": 161,
+            "bracketOpenMs": 77
+          },
+          {
+            "centerInitialOpenMs": 1126,
+            "ownMatchInitialOpenMs": 743,
+            "leagueTableOpenMs": 152,
+            "bracketOpenMs": 112
+          },
+          {
+            "centerInitialOpenMs": 1148,
+            "ownMatchInitialOpenMs": 788,
+            "leagueTableOpenMs": 157,
+            "bracketOpenMs": 79
+          }
+        ]
+      }
+    ]
+  },
+  "bundle": {
+    "method": "Same React-only Vite production build configuration, immutable START_HEAD archive vs final working tree, no branch change. Sum of emitted JS+CSS, separately gzipped. Not all lazy chunks are downloaded by Home. Full Cloudflare production build also verified separately.",
+    "baseline": {
+      "raw_bytes": 1189798,
+      "gzip_bytes": 326329,
+      "files": [
+        {
+          "file": "ArenaAccount-C1V4hP1f.js",
+          "raw_bytes": 5112,
+          "gzip_bytes": 2027
+        },
+        {
+          "file": "ArenaAdmin-CAa21kIo.js",
+          "raw_bytes": 18731,
+          "gzip_bytes": 5617
+        },
+        {
+          "file": "ArenaApp-BfcldVuy.css",
+          "raw_bytes": 200821,
+          "gzip_bytes": 32531
+        },
+        {
+          "file": "ArenaApp-T-jawMD3.js",
+          "raw_bytes": 59248,
+          "gzip_bytes": 18522
+        },
+        {
+          "file": "ArenaCompetitions-Ckva5uAr.js",
+          "raw_bytes": 2516,
+          "gzip_bytes": 1061
+        },
+        {
+          "file": "ArenaFight-DTSWR8kJ.js",
+          "raw_bytes": 6480,
+          "gzip_bytes": 2605
+        },
+        {
+          "file": "ArenaLeague-D1v0xqW8.js",
+          "raw_bytes": 3319,
+          "gzip_bytes": 1368
+        },
+        {
+          "file": "ArenaNetwork-EUsyRYVs.js",
+          "raw_bytes": 32023,
+          "gzip_bytes": 9237
+        },
+        {
+          "file": "ArenaRecovery-C9Z3CMVa.js",
+          "raw_bytes": 3138,
+          "gzip_bytes": 1309
+        },
+        {
+          "file": "ArenaReports-mzMNQTRm.js",
+          "raw_bytes": 6595,
+          "gzip_bytes": 2355
+        },
+        {
+          "file": "index-C_TdpUt1.css",
+          "raw_bytes": 134392,
+          "gzip_bytes": 28208
+        },
+        {
+          "file": "index-DyENPe4F.js",
+          "raw_bytes": 310643,
+          "gzip_bytes": 98742
+        },
+        {
+          "file": "index-wEhDFahY.js",
+          "raw_bytes": 406780,
+          "gzip_bytes": 122747
+        }
+      ]
+    },
+    "current": {
+      "raw_bytes": 1243883,
+      "gzip_bytes": 342068,
+      "files": [
+        {
+          "file": "ArenaAccount-BLwN6nSu.js",
+          "raw_bytes": 5112,
+          "gzip_bytes": 2028
+        },
+        {
+          "file": "ArenaAdmin-9m3HXY6U.js",
+          "raw_bytes": 19178,
+          "gzip_bytes": 5792
+        },
+        {
+          "file": "ArenaApp-741J8qRo.css",
+          "raw_bytes": 201808,
+          "gzip_bytes": 32706
+        },
+        {
+          "file": "ArenaApp-DnztR9SR.js",
+          "raw_bytes": 60756,
+          "gzip_bytes": 18952
+        },
+        {
+          "file": "ArenaCompetition-Dm-gI5ck.js",
+          "raw_bytes": 10213,
+          "gzip_bytes": 3663
+        },
+        {
+          "file": "ArenaCompetitions-C8uQCOOa.js",
+          "raw_bytes": 11141,
+          "gzip_bytes": 3646
+        },
+        {
+          "file": "ArenaFight-DUx9XppB.js",
+          "raw_bytes": 7393,
+          "gzip_bytes": 2965
+        },
+        {
+          "file": "ArenaLeague-DR18p7b7.js",
+          "raw_bytes": 3353,
+          "gzip_bytes": 1384
+        },
+        {
+          "file": "ArenaNetwork-KABFzNwI.js",
+          "raw_bytes": 41135,
+          "gzip_bytes": 11347
+        },
+        {
+          "file": "ArenaRecovery-BqAHHqoH.js",
+          "raw_bytes": 3138,
+          "gzip_bytes": 1310
+        },
+        {
+          "file": "ArenaReports-DCg_T_Dd.js",
+          "raw_bytes": 6595,
+          "gzip_bytes": 2356
+        },
+        {
+          "file": "ArenaTemporaryConcept-CFeXG7cX.js",
+          "raw_bytes": 1096,
+          "gzip_bytes": 606
+        },
+        {
+          "file": "arena-competition-CerWuPGU.css",
+          "raw_bytes": 16145,
+          "gzip_bytes": 3268
+        },
+        {
+          "file": "arena-competitions-BmVrXPWo.js",
+          "raw_bytes": 4824,
+          "gzip_bytes": 2180
+        },
+        {
+          "file": "arena-route-id-nE-jfgl6.js",
+          "raw_bytes": 173,
+          "gzip_bytes": 163
+        },
+        {
+          "file": "index-Blsx3m67.js",
+          "raw_bytes": 406788,
+          "gzip_bytes": 122752
+        },
+        {
+          "file": "index-C_TdpUt1.css",
+          "raw_bytes": 134392,
+          "gzip_bytes": 28208
+        },
+        {
+          "file": "index-X9acGBsQ.js",
+          "raw_bytes": 310643,
+          "gzip_bytes": 98742
+        }
+      ]
+    },
+    "delta_raw_bytes": 54085,
+    "delta_gzip_bytes": 15739,
+    "new_home_request_endpoints": 0,
+    "loading": "Competition pages and Competition Builder CSS are lazy; Home adds tiny nav-state CSS and counts inside existing stats response. Superadmin Builder lives in existing lazy administration chunk."
+  }
+}

@@ -1,0 +1,165 @@
+
+> tvattligan@1.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ❯ tests/api.test.ts (43 tests | 1 failed) 234ms
+   ✓ Försäljning och dataintegritet > registrerar säljare, program, pris, unikt ID och tidsstämpel 12ms
+   ✓ Försäljning och dataintegritet > läser aktuellt pris från servern och avvisar klientens pris 3ms
+   ✓ Försäljning och dataintegritet > räknar inte dubbla begäranden och upptäcker återanvändning för annat program 4ms
+   ✓ Försäljning och dataintegritet > makulerar idempotent och utesluter ångrad försäljning ur statistik och mål 11ms
+   ✓ Försäljning och dataintegritet > beräknar omsättning, snittköp och Preemium-andel 7ms
+   ✓ Försäljning och dataintegritet > bevarar historiska priser efter administrativ prisändring 6ms
+   ✓ Försäljning och dataintegritet > ändrar Borstlös till 219 kr via skyddad admin utan att ändra gamla kvitton 4ms
+   ✓ Försäljning och dataintegritet > döljer inaktiv personal och avvisar försäljning för inaktiva poster 5ms
+   ✓ Försäljning och dataintegritet > validerar data och tillåter inte radering av historik 4ms
+   ✓ Försäljning och dataintegritet > visar individuell statistik 4ms
+   ✓ Topplistor > rangordnar säljare och kräver 3 försäljningar för snitt och andel 6ms
+   ✓ Topplistor > ger noll och tomma listor när perioden saknar försäljning 2ms
+   ✓ Admin, sessioner och export > avvisar alla oskyddade admin-anrop 4ms
+   ✓ Admin, sessioner och export > skapar serverlagrad säker cookie och logout spärrar sessionen 3ms
+   ✓ Admin, sessioner och export > begränsar PIN-försök och avvisar utgångna sessioner 6ms
+   ✓ Admin, sessioner och export > avvisar CSRF-anrop och kräver serverkonfigurerad PIN 2ms
+   × Admin, sessioner och export > sparar personal och mål och exporterar BOM, semikolon och makuleringar 15ms
+     → expected 'Datum;Tid;SÃ¤ljare;TvÃ¤ttprogram;Pris…' to contain 'Datum;Tid;Säljare;Tvättprogram;Pris;S…'
+   ✓ Säkert Admin-underhåll > framåtmigrerar befintlig historik utan ändrade försäljningsvärden eller FK-brott 5ms
+   ✓ Säkert Admin-underhåll > redigerar namn/färg och bevarar auditspår 4ms
+   ✓ Säkert Admin-underhåll > raderar bara säljare utan någon historik och kräver granskning/bekräftelse 4ms
+   ✓ Säkert Admin-underhåll > arkiverar historisk personal utan FK-brott, makulerar och döljer i alla topplistor 8ms
+   ✓ Säkert Admin-underhåll > även enbart makulerad historik förhindrar fysisk personalradering 4ms
+   ✓ Säkert Admin-underhåll > kan återställa arkiverad identitet utan att tyst återställa statistik 7ms
+   ✓ Säkert Admin-underhåll > avvisar personalradering när en försäljning tillkommer efter granskningen 4ms
+   ✓ Säkert Admin-underhåll > korrigerar säljare och program med nytt serverpris, audit och versionsskydd 5ms
+   ✓ Säkert Admin-underhåll > bevarar historiskt pris vid bara säljarbyte och avvisar fria prisfält 4ms
+   ✓ Säkert Admin-underhåll > makulerar och återställer med rätt KPI, snittköp och bevarad historik 6ms
+   ✓ Säkert Admin-underhåll > filtrerar och paginerar Admin-historik utan privata kvitton 12ms
+   ✓ Säkert Admin-underhåll > förhandsgranskar och nollställer en säljare utan att beröra laget 6ms
+   ✓ Säkert Admin-underhåll > kräver NOLLSTÄLL server-side för hela laget/all historik 8ms
+   ✓ Säkert Admin-underhåll > nollställer today men inte äldre försäljningar 4ms
+   ✓ Säkert Admin-underhåll > nollställer week men inte äldre försäljningar 4ms
+   ✓ Säkert Admin-underhåll > nollställer month men inte äldre försäljningar 4ms
+   ✓ Säkert Admin-underhåll > begränsar valfri period till Stockholms dygn inklusive datumgränser 5ms
+   ✓ Säkert Admin-underhåll > återställer bara granskade resetposter, inte tidigare ångrade försäljningar 7ms
+   ✓ Säkert Admin-underhåll > stale/utgångna förhandsgranskningar gör inga deländringar 9ms
+   ✓ Säkert Admin-underhåll > förhandsgranskning med samma antal men utbytta registreringar avvisas 5ms
+   ✓ Säkert Admin-underhåll > enskild makulering/återställning kräver explicit bekräftelse och giltig version 4ms
+   ✓ Säkert Admin-underhåll > stale återställning och arkiverad säljare kan inte återinföras av en batch 6ms
+   ✓ Säkert Admin-underhåll > alla underhållsendpoints kräver Admin och CSRF-skydd 4ms
+   ✓ Stockholmstid och perioder > konverterar vinter, sommar och båda DST-gränserna korrekt 2ms
+   ✓ Stockholmstid och perioder > använder måndag och rätt kalenderdag för periodgränser 2ms
+   ✓ Stockholmstid och perioder > avvisar ogiltiga, bakvända eller alltför långa perioder 3ms
+ ✓ tests/arena-owner-maintenance.test.ts (3 tests) 1092ms
+   ✓ Offline infra bootstrap and break glass > bootstraps exactly one Owner, with an unverified email, salted KDF and audit event  471ms
+   ✓ Offline infra bootstrap and break glass > requires an existing matching Owner for recovery and produces a traceable security event  580ms
+ ✓ tests/arena-competition-builder.test.ts (31 tests) 902ms
+stderr | tests/push.test.ts > Leverans, mottagare och spam-skydd > HTTP 404 inaktiverar föråldrad prenumeration
+{"event":"push_delivery_failed","provider":"google","status":404,"event_type":"manual"}
+
+stderr | tests/push.test.ts > Leverans, mottagare och spam-skydd > HTTP 410 inaktiverar föråldrad prenumeration
+{"event":"push_delivery_failed","provider":"google","status":410,"event_type":"manual"}
+
+ ✓ tests/arena-network.test.ts (13 tests) 3320ms
+   ✓ Arena station authentication and tenant isolation > a reset racing a successful password check cannot issue a new session with the old credential  347ms
+   ✓ Arena station authentication and tenant isolation > rate limits login and signup, and preserves same-origin CSRF protection  919ms
+   ✓ multi-station groups > opt-in people/feed projection respects group membership, metric, range, undo and station suspension  318ms
+stderr | tests/push.test.ts > Leverans, mottagare och spam-skydd > tillfälligt fel/network failure stoppar inte andra enheter
+{"event":"push_delivery_exception","provider":"google","stage":"fetch_provider","exception_type":"Error"}
+
+stderr | tests/push.test.ts > Leverans, mottagare och spam-skydd > tillfälligt fel/network failure stoppar inte andra enheter
+{"event":"push_delivery_failed","provider":"google","status":503,"event_type":"manual"}
+
+stderr | tests/push.test.ts > Leverans, mottagare och spam-skydd > tillfälligt fel/network failure stoppar inte andra enheter
+{"event":"push_delivery_failed","provider":"google","status":503,"event_type":"manual"}
+
+stderr | tests/push.test.ts > Automatiska målnotiser > pushfel påverkar inte sparad försäljning, statistik eller idempotens
+{"event":"push_delivery_exception","provider":"google","stage":"fetch_provider","exception_type":"Error"}
+
+ ✓ tests/push.test.ts (57 tests) 810ms
+ ✓ tests/arena-fights.test.ts (16 tests) 444ms
+ ✓ tests/arena.test.ts (17 tests) 498ms
+ ✓ tests/migration.test.ts (4 tests) 441ms
+stderr | tests/arena-daily-leagues.test.ts > Round robin leagues > rolls back a whole league if any fixture fails to insert
+API error: test atomic fixture failure
+
+ ✓ tests/arena-daily-leagues.test.ts (20 tests) 540ms
+ ✓ tests/station-v2.test.ts (15 tests) 211ms
+ ✓ tests/arena-security.test.ts (18 tests) 5898ms
+   ✓ Individual Superadmins and Owner protection > invites an individual account; only a hashed one-time token persists outside dev delivery  472ms
+   ✓ Individual Superadmins and Owner protection > operational Superadmin cannot mutate Owner, accounts, recovery codes or ownership  417ms
+   ✓ Individual Superadmins and Owner protection > disabling an account immediately invalidates all of its sessions and reenable does not restore them  501ms
+   ✓ Individual Superadmins and Owner protection > requires recent reauth and explicit confirmation for sensitive actions  305ms
+   ✓ Individual Superadmins and Owner protection > transfers ownership only explicitly to a verified active individual and revokes sessions  450ms
+   ✓ Recovery, audit and security boundaries > email reset is single use, expires and revokes sessions; responses do not enumerate accounts  380ms
+   ✓ Recovery, audit and security boundaries > expired reset links fail without changing credentials  325ms
+   ✓ Recovery, audit and security boundaries > recovery codes are hashed, single use, regenerated and audited  487ms
+   ✓ Recovery, audit and security boundaries > upgrades existing 100k credentials on successful login without breaking existing passwords  320ms
+   ✓ Recovery, audit and security boundaries > accepts legacy hashes and versioned PBKDF2 hashes without exposing new credentials  361ms
+ ✓ tests/arena-pdf.test.ts (12 tests) 385ms
+ ✓ tests/arena-reports.test.ts (7 tests) 315ms
+ ✓ tests/handbook.test.ts (5 tests) 76ms
+ ✓ tests/arena-portraits.test.ts (4 tests) 230ms
+ ✓ tests/pwa.test.ts (7 tests) 89ms
+ ✓ tests/arena-query-plans.test.ts (1 test) 81ms
+ ✓ tests/league.test.ts (21 tests) 255ms
+ ✓ tests/v33.test.ts (5 tests) 76ms
+ ✓ tests/v32.test.ts (6 tests) 75ms
+ ✓ tests/arena-competition-notifications.test.ts (3 tests) 80ms
+ ✓ tests/recurring-tasks.test.ts (3 tests) 57ms
+ ✓ tests/todo-celebration.test.ts (3 tests) 91ms
+ ✓ tests/station.test.ts (7 tests) 62ms
+ ✓ tests/handbook-v29.test.ts (3 tests) 51ms
+ ✓ tests/weather-medals.test.ts (9 tests) 55ms
+ ✓ tests/v30.test.ts (5 tests) 36ms
+ ✓ tests/arena-competition-migrations.test.ts (2 tests) 37ms
+ ✓ tests/launch-reset.test.ts (2 tests) 50ms
+ ✓ tests/weather-probe.test.ts (9 tests) 39ms
+ ✓ tests/arena-migrations.test.ts (2 tests) 36ms
+ ✓ tests/arena-achievements.test.ts (13 tests) 5ms
+ ✓ tests/arena-identity.test.ts (8 tests) 17ms
+ ✓ tests/arena-realtime.test.ts (3 tests) 8ms
+ ✓ tests/arena-fight-feedback.test.ts (6 tests) 5ms
+ ✓ tests/arena-start.test.ts (3 tests) 4ms
+ ✓ tests/arena-money.test.ts (17 tests) 10ms
+ ✓ tests/arena-avatars.test.ts (4 tests) 4ms
+ ✓ tests/arena-product-images.test.ts (4 tests) 3ms
+ ✓ tests/task-priority.test.ts (2 tests) 3ms
+ ✓ tests/arena-dates.test.ts (3 tests) 3ms
+ ✓ tests/playwright-diagnostic.test.ts (1 test) 3ms
+ ✓ tests/arena-route-id.test.ts (2 tests) 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/api.test.ts > Admin, sessioner och export > sparar personal och mål och exporterar BOM, semikolon och makuleringar
+AssertionError: expected 'Datum;Tid;SÃ¤ljare;TvÃ¤ttprogram;Pris…' to contain 'Datum;Tid;Säljare;Tvättprogram;Pris;S…'
+
+- Expected
++ Received
+
+- Datum;Tid;Säljare;Tvättprogram;Pris;Status
++ Datum;Tid;SÃ¤ljare;TvÃ¤ttprogram;Pris;Status
++ "2026-10-15";"16:39:53";"'=FORMEL";"Preemium";"389";"Makulerad"
++
+
+ ❯ tests/api.test.ts:402:17
+    400|     expect([...bytes.slice(0, 3)]).toEqual([239, 187, 191]);
+    401|     const csv = new TextDecoder().decode(bytes);
+    402|     expect(csv).toContain("Datum;Tid;Säljare;Tvättprogram;Pris;Status"…
+       |                 ^
+    403|     expect(csv).toContain("Makulerad");
+    404|     expect(csv).toContain("'=FORMEL");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 42 passed (43)
+      Tests  1 failed | 418 passed (419)
+   Start at  14:39:52
+   Duration  9.57s (transform 1.25s, setup 0ms, collect 4.83s, tests 16.64s, environment 5ms, prepare 2.05s)
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

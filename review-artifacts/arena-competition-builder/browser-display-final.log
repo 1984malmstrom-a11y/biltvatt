@@ -1,0 +1,25 @@
+
+Running 17 tests using 1 worker
+
+(node:332971) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/17] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation sprint
+[2/17] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation daily
+[3/17] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation league
+[4/17] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation playoffs
+[5/17] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation cup
+[6/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1920x1080
+[7/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1536x864
+[8/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1448x1086
+[9/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1024x768
+[10/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 390x844
+[11/17] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 844x390
+[12/17] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 1920x1080
+[13/17] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 390x844
+[14/17] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 844x390
+[15/17] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 390x844
+[16/17] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 844x390
+[17/17] e2e/arena-competition-builder.spec.ts:44:1 › Competition: TB uses kronor in tables and brackets; multi-station Sprint lists every participant
+  17 passed (57.0s)

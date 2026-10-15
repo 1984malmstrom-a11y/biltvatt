@@ -1,0 +1,51 @@
+{
+  "start_head": "168278ef4ae4dac18e47e379e050e3c356afd168",
+  "old_migrations": [
+    {
+      "file": "0001_arena_core.sql",
+      "unchanged": true,
+      "sha256": "71aecfc5d5ce3d008f0bbccbe84781097b95f9cb9a58d50743ac2f617cd3a452"
+    },
+    {
+      "file": "0002_arena_images_integrity.sql",
+      "unchanged": true,
+      "sha256": "0c05b80c7b492845817b3b4ec85bfd56d6060233b838d7c5530ae5cc81c76963"
+    },
+    {
+      "file": "0003_arena_achievements.sql",
+      "unchanged": true,
+      "sha256": "30291c24cb7f1518cd7cd466df81ec7580f589912b493199788bba03e8c798f1"
+    },
+    {
+      "file": "0004_arena_contribution_margin.sql",
+      "unchanged": true,
+      "sha256": "b9a09dad1cca6de1b5e9b221bd5f7371578752ed1c80de2f121c22f7ffce1ce5"
+    },
+    {
+      "file": "0005_arena_accounts.sql",
+      "unchanged": true,
+      "sha256": "19f40f9d20c2943f62344c996540cfb7b74b108ca760c2a60151e21f6ff66d20"
+    },
+    {
+      "file": "0006_arena_store_fights.sql",
+      "unchanged": true,
+      "sha256": "bb8da1c7577c4c88e930e37bd58dc0290d36d7ecaba6962f021afb17d80aa17e"
+    },
+    {
+      "file": "0007_arena_people_security_reports.sql",
+      "unchanged": true,
+      "sha256": "b210b5e5d3d7c104b6bce088f722ecd1c846742c3fbc59b622a14f13c0078a48"
+    },
+    {
+      "file": "0008_arena_stable_portrait_identity.sql",
+      "unchanged": true,
+      "sha256": "b3dc312e4c49e4ad15eccfdecdd511092c676c45881b717b1879fc4574cb1d6e"
+    },
+    {
+      "file": "0009_arena_daily_fights_leagues.sql",
+      "unchanged": true,
+      "sha256": "3156e891735949f1a658fc118ce73c3d87ddce6096755b0147f7929bcad1de30"
+    }
+  ],
+  "worker_index_unchanged": true
+}

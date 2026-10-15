@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "id": "release-seller",
+  "type": "seller",
+  "title": "MIN ARENA · RESULTAT",
+  "created_at": "2026-10-15T12:00:00.000Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": {
+    "id": "review",
+    "name": "Tingsryd"
+  },
+  "subject": {
+    "id": "s-0",
+    "name": "Peter"
+  },
+  "totals": {
+    "count": 87,
+    "points": 142,
+    "tb_ore": 1246000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Peter"
+  ],
+  "metric": "points",
+  "source": "synthetic-frozen-review",
+  "leaderboard": [
+    {
+      "id": "p-0",
+      "name": "Peter",
+      "rank": 1,
+      "count": 87,
+      "points": 142,
+      "tb_ore": 1246000,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [
+    {
+      "name": "Biltvätt",
+      "count": 34,
+      "points": 68,
+      "tb_ore": 1000000
+    },
+    {
+      "name": "Kaffe + bulle",
+      "count": 18,
+      "points": 18,
+      "tb_ore": 72500
+    },
+    {
+      "name": "Korv med mos",
+      "count": 15,
+      "points": 15,
+      "tb_ore": 48000
+    },
+    {
+      "name": "Spolarvätska",
+      "count": 12,
+      "points": 24,
+      "tb_ore": 85600
+    },
+    {
+      "name": "Räksallad",
+      "count": 8,
+      "points": 17,
+      "tb_ore": 39900
+    }
+  ],
+  "goals": [
+    {
+      "name": "Lagets septembermål",
+      "points": 142,
+      "target_points": 140
+    }
+  ]
+}

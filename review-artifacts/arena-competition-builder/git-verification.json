@@ -1,0 +1,17 @@
+{
+  "start_head": "168278ef4ae4dac18e47e379e050e3c356afd168",
+  "final_head": "ba515b19f5815fd6ef33aa4f978502494b6722c5",
+  "parent_head": "168278ef4ae4dac18e47e379e050e3c356afd168",
+  "local_commit_count": 1,
+  "commit_message": "Arena V1: build complete competition builder leagues playoffs and challenges",
+  "branch": "feat/arena-v1",
+  "working_tree_clean": true,
+  "origin_tracking_ref": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "origin_tracking_ref_unchanged": true,
+  "no_push": true,
+  "no_deploy": true,
+  "no_remote_migration": true,
+  "no_merge": true,
+  "no_branch_switch": true,
+  "old_migrations_and_csv_worker_unchanged": true
+}

@@ -1,0 +1,17 @@
+{
+  "frames": [
+    {
+      "at": 1000,
+      "animation": "arena-fight-orbit",
+      "transform": "matrix(0.809017, 0.587785, -0.587785, 0.809017, 0, 0)"
+    },
+    {
+      "at": 4000,
+      "animation": "arena-fight-orbit",
+      "transform": "matrix(-0.809017, 0.587785, -0.587785, -0.809017, 0, 0)"
+    }
+  ],
+  "localSecondTimer": true,
+  "requestsDuringOneSecond": 0,
+  "reducedMotion": "animation:none on perimeter and pulse"
+}

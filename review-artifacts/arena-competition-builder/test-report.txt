@@ -1,0 +1,15 @@
+TYPECHECK: PASS (npm run typecheck)
+BUILD: PASS (npm run build; local Cloudflare client/server build, no deployment)
+ARENA UNIT: 212/212 PASS, 24 Arena test files (included in full run).
+FULL UNIT: 418 PASS + 1 known unchanged CSV UTF-8 failure = 419 tests, 43 files.
+Known failure: tests/api.test.ts:402, existing CSV export BOM/header expectation; worker/index.ts byte-identical to START_HEAD. Not corrected or hidden.
+NEW FEATURE UNIT: 38/38 PASS (31 competition builder, 2 migration, 3 notification, 2 route/calendar; included above).
+BROAD ARENA PLAYWRIGHT: 194/194 PASS, 8.3 minutes.
+COMPETITION FINAL PLAYWRIGHT: 19/19 PASS, includes 3 scenarios added after broad run.
+FINAL DISPLAY CONFIRMATION: 17/17 PASS (5 builder formats, 6 responsive centers, 3 challenge flows including source activity name, 2 mobile builders, 1 additional TB/multi-station Sprint scenario).
+UNIQUE ARENA PLAYWRIGHT SCENARIOS: 198 (194 + 3 later cases + 1 final display case); repeated confirmations are not added again.
+Native local Worker: real station signup/session/approval, simultaneous accepts produce exactly 200/409, no orphan partial competition, cancellation freezes with no champion. Existing native auth, registration, undo, PDF frozen bytes, profile upload, legacy fights/daily series all passed in broad run.
+Fresh DB all migrations and upgrade 0009→0010 verified; foreign_key_check clean; old frozen fields preserved. Prior 0001–0009 SQL files byte-identical.
+Round robin mathematical proofs: 4 single, 5 single with fair byes, 10 single, 10 double; actual 90-match DB creation. Top 2/4/8 seed/advancement/final retry proofs. Scope, category, local manual mapping, permissions, tenant isolation, expiry, pending requests, overlap races, cancellation and notification delivery included.
+Realtime: single scoped 5s competition payload, hidden-tab 0 polls, immediate visible resume, 12s Home preserved, local 1s clock, sale/undo/TB/achievements regression. Reduced motion and 7 Home slots verified.
+All visual captures are the real React/CSS implementation in Chromium with explicit deterministic test fixtures; native backend verification is separately labeled. No generated UI mockups.

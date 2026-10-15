@@ -1,0 +1,5860 @@
+{
+  "start_head": "168278ef4ae4dac18e47e379e050e3c356afd168",
+  "final_head": "ba515b19f5815fd6ef33aa4f978502494b6722c5",
+  "branch": "feat/arena-v1",
+  "committed": true,
+  "working_tree_clean": true,
+  "origin_feat_unchanged": true,
+  "png_count": 456,
+  "screenshots": [
+    {
+      "file": "admin-goals.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 292354,
+      "sha256": "42efb3b791942752c31d94a1b75be07d8fb390b42e13a45a2a665fddea73144a"
+    },
+    {
+      "file": "admin-profile-upload-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 391616,
+      "sha256": "3fc65bc2fae175a8549984eb55903b294275953228f503925b869c3bebc738cd"
+    },
+    {
+      "file": "admin-profile-upload-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 586308,
+      "sha256": "084aa12b5a9d07010795d4679b664d2034d450bf9c391a11c4d49db23260ed98"
+    },
+    {
+      "file": "admin-profile-upload-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 180771,
+      "sha256": "e3793f293a7946b7e1603a7926ed28de8809f3c80625dd925013df882214f731"
+    },
+    {
+      "file": "admin-profile-upload-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 158346,
+      "sha256": "eb5a1781bf4f3b024d193e612dd6e919f04487d16c168f3ba9ead96f4086cff3"
+    },
+    {
+      "file": "arena-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 651888,
+      "sha256": "d36699abcf331403f0f558ede839dd3317e2ab78809faa5b8fce76c7794adc58"
+    },
+    {
+      "file": "arena-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1402265,
+      "sha256": "d4f6305794b62df0bb87c6a01e69f5dcbde70b3d9112cfa0e2a3ec3b103011da"
+    },
+    {
+      "file": "arena-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 332558,
+      "sha256": "45a39169b0d223578e72332d3ec60602de269984ac9b18e34a380fa57333e211"
+    },
+    {
+      "file": "arena-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 316468,
+      "sha256": "8aa92c90b31283bbda764ddc2a6c7a767f7858779adce1401c10685ec316330d"
+    },
+    {
+      "file": "auth-forgot-password-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 93719,
+      "sha256": "5f0d8740c4c25bf9680106a2261a4fa0bd2b4cbd14f79050e7eb5deb7ff561f4"
+    },
+    {
+      "file": "auth-forgot-password-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 108299,
+      "sha256": "bc3aa6e0347160c34f88842abe3e9d3b4e98c093c4b0764e5e79a1e7bafb591c"
+    },
+    {
+      "file": "auth-forgot-password-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 65709,
+      "sha256": "18bdc91a0ca98a989a1165fee092ed84110ddad0f70af6af7e087a4b9b7b5917"
+    },
+    {
+      "file": "auth-forgot-password-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 58326,
+      "sha256": "c55a0bd2398df9836a9edb32f66e9d2a6824337531c1ab32621c54e6f7458d64"
+    },
+    {
+      "file": "auth-recovery-codes-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 240346,
+      "sha256": "f14babf323b175abc051a4d1b69833a30ee2563fe419c6b94f59e65fece6b0d2"
+    },
+    {
+      "file": "auth-recovery-codes-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 373694,
+      "sha256": "a29e2bf913816afd6d1491701ea664785ade973e38c1cd0ca0298ad67f65baac"
+    },
+    {
+      "file": "auth-recovery-codes-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 149529,
+      "sha256": "fa2863379dc473a536197e4924e5e6cf3376ec5761823e1a13a6475a8941abc0"
+    },
+    {
+      "file": "auth-recovery-codes-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 121714,
+      "sha256": "4c7122a2891b7cf0f42d78dede33db092af70e8b5cbc2f3f1bcfacc02c472d04"
+    },
+    {
+      "file": "auth-session-management-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 165843,
+      "sha256": "204340e4f4076b32389c8614ef148f4eedb6bf1cf5caad1c67a94c853ef6ef63"
+    },
+    {
+      "file": "auth-session-management-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 283148,
+      "sha256": "7371098133409500859943a182d4fd6157a9a5c8fc7c1bc43bf97dcfbb2eef7e"
+    },
+    {
+      "file": "auth-session-management-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 105391,
+      "sha256": "8907a45c31525569750e42728f6504f147a35fde51994da4536547ca902c6067"
+    },
+    {
+      "file": "auth-session-management-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 63572,
+      "sha256": "00f2d45d329b013bc0e788f10a31acf139a74aa7c1f0a54b7cc79f6009d7ab9b"
+    },
+    {
+      "file": "avatar-min-arena-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 319623,
+      "sha256": "aed32d5b4c0935373fd74cd09f5178570c994ef87fc04589ecb7260202488535"
+    },
+    {
+      "file": "avatar-min-arena-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 484047,
+      "sha256": "ed93c5dbee4d16076aa8a0dfbb5e84ec477db578bce5241a4d69089bc6bd358b"
+    },
+    {
+      "file": "avatar-min-arena-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 590569,
+      "sha256": "a036f2e4b72208b6114465ac65f877713ac45fb506f6d66c2b2207be786caf83"
+    },
+    {
+      "file": "avatar-min-arena-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 181883,
+      "sha256": "271cb5efe7f8e58304c815163b813e96008f9e528fd76de2de0014b7ed3a04e5"
+    },
+    {
+      "file": "avatar-min-arena-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 134500,
+      "sha256": "97acf7867c95718e24738e3a106dfb46f1449c2bb84a4b0decbd0dd693efb994"
+    },
+    {
+      "file": "avatars-feed-1024x768.png",
+      "width": 257,
+      "height": 277,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 48571,
+      "sha256": "9b743e11fa828d15243aaaf0404712bf9e13d37d930e58707a23d3dbc3dad50c"
+    },
+    {
+      "file": "avatars-feed-1448x1086.png",
+      "width": 363,
+      "height": 414,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 81059,
+      "sha256": "8cd0311ce67c9a195c21424f79b845fee23b57497ad58420155a5ac10e141fc7"
+    },
+    {
+      "file": "avatars-feed-1920x1080.png",
+      "width": 496,
+      "height": 407,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 93010,
+      "sha256": "09829ce16d7fc863781c39b90a04d5bed7e5f33dfa349fa339ebc38a4684c6e9"
+    },
+    {
+      "file": "avatars-leaderboard-1024x768.png",
+      "width": 257,
+      "height": 300,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 65934,
+      "sha256": "ff0b3de6b711a27aeccc4e343674477a17ab2f218d52cf744a8cc9279e631d18"
+    },
+    {
+      "file": "avatars-leaderboard-1448x1086.png",
+      "width": 363,
+      "height": 447,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 118162,
+      "sha256": "0d0a71e1dd53eee0572980cb95a804e00443e4dfe101da482f0ef1a3abeb4371"
+    },
+    {
+      "file": "avatars-leaderboard-1920x1080.png",
+      "width": 496,
+      "height": 440,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 144613,
+      "sha256": "0edc7a5b9450b0271351a63ad3caec6998e8bb0d90be5375dad5bc1aa3d657d8"
+    },
+    {
+      "file": "builder-choose-format.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 339276,
+      "sha256": "8806d4a3d45c905cf56da11538fae22f9d4372604e26575be740d1ec8de9bad9"
+    },
+    {
+      "file": "builder-cup-participants.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 362307,
+      "sha256": "2b60173e04de09480bd7c840b7beeb806c977fd3e6a7505b54a81ee9b342f45c"
+    },
+    {
+      "file": "builder-cup-preview.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 470379,
+      "sha256": "8070237e5cda6fff2181265596e944525343fbc05bca9181cb7e60c236f16669"
+    },
+    {
+      "file": "builder-cup-rules.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 267058,
+      "sha256": "236ca548511817a11b840358618263b67b75353acec66f88af60434606f7e683"
+    },
+    {
+      "file": "builder-cup-setup.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 334767,
+      "sha256": "e7292bcbd870833da198496cdb333fb166864c33e914c35bc86b07c612a07255"
+    },
+    {
+      "file": "builder-daily-participants.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 360397,
+      "sha256": "bbdc5e7de13b9de15de5b239196508094fa7e4d8d59fc95e1757b800a99cf6dc"
+    },
+    {
+      "file": "builder-daily-preview.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 441812,
+      "sha256": "3365f1b96921e1b905e60506e746c0d33d8b38149bfe42403f83d8cfc0432e09"
+    },
+    {
+      "file": "builder-daily-rules.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 284460,
+      "sha256": "ab8ed350c3046a141a45b8a8fa1d1ced1bd4df4eb3b90b2ed9b12c5ec850829a"
+    },
+    {
+      "file": "builder-daily-setup.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 319071,
+      "sha256": "2fe0395bdb1763fbd4073fdeabb36580193a6fa103ff9723da1e0f73cb180461"
+    },
+    {
+      "file": "builder-format-390x844.png",
+      "width": 390,
+      "height": 1643,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 241219,
+      "sha256": "33956c8f012e4c6a4bbb2a58352b6f16703ef7d6d1b3e3fd502608147cbe5cd2"
+    },
+    {
+      "file": "builder-format-844x390.png",
+      "width": 844,
+      "height": 1085,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 257485,
+      "sha256": "95ada861c246b3ae67e62f7c26a863a2263f4ef6f4131cef2be9b9c5131c17cf"
+    },
+    {
+      "file": "builder-league-participants.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 360523,
+      "sha256": "8bd9ce43388c3e8de2825c38384fdaa04fdb1f025b7fce23d7f50e68e7a70133"
+    },
+    {
+      "file": "builder-league-preview.png",
+      "width": 1920,
+      "height": 1383,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 797461,
+      "sha256": "03b7a3e798bbf53ce7fe8d51cb145f62f91c1edf8b22fd8028079f56e7feca87"
+    },
+    {
+      "file": "builder-league-rules.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 280667,
+      "sha256": "98deb6b1737bde87c67ecb9056256dc3ae40de25577564ce30a5d72132f6afbc"
+    },
+    {
+      "file": "builder-league-setup.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 337597,
+      "sha256": "2430d4dc4ea6477aa81152ad9be34200c21136394c9f3c4230817472cb89acec"
+    },
+    {
+      "file": "builder-playoffs-participants.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 360523,
+      "sha256": "8bd9ce43388c3e8de2825c38384fdaa04fdb1f025b7fce23d7f50e68e7a70133"
+    },
+    {
+      "file": "builder-playoffs-preview.png",
+      "width": 1920,
+      "height": 1325,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 763625,
+      "sha256": "183ca588a9d95cd362643e6b31862409033c5f394bafcd0f9f468ab91ea53abf"
+    },
+    {
+      "file": "builder-playoffs-rules.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 306653,
+      "sha256": "822b74525747ccfcfc71f5dcb8877aa629f120ab9512aa573f864179b748120a"
+    },
+    {
+      "file": "builder-playoffs-setup.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 318865,
+      "sha256": "081f025dad18d1579cb7df5e0be40f3c32dfe5f773e840b76437e43d386bea26"
+    },
+    {
+      "file": "builder-preview-390x844.png",
+      "width": 390,
+      "height": 1749,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 333315,
+      "sha256": "02e73b56b786af7e22bd964c76d589bb2fb9faa7971fbad179dd8e39df28e3f1"
+    },
+    {
+      "file": "builder-preview-844x390.png",
+      "width": 844,
+      "height": 1336,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "builder",
+      "bytes": 463186,
+      "sha256": "d027c0e9283393730a5a30e4b5fb5d0affc673a0fa4ba4fba8b1414eb13bb966"
+    },
+    {
+      "file": "builder-sprint-participants.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 360397,
+      "sha256": "bbdc5e7de13b9de15de5b239196508094fa7e4d8d59fc95e1757b800a99cf6dc"
+    },
+    {
+      "file": "builder-sprint-preview.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 441193,
+      "sha256": "2eb952e944468784970db7f3f67549a2304d76b60528b7d6371731d9f01568ee"
+    },
+    {
+      "file": "builder-sprint-rules.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 288840,
+      "sha256": "ab7dbbf60051f7b10c8a631385dab6d2b3c60dae0e84873639c1383dff34ba3a"
+    },
+    {
+      "file": "builder-sprint-setup.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "builder",
+      "bytes": 338597,
+      "sha256": "0a12989f752ae2fc9e45b833da5abe71402f9c11935e1f5c8cab187e16e28fa7"
+    },
+    {
+      "file": "center-cup-bracket-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 148659,
+      "sha256": "6ccde6012aeaee84c6cacbcead140cb379e860c053d3e6ad63284e9b26a1fb43"
+    },
+    {
+      "file": "center-cup-bracket-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 302614,
+      "sha256": "6429597e7146f80c3c56504453e1b34253fe003a6643283f7836decd2197c0d7"
+    },
+    {
+      "file": "center-cup-bracket-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 224491,
+      "sha256": "fc3fc02a9fac9c23c2ed23af6fa6fd42bac2801e7377f32eefb0945c7d8ef6d7"
+    },
+    {
+      "file": "center-cup-bracket-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 312565,
+      "sha256": "4198d0a7e1a1454c18650cc5ba1f2a6fd960e8d9093dca10a2aed9ab4c9feab3"
+    },
+    {
+      "file": "center-cup-bracket-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 90258,
+      "sha256": "5bc89204197c068403cc4dd6ac733c5ee7006237b66ccab1959857fce9af12d1"
+    },
+    {
+      "file": "center-cup-bracket-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 76093,
+      "sha256": "da3b280737f08d7d062b4fd775e0583dd30aff30f295a6f8dc1255e11d7a5b1a"
+    },
+    {
+      "file": "center-cup-champion-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 226823,
+      "sha256": "b7810eccbd5bab8fc9331cf80f9af668a16a6742a783bfcf8671c5edda7bf9e0"
+    },
+    {
+      "file": "center-cup-champion-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 312498,
+      "sha256": "8ebd4f4bfad36f3448080c1a9f5fe9f239dffd0f6432fb428144d59a685345a9"
+    },
+    {
+      "file": "center-cup-champion-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 309494,
+      "sha256": "da49e2ed9e2d45465c9d5db96acf0fdb531e640a62bd073af4c3e193140dc582"
+    },
+    {
+      "file": "center-cup-champion-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 323988,
+      "sha256": "dd1de062333295b0b3237e57f5fa32166a91b33e12ae8f3cf88279db55613c2b"
+    },
+    {
+      "file": "center-cup-champion-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 108148,
+      "sha256": "ab3ea9849057176c50c75351e659c266a25c521caaee480c358c55f62add783e"
+    },
+    {
+      "file": "center-cup-champion-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 86058,
+      "sha256": "a2f80b8eaac87807d305bf439412967f97fae38074aa0941cc0cebfe50d3e7ab"
+    },
+    {
+      "file": "center-fight-1920x1080.png",
+      "width": 866,
+      "height": 758,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "center",
+      "bytes": 722703,
+      "sha256": "9dd7cba342643abed3a2647a7410f10a1deca7ac97870f2ff53db91cea22180a"
+    },
+    {
+      "file": "center-history-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 186069,
+      "sha256": "2c667eda50e53f81c4c52e09e9da52f100aba04a9b813082255d53bb6ffc609e"
+    },
+    {
+      "file": "center-history-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 264441,
+      "sha256": "86053812d973774e792679d55b2212b3f90382f7d52c6e68807f0e59499e08ea"
+    },
+    {
+      "file": "center-history-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 248934,
+      "sha256": "cead461f2260c3f4581c10a7ec5a7889952364b1dad7fb372c28e650606996ad"
+    },
+    {
+      "file": "center-history-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 253348,
+      "sha256": "b2f40a10eaa0755e16f2a3147bb7abc9165dd4954052f4f72b7177f93340417a"
+    },
+    {
+      "file": "center-history-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 120778,
+      "sha256": "182a35e87da85cd99d139b9ad83295c94466713192f1f7cc7c520338f75ae780"
+    },
+    {
+      "file": "center-history-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 77445,
+      "sha256": "2098670571f08639e81c394eae38f57f65e8079f615ac1bd4783140591ef5639"
+    },
+    {
+      "file": "center-league-champion-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 225014,
+      "sha256": "138815f6cddc14305d2fb3696c38a88416b545285507d335855a4042254e5cc0"
+    },
+    {
+      "file": "center-league-champion-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 311183,
+      "sha256": "2e0d01ce059abae9313e525658549d3f1dfa23512681ac28d1acafc3fa55a598"
+    },
+    {
+      "file": "center-league-champion-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 307698,
+      "sha256": "2c49bb3de7df70c6b8a84f261e8e5838b13d949795e619e621117b7381b1ca2d"
+    },
+    {
+      "file": "center-league-champion-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 322430,
+      "sha256": "b7e05be8fce893355026a4d5f9053ffa2afe7e54395203e40d01215b02248581"
+    },
+    {
+      "file": "center-league-champion-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 106652,
+      "sha256": "3e94ef798441ffc8ab55906ef2e5099675c7c57ab3ecd1b8d8d2aeeb3e36de2a"
+    },
+    {
+      "file": "center-league-champion-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 86088,
+      "sha256": "b581b3804f238b42b6de1fe145a36ea83787fa73dd4ec53885789b3b0b1ddf6a"
+    },
+    {
+      "file": "center-league-table-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 142425,
+      "sha256": "3843799bdd27f2268e369d849f84d7df8c19e9900792e052e6b6b4a8eb957071"
+    },
+    {
+      "file": "center-league-table-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 187538,
+      "sha256": "3064c71752a5d86e9857603ae69c424b21efc67b295f5f848503f06eee56b314"
+    },
+    {
+      "file": "center-league-table-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 187751,
+      "sha256": "e65fc5714a63f2e9d50fc55f4aef0df9c3aa23b34187cd31303317ac71d336d1"
+    },
+    {
+      "file": "center-league-table-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 205107,
+      "sha256": "740b0ec299f1949b30d1b8cea05437b647c6d47284f41fbcedf71201c5e55386"
+    },
+    {
+      "file": "center-league-table-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 88837,
+      "sha256": "9ceca0112c2125ded23ef585583c8d561adedfde806d2e804192135a2a74eed4"
+    },
+    {
+      "file": "center-league-table-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 77065,
+      "sha256": "d7e6f64ca34183d6eeb4b14f5fe23b06d59cc921264168c3026c41834e2b13f8"
+    },
+    {
+      "file": "center-my-match-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 242673,
+      "sha256": "8ec2cfe06f87473570ae9bcaae2965a83cac2510da43fa462a67ce757488042b"
+    },
+    {
+      "file": "center-my-match-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 425052,
+      "sha256": "1dd60c93113ba0c4a3d5f467a040c9be66471b7d985793b90cb6feb21b844582"
+    },
+    {
+      "file": "center-my-match-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 357646,
+      "sha256": "d851cdfbc016243fb8989dfe751ab6352e6e551f08f9334b0cd20ed3d7a18fb5"
+    },
+    {
+      "file": "center-my-match-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 444062,
+      "sha256": "2788dabef84f193d6ab0a7ea9c68c9f625a72860aff4d57b3ca0b9735b478d00"
+    },
+    {
+      "file": "center-my-match-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 121106,
+      "sha256": "4b85ad12be2631ec9449cf91c90a916e3d8ec870c9eb0963df2168ab71852606"
+    },
+    {
+      "file": "center-my-match-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 75818,
+      "sha256": "02b125db8f7fe19c0898cf420b65f52b44a9d8b50eba26c1eec6879fb346b791"
+    },
+    {
+      "file": "center-normal-1920x1080.png",
+      "width": 866,
+      "height": 758,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "center",
+      "bytes": 716440,
+      "sha256": "37d37609def0891c32ff12569694d8f6d8b1d6773a40a0abb99897af1ced314e"
+    },
+    {
+      "file": "center-playoffs-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 160507,
+      "sha256": "0059c0d0d915465c1420abc4f55b9d790a5cca2d123b47f336ec35a64371a1d5"
+    },
+    {
+      "file": "center-playoffs-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 274670,
+      "sha256": "3de5a57e54d75f920ba045a98ee0886086603861f63daaa55e0406d45e7d3982"
+    },
+    {
+      "file": "center-playoffs-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 244445,
+      "sha256": "94b0355f08f445d0c8ef65aeb469b8554f96ccf054e0791004aa8adbbf51ac25"
+    },
+    {
+      "file": "center-playoffs-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 287125,
+      "sha256": "6a871af30e7a50cd873b7d592d54016cbb89aa9dafd861103b833211ef6c0b42"
+    },
+    {
+      "file": "center-playoffs-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 90558,
+      "sha256": "50966fe86aeb3de147d6c5ea0121490b0bb6110ecb705bcdf6285e5a95df0fa4"
+    },
+    {
+      "file": "center-playoffs-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 76238,
+      "sha256": "3f546cdbed1d9536aed218a7cb5548b1ca406adfdd8e4d3112dcfc87da9e4a4c"
+    },
+    {
+      "file": "center-schedule-1024x768.png",
+      "width": 1024,
+      "height": 1504,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 395087,
+      "sha256": "31dbffe59bd2b1d8c8c6881ddea11b95c929bd93396bd41c8cd82650e5b8a06f"
+    },
+    {
+      "file": "center-schedule-1448x1086.png",
+      "width": 1448,
+      "height": 1188,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 390157,
+      "sha256": "c64d09fa8e3fd08ead026eb788d2529735930993406e4d8b2187ad2e9ec23ccf"
+    },
+    {
+      "file": "center-schedule-1536x864.png",
+      "width": 1536,
+      "height": 1198,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 377815,
+      "sha256": "1f8c43315708bd497a2ed904f21188cacb2ad734bcbc1df4b47ebac44f56b71d"
+    },
+    {
+      "file": "center-schedule-1920x1080.png",
+      "width": 1920,
+      "height": 1201,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 383564,
+      "sha256": "36bfe3490af390b98a95133c932d19888d39dcc03f7b49c0b9f1650d2952cb39"
+    },
+    {
+      "file": "center-schedule-390x844.png",
+      "width": 390,
+      "height": 2198,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 380362,
+      "sha256": "243f9de609061f8c0e1caaa669fb6ffa5359a01a62d05f5c7b55d15b42cb014b"
+    },
+    {
+      "file": "center-schedule-844x390.png",
+      "width": 844,
+      "height": 1464,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "center",
+      "bytes": 402796,
+      "sha256": "b2f2ec830c3749ad340935ab3c43c7bc6fc8b7b13db0eb3cf60dd167be787e6e"
+    },
+    {
+      "file": "center-sprint-multi-station-final-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 120444,
+      "sha256": "584a3e4648b7b36ac28209a80caa86c493927694d6c7bf291c385c079bb8b68f"
+    },
+    {
+      "file": "center-tb-bracket-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 90803,
+      "sha256": "7063cc76eb917bcbc5e019da4a79604ad2d2d719680af0b63e51cc468eb359e7"
+    },
+    {
+      "file": "center-tb-table-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 87229,
+      "sha256": "5ca6e49ad5825019fddf77f7ccca13240c0224e04d1aa19ba7d18b27d48c2d27"
+    },
+    {
+      "file": "center-today-matches-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 190534,
+      "sha256": "615658aa3f94d20a595542e9ef49e25e7d4e8da42a3768eeb9691687289cdbef"
+    },
+    {
+      "file": "center-today-matches-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 301674,
+      "sha256": "865e64129fd8f862354a74dadd989874eb65ff84d18510cf549158a8765adeb9"
+    },
+    {
+      "file": "center-today-matches-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 279096,
+      "sha256": "55a30cb3c1f35b0da4fd663c31feccfd6553b79bd2ff9f21717f035de55a63da"
+    },
+    {
+      "file": "center-today-matches-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 294657,
+      "sha256": "42b2c57bebe13a437fca93196f81bc2f3588de12594a1512d1342df9988d22ed"
+    },
+    {
+      "file": "center-today-matches-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 121170,
+      "sha256": "b90cee01d7982813cbeda65ec77e7523e671d9268c4d6e67c086afe65aee3940"
+    },
+    {
+      "file": "center-today-matches-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "center",
+      "bytes": 79074,
+      "sha256": "96425b970b386bdfb165edfcf16428360167f6896ec8fabe30f2be8c082dde16"
+    },
+    {
+      "file": "central-leader-Aktuellt-fokus.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 761816,
+      "sha256": "49ab3fa3c914bb06f2e60a7146c046faaba30d05644fe972cf4b4f5d0c54574e"
+    },
+    {
+      "file": "central-leader-Den-här-månaden.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 766862,
+      "sha256": "89e31a8b17cb4db84b070cd89037134734b26bbf15d2fea272a2425226163663"
+    },
+    {
+      "file": "central-leader-Den-här-veckan.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 766966,
+      "sha256": "9a707369f04dea62108d2ed2e69e39e8bcdebbd454964f0ee625d29762a43f29"
+    },
+    {
+      "file": "central-leader-Idag.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 781100,
+      "sha256": "5fa4206cf80c08be43fa75631401e8d818d0ef26039cfdd3301855ae38c81080"
+    },
+    {
+      "file": "central-leader-Kaffe-+-bulle.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 746733,
+      "sha256": "ed8446003aaaf596ed6ee67464647d867a231c09e518d6eb24520d41aaac0eef"
+    },
+    {
+      "file": "central-leader-Vald-period.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 718210,
+      "sha256": "08a8af49c4e4e30f6f35271c247a02c8d5cfd4e43f38c8573d9c89c312389f96"
+    },
+    {
+      "file": "challenge-accept-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 389198,
+      "sha256": "f2e81c371de3a757883b19aa262514fd4465a2985577eb0f1d495c3b807599e9"
+    },
+    {
+      "file": "challenge-accept-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 168406,
+      "sha256": "4c672b010e692cfcbaaf9ea0e4c99e355b9cd381271e9c55d43e9af49a9ee76b"
+    },
+    {
+      "file": "challenge-accept-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 127106,
+      "sha256": "196d3f7968c5ac872b9379e24b676032a745bd336a06c8839d0af5d39610d7d3"
+    },
+    {
+      "file": "challenge-active-duel-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 467245,
+      "sha256": "2df2f378e37ae20d72ba7d2b61c07d122f78bd93a09bf626393e10a7c85df208"
+    },
+    {
+      "file": "challenge-active-duel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 126673,
+      "sha256": "74290eb9dfe14a1048cbfa1872f27de8d5699c5b01ab4d4b2edbd0e55cbb05bb"
+    },
+    {
+      "file": "challenge-active-duel-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 73323,
+      "sha256": "7133d17a2af2f65161906be959e1004efddfb85ebfc2787a8e313a0100a0fc3e"
+    },
+    {
+      "file": "challenge-cancel-confirm-1920x1080.png",
+      "width": 1920,
+      "height": 2128,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 731252,
+      "sha256": "a245baaefcabf0f4c8f29310152732a33671c4270e9b53f6b537d0c38585b0c9"
+    },
+    {
+      "file": "challenge-cancel-confirm-390x844.png",
+      "width": 390,
+      "height": 1851,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 262584,
+      "sha256": "764a190872b0d7444967476dbc8453d7d6cfc976fd672ef83750495593a9b461"
+    },
+    {
+      "file": "challenge-cancel-confirm-844x390.png",
+      "width": 844,
+      "height": 1952,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 449421,
+      "sha256": "777e883333de6cbc03f8c1520595f4ccd0e41dd84159a0b8688ba08927a0cb28"
+    },
+    {
+      "file": "challenge-cancelled-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 153202,
+      "sha256": "3e9f708a98c60f1480e356b21778dcbc801bd679b282d0e940c15079673eaf3d"
+    },
+    {
+      "file": "challenge-cancelled-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 71979,
+      "sha256": "62da9db3ff5f559e423a2943438f21cc11deff89830e3206602b82ff595ce807"
+    },
+    {
+      "file": "challenge-cancelled-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 27570,
+      "sha256": "d085fc3045955796f69e75fc99e402ab59ddc0f742e5e9b9b8a1f8ac800c4d32"
+    },
+    {
+      "file": "challenge-decline-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 358866,
+      "sha256": "760100153faa17703aab10c2f3f93fa8f87f54f07d7bc133e4e6a51801fa8faa"
+    },
+    {
+      "file": "challenge-decline-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 166881,
+      "sha256": "ad82d627f162d3688a80efe3ee7483fe70b61f7609d8e82c7d23649a94ab424d"
+    },
+    {
+      "file": "challenge-decline-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 114910,
+      "sha256": "96dc372e06854a1c8c90b07c6b3afa73fc82cfa613441cb6b3cb13511242da97"
+    },
+    {
+      "file": "challenge-incoming-1920x1080.png",
+      "width": 1920,
+      "height": 1692,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 577746,
+      "sha256": "3d334b1a8f9141d17399018c80f60ac80f432886dd90dbbb0b13344a567ce533"
+    },
+    {
+      "file": "challenge-incoming-390x844.png",
+      "width": 390,
+      "height": 1605,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 279743,
+      "sha256": "ae7d3f2a0f90bd52ab2d31e27c8c5eb08843866410ca2e71351f524c72077063"
+    },
+    {
+      "file": "challenge-incoming-844x390.png",
+      "width": 844,
+      "height": 1508,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 393803,
+      "sha256": "7ee5b3d5576fddb747529dd4f1e635ee95ebe2cb7321fc7f1e0bf4d7b28c24ac"
+    },
+    {
+      "file": "challenge-pending-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 384200,
+      "sha256": "7b23be971ded018f87e3606639e2ad87829b80a106e59abf64743af348a03b43"
+    },
+    {
+      "file": "challenge-pending-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 164938,
+      "sha256": "ed3d8a765348a6e24497c0cf4f8cd15cb5899f30f410e094d041658deb091632"
+    },
+    {
+      "file": "challenge-pending-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 100238,
+      "sha256": "6ad41b49607cca7b44e5f976613b22081e746dc8eba96ec312bf16535c4b5dd2"
+    },
+    {
+      "file": "challenge-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 383641,
+      "sha256": "a995577bc0808cd066e6a24cde315f3690bc52a9dda20a2506df0daef83204e6"
+    },
+    {
+      "file": "challenge-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 179610,
+      "sha256": "881e58d76cf6bba32701ff694d2c57ff7b5ed1fd651c365a58c6b38ecc2607a1"
+    },
+    {
+      "file": "challenge-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 115083,
+      "sha256": "35ab6f295876bada89cb873e2f526a12939d60d8b42ccbe2507d79fadd180388"
+    },
+    {
+      "file": "challenge-setup-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 341204,
+      "sha256": "6b8963aa2b7d97ccce0db7f99b3639bca0ce5bda8afd2e97a4349f492f509022"
+    },
+    {
+      "file": "challenge-setup-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 127123,
+      "sha256": "ee34912e07f46576b63ee9d7305b89ba054a8a72ed27ccc305007dfeb895db65"
+    },
+    {
+      "file": "challenge-setup-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 86087,
+      "sha256": "8119a407ab4607bc833a02fa98d88a63db59bd080edcc8cdfe94744992f1abb4"
+    },
+    {
+      "file": "challenge-station-busy-1920x1080.png",
+      "width": 1920,
+      "height": 1692,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 566903,
+      "sha256": "4824069c5869b304fe9a0bc3fcdc4c8910dd44699320de16a4865a0c7827447c"
+    },
+    {
+      "file": "challenge-station-busy-390x844.png",
+      "width": 390,
+      "height": 1626,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 276389,
+      "sha256": "37938b2a48c4dd7b495f88b747c8b39c0b1ce1baaa1d10b5e326a57dda8dc821"
+    },
+    {
+      "file": "challenge-station-busy-844x390.png",
+      "width": 844,
+      "height": 1507,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "challenge",
+      "bytes": 384194,
+      "sha256": "998f046d230f739f8aa1ce2402ceaf5a9d5d7afde7f05833cb20fdac99e0d18c"
+    },
+    {
+      "file": "champion-reduced-motion-mobile.png",
+      "width": 390,
+      "height": 844,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 332595,
+      "sha256": "fd9ee854e7cea29aaa7685cd00e725c48e1e29ee10f6714afcf19e61c99ea31b"
+    },
+    {
+      "file": "combined-achievement-mobile.png",
+      "width": 390,
+      "height": 844,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 332353,
+      "sha256": "cce1730587e59a5e99c8f06b1e7ebeab01b5b36059e1a42a5ec564e01a72695b"
+    },
+    {
+      "file": "competition-bracket-reduced-motion.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 156329,
+      "sha256": "3bd14bac2e726aa5dfabc711ce10eab304f65ca556865e09acd76d518deeb69d"
+    },
+    {
+      "file": "daily-dashboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 684765,
+      "sha256": "e09a349691be047e431d72001af5ceee809d37ca335477a39fb221ebd6ddb701"
+    },
+    {
+      "file": "daily-dashboard-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1201723,
+      "sha256": "4f8e768e78082fc94d3977506c2fe8178c359010ebc5670333b551e3660c2771"
+    },
+    {
+      "file": "daily-dashboard-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1067667,
+      "sha256": "a29cc5e3a1e1b3ff54a2a31e7c3257f70bab5306cd7756530d2efead9685543e"
+    },
+    {
+      "file": "daily-dashboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1479773,
+      "sha256": "936ad1bb43b3cf4e1d10498f0a04d40c374aa558f257e071f816f22a0bb3d9f0"
+    },
+    {
+      "file": "daily-dashboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 340035,
+      "sha256": "080edd6155947f2293e83d5605dda77c0e05970f6c5bca6aafbdf317e81d3cef"
+    },
+    {
+      "file": "daily-dashboard-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 330925,
+      "sha256": "bb8aba73bfdf00d56f13715ffb9488595a5450e55549737fba38576d533dc082"
+    },
+    {
+      "file": "daily-detail-1024x768.png",
+      "width": 1024,
+      "height": 1707,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 509250,
+      "sha256": "604a9b5df0f5624aa9c6af41998dbfe3dd798cf5ac99280214c0a99d65552bb7"
+    },
+    {
+      "file": "daily-detail-1920x1080.png",
+      "width": 1920,
+      "height": 1790,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 677536,
+      "sha256": "905bef795c8a75a12df581cb839cd9dc82ed8da79a2f4982a7b2271c7d98e0d8"
+    },
+    {
+      "file": "daily-detail-390x844.png",
+      "width": 390,
+      "height": 2047,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 345899,
+      "sha256": "a80fd24304a62aff45a2ebee81e0400f757503df5563e29757948acaaf067c07"
+    },
+    {
+      "file": "daily-detail-844x390.png",
+      "width": 844,
+      "height": 1607,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 443203,
+      "sha256": "503b8a8e7ce9ffbe300b3cc1ef783c4bb3a5097fe9f6aef728574f3356c2f5ea"
+    },
+    {
+      "file": "daily-fight-sale-lead.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1145311,
+      "sha256": "0f068b509a8f2ee33f242df16647ee19e287841562180030a033473d7e5b0ad2"
+    },
+    {
+      "file": "daily-home-after-month-tb-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 652778,
+      "sha256": "759bf6a69184ff444a0e1abe97c9ab0492441b723912f1ce6f18c139fd1ee99b"
+    },
+    {
+      "file": "daily-home-after-month-tb-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1118675,
+      "sha256": "fba3b563c722a8de1f63484337f8178859dc5c0d44885ed04e87ca23336b7bd0"
+    },
+    {
+      "file": "daily-home-after-month-tb-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1386609,
+      "sha256": "4cc66c235e6c3df86a3de436898ad9d1e7aa459000b851b97ef7fccfc9aefddd"
+    },
+    {
+      "file": "daily-home-after-month-tb-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 328423,
+      "sha256": "cb657ff2cae9ebd0bb57d27f615301159bc58e2cab67aa01d19db32bd799a2bc"
+    },
+    {
+      "file": "daily-home-after-month-tb-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 315367,
+      "sha256": "2c371f84ac1cea477842c4736432219d2d57fff96443e44590ba359cfd8d07a0"
+    },
+    {
+      "file": "daily-report-preview.png",
+      "width": 1280,
+      "height": 978,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 326771,
+      "sha256": "3167a8dd6708618af8a8661f82df55598444626350228b95683a47dfe8d8cb36"
+    },
+    {
+      "file": "desktop-orbit-1280x800.png",
+      "width": 1280,
+      "height": 800,
+      "viewport": [
+        1280,
+        800
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 774103,
+      "sha256": "4a9b719a4b4a37a5fd29f4a38a2fb35ceb5bd04d88fc0a831c92f4e6d62b2204"
+    },
+    {
+      "file": "desktop-orbit-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 821215,
+      "sha256": "aa648fdd96e0c5c4400f2c51d89b05a17b450b29b57fead31d7c220a167ca942"
+    },
+    {
+      "file": "desktop-orbit-1440x900.png",
+      "width": 1440,
+      "height": 900,
+      "viewport": [
+        1440,
+        900
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 963366,
+      "sha256": "13899827eb5b19ad2da61d250745eaa636c38d120db49571b096c091588c6d5e"
+    },
+    {
+      "file": "desktop-orbit-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1117046,
+      "sha256": "29e15731aaff9ff2a3406fa18a933801118d1a86cf31559f2fb8700f07b93676"
+    },
+    {
+      "file": "desktop-orbit-1920x1200.png",
+      "width": 1920,
+      "height": 1200,
+      "viewport": [
+        1920,
+        1200
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1492256,
+      "sha256": "11b6ed6c7701c5ebb0b333035d40dcc1807f525568e90c0898c46757c88ad41a"
+    },
+    {
+      "file": "fight-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 678385,
+      "sha256": "1d4c09a5009f1795187aa0bbaf76d35b1eb9a82df9b9eeb686d059a071abe1b5"
+    },
+    {
+      "file": "fight-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1148439,
+      "sha256": "fdd7d30464ef4cd97ee0ec0fa1af468aef3f4e9afa1039daab1f4e3d996e4238"
+    },
+    {
+      "file": "fight-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1017456,
+      "sha256": "33f96270b60a94a29d032da70fbf11a33f0b4d6c2972407c6fc0bc0380542641"
+    },
+    {
+      "file": "fight-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1478900,
+      "sha256": "3bfeaaf2a57b0b3d755ff9be337921c01f7c00a577d93c56313b5fa53a72d1ac"
+    },
+    {
+      "file": "fight-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 337227,
+      "sha256": "4f2f41878199db2302a46d98509d1401f46545deb517ce31a40b29d86dc2dda2"
+    },
+    {
+      "file": "fight-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 327773,
+      "sha256": "3c92c9c82ce7e8d5f968787dcb30bc6c4eb0395df1455c750de539b4f1a92be3"
+    },
+    {
+      "file": "fight-active-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 290519,
+      "sha256": "7ce93f615bf1675d01f51a3c11703252413101400e5068ea2141d2827dffcfeb"
+    },
+    {
+      "file": "fight-active-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 427084,
+      "sha256": "2c166084325b723a445b6b7a5362793d8ed46bfa1c461d08e36d4380336d13c3"
+    },
+    {
+      "file": "fight-active-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 443789,
+      "sha256": "8289c6316a4b2c674e4d5b29775bc5ea69a8c0a25fb7181cafa03c15e6a48bf6"
+    },
+    {
+      "file": "fight-active-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 166522,
+      "sha256": "f615748189101c0d848a7bd09d8e9df5337b3b47e8661a64bb1782aa4ad097a9"
+    },
+    {
+      "file": "fight-active-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 74479,
+      "sha256": "35366b80eac8712b8cea9bce7aff1b6b16fe680beba7b51a2b1e1c7a0ff5bb73"
+    },
+    {
+      "file": "fight-active-duel.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 477300,
+      "sha256": "a35af615824e325856bc58ffa4b5f08f1689ca62209ca50c33ff8f856559c399"
+    },
+    {
+      "file": "fight-arena-final-loss-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 266924,
+      "sha256": "710e44e3fa6beacb0f5d7a016bfb4f78d86765b89157b2a47c7e0ea993a1452d"
+    },
+    {
+      "file": "fight-arena-final-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1261476,
+      "sha256": "01d1d2d6818d426a4998c37718fb92d233a0d03e9994d4a85d8504b1c48fe6c5"
+    },
+    {
+      "file": "fight-border-position-1000.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1506156,
+      "sha256": "fbc9ccb7e8bea9ed3190073088c8f369ceeae20617341f5a7cddd10ebba8ef3f"
+    },
+    {
+      "file": "fight-border-position-4000.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1506466,
+      "sha256": "3f2b8a91700b739e972e709d95e71ae1695f2a3c035ace7c207692e723347a78"
+    },
+    {
+      "file": "fight-event-feed.png",
+      "width": 1250,
+      "height": 387,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 133633,
+      "sha256": "677102da04ce4dc8959bf85aa901a35974dfa24653643cb3e88e1c75a0b72441"
+    },
+    {
+      "file": "fight-final-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 496898,
+      "sha256": "601fc63664feebe78930f50b2ebeea025cf98b3f546fefac90c053a6f1d65047"
+    },
+    {
+      "file": "fight-final-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 982063,
+      "sha256": "4f5ade95f2ce07bada0967f745f66e3dfbed6038389f11a7b4992e8c8e6d6209"
+    },
+    {
+      "file": "fight-final-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1260538,
+      "sha256": "5a078e2384006f17ea2ab641ec263ca7591fa5f5e3c1bbc46348147b99fa6b66"
+    },
+    {
+      "file": "fight-final-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 273359,
+      "sha256": "50faadec288c0ca5ee012428ca82ae40170eb9526776ad9bcfa849d07402293b"
+    },
+    {
+      "file": "fight-final-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 230307,
+      "sha256": "815881a581fe40b386d29cb7abe16d2149f0d97eeb88aa5e944b3d72e63f6c91"
+    },
+    {
+      "file": "fight-final-tie.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1261514,
+      "sha256": "0748d37afae2482a4ccf838c6e8ebb5734524fd033e506c2a0c21fee4a264fb9"
+    },
+    {
+      "file": "fight-final.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 583543,
+      "sha256": "d90b167fea29c72e7d4d070dd8859cd836a9171b70ff2d271bcc53f806dda24f"
+    },
+    {
+      "file": "fight-finished-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 238211,
+      "sha256": "06a4ae674240a568bfbdf7bfc874b7992f3c961bb70051bc718852c021ebfcae"
+    },
+    {
+      "file": "fight-finished-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 533150,
+      "sha256": "459647dc95b8e0996bbcfdf1275f658c1eeea3fe0194fd7499332036e09a993e"
+    },
+    {
+      "file": "fight-finished-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 557632,
+      "sha256": "680c9fce13726789002cba87beeecbd493e85936a44a9713c60306eb8d212bc2"
+    },
+    {
+      "file": "fight-finished-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 147262,
+      "sha256": "4ff40e1e4b5876b50c5679592715e391c4b4f3276cfb73d5a6229e59acb1769f"
+    },
+    {
+      "file": "fight-finished-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 54858,
+      "sha256": "4b7cb5a042502c40dff1f88897e4f83505a93b8b486431fc3e41802c1f0ef2a7"
+    },
+    {
+      "file": "fight-full-duel-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 481465,
+      "sha256": "826e231b51abb63cf071d4eeca3ed3587f4c1089c562126476b3c27541dcf22a"
+    },
+    {
+      "file": "fight-full-duel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 162140,
+      "sha256": "f23d808c81842ff47b62df499faf6a1bf1b1cff3991fb6c8d3afaac34e96373e"
+    },
+    {
+      "file": "fight-full-ranking-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 436979,
+      "sha256": "256fb9272ea23bc5462771315cb5c5ac16c19b0ccbc86078907df1484648798a"
+    },
+    {
+      "file": "fight-full-ranking-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 152268,
+      "sha256": "3ebe93cf07b4edf4a8a9a5a70a658288d855a8fa2291205b14a516bfc7265292"
+    },
+    {
+      "file": "fight-full-tie-final-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 461974,
+      "sha256": "30505a912e2e7b736c042b006a77b43f9b581e0decef93e14ca9ba1001ba3eb6"
+    },
+    {
+      "file": "fight-full-tie-final-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 137587,
+      "sha256": "590e962c712babe153f3328dad942ee019f77b1aacba0cc66f476fca7270c1d2"
+    },
+    {
+      "file": "fight-full-winner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 548977,
+      "sha256": "88935ba00c7cbfb40e0abad65562a502a5be192e03b6f89102c370d3a1460b5e"
+    },
+    {
+      "file": "fight-full-winner-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 144621,
+      "sha256": "2ae75be17f05c8f6bcaaba422a5ccbcad3477b507ca15dc4c8bfbaf93629d109"
+    },
+    {
+      "file": "fight-hub.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 209462,
+      "sha256": "157b2c2d08028b339cfe0c6f1de3e2bec75f33addeee0148e595768f96e68c42"
+    },
+    {
+      "file": "fight-indicator-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 665323,
+      "sha256": "9050cd1b7c955257281f8155cb46aaf61335ff8649d62521bc488cd44d7d2225"
+    },
+    {
+      "file": "fight-indicator-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1197577,
+      "sha256": "9ecd739bea8eebda8f50eb753d7c0f1118aff9d322c90d583bbf6ac4be259da7"
+    },
+    {
+      "file": "fight-indicator-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1475480,
+      "sha256": "4b1aedd2492c9eb159a9f178e469c5a72e979b6e031b4ed692b90dfd71f0f311"
+    },
+    {
+      "file": "fight-indicator-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 337738,
+      "sha256": "431c56ce973dc55dc34597b993abaf045bdaed9578d1742ee98116f5e4ecf8bb"
+    },
+    {
+      "file": "fight-indicator-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 324045,
+      "sha256": "bcca4ead3dc00a8f70dbae53e19815080158458289286774c52a2d3f6ff8453a"
+    },
+    {
+      "file": "fight-lead-change-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 413441,
+      "sha256": "0a8086a9ca71e548da62fcecaf64cb9e4858364d80ee2b9c5e24a954d975ff7e"
+    },
+    {
+      "file": "fight-lead-change-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 719065,
+      "sha256": "526eff622355ead87ea8e04a3d315ba7edbbfe137fa5cd642cec3c6e280de5ba"
+    },
+    {
+      "file": "fight-lead-change-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 827354,
+      "sha256": "b80dd0293b37c81e43e3bfb6e53efc6e136cfa19673ab486b8e8f1b70b29623b"
+    },
+    {
+      "file": "fight-lead-change-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 242780,
+      "sha256": "77003ee775763421b38988d78f18a1794604b508f88e676b12db87db5f391e4b"
+    },
+    {
+      "file": "fight-lead-change-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 213413,
+      "sha256": "61a9974bfbfe88418180f7cb1c7a18fd92cb7ee34dce53fb344ea70e3aea12b3"
+    },
+    {
+      "file": "fight-lead-change.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 846338,
+      "sha256": "f5d20ac5dca9302955270b2fb70625e5e6999cb78926f8814c071770b21d9a42"
+    },
+    {
+      "file": "fight-leader.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1506814,
+      "sha256": "4aaf03574c37ff02c5244ca9374476e939c8b8240fb0c4053402f6efb94447a6"
+    },
+    {
+      "file": "fight-reduced-motion.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1523379,
+      "sha256": "b4b12b31441939a4d671cb8907e57bb385e1ab7297be2a628a3598728685e1a4"
+    },
+    {
+      "file": "fight-sale-lead-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 446136,
+      "sha256": "28185dba0da647d10ec59a46b9582c2fa2587b9429163013e66cf7026412fb0a"
+    },
+    {
+      "file": "fight-sale-lead-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 881307,
+      "sha256": "2b8d59599ac75a642a555d1ba18a0d0fc1bcde42e822977085c7d48bc363b7dd"
+    },
+    {
+      "file": "fight-sale-lead-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1138492,
+      "sha256": "cae8eec02ed8b0ed6db3939159d0bb08838f9ee9c748a216536eb154ceb5649e"
+    },
+    {
+      "file": "fight-sale-lead-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 234534,
+      "sha256": "080924ffe30f532f1853a877c990606b6bce555b73220ceb96d8a7ba55e3752f"
+    },
+    {
+      "file": "fight-sale-lead-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 213505,
+      "sha256": "583a6b743a9b476b3398ecf8c1d93f8dd3f46cb0c4b6f66185a7f1047fd86adf"
+    },
+    {
+      "file": "fight-tie-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 490076,
+      "sha256": "a707aae4012e90f8c18e086531fff2613087ea7416d1ef523a17d796f86a0375"
+    },
+    {
+      "file": "fight-tie-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 942395,
+      "sha256": "b5f6e411f20e8d0a26b333f32f0bcd284c9cc97e12b0a15020faaec7e563a1f5"
+    },
+    {
+      "file": "fight-tie-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1214967,
+      "sha256": "06500f32cac9c9755107e6c3baf5d45b1655c83920601e918063ea7acf817811"
+    },
+    {
+      "file": "fight-tie-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 245652,
+      "sha256": "0889d43c7bba06523439e2594f96c784ead83abb3f2ff691fe91c4b13e698ff7"
+    },
+    {
+      "file": "fight-tie-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 217149,
+      "sha256": "0bbe3a4dfc7d20fa1979343715502dceaa2acebd3e239a96f2daf5e6b0292cb9"
+    },
+    {
+      "file": "fight-tie.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1505267,
+      "sha256": "eef6e0497ebab3ad9d5713f08e03d8779ee16abdfa3680b89f451f6b97c11e96"
+    },
+    {
+      "file": "fight-under-15-minutes.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1427829,
+      "sha256": "972be3e2b68d3dcb4238446b8f5b7946c425fe7d318587ad353c2dbcffe488a2"
+    },
+    {
+      "file": "fight-under-5-minutes.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1506814,
+      "sha256": "4aaf03574c37ff02c5244ca9374476e939c8b8240fb0c4053402f6efb94447a6"
+    },
+    {
+      "file": "fight-widget-final-sprint-1280x720.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": [
+        1280,
+        720
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 772138,
+      "sha256": "e7ff5710fc2afa247476813c5d86200eda54992d23e77636f9fcbe9245f91d3d"
+    },
+    {
+      "file": "fight-widget-tb-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1502286,
+      "sha256": "e1b022620814ea00019558131826d20e8df8960428a28c66f914a826609ee514"
+    },
+    {
+      "file": "fight-widget-tb-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 336371,
+      "sha256": "39fa6180f4a1294c29acd083a05afa31bc7dac8a5c3c420decaf0f5ade9e98b1"
+    },
+    {
+      "file": "fight-widget-urgency-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 678364,
+      "sha256": "7ace882630de5220b381b8e866f5645942c8a35e2331b47577bca4c4b4c32f04"
+    },
+    {
+      "file": "fight-widget-urgency-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1196805,
+      "sha256": "7d938a3c4367c41e30a2e61be2fef48d4dc31b646991ccf492f4c9056b5ea640"
+    },
+    {
+      "file": "fight-widget-urgency-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1496855,
+      "sha256": "9097e8bfd7c4c433dd850edb9dbe351bd27fd9ab812467c2e447a1840a31691f"
+    },
+    {
+      "file": "fight-widget-urgency-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 337558,
+      "sha256": "e5659bcb6faab51bc7aa8dd6ba5351c670c4dd05483479956a32a0f0411f485d"
+    },
+    {
+      "file": "fight-widget-urgency-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 330559,
+      "sha256": "dc011d1e225a1304118e48233ea310ecf0866f3527ce64a48c1911a588ff3063"
+    },
+    {
+      "file": "fight-winner.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1264402,
+      "sha256": "52cfc0968d20a5381ea3e5d630622d6b8f8186c62e16e0352cc72d08068a7f2b"
+    },
+    {
+      "file": "full-leaderboard.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 668728,
+      "sha256": "71c83507b9b92f36e5975071df7c14cee6e758ed20262744f231e118b9c2975c"
+    },
+    {
+      "file": "goal-hero-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 527404,
+      "sha256": "f179edced98e20577c3f911ab206820504d0b68a947907bd3799e1ec118a569a"
+    },
+    {
+      "file": "goal-hero-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 924802,
+      "sha256": "fe3ed543170bcabcea84e2db5ef69cdf1c875ee581f39d15de33aec60bc0e903"
+    },
+    {
+      "file": "goal-hero-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1162247,
+      "sha256": "b6fa2222533270662686fcfca3e64cf3548de122944aabeb0baa865843a2f61a"
+    },
+    {
+      "file": "goal-hero-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 280465,
+      "sha256": "bd4b82abb7594638093c016e5fe7297c9360737d22331cfb134487e24374a62f"
+    },
+    {
+      "file": "goal-hero-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 275712,
+      "sha256": "b9ed517392e8771f19ace066b0b84304f3c4410f58e1a4e9e3de1f62ccafbac0"
+    },
+    {
+      "file": "goal-hero.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1238887,
+      "sha256": "4980e668ce97ad21669fb38e1a4bf73428b99750a4c32abc80bcf9d7d2c0d596"
+    },
+    {
+      "file": "hero-burst-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 656311,
+      "sha256": "6c288398374331b24981ca4b796e9723143fe944d8b36f2d031d099ba3f1c573"
+    },
+    {
+      "file": "hero-burst-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1370262,
+      "sha256": "661137b330e328263a3e02fe4507ff8b6e6543e3f08e5e39163c62c6a439e48e"
+    },
+    {
+      "file": "hero-burst-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 325402,
+      "sha256": "243063f6fc1cda8c41cfa263c8a50c4b50affc17ad90a7c41fa77604f196ee20"
+    },
+    {
+      "file": "hero-burst-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 314954,
+      "sha256": "1467c150811e616ae8ddeea1d0a89f72761ff932e7f3b3906a687619861a7bd5"
+    },
+    {
+      "file": "homepage-incoming-badge-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 1393140,
+      "sha256": "d738de5c7ae90428bea5222e937fa485f4e22851ab7361f0a2015903a644f403"
+    },
+    {
+      "file": "homepage-incoming-badge-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 330655,
+      "sha256": "2b1d584dd3b8d19e3cce55480712ea2dfdfe0aaf7db6651202b13370e2d8c5eb"
+    },
+    {
+      "file": "homepage-incoming-badge-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "challenge",
+      "bytes": 315562,
+      "sha256": "0dcfda08660ae612b15dc84fb27f4cefa13d43e0c37fafb306f5f091bf1c4d45"
+    },
+    {
+      "file": "identity-champion-reduced-motion.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1285569,
+      "sha256": "4bd5269411052ab527963308964bc59a106d4b9f2876012f528782924edb4ad8"
+    },
+    {
+      "file": "identity-multistation-board-and-feed.png",
+      "width": 1920,
+      "height": 1746,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 530670,
+      "sha256": "6580ad030a51cae158f383ae9f0dd1f915bac00b064d384c4eeed58d77fae1e6"
+    },
+    {
+      "file": "identity-multistation-mobile.png",
+      "width": 390,
+      "height": 1797,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 266499,
+      "sha256": "daaf39c05d9cd486707ca37881c8cb62144e8cc8508d02093ddf2e89a9fe840e"
+    },
+    {
+      "file": "identity-nav-1024x768.png",
+      "width": 1024,
+      "height": 70,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 17733,
+      "sha256": "db15bd68c88330cbfb8c662dbd128ebe22d6c36f5146f8c801f04820a5571f8a"
+    },
+    {
+      "file": "identity-nav-1448x1086.png",
+      "width": 1448,
+      "height": 86,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 18522,
+      "sha256": "850a0c59b5922d76a04f31caf7cd9f0f03de583253a584d0e94c4c713d71cc3f"
+    },
+    {
+      "file": "identity-nav-1536x864.png",
+      "width": 1536,
+      "height": 70,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 19558,
+      "sha256": "8b9b9fc50f73d17d9c1364ddffdc13662613af9897217f38c0696b33498abd7f"
+    },
+    {
+      "file": "identity-nav-1920x1080.png",
+      "width": 1920,
+      "height": 86,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 20962,
+      "sha256": "a32eba9540ec3d3b64fb4d641f9c994879f508d3d5d7bd9188db1683fa93b5ab"
+    },
+    {
+      "file": "identity-nav-390x844.png",
+      "width": 390,
+      "height": 64,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 9766,
+      "sha256": "0da8ca5200d8000ca7e3eea7b22f5c3e9371d153697061d02a4a4c1c45939d24"
+    },
+    {
+      "file": "identity-nav-844x390.png",
+      "width": 844,
+      "height": 48,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 11887,
+      "sha256": "08fd1fa89836d77f6662e7af776ae77e0c91bd6a3cce7c6386474d58a0c58137"
+    },
+    {
+      "file": "identity-new-leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 659560,
+      "sha256": "a16c2aa6622a1a6f06bef4e5bd6a76a3bc354562962093b1f4bbb513de2e450d"
+    },
+    {
+      "file": "identity-new-leader-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1105358,
+      "sha256": "192e884db7a066582f0f986c7cdcec8d6fcccfab8fae850c58a903f49b088d69"
+    },
+    {
+      "file": "identity-new-leader-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 968413,
+      "sha256": "e1606c4c3f14d63a143da83ac882ac58f4d8c5d7dc921cbd6bb3b08ef9973f3c"
+    },
+    {
+      "file": "identity-new-leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1296883,
+      "sha256": "39bbe56bc477cac06c0e1dc941e911a8e1bac14a8510fd43174b2e306e7e838b"
+    },
+    {
+      "file": "identity-new-leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 334631,
+      "sha256": "eaa3f5dca63e27aeaa06d40108eecec04935f4a7e6629e439d7d912fdc3d054a"
+    },
+    {
+      "file": "identity-new-leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 323481,
+      "sha256": "705f1392248b25e29a6a90ed7d202fbdc6ec9a755fbebf856a6ae38fb2e1ccc6"
+    },
+    {
+      "file": "identity-normal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 648609,
+      "sha256": "5f163ccc707c8118bb74c82f098b2ff24be2820f2fed5953b96de3675cd58f2b"
+    },
+    {
+      "file": "identity-normal-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1115282,
+      "sha256": "ff9cbb0b5b3e4a83b9557f501128c8e89cf7bfb2ef850fdb94a649a767c953bf"
+    },
+    {
+      "file": "identity-normal-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 994511,
+      "sha256": "76676ed035da9dccd35fb05a101e4a3a897d05450da56eadc148aa9004a34702"
+    },
+    {
+      "file": "identity-normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1392156,
+      "sha256": "5078800ed76d7efb73c1e6233797af4f65332bceb7bb048b18c6a00625516126"
+    },
+    {
+      "file": "identity-normal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 327573,
+      "sha256": "c35e83f8e6d5e2ab3769d6675563c26e7b527c5bc4de8f11c561bb9dbec0b2ee"
+    },
+    {
+      "file": "identity-normal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 314097,
+      "sha256": "7bfb2909d643ffc4ca2de64582e28990b167ff32ff4000d4241ad12e5cfd25f1"
+    },
+    {
+      "file": "identity-sellers-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 456742,
+      "sha256": "a2802a7e1500934bdd85ff2d71a0e177dc49205eed018af18a81139836bcd7d8"
+    },
+    {
+      "file": "identity-sellers-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 627929,
+      "sha256": "609469e28f3a61f979f7b9fa623598c4c18141f0a8c2d99f44a0e66700043140"
+    },
+    {
+      "file": "identity-sellers-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 577596,
+      "sha256": "ae2998ff30e5da6aec63db271e82eefb364d5b0b1e5587a38ff41c7eb6722725"
+    },
+    {
+      "file": "identity-sellers-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 736495,
+      "sha256": "7bdbefd4f732631537ae06453d4bc57f12263cc88d92eb2e169bf47e3a3d34c8"
+    },
+    {
+      "file": "identity-sellers-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 256896,
+      "sha256": "424730e74076e18fc3c00d6695f544e75a336d2e944ea8effe9cea177e39425f"
+    },
+    {
+      "file": "identity-sellers-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 228172,
+      "sha256": "b555931fb3e9d35aebd769a92ab1e749878ba30c51362d8601141a3e7547096b"
+    },
+    {
+      "file": "leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 660590,
+      "sha256": "dac08ed65509516b33e3bea135cbcb780503953716fa988ca7158542245a99d2"
+    },
+    {
+      "file": "leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1297834,
+      "sha256": "aee1ca58a695cb663b9ff902d80dea92a8a348340cda80c2774753219606e698"
+    },
+    {
+      "file": "leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 330948,
+      "sha256": "d08efc97ea261863f682b1665052a3ea3fcb56bf7820071b7a1ea633fbb50e18"
+    },
+    {
+      "file": "leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 318346,
+      "sha256": "d7636f0153c2ce7f8587e7f100139d377daaa620ed32108e4ad094a50fca2047"
+    },
+    {
+      "file": "leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 650348,
+      "sha256": "5062e33f1f7c39c84c03a020b0c3862db89955982417dc7160fb927eea386d57"
+    },
+    {
+      "file": "leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1391554,
+      "sha256": "fe34b0779afc373cb0afcb793e2683d007b7b6ffa0d4e96b221e006bd243a028"
+    },
+    {
+      "file": "leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 328373,
+      "sha256": "4be650646f30ed61465e81be9ad297852df58e7286ddf59b45474d9bdba6ba1e"
+    },
+    {
+      "file": "leaderboard-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 315367,
+      "sha256": "2c371f84ac1cea477842c4736432219d2d57fff96443e44590ba359cfd8d07a0"
+    },
+    {
+      "file": "league-table-1024x768.png",
+      "width": 1024,
+      "height": 1932,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 333387,
+      "sha256": "1f83d65394cc10a20b01b79e67f35c06205c4a2442bad9ff29383f0d3a7be59b"
+    },
+    {
+      "file": "league-table-1920x1080.png",
+      "width": 1920,
+      "height": 2009,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 402027,
+      "sha256": "e2d0bea6096beb8705acb11f1b818ed1bf2ae47bdfe8cccf61d5f9fb37f0f777"
+    },
+    {
+      "file": "league-table-390x844.png",
+      "width": 390,
+      "height": 1997,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 226097,
+      "sha256": "a9b730dcb9062a5414b89a5b422e5c86b0c6a53483319f6883483b75900a39b9"
+    },
+    {
+      "file": "league-table-844x390.png",
+      "width": 844,
+      "height": 1902,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "full page",
+      "category": "regression",
+      "bytes": 296086,
+      "sha256": "a294067ef5479ee997f62dc043b2281c353215898f4b1f08362f5479e04988ae"
+    },
+    {
+      "file": "left-column-1024x768.png",
+      "width": 257,
+      "height": 602,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 117995,
+      "sha256": "db5ac6dd3bd8e8b00908788044a2e073a8a91d3c17720a259973baf2cb703b04"
+    },
+    {
+      "file": "left-column-1448x1086.png",
+      "width": 363,
+      "height": 886,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 203508,
+      "sha256": "d72e89ebc2891221526da1946a95ca629497f0f8a18b4910207eb0e1632545ed"
+    },
+    {
+      "file": "left-column-1920x1080.png",
+      "width": 496,
+      "height": 880,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "element crop / smaller capture",
+      "category": "regression",
+      "bytes": 243939,
+      "sha256": "314d3f713ba0b664010b883fa42c7e9b0a6e1cd2b1ef12f9dcced538e8000a59"
+    },
+    {
+      "file": "level-2-near-personal-goal.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 820541,
+      "sha256": "c12a9b1313d1eb2f90896f12e10c2777547873e87482b22a083f6f64a921f380"
+    },
+    {
+      "file": "min-arena.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 593559,
+      "sha256": "a6dfecfa50e6ec72227cd049da7e7d72e41493df6b63702d6db8e5e5031206ed"
+    },
+    {
+      "file": "mobile-feed-panel-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 158405,
+      "sha256": "e422d27df3d19e7a0a6fa9b76f7572fe561d9ac06a6f3762a53f9fb13021b37a"
+    },
+    {
+      "file": "mobile-feed-panel-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 150326,
+      "sha256": "0281f0f3ed441fed1844a8b3756acdc38adc1749ce25c92a95fd56f26fe3e710"
+    },
+    {
+      "file": "multi-station-leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 219337,
+      "sha256": "712741596cd35c85de6f4f03f38582f1d3171c4e145f1a1e3eaa95d68efbdbd5"
+    },
+    {
+      "file": "multi-station-leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 303451,
+      "sha256": "b3ad7f31d8b4f4d54f8772bf9344ceb95a4a777c4f2fd58fab20041f23a425be"
+    },
+    {
+      "file": "multi-station-leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 99248,
+      "sha256": "bdcf3b18c4a7f13aec3e73fd6a4db4616d54502c8da1c65cd3e781d0f135b374"
+    },
+    {
+      "file": "native-profile-upload-success.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 304754,
+      "sha256": "38dcbcb6ebb1c58304c771c501d9f191d813eb2ac945c8aafc640818fe6b19c5"
+    },
+    {
+      "file": "new-leader-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 658161,
+      "sha256": "8c608de24c3a68e845a1420cb32ca716639a0deed8d9c8a9023a7429e874b916"
+    },
+    {
+      "file": "new-leader-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1112211,
+      "sha256": "504cbebd6979dc8f95bca70d02c4d2959772f36eb04d13c32ee10dd767606c9a"
+    },
+    {
+      "file": "new-leader-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 963864,
+      "sha256": "1d5d9f03ac32df7d5e15c80777151e01f87ce7af35df1a7d03f7bec8733ee03c"
+    },
+    {
+      "file": "new-leader-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1293210,
+      "sha256": "089a07abf319f5f1f1a6a2fa394295ce9f9cec98b93013624060923607352a23"
+    },
+    {
+      "file": "new-leader-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 334174,
+      "sha256": "8520d24b85a9cf7f2371fe936142e49278347c3afaa5d30778e08fee62aa955e"
+    },
+    {
+      "file": "new-leader-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 326658,
+      "sha256": "b8670f4e9db90318467ad1acfd557bd323520c52d493feff5add418f68678795"
+    },
+    {
+      "file": "new-leader-activity-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1104496,
+      "sha256": "ebacab30f738aaba8d21189a008c8b45e3bd7c05a1e7a51a261718ebbb2ae8de"
+    },
+    {
+      "file": "new-leader.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1285959,
+      "sha256": "f88e51c0fb51895d7df2552f9c1f0944af2dddf022c567c80b94d2282f388330"
+    },
+    {
+      "file": "normal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 648606,
+      "sha256": "12bf096a213e5c5d5c553ded6d2411413be40b0f4ba06795f01b4c71fe7ed3a9"
+    },
+    {
+      "file": "normal-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1115279,
+      "sha256": "7d39cc17b464050e71f7b2088b8cfebc6410e8a690b77090d9b931562c47449a"
+    },
+    {
+      "file": "normal-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 994511,
+      "sha256": "76676ed035da9dccd35fb05a101e4a3a897d05450da56eadc148aa9004a34702"
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1392158,
+      "sha256": "8473735485dfea14ab7c290161849590306e215712e74b11e50991383a80afc7"
+    },
+    {
+      "file": "normal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 327573,
+      "sha256": "c35e83f8e6d5e2ab3769d6675563c26e7b527c5bc4de8f11c561bb9dbec0b2ee"
+    },
+    {
+      "file": "normal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 314097,
+      "sha256": "7bfb2909d643ffc4ca2de64582e28990b167ff32ff4000d4241ad12e5cfd25f1"
+    },
+    {
+      "file": "onboarding-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 219444,
+      "sha256": "07763a9790f408accb6609db8344351387c55a612fdad09c9365a2df4107dd66"
+    },
+    {
+      "file": "onboarding-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 262379,
+      "sha256": "6a41c6af1766a204def1e24e772373915a05996e2a78ea516556717d62a5ad68"
+    },
+    {
+      "file": "onboarding-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 121402,
+      "sha256": "63872a7631c31a7c0dd3cb2de3424326a7450e223d712a337299f134eec09b59"
+    },
+    {
+      "file": "pdf-diploma-preview-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 362485,
+      "sha256": "4ae3e511ee411583e06efcd61d357204a06675efc4956840516344f343930950"
+    },
+    {
+      "file": "pdf-diploma-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 544354,
+      "sha256": "dc598fe4734843ec1bd1ac5951b92566c866e90c1e626a70dc4b06907d1d07ad"
+    },
+    {
+      "file": "pdf-diploma-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 171218,
+      "sha256": "ae52c322a37cacb59e4f2e8ac9e6a9aba6a73a821e63d22bd5f380dfbf7e0ddd"
+    },
+    {
+      "file": "pdf-diploma-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 120129,
+      "sha256": "df3458dcf61ea0f37b16122cce94cfb4e213ec5db70057db0c130bf0d36a7025"
+    },
+    {
+      "file": "pdf-fight-preview-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 309195,
+      "sha256": "2c238074def02ba21b5b72c7a53bf6830fd92b63dddd9f2758aea9c73dd001a3"
+    },
+    {
+      "file": "pdf-fight-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 454567,
+      "sha256": "6871134871e1737769d7ff6542ca674a75828f1d56c13500f75098d75eaa33cb"
+    },
+    {
+      "file": "pdf-fight-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 138822,
+      "sha256": "441e8325caa2e98c94ac63ab5d2eb308e14d56ed8ae0662e3596fdba3a0e7165"
+    },
+    {
+      "file": "pdf-fight-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 158193,
+      "sha256": "3083a6e4dde66876daad64da033336d1cb4d023bc76eeefdcdc2caf659a9c12f"
+    },
+    {
+      "file": "pdf-seller-preview-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 363415,
+      "sha256": "fdd0a576abedfa98546dbc8f73b8eda20ccc6160fc638505cba5f85c6b6ddd66"
+    },
+    {
+      "file": "pdf-seller-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 545419,
+      "sha256": "bf8da6d4b4bd4c59ab20393fe3e9539785e57e01b70e2a82b3637ed8274b65a1"
+    },
+    {
+      "file": "pdf-seller-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 171910,
+      "sha256": "792131c30dad433bb1c721d28d909f6e2cf22f3496df93987a5a918378d2cab2"
+    },
+    {
+      "file": "pdf-seller-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 120297,
+      "sha256": "d749f23fa879fe653ce37b89a21e08ca01289f62d68a250ac78fad7e35299956"
+    },
+    {
+      "file": "pdf-station-preview-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 298623,
+      "sha256": "2ec5dcbf6e1194f3ab881fca0a0dfe07957129f84add380ace6315c30cf1ca4c"
+    },
+    {
+      "file": "pdf-station-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 440981,
+      "sha256": "4649824ba923d3038e481ab410d9d1052de07507323e59fcc51645ceccd0a8ae"
+    },
+    {
+      "file": "pdf-station-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 133403,
+      "sha256": "c16db00b857b536252c8c5ef60291f3640e6dc4164f249cb5421880dfb54501e"
+    },
+    {
+      "file": "pdf-station-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 161423,
+      "sha256": "9b7da4c18c09a7af3cac7e8fbcf8bc88153a3eea3b24df097ebfc41c27d163d1"
+    },
+    {
+      "file": "pdf-summary-preview-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 300051,
+      "sha256": "7191c59dd4e6fb5fd598f64f1807abdcfcae7a4319dfa693b155f532f9c0a5f3"
+    },
+    {
+      "file": "pdf-summary-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 442992,
+      "sha256": "f04573f95beb664aa9c38e133c93fff068a4b21a6c1d0d1788d7f3c1a8140393"
+    },
+    {
+      "file": "pdf-summary-preview-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 135328,
+      "sha256": "0ce947f9d62760697368cda4893ff607b6a85237b1326871254931898f4999f9"
+    },
+    {
+      "file": "pdf-summary-preview-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 56233,
+      "sha256": "7189dc063e939acfa79f027b0df31eadf0bbed9d22759c053ea7604ef0f24467"
+    },
+    {
+      "file": "pending-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 233871,
+      "sha256": "cbcde36aaab70e0038293685d65128def3d0f4b4f84f2be1c7f384538a7d07bd"
+    },
+    {
+      "file": "pending-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 274440,
+      "sha256": "de04a20b50a788d7344663cf7160e6e237b91be10fe17078ba2fffcc1de651c2"
+    },
+    {
+      "file": "pending-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 158424,
+      "sha256": "094e3da6fd2aabc2921f517d927d03610a901fd6708125ea5d2c375a23afe2d1"
+    },
+    {
+      "file": "person-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 342288,
+      "sha256": "24e4a0ed571e92fbdedc817ea29b90fb6448d022f7509ad22a1a4abe253840f9"
+    },
+    {
+      "file": "person-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 401361,
+      "sha256": "1929a4a93458bee3e1acd96d75d04689e1b4cbc2cadb335a90370863edd96be8"
+    },
+    {
+      "file": "person-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 591047,
+      "sha256": "7b05ea163f8578f8ee44864e65de4f83b7e440406bb32efb766436ca72755284"
+    },
+    {
+      "file": "person-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 178117,
+      "sha256": "d73b12b489b9dbcc4a49547ebdf92194e0eab89408e47a81c2f67f7047a1789f"
+    },
+    {
+      "file": "person-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 133023,
+      "sha256": "ddac7c78bfe7c73782e4c71cbb380862a9380bdd0ea0d3282beb87ca7517b969"
+    },
+    {
+      "file": "person-empty-desktop.png",
+      "width": 1366,
+      "height": 768,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 379273,
+      "sha256": "65d67d63ba78949f9588a921984e9be6863b0ba97d158842812f4bcc27823978"
+    },
+    {
+      "file": "personal-goal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 547811,
+      "sha256": "e160e88b02d5bb766f85a4ee53f25b5d91179de7c58e28f29cdc595f66d15f6f"
+    },
+    {
+      "file": "personal-goal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1183278,
+      "sha256": "fe9606f7f874789376e00699d37562ada443eaf6cbe88b5b612e42cc415e9471"
+    },
+    {
+      "file": "personal-goal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 285342,
+      "sha256": "baf29d17fd9abe2ab597e9ca2e583c7538267e6dce8b12ce81a6fc6f9de83afa"
+    },
+    {
+      "file": "personal-goal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 277166,
+      "sha256": "aef4af80715a0e3eed502e276afe199ccb27299141c24b548cbda448a5572002"
+    },
+    {
+      "file": "product-upload-preview.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 297589,
+      "sha256": "1f84b7cbb5348086def5e7aa721e1da6a7bde1d964ae6b8396208d289e3f3c5e"
+    },
+    {
+      "file": "products-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 650995,
+      "sha256": "65c936c54c8fd5b7fc67169eceb2100a7ccc2bdc1c9a4282cfafe42b6038e4f4"
+    },
+    {
+      "file": "products-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1117059,
+      "sha256": "ab5d157494b030c420d51fe76d25232bb8371612b63c5b5d8ca1e87b241a0dae"
+    },
+    {
+      "file": "products-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1391558,
+      "sha256": "569ee4ae208590ed217282c5977a31a7609fc43a7070010eced79828ba774623"
+    },
+    {
+      "file": "products-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 328373,
+      "sha256": "f3d8cb55b0d4183d99b53946b54d3b3274cb62ee0d6e2a49da58ab77796cf4e6"
+    },
+    {
+      "file": "products-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 315363,
+      "sha256": "5706ee014c08436d17a0f597cc3793bf86fb4c9d8ed6773556c20691f6033a15"
+    },
+    {
+      "file": "registration-reward.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 719546,
+      "sha256": "0b81f6ac90f6c3d5b15cfa55f086a815cbe7a580ed5e6a340be4c85845bd8447"
+    },
+    {
+      "file": "responsive-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 652270,
+      "sha256": "f3697fcacceb6ff5781f495f926085a9608b836279658bb3a7a9c5868c654ae6"
+    },
+    {
+      "file": "responsive-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1117004,
+      "sha256": "065fd271b0744f4a7460f843ad8b1cb34031ca9b41a75ef2b85e54ff3d8bb81e"
+    },
+    {
+      "file": "responsive-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1390606,
+      "sha256": "6be6cc98762afa926492612eb61b42d7727edcb1af94deb26e72891acb908cd8"
+    },
+    {
+      "file": "responsive-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 334559,
+      "sha256": "a08ca3c1c8d2d86207dc41b030d620ae70a5ca680d1d2e9500e78a0a9df7970e"
+    },
+    {
+      "file": "responsive-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 314624,
+      "sha256": "ffe69dac528861f116788a8c7389a00150d74c001a7a345c60c3cfc54637d275"
+    },
+    {
+      "file": "seller-selected-pending.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 509572,
+      "sha256": "851be356d69cfe9c163348312a0a042d290bfd66dbcf843cc232b423a7ff3033"
+    },
+    {
+      "file": "seller-selector-mobile.png",
+      "width": 390,
+      "height": 844,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 255756,
+      "sha256": "8ee97a0d6c8e118f7c97b7fe26e3f9feef3a34246a58cdefefbca74688d4cf5d"
+    },
+    {
+      "file": "seller-selector.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 736443,
+      "sha256": "16f84d79120b9f09b938ac2a81db702c505fbd66921e6330ff09a90e5b282f74"
+    },
+    {
+      "file": "sellers-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 451385,
+      "sha256": "cc411e763cfee8321bbdd907475dfb646ef0f82a2721ae53df857f3f13594b34"
+    },
+    {
+      "file": "sellers-1366x768.png",
+      "width": 1366,
+      "height": 768,
+      "viewport": [
+        1366,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 519375,
+      "sha256": "2a5e1c1d744ce6f7ba80d5586092ab9d161c772e735e322df76db33d006663ff"
+    },
+    {
+      "file": "sellers-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 627925,
+      "sha256": "12f0357d7ce6e925be5331d58fa399380eb82c2e4137e4cabbf8299b48c3a52a"
+    },
+    {
+      "file": "sellers-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 577967,
+      "sha256": "bac4f7096de0aa35018746f690c61ea8730063d93d8bbdbd0298e72436ea13e5"
+    },
+    {
+      "file": "sellers-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 729186,
+      "sha256": "5118a3f8e1d96112d73f492bab91b6368019645686e0c30dd51224a9919a2f25"
+    },
+    {
+      "file": "sellers-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 253860,
+      "sha256": "c4ff670610f71f87346161365ce87d2bcb32ff94e3eb5eccb90c0124d7e25bda"
+    },
+    {
+      "file": "sellers-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 224539,
+      "sha256": "6f4eb13bff6f1be8afdb629191ff5e4047b43a4a35b5d6b2a53579fa9295aa38"
+    },
+    {
+      "file": "simultaneous-achievements-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1280568,
+      "sha256": "c0153c845b89ea19928c5920323649434e9c0f3568e98a07405dee450d288c51"
+    },
+    {
+      "file": "standard-sale-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 655428,
+      "sha256": "5f633da14c92d86ec3a215f5193dc5692d1681525f7eb7345aeaf360ecc5cd27"
+    },
+    {
+      "file": "standard-sale-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1089765,
+      "sha256": "23e373668284154ceb79c57d793618cd5982d0e6072cce7e85ab52089f28e283"
+    },
+    {
+      "file": "standard-sale-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 965488,
+      "sha256": "dad86cfe1b6f3ba59cc414643fe328ae517ea719c4327ef12a07105b1066b8aa"
+    },
+    {
+      "file": "standard-sale-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1369110,
+      "sha256": "7c6589891060b2415ad416359f4a6831545bce6027ffab2642d69e9e497011fa"
+    },
+    {
+      "file": "standard-sale-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 325272,
+      "sha256": "332a7dc2e1e8331b3fc7de6d14aa8514fb75f54470d0a178b184f50db6367cdb"
+    },
+    {
+      "file": "standard-sale-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 313532,
+      "sha256": "7b7eee1dc5f4fec00448ea1d66b834b735dfecb3ac505c0f329fa082b8a84eb9"
+    },
+    {
+      "file": "standard-sale.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1370531,
+      "sha256": "e060869da51f0d592c1edc81351ee144f9f397b3fa439bf0235cacf3f9374987"
+    },
+    {
+      "file": "start-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 647474,
+      "sha256": "a6430b80adecf5241f0519ae8f0724cc2462ec51335b1f489c94d61086d3f9fd"
+    },
+    {
+      "file": "start-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1113478,
+      "sha256": "46ea5dedbee7ffb0b72d9d827ae1a6ebf480390b1d103b984f5160a659c9b6b5"
+    },
+    {
+      "file": "start-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "viewport": [
+        1536,
+        864
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 994507,
+      "sha256": "b84660d9a79dd8925ce14eb4ac5122669ea67a8b72f906a1b8ec8d9cd9ec417c"
+    },
+    {
+      "file": "start-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1388247,
+      "sha256": "1f846f57cd9e21153f0e9bb8db97463bd4a1deaa921f53a7414564c543f40ab0"
+    },
+    {
+      "file": "start-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 327651,
+      "sha256": "e55a61d09275a52928ed8165aefdeea78f80a4a585a4a5a676e4806cf7c33fd5"
+    },
+    {
+      "file": "start-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 314107,
+      "sha256": "1ce5fa4baa29d596ac4dbce025c2ecb8879882a6f48f885191b7c437c6150540"
+    },
+    {
+      "file": "station-goal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 546692,
+      "sha256": "f322f4a947d0b9aa5d1fdd04a0958039e77da9d65e2127add6a351f851ece4dc"
+    },
+    {
+      "file": "station-goal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1182361,
+      "sha256": "9f930e78787a08691899adf7c6cd753b9e494716f1ece897d4a932248ae0ce7f"
+    },
+    {
+      "file": "station-goal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 288492,
+      "sha256": "72ed74d79e7ffb8b5a467970db482f59fea99a8fc396171d83282c8dca326d2a"
+    },
+    {
+      "file": "station-goal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 275781,
+      "sha256": "2fbae0e206d21d5c60ef407fa9837c413e6252471f55351307efe385ba49b78a"
+    },
+    {
+      "file": "station-group-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 237411,
+      "sha256": "7ea4aebfac182a537802f08a33a91005fb7d7f969b368db3b8b01718811fad3c"
+    },
+    {
+      "file": "station-group-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 290593,
+      "sha256": "1e8016efea1e37b3282449863474e176867eb73b643367753f76aaa209567cbb"
+    },
+    {
+      "file": "station-group-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 133426,
+      "sha256": "ee8c8b6b653bdb6bc616cbf9b09c7a264309be3fdd44bad30ecdb7739dc9d3c8"
+    },
+    {
+      "file": "station-login-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 185247,
+      "sha256": "d686052dacfe00f2c8099e2f88f337abbf99ebf944674583ef6266533835bcdc"
+    },
+    {
+      "file": "station-login-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 221827,
+      "sha256": "15e6075e0fbbc075d43336817f33548ce1397a451f26ed1fd37a5fe365f32b4f"
+    },
+    {
+      "file": "station-login-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 115285,
+      "sha256": "55e16878e79293aa0a1b07b4d5ad29d09162eba0a7be1814ca64ae637fe6c231"
+    },
+    {
+      "file": "superadmin-accounts-roles-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 162379,
+      "sha256": "fc0fea35234a6b4e78fd53e45209e89bed2824d289f688ec8121bcf26813970c"
+    },
+    {
+      "file": "superadmin-accounts-roles-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 263508,
+      "sha256": "02b9245e133e5ff5bd86f45c614c9dd0bce3a8d98e6d73302e019b6ddd17e6cc"
+    },
+    {
+      "file": "superadmin-accounts-roles-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 93922,
+      "sha256": "aef971a6ac0f0d1ce2754866baa328b2e589eb0a4e309e257d989ae11fa43d39"
+    },
+    {
+      "file": "superadmin-accounts-roles-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 65313,
+      "sha256": "a56f6d49398f1f279b65f35331b4670b6d32acacb1dc6f31e4df733abd21c9ff"
+    },
+    {
+      "file": "superadmin-audit-log-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 177885,
+      "sha256": "7fbf50540d935036095db705f34927d2f939f6631cace18cc664ee75ce06cd96"
+    },
+    {
+      "file": "superadmin-audit-log-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 255460,
+      "sha256": "816cfde1ce611d253a93ce1f75d672008c1fa374541827135fe88fd5bec4dbdb"
+    },
+    {
+      "file": "superadmin-audit-log-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 95061,
+      "sha256": "f051b57e0af957fff503ebf9b1c597e77961d77ddee8b217c42d8b11563ee220"
+    },
+    {
+      "file": "superadmin-audit-log-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 63492,
+      "sha256": "83316e41f7d952b13051b5cc5a477d82552a1709baed0e8e29feb6c1be37f716"
+    },
+    {
+      "file": "superadmin-create-fight.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 360690,
+      "sha256": "03ae7a2faf1d9f8e1baa54ff43c4464a5e6ff54891edc5935aa07e2cfe057fbb"
+    },
+    {
+      "file": "superadmin-daily-rules.png",
+      "width": 1920,
+      "height": 2513,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 814891,
+      "sha256": "024415d18cca40003844cf017af333283b5196e22cafefbeae58e1aae7d37f7a"
+    },
+    {
+      "file": "superadmin-fight-manager-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 409653,
+      "sha256": "3fe7fd188cb23feebd957244fda81ca682bec5e9b9372df50358ddc56d90cac3"
+    },
+    {
+      "file": "superadmin-groups-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 174411,
+      "sha256": "360d7eedcb7895c30c51d61feaef00571a3b9851133fe0005c6bc3672ff81dd7"
+    },
+    {
+      "file": "superadmin-groups-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 216144,
+      "sha256": "29c4e893a11254c772942daac3be5fd5e60ca6b84bab4b4d2a6ec0e00e3ae1b8"
+    },
+    {
+      "file": "superadmin-groups-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 93663,
+      "sha256": "16604565f9aa2493707db6fa5e64c0750cd562c487f3d7f5414f40756659237d"
+    },
+    {
+      "file": "superadmin-league-planner.png",
+      "width": 1920,
+      "height": 3470,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 1107519,
+      "sha256": "e9e481b5783140c1b5cefda0c9c0e001633eba71a8960def03210c8ff8feac58"
+    },
+    {
+      "file": "superadmin-reports-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 143762,
+      "sha256": "645207d1c3d82412bbb27de7186947c0818374eb59158005063a731bf1c57a9c"
+    },
+    {
+      "file": "superadmin-reports-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 219044,
+      "sha256": "fe26df6396744d9f8c643ec854eb2278e971bdc6a0db2b040f3d8ba9bbb96967"
+    },
+    {
+      "file": "superadmin-reports-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 101450,
+      "sha256": "09ea967be10775d57b48db5e9a10249a9517a9d2292e46859ba5903c9de4eab3"
+    },
+    {
+      "file": "superadmin-reports-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 71773,
+      "sha256": "edff94f84bcec2cfacc99b576c957bff82cb23dc6c7b9885323b242db1270f27"
+    },
+    {
+      "file": "superadmin-stations-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 207535,
+      "sha256": "e15c6f3a6bbb201833d9554949fde3d1d8d3b5fb31e12811e39479079ae297df"
+    },
+    {
+      "file": "superadmin-stations-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 266670,
+      "sha256": "2b668e9e6cc1e6f1cb51f81105c25949a32c0d4e279899a069ce9fa144bc41a4"
+    },
+    {
+      "file": "superadmin-stations-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 106607,
+      "sha256": "e54ce083d9f83bd86c0799611c5513e45f6c0355c2b35afc51441be07508a400"
+    },
+    {
+      "file": "tb-admin.png",
+      "width": 1280,
+      "height": 720,
+      "viewport": null,
+      "capture": "capture metadata not recorded; actual PNG size shown",
+      "category": "regression",
+      "bytes": 319334,
+      "sha256": "299ed8de580cf933b77abe7afe96203f15dbcebe16f49d0d4550d3ac7b929451"
+    },
+    {
+      "file": "tb-badge-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 649070,
+      "sha256": "9364a60879b1229b1b02f74449fbd4a9332487be2a50bb44dedb8f878eae4e7a"
+    },
+    {
+      "file": "tb-badge-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1117115,
+      "sha256": "7d58c0e3561ae6e4079027cdafd52386f6a2edd9c5c982e201487c939db42b99"
+    },
+    {
+      "file": "tb-badge-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1391287,
+      "sha256": "30f32c2ba43b51f8310dc1e7083dde3f41fc8c120522698d8403fac2d201a4cd"
+    },
+    {
+      "file": "tb-badge-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 328362,
+      "sha256": "7f75efa60a0aceaf28433d7be2b352ee56e9efffbf3b3dec67465b68acbe2799"
+    },
+    {
+      "file": "tb-badge-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 312512,
+      "sha256": "50b40563945ac7a6a19e0ae8ac8904d18a0bd15962f57b259fff00f028302b6b"
+    },
+    {
+      "file": "tb-leaderboard-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 336779,
+      "sha256": "78d9430de56e8de3dcd773e4f230ee54582cab989f7623a76a3b989cf9f0c200"
+    },
+    {
+      "file": "tb-leaderboard-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 577692,
+      "sha256": "5a6323645a68be06ca3f9020ecbe1bfee35cecec691a0fde6942f8390c472796"
+    },
+    {
+      "file": "tb-leaderboard-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 672017,
+      "sha256": "463a825e946cff79473cd6299ddcda8a77391475df3af1ea709bf9daf6d9bacf"
+    },
+    {
+      "file": "tb-leaderboard-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 194250,
+      "sha256": "d2076400c47a405f5004a8d20e9cfb59fe1e13ad7556842c71cb01ecc70904b4"
+    },
+    {
+      "file": "tb-leaderboard-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 115561,
+      "sha256": "f2c5431288d5237e0c85823ced4440ff8c37365dc60572338f81b7670ba78933"
+    },
+    {
+      "file": "tb-person-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 326383,
+      "sha256": "88c5e155fa5f0b479cf148c4f5c74d9a3809d14b895439b65210b38e56299d88"
+    },
+    {
+      "file": "tb-person-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 492242,
+      "sha256": "447b742412fc15650e387da3827195f6bd6b43781b9054fe9e97834a8ae484bd"
+    },
+    {
+      "file": "tb-person-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 597982,
+      "sha256": "afceee4a60e1e027cf4ed91e5a14e0662fd286176f03bdb497597f36dcf9a476"
+    },
+    {
+      "file": "tb-person-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 189828,
+      "sha256": "99b001b5fd98b7e956aabd9910b2ee06f081cbf9af375201326a635a0fa8626a"
+    },
+    {
+      "file": "tb-person-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 132917,
+      "sha256": "6106894151aeab09e4e4f841fbf0dbafc878a45d779465f55711e2aa07101824"
+    },
+    {
+      "file": "temporary-activity-concept-A.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "concept",
+      "bytes": 1405089,
+      "sha256": "48566f5b962b5df48187feb375db7f729daa2dbfd6ae9a687bb34758b6319831"
+    },
+    {
+      "file": "temporary-activity-concept-B.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "concept",
+      "bytes": 1335841,
+      "sha256": "a219694c06c54fd13c93e095022240548caf29ce8c57b127557507138f89b6c2"
+    },
+    {
+      "file": "temporary-activity-concept-C.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "concept",
+      "bytes": 1396935,
+      "sha256": "acaabe9e97db314723509f45171531c87f1644039d71f7d3b6a3e5e31a30517a"
+    },
+    {
+      "file": "unavailable-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "viewport": [
+        1024,
+        768
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 646117,
+      "sha256": "1c56b74d1085559964c10a0d97e501b22e8096983db5c9c495c94e4364143f3f"
+    },
+    {
+      "file": "unavailable-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "viewport": [
+        1448,
+        1086
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1094637,
+      "sha256": "24d9ff147a19af2504a5ad19dbb87fea600cc574f01d70fef801a85b2343b076"
+    },
+    {
+      "file": "unavailable-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 1385186,
+      "sha256": "27c336bd4a1b146426aca1da7950613050781b0913746abd7e9ac841d98b7860"
+    },
+    {
+      "file": "unavailable-390x844.png",
+      "width": 390,
+      "height": 844,
+      "viewport": [
+        390,
+        844
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 324329,
+      "sha256": "feb51ea5e219f160c621a95c551d778ebb0d04eb136f0d08bce280e0f35f5dbf"
+    },
+    {
+      "file": "unavailable-844x390.png",
+      "width": 844,
+      "height": 390,
+      "viewport": [
+        844,
+        390
+      ],
+      "capture": "viewport",
+      "category": "regression",
+      "bytes": 309934,
+      "sha256": "eed49e01f2fb463ffbc74efa1cf2620d4bfe334f0bfabe26b02129b2e47433e1"
+    }
+  ],
+  "pdfs": [
+    {
+      "file": "sample-daily-fight.pdf",
+      "sha256": "1bfb0b57bbe6b9fe0d4cd5bfc8c6a63a031505daf61ec782b71be0c3bdc50e57"
+    },
+    {
+      "file": "sample-diploma.pdf",
+      "sha256": "e2dba6f9d97570d74d3f95bb604b18e4c6260e31c676080cef1bd4fd5f61d796"
+    },
+    {
+      "file": "sample-fight.pdf",
+      "sha256": "3f9ab2be0e732918f62bd46df5ce75b8ceb5bdb2479d1e128cfe9c04845ca3b8"
+    },
+    {
+      "file": "sample-seller.pdf",
+      "sha256": "967d388ffc5d065a9ffabe09bc337adbce2cf8613dd042b78807f5a4ac237d93"
+    },
+    {
+      "file": "sample-station.pdf",
+      "sha256": "9d696cf680fadf3c717ff8651374347bc3a5b7f3867cf27f74624fadd7fcc381"
+    },
+    {
+      "file": "sample-summary.pdf",
+      "sha256": "bb811a5f0b4990dc9ee66d1693810c74aba7687e64ceb0e1b07bc91b75cd6f58"
+    }
+  ],
+  "reports": [
+    "browser-competition-final.log",
+    "browser-display-final.log",
+    "browser-full.log",
+    "build-final.log",
+    "changed-files.txt",
+    "competition-model.md",
+    "deployment-readiness.md",
+    "final-report.md",
+    "full-unit-final.log",
+    "git-verification.json",
+    "migration-integrity.json",
+    "migration-report.md",
+    "motion-verification.json",
+    "native-competition-verification.json",
+    "performance-report.json",
+    "performance-summary.md",
+    "responsive-report.md",
+    "security-review.md",
+    "snapshot-daily-fight.json",
+    "snapshot-diploma.json",
+    "snapshot-fight.json",
+    "snapshot-seller.json",
+    "snapshot-station.json",
+    "snapshot-summary.json",
+    "test-report.txt",
+    "typecheck-final.log"
+  ],
+  "human_review": [
+    "Temporary activity placement A/B/C; no permanent eighth ring",
+    "Sudden-death blocked-period policy and physical cash-register test"
+  ],
+  "notes": "Actual Chromium/React/CSS with deterministic fixtures; native Worker proof separate. No generated UI images. Prior regression PDFs preserve existing design."
+}
