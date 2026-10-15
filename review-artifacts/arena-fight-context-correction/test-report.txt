@@ -1,0 +1,10 @@
+PASS npm run typecheck
+PASS npm run build
+PASS npm test -- tests/arena*.test.ts: 27 files, 230 tests
+PASS e2e/arena-fight-context-correction.spec.ts: 26 tests
+PASS e2e/arena-fight-objective.spec.ts + arena-mini-polish.spec.ts + arena-compact-headers.spec.ts: 59 tests
+PASS targeted final event-feed / lead-popup capture: 1 rerun, included in the 26 unique cases
+TOTAL distinct Playwright tests: 85 passed
+PASS normal geometry and header comparison at all six required viewports
+PASS git diff --check
+No migration, deploy, push, merge or branch switch.

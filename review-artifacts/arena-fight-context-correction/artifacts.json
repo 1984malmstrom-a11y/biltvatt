@@ -1,0 +1,129 @@
+{
+  "review": "Arena Fight-context correction",
+  "start_head": "6cee8c96910bbe1c7ea437134700bfb0380445c5",
+  "curated_png_count": 12,
+  "screenshots": [
+    {
+      "file": "all-categories-fight-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Qualifying Fight state",
+      "sha256": "7f2e59aaded04948533df38cdc9d2afcc5771c449185acb0a6694fb7e8744fe2"
+    },
+    {
+      "file": "fight-events-multistation-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Person / station context",
+      "sha256": "b162331278cebb7becd6f244207bcaa53206765a3457a0c02be3ca1f970ac6f2"
+    },
+    {
+      "file": "fight-multistation-context-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Person / station context",
+      "sha256": "4094ec0263660cbd7f698d31d004e902cacc2713fc874cd1aa72e261460801c2"
+    },
+    {
+      "file": "fight-recent-activities-multistation-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Person / station context",
+      "sha256": "93c51c5556e5fffe525aa8bf4363253999b20b27b8dcec9961565db8db5b9697"
+    },
+    {
+      "file": "lead-change-multistation-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Person / station context",
+      "sha256": "27ddabb2d3cc8ff595ab53c8e1be2949a8110ff08e0cb14b78a025499f633dc6"
+    },
+    {
+      "file": "local-context-no-station-label-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Person / station context",
+      "sha256": "3317390cd43aa866aff4327e21f57406fe4434a206b0585c0895c43d873ae721"
+    },
+    {
+      "file": "monthly-focus-fight-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Qualifying Fight state",
+      "sha256": "c5dc6aa525a4acb98e3d1491cbba486ea4c0818b32aab832c656fae119cc6aba"
+    },
+    {
+      "file": "single-category-fight-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Qualifying Fight state",
+      "sha256": "20735c2c682eae47acd034f56802c0eff363801a70cfbd7408c77c278e9a2c9f"
+    },
+    {
+      "file": "temp-objective-1920x1080.png",
+      "viewport": "1920x1080",
+      "pixels": [
+        1920,
+        1080
+      ],
+      "group": "Temporary objective",
+      "sha256": "ab8cdf3b4564d291850cf4bdd55432690da355a07f89b1e59a6344c81125edc7"
+    },
+    {
+      "file": "temp-objective-390x844-top.png",
+      "viewport": "390x844",
+      "pixels": [
+        390,
+        844
+      ],
+      "group": "Temporary objective",
+      "sha256": "79c7912ec7ba6bea1f602cd2998f4af6a30a5a605bfc723ae309c7c3b99f85f8"
+    },
+    {
+      "file": "temp-objective-390x844.png",
+      "viewport": "390x844",
+      "pixels": [
+        390,
+        844
+      ],
+      "group": "Temporary objective",
+      "sha256": "e2eafe27d525b816d3534efd87e6237d389a90da44a3429a95225c84173afe41",
+      "internal_scroll_top": 224
+    },
+    {
+      "file": "temp-objective-844x390.png",
+      "viewport": "844x390",
+      "pixels": [
+        844,
+        390
+      ],
+      "group": "Temporary objective",
+      "sha256": "d7e100e2f74fc512343e4156675f4e2df8e2bc9dfc0dbbe5552b06519045704e"
+    }
+  ],
+  "final_head": "54f6b95e3b314cbf16b4b8db60c0e53fa87e5b06"
+}

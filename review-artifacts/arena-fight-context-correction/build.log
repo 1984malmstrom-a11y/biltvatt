@@ -1,0 +1,72 @@
+
+> tvattligan@1.0.0 build
+> tsc --noEmit && vite build
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mFailed to write to log file Error: ENOENT: no such file or directory, mkdir '/home/agent/.config/.wrangler'[0m
+
+      at async Object.mkdir (node:internal/fs/promises:916:10)
+      at async ensureDirectoryExists (/workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65007:3)
+      at async /workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65088:7
+      at async Mutex.runWith (/workspace/biltvatt/node_modules/miniflare/dist/src/index.js:70213:16)
+      at async appendToDebugLogFile (/workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65086:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: '/home/agent/.config/.wrangler'
+  }
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mWould have written: [0m
+
+  --- 2026-10-15T19:56:29.538Z debug
+  🪵  Writing logs to "/home/agent/.config/.wrangler/logs/wrangler-2026-10-15_19-56-29_225.log"
+  ---
+  
+
+
+vite v7.3.7 building tvattligan_master_test environment for production...
+transforming...
+✓ 58 modules transformed.
+rendering chunks...
+Using secrets defined in .dev.vars
+dist/tvattligan_master_test/.dev.vars              0.02 kB
+dist/tvattligan_master_test/.vite/manifest.json    0.16 kB
+dist/tvattligan_master_test/wrangler.json          1.71 kB
+dist/tvattligan_master_test/index.js             347.04 kB
+✓ built in 734ms
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 2008 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore                                0.02 kB
+dist/client/index.html                                   1.02 kB │ gzip:   0.48 kB
+dist/client/assets/ArenaFightQuickAction-DfBC0rYe.css    1.70 kB │ gzip:   0.56 kB
+dist/client/assets/arena-competitions-8JPxLAyO.css      22.94 kB │ gzip:   4.68 kB
+dist/client/assets/index-C_TdpUt1.css                  134.39 kB │ gzip:  28.39 kB
+dist/client/assets/ArenaApp-CF2duZ6d.css               235.66 kB │ gzip:  38.93 kB
+dist/client/assets/arena-route-id-nE-jfgl6.js            0.17 kB │ gzip:   0.16 kB
+dist/client/assets/ArenaRecovery-xFQUBKy_.js             3.14 kB │ gzip:   1.31 kB
+dist/client/assets/ArenaLeague-C5NFBPcY.js               3.35 kB │ gzip:   1.38 kB
+dist/client/assets/ArenaFightQuickAction-DSX6yFkD.js     3.45 kB │ gzip:   1.53 kB
+dist/client/assets/arena-competitions-s43vm8ci.js        4.82 kB │ gzip:   2.19 kB
+dist/client/assets/ArenaAccount-DdNXPq1Z.js              5.11 kB │ gzip:   2.03 kB
+dist/client/assets/ArenaReports-D1s1CjhZ.js              6.60 kB │ gzip:   2.35 kB
+dist/client/assets/ArenaFight-6frrVkWl.js                7.39 kB │ gzip:   2.98 kB
+dist/client/assets/ArenaCompetition-4-M5YFEp.js         10.87 kB │ gzip:   3.89 kB
+dist/client/assets/ArenaCompetitions-C-UI_i5E.js        11.14 kB │ gzip:   3.65 kB
+dist/client/assets/ArenaAdmin-BR_JpD_l.js               19.18 kB │ gzip:   5.80 kB
+dist/client/assets/ArenaNetwork-DCmxQ9So.js             41.10 kB │ gzip:  11.38 kB
+dist/client/assets/ArenaApp-CjbtrE7N.js                 64.80 kB │ gzip:  20.13 kB
+dist/client/assets/index-R0BEOjO9.js                   310.64 kB │ gzip:  99.48 kB
+dist/client/assets/index-2h522wtU.js                   406.79 kB │ gzip: 123.66 kB
+✓ built in 3.90s
+🪵  Logs were written to "/home/agent/.config/.wrangler/logs/wrangler-2026-10-15_19-56-29_225.log"
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

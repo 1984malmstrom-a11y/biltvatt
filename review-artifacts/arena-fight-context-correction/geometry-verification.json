@@ -1,0 +1,32 @@
+[
+  {
+    "viewport": "1920x1080",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  },
+  {
+    "viewport": "1536x864",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  },
+  {
+    "viewport": "1448x1086",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  },
+  {
+    "viewport": "1024x768",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  },
+  {
+    "viewport": "390x844",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  },
+  {
+    "viewport": "844x390",
+    "geometry_unchanged": true,
+    "headers_unchanged": true
+  }
+]

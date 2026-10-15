@@ -1,0 +1,28 @@
+{
+  "baseline_arena_app": {
+    "css": {
+      "kb": 233.28,
+      "gzip_kb": 38.51
+    },
+    "js": {
+      "kb": 64.69,
+      "gzip_kb": 20.13
+    }
+  },
+  "current_arena_app": {
+    "css": {
+      "kb": 235.66,
+      "gzip_kb": 38.93
+    },
+    "js": {
+      "kb": 64.8,
+      "gzip_kb": 20.13
+    }
+  },
+  "new_dependencies": 0,
+  "new_assets": 0,
+  "additional_requests_or_polls": 0,
+  "changes": "Static 4/5px qualifying perimeter + thin outer energy edge; existing 300ms opacity fade. Larger portrait section uses CSS grid and bounded internal scrolling; no JS measurements/resize observers.",
+  "unchanged": "Competition Builder, frozen scope mapping, backend/DB, polling 12s/5s/hidden0, Stationspuls, seven-ring geometry.",
+  "limit": "No benchmark on physical checkout hardware."
+}

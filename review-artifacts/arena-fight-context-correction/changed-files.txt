@@ -1,0 +1,6 @@
+e2e/arena-fight-context-correction.spec.ts
+e2e/arena-fight-context-fixture.ts
+e2e/arena-fight-objective.spec.ts
+src/ArenaApp.tsx
+src/arena-fight-objective.css
+tests/arena-identity.test.ts

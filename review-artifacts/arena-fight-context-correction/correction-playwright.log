@@ -1,0 +1,34 @@
+
+Running 26 tests using 1 worker
+
+(node:418620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1920x1080
+[2/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1920x1080
+[3/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1920x1080
+[4/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1536x864
+[5/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1536x864
+[6/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1536x864
+[7/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1448x1086
+[8/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1448x1086
+[9/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1448x1086
+[10/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1024x768
+[11/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1024x768
+[12/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1024x768
+[13/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 390x844
+[14/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 390x844
+[15/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 390x844
+[16/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 844x390
+[17/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 844x390
+[18/26] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 844x390
+[19/26] e2e/arena-fight-context-correction.spec.ts:21:1 › Context correction: local versus Fight names, contributions and recent activity panels
+[20/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1920x1080
+[21/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1536x864
+[22/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1448x1086
+[23/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1024x768
+[24/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 390x844
+[25/26] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 844x390
+[26/26] e2e/arena-fight-context-correction.spec.ts:33:1 › Context correction: Fight event feed and sale lead-change retain station names
+  26 passed (54.4s)

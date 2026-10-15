@@ -1,0 +1,67 @@
+
+Running 59 tests using 1 worker
+
+(node:423300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1920x1080
+[2/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1536x864
+[3/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1448x1086
+[4/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1024x768
+[5/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 390x844
+[6/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 844x390
+[7/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 951x768
+[8/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1100x768
+[9/59] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1200x768
+[10/59] e2e/arena-compact-headers.spec.ts:16:1 › Compact headers: live fight keeps separate header action and status
+[11/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1920x1080
+[12/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1536x864
+[13/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1448x1086
+[14/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1024x768
+[15/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 390x844
+[16/59] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 844x390
+[17/59] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen all authority only
+[18/59] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen activity authority only
+[19/59] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen focus authority only
+[20/59] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen category authority only
+[21/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1920x1080
+[22/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1536x864
+[23/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1448x1086
+[24/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1024x768
+[25/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 390x844
+[26/59] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 844x390
+[27/59] e2e/arena-fight-objective.spec.ts:37:1 › Fight objectives: live transitions remove frozen emphasis, reduced motion and missing authority fail closed
+[28/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1920x1080
+[29/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1920x1080
+[30/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1920x1080
+[31/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1536x864
+[32/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1536x864
+[33/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1536x864
+[34/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1448x1086
+[35/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1448x1086
+[36/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1448x1086
+[37/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1024x768
+[38/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1024x768
+[39/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1024x768
+[40/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 390x844
+[41/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 390x844
+[42/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 390x844
+[43/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 844x390
+[44/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 844x390
+[45/59] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 844x390
+[46/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1920x1080
+[47/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1536x864
+[48/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1448x1086
+[49/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1024x768
+[50/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 390x844
+[51/59] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 844x390
+[52/59] e2e/arena-fight-objective.spec.ts:49:1 › Fight objectives: lightweight entry with static reduced-motion alternative
+[53/59] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1920x1080
+[54/59] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1536x864
+[55/59] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1024x768
+[56/59] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 390x844
+[57/59] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 844x390
+[58/59] e2e/arena-mini-polish.spec.ts:17:1 › Mini polish: sourced pulse handles no goal, no sales and reached target
+[59/59] e2e/arena-mini-polish.spec.ts:21:1 › Mini polish: active fight remains a separate match state without customer branding and with nav intact
+  59 passed (1.5m)
