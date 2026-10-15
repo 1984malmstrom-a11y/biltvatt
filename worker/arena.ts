@@ -8,6 +8,7 @@ import type { ArenaRegistration } from "../shared/arena";
 import { resolveArenaStation } from "./arena-auth";
 import { arenaGroupApi } from "./arena-network";
 import { arenaFightApi, refreshStationFights } from "./arena-fights";
+import {arenaLeagueApi} from './arena-leagues';
 import { achievementScopes } from "./arena-achievements";
 import { evaluateArenaAchievements, type EvaluatedAchievement } from "../shared/arena-achievements";
 
@@ -42,6 +43,7 @@ export async function arenaApi(
   const now = new Date().toISOString();
   if(path.startsWith("/api/arena/groups")) return arenaGroupApi(request,arena,key);
   if(path.startsWith("/api/arena/fights"))return arenaFightApi(request,arena,key);
+  if(path.startsWith('/api/arena/leagues'))return arenaLeagueApi(request,arena,key);
 
   if (path === "/api/arena/stats" && method === "GET") return json(await arenaStats(arena, key, url));
   const image = path.match(/^\/api\/arena\/activity-images\/([a-f0-9-]{36})$/);

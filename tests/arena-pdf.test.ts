@@ -25,3 +25,8 @@ it('handles long hostile names, Unicode, controls and multi-page tables without 
  const bytes=arenaReportPDF(s);expect(Buffer.from(bytes).toString()).toContain('%%EOF');
  if(!spawnSync(pdftotext,['-v']).error){const r=spawnSync(pdftotext,['-','-'],{input:bytes});expect(r.status).toBe(0);expect(r.stderr.toString()).toBe('');expect(r.stdout.toString()).toContain('150.');}
 });
+it('exports match points and raw totals together for a frozen daily fight',()=>{
+ const s=snapshot('fight');s.scoring_mode='daily';s.day_win_points=3;s.day_tie_points=1;s.leaderboard[0].match_points=7;
+ const pdf=arenaReportPDF(s);expect(arenaReportPDF(s)).toEqual(pdf);
+ if(!spawnSync(pdftotext,['-v']).error){const text=execFileSync(pdftotext,['-','-'],{input:pdf}).toString();expect(text).toContain('MATCHPOÄNG');expect(text).toContain('7');expect(text).toContain('142');expect(text).toContain('Åsa Östermalm');}
+});

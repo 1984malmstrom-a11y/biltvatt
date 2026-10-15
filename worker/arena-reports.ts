@@ -36,7 +36,7 @@ export async function freezeStationReport(db:D1Database,station:string,input:{ty
 }
 export async function freezeFightReport(db:D1Database,f:ArenaFight){
   if(f.phase!=='finished')return;
-  const source=`fight:${f.id}`,s:ArenaReportSnapshot={version:1,id:`fight-${f.id}`,type:'fight',title:`BUTIKSFIGHT · ${f.name}`,created_at:f.end_at,period:{start:f.start_at,end:f.end_at},station:null,totals:f.standings.reduce(add,empty()),leaderboard:f.standings.map(r=>({...r,unknown_tb_count:r.unknown_tb_count??0})),activities:[],goals:[],winner_names:f.standings.filter(r=>f.winner_ids?.includes(r.id)).map(r=>r.name),metric:f.metric,source};
+  const source=`fight:${f.id}`,s:ArenaReportSnapshot={version:1,id:`fight-${f.id}`,type:'fight',title:`BUTIKSFIGHT · ${f.name}`,created_at:f.end_at,period:{start:f.start_at,end:f.end_at},station:null,totals:f.standings.reduce(add,empty()),leaderboard:f.standings.map(r=>({...r,unknown_tb_count:r.unknown_tb_count??0})),activities:[],goals:[],winner_names:f.standings.filter(r=>f.winner_ids?.includes(r.id)).map(r=>r.name),metric:f.metric,source,...(f.scoring_mode==='daily'?{scoring_mode:'daily' as const,day_win_points:f.day_win_points,day_tie_points:f.day_tie_points}:{})};
   await persist(db,source,s,f.id);
 }
 // Bounded lazy archive on authenticated report reads. Also callable from a future

@@ -1,0 +1,16 @@
+import {useEffect,useState} from 'react';
+import {ArrowLeft,Crown} from 'lucide-react';
+import {api} from './api';
+import {visibleArenaPolling,ARENA_FIGHT_SYNC_MS,ARENA_SYNC_MS} from './arena-polling';
+import type {ArenaLeague as League} from '../shared/arena-leagues';
+import type {ArenaBootstrap} from '../shared/arena';
+export default function ArenaLeague(){
+ const admin=location.pathname.startsWith('/arena/superadmin/'),id=location.pathname.split('/').at(-1)!;
+ const [league,setLeague]=useState<League|null>(null),[station,setStation]=useState(''),[error,setError]=useState('');
+ useEffect(()=>{let alive=true,stop=()=>{};let current:League|null=null;
+ const load=async()=>{if(document.hidden)return;try{const next=await api<League>(`/arena/${admin?'superadmin/':''}leagues/${id}`);if(alive){current=next;setLeague(next);setError('');}}catch(e){if(alive)setError((e as Error).message);}};
+ if(!admin)void api<ArenaBootstrap>('/arena/bootstrap').then(b=>{if(alive)setStation(b.station.id);}).catch(()=>{});
+ void load().then(()=>{if(alive)stop=visibleArenaPolling(load,()=>current?.phase==='active'?ARENA_FIGHT_SYNC_MS:ARENA_SYNC_MS);});return()=>{alive=false;stop();};},[id,admin]);
+ return <div className="arena-page arena-theme"><header className="arena-page-header"><a href={admin?'/arena/superadmin':'/arena/fights'}><ArrowLeft/> {admin?'Till Superadmin':'Till Butiksfight'}</a><h1><Crown/> Matchserie</h1></header>{error&&<p role="alert" className="arena-error">{error}</p>}{!league&&!error&&<p role="status">Hämtar matchserie…</p>}{league&&<main className="arena-league-main"><header><span className="arena-eyebrow">ALLA MÖTER ALLA · {league.phase==='finished'?'LÅST SLUTTABELL':league.phase==='active'?'SERIEN ÄR IGÅNG':'KOMMANDE SERIE'}</span><h2>{league.name}</h2><p>{league.standings.length} stationer · {new Set(league.fixtures.map(f=>f.round)).size} omgångar · {league.day_win_points} mp per dagsvinst · {league.day_tie_points} mp var vid lika</p></header><section className="arena-panel"><h2>Serietabell</h2><p>Endast avslutade matcher räknas. Lika matchpoäng ger delad placering.</p><div className="arena-table-scroll"><table className="arena-league-table"><thead><tr><th>Plats / station</th><th>Spelade</th><th>V</th><th>O</th><th>F</th><th>MP</th></tr></thead><tbody>{league.standings.map(s=><tr key={s.id} className={s.id===station?'is-own-station':''}><th scope="row">{s.rank}. {s.name}</th><td>{s.played}</td><td>{s.won}</td><td>{s.drawn}</td><td>{s.lost}</td><td><strong>{s.match_points}</strong></td></tr>)}</tbody></table></div></section>
+ <section className="arena-panel"><h2>Omgångar & dagsdueller</h2>{[...new Set(league.fixtures.map(f=>f.round))].map(round=><details key={round} open={league.fixtures.some(f=>f.round===round&&f.phase==='active')}><summary>Omgång {round} · {league.fixtures.find(f=>f.round===round)?.day}</summary><ul className="arena-league-fixtures">{league.fixtures.filter(f=>f.round===round).map(f=><li key={f.fight_id}><strong>{f.home.name} <em>VS</em> {f.away.name}</strong><span>{f.phase==='finished'?`${f.home_points} – ${f.away_points} mp`:f.phase==='active'?'LIVE · dagens duell':'Kommande'}</span>{(admin||station===f.home.id||station===f.away.id)&&<a href={`/arena/${admin?'superadmin/':''}fights/${f.fight_id}`}>Öppna match</a>}</li>)}</ul></details>)}</section></main>}</div>;
+}

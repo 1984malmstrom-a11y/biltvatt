@@ -16,6 +16,15 @@ describe("Fight crossings, never current-state celebration",()=>{
     expect(fightTransition(before,{...before,version:2,standings:standings.map(s=>({...s,rank:1,points:10}))},"b")).toMatchObject({kind:"tie"});
     expect(fightTransition(before,{...before,version:2,standings:[{...standings[1],rank:1},{...standings[0],rank:2,points:8}]},"b")).toBeNull();
   });
+  it("celebrates today's daily duel crossing without confusing series points or midnight settlement",()=>{
+    const day={day:'2026-10-15',start_at:'2026-10-14T22:00:00Z',end_at:'2026-10-15T22:00:00Z',closed:false,winner_ids:[],standings};
+    const daily:ArenaFightSummary={...before,scoring_mode:'daily',standings:standings.map(s=>({...s,match_points:s.id==='a'?1:4})),current_day:day};
+    const crossed={...daily,version:2,current_day:{...day,standings:[{...standings[1],rank:1,points:11},{...standings[0],rank:2}]}};
+    expect(fightTransition(daily,crossed,'b')).toMatchObject({kind:'lead',daily:true,previousLeader:'A'});
+    expect(fightTransition(crossed,{...crossed,version:3,current_day:{...crossed.current_day,standings:[{...crossed.current_day.standings[0],points:12},crossed.current_day.standings[1]]}},'b')).toBeNull();
+    expect(fightTransition(daily,{...daily,version:2,standings:daily.standings.map(s=>({...s,match_points:9})),current_day:{...day,day:'2026-10-16',standings:standings.map(s=>({...s,points:0}))}},'b')).toBeNull();
+    expect(fightTransition(daily,{...crossed,current_day:{...day,standings:[standings[1],{...standings[0],points:8}]}},'b')).toBeNull();
+  });
   it("formats countdown boundaries without wrapping a day or inventing time",()=>{
     const now=Date.parse("2026-10-14T10:00:00Z");
     expect(fightTime("2026-10-15T11:02:03Z",now)).toBe("1 d 01:02:03");expect(fightTime(undefined,now)).toBe("LIVE");

@@ -21,8 +21,10 @@ import "./arena-theme.css";
 import "./arena.css";
 import "./arena-showroom.css";
 import "./arena-brand.css";
+import "./arena-premium.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
+const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
 const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
 
 function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: ArenaActivity; imageUrl?: string; loading?: "eager" | "lazy" }) {
@@ -139,6 +141,8 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
 export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
+  if(window.location.pathname==="/arena/fights")return <ArenaCompetitions/>;
+  if(window.location.pathname.startsWith("/arena/leagues/") || window.location.pathname.startsWith("/arena/superadmin/leagues/"))return <ArenaLeague/>;
   if(window.location.pathname.startsWith("/arena/fights/") || window.location.pathname.startsWith("/arena/superadmin/fights/"))return <ArenaFight />;
   if(window.location.pathname.startsWith("/arena/superadmin"))return <ArenaSuperadmin />;
   if(window.location.pathname.startsWith("/arena/groups"))return <ArenaGroups />;
@@ -337,7 +341,7 @@ function ArenaHome() {
       <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
       <p>Små merförsäljningar skapar stora resultat!</p>
     </section>
-    <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/admin"><Settings /> ADMIN</a></nav>
+    <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/fights"><Flag /> BUTIKSFIGHT</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />

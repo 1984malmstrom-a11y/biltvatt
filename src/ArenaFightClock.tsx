@@ -11,7 +11,7 @@ export default function ArenaFightClock({fight,onBoundary,compact=false}:{fight:
   const urgency=fight.phase==="active" ? fightUrgency(fight.end_at,now):"calm";
   return <div className={`arena-fight-timer urgency-${urgency}${compact ? " is-compact":""}`}>
     {(urgency==="quarter" || urgency==="final") && <strong className="arena-fight-sprint">SLUTSPURT{urgency==="final" ? " · SISTA MINUTERNA":""}</strong>}
-    <div className="arena-fight-clock"><Clock3 aria-hidden="true" /><span role="timer" aria-live="off">{fight.phase==="finished" ? "SLUTRESULTAT":fight.phase==="cancelled" ? "AVBRUTEN":`${fightTime(boundary,now)} ${fight.phase==="scheduled" ? "till start":"kvar"}`}</span>{!compact && <strong>{fight.metric==="tb" ? "TB · UPPSKATTAD MARGINAL":fight.metric==="count" ? "ANTAL REGISTRERINGAR":"POÄNG"}</strong>}</div>
+    <div className="arena-fight-clock"><Clock3 aria-hidden="true" /><span role="timer" aria-live="off">{fight.phase==="finished" ? "SLUTRESULTAT":fight.phase==="cancelled" ? "AVBRUTEN":`${fightTime(boundary,now)} ${fight.phase==="scheduled" ? "till start":"kvar"}`}</span>{!compact && <strong>{fight.scoring_mode==="daily" ? "DAGSPOÄNG · MATCHPOÄNG":fight.metric==="tb" ? "TB · UPPSKATTAD MARGINAL":fight.metric==="count" ? "ANTAL REGISTRERINGAR":"POÄNG"}</strong>}</div>
     {!compact && <div className="arena-fight-period" role="progressbar" aria-label="Fightperiod" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(elapsed)}><i style={{width:`${elapsed}%`}} /></div>}
   </div>;
 }

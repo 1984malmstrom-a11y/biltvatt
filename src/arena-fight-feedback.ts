@@ -1,14 +1,17 @@
 import {fightScore,uniqueFightLeader,type ArenaFightSummary} from "../shared/arena-fights";
-export type FightFeedback={kind:"lead"|"tie"|"final";key:string;fight:ArenaFightSummary;stationId:string;previousLeader?:string};
+export type FightFeedback={kind:"lead"|"tie"|"final";key:string;fight:ArenaFightSummary;stationId:string;daily?:boolean;previousLeader?:string};
 export function fightTransition(before:ArenaFightSummary|null|undefined,after:ArenaFightSummary|null|undefined,stationId:string):FightFeedback|null {
   if(!before || !after || before.id!==after.id || before.phase!=="active" || after.phase!=="active" || after.metric!==before.metric || after.version<=before.version)return null;
-  const own=after.standings.find(s=>s.id===stationId),was=before.standings.find(s=>s.id===stationId);
+  const daily=after.scoring_mode==="daily";
+  if((before.scoring_mode??"total")!==(after.scoring_mode??"total") || (daily && (!before.current_day || !after.current_day || before.current_day.day!==after.current_day.day)))return null;
+  const rows=daily ? after.current_day!.standings:after.standings,previousRows=daily ? before.current_day!.standings:before.standings;
+  const own=rows.find(s=>s.id===stationId),was=previousRows.find(s=>s.id===stationId);
   if(!own || !was || fightScore(own,after.metric)<=fightScore(was,before.metric))return null;
-  const leader=uniqueFightLeader(after.standings,after.metric),previous=uniqueFightLeader(before.standings,before.metric);
+  const leader=uniqueFightLeader(rows,after.metric),previous=uniqueFightLeader(previousRows,before.metric);
   const key=`${after.id}:${after.version}`;
-  if(leader===stationId && previous!==stationId)return {kind:"lead",key:`${key}:lead`,fight:after,stationId,previousLeader:before.standings.find(s=>s.id===previous)?.name ?? before.standings.find(s=>s.id!==stationId && s.rank===1)?.name};
-  const high=after.standings[0] && fightScore(after.standings[0],after.metric);
-  if(!leader && high>0 && fightScore(own,after.metric)===high && previous!==stationId && previous)return {kind:"tie",key:`${key}:tie`,fight:after,stationId};
+  if(leader===stationId && previous!==stationId)return {kind:"lead",key:`${key}:lead`,fight:after,stationId,daily,previousLeader:previousRows.find(s=>s.id===previous)?.name ?? previousRows.find(s=>s.id!==stationId && s.rank===1)?.name};
+  const high=rows[0] && fightScore(rows[0],after.metric);
+  if(!leader && high>0 && fightScore(own,after.metric)===high && previous!==stationId && previous)return {kind:"tie",key:`${key}:tie`,fight:after,stationId,daily};
   return null;
 }
 export function fightUrgency(end:string|undefined,now:number):"calm"|"hour"|"quarter"|"final" {

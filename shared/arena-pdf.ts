@@ -55,10 +55,11 @@ export function arenaReportPDF(s:ArenaReportSnapshot):Uint8Array {
     text(s.type==='fight'?s.title:s.subject?.name??s.station?.name??'Arena-nätverket',M,y,17,true);y+=24;
     text(`${s.period.start} – ${s.period.end}`,M,y,10,false,muted);y+=24;kpis(s.totals);
     if(s.type==='fight'){
-      const unit=s.metric==='tb'?'UPPSKATTAT TB':s.metric==='count'?'REGISTRERINGAR':'POÄNG';
+      const unit=s.scoring_mode==='daily'?'MATCHPOÄNG':s.metric==='tb'?'UPPSKATTAT TB':s.metric==='count'?'REGISTRERINGAR':'POÄNG';
       rect(M,y,W-2*M,72,'0.94 0.92 0.85');text(`${s.winner_names.length>1?'OAVGJORT · DELAD SEGER':'VINNARE'} · ${unit}`,M+14,y+12,10,true,gold);
       text(s.winner_names.join(' · ')||'Ingen vinnare',M+14,y+34,19,true);y+=95;
     }
+    if(s.scoring_mode==='daily'){section('SERIERESULTAT · MATCHPOÄNG');table(['PLAC. / STATION','MATCHPOÄNG'],s.leaderboard.map(r=>[`${r.rank}. ${r.name}`,number(r.match_points??0)]),[M,400]);}
     section(s.type==='fight'?'DELTAGARE OCH SLUTSTÄLLNING':s.type==='seller'?'DITT FRYSTA RESULTAT':'LAGETS RESULTAT');
     table(['PLAC. / NAMN','ANTAL','POÄNG','TB'],s.leaderboard.map(r=>[`${r.rank}. ${r.name}`,number(r.count),number(r.points),money(r.tb_ore)]),[M,304,363,422]);
     if(s.activities.length){section('AKTIVITETER');table(['AKTIVITET','ANTAL','POÄNG','TB'],s.activities.map(a=>[a.name,number(a.count),number(a.points),money(a.tb_ore)]),[M,304,363,422]);}
