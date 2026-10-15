@@ -14,7 +14,7 @@ async function signup(f:ReturnType<typeof setup>,name="Malmö",email="malmo@exam
   return {response,cookie:f.cookie(response),station:(await response.json() as {station:{id:string;status:string}}).station};
 }
 async function active(f:ReturnType<typeof setup>,name="Malmö",email="malmo@example.test") {
-  const account=await signup(f,name,email),admin=await f.superLogin();expect((await f.call(`/arena/superadmin/stations/${account.station.id}`,"PATCH",{status:"active"},admin)).status).toBe(200);return {...account,admin};
+  const account=await signup(f,name,email),admin=await f.superLogin();expect((await f.call(`/arena/superadmin/stations/${account.station.id}`,"PATCH",{status:"active"},admin)).status).toBe(200);return {...account,cookie:await f.stationAdmin(account.cookie),admin};
 }
 const draft={name:"Kaffe + bulle",offer_text:"",price_text:"",points:2,tb_kronor:"35,25",display_mode:"tb",image_key:null,category:"Mat",sort_order:0,active:1};
 describe("Arena station authentication and tenant isolation",()=>{

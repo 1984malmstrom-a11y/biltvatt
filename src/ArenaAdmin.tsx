@@ -1,4 +1,6 @@
-import ArenaReports from "./ArenaReports";
+import {lazy,Suspense} from 'react';
+import {ArenaPinGate,ArenaChangePin,useArenaAdminIdle,leaveArenaAdmin,type AdminAccess} from './ArenaAdminPin';
+const ArenaReports=lazy(()=>import('./ArenaReports'));
 import ArenaPeopleAdmin from "./ArenaPeopleAdmin";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ImagePlus, Pencil, Plus, Save, Settings } from "lucide-react";
@@ -16,6 +18,7 @@ const blankCampaign = () => ({ id: "", name: "", activity_id: "", start_date: da
 const blankGoal = () => ({ id: "", seller_id: "", period_type: "custom", start_date: day(), end_date: day(), target_points: 100 });
 
 export default function ArenaAdmin() {
+  const [access,setAccess]=useState<AdminAccess|null>(null);
   const [authorized, setAuthorized] = useState<boolean | null>(null), [pin, setPin] = useState("");
   const [accountRequired,setAccountRequired]=useState(false),[seller,setSeller]=useState({id:"",name:"",color:"#49caff",active:1});
   const [config, setConfig] = useState<Config | null>(null), [bootstrap, setBootstrap] = useState<ArenaBootstrap | null>(null);
@@ -33,11 +36,14 @@ export default function ArenaAdmin() {
       // Bootstrap only syncs the existing station register; Arena has no separate staff editor.
       let b:ArenaBootstrap;
       try{b=await api<ArenaBootstrap>("/arena/bootstrap");}catch(e){if(e instanceof HttpError && [401,403].includes(e.status)){setAccountRequired(true);setAuthorized(false);return;}throw e;}
+      const access=await api<AdminAccess>('/arena/auth/admin-access/status');setAccess(access);
+      if(access.mode==='pin'&&!access.authorized){setAuthorized(false);setBootstrap(b);setConfig(null);return;}
       const c = await api<Config>("/admin/arena/config");
       setBootstrap(b); setConfig(c); setAuthorized(true);
     } catch (e) { if (e instanceof HttpError && e.status === 401) setAuthorized(false); else setError((e as Error).message); }
   }
   useEffect(() => { void load(); }, []);
+  useArenaAdminIdle(authorized===true&&access?.mode==='pin',()=>{setAuthorized(false);setConfig(null);});
   async function action(task: () => Promise<void>) {
     if (busy) return; setBusy(true); setError(""); setNotice("");
     try { await task(); await load(); setNotice("Sparat. Arenan hämtar ändringarna automatiskt."); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
@@ -48,13 +54,14 @@ export default function ArenaAdmin() {
   }
   const field = (label: string, value: string | number, onChange: (v: string) => void, type = "text", required = false) => <label>{label}<input type={type} value={value} onChange={e => onChange(e.target.value)} required={required} maxLength={type === "text" ? 80 : undefined} step={type === "number" ? "0.01" : undefined} min={type === "number" ? 0 : undefined} /></label>;
   const save = <button className="arena-action" disabled={busy}><Save size={18} /> {busy ? "Sparar…" : "Spara"}</button>;
-  return <div className="arena-admin arena-theme"><header className="arena-admin-header"><a href="/arena"><ArrowLeft /> Till Arenan</a><h1><Settings /> Arena-admin</h1><a href={bootstrap?.station.kind==="arena" ? "/arena/account":"/station/admin"}>{bootstrap?.station.kind==="arena" ? "Stationskonto":"Stationsadmin"}</a></header>
+  return <div className="arena-admin arena-theme"><header className="arena-admin-header"><a href="/arena" onClick={access?.mode==='pin'&&authorized?e=>{e.preventDefault();void leaveArenaAdmin().catch(e=>setError(e.message));}:undefined}><ArrowLeft /> Till Arenan</a><h1><Settings /> Arena-admin</h1><a href={bootstrap?.station.kind==="arena" ? "/arena/account":"/station/admin"}>{bootstrap?.station.kind==="arena" ? "Stationskonto":"Stationsadmin"}</a></header>
     {error && <p className="arena-error" role="alert">{error}</p>}{notice && <p className="arena-notice" role="status">{notice}</p>}
-    {authorized === false && accountRequired ? <section className="arena-login arena-panel"><h2>Stationskonto krävs</h2><p>Logga in på ett aktivt stationskonto. Väntande stationer behöver godkännas först.</p><a className="arena-gold-action" href="/arena/account">Logga in / Anslut station</a></section> : authorized === false ? <form className="arena-login arena-panel" onSubmit={e => { e.preventDefault(); void action(async () => { await api("/admin/login", send("POST", { pin })); setPin(""); }); }}>
+    {authorized === false && accountRequired ? <section className="arena-login arena-panel"><h2>Stationskonto krävs</h2><p>Logga in på ett aktivt stationskonto. Väntande stationer behöver godkännas först.</p><a className="arena-gold-action" href="/arena/account">Logga in / Anslut station</a></section> : authorized === false && access?.mode==='pin' ? <ArenaPinGate configured={!!access.configured} onUnlock={load}/> : authorized === false ? <form className="arena-login arena-panel" onSubmit={e => { e.preventDefault(); void action(async () => { await api("/admin/login", send("POST", { pin })); setPin(""); }); }}>
       <h2>Logga in som stationsadmin</h2><p>Samma administratörssession som i Tvättligan och stationsdashboarden.</p><label>Administratörs-PIN<input type="password" inputMode="numeric" autoComplete="current-password" value={pin} onChange={e => setPin(e.target.value)} required maxLength={12} /></label><button className="arena-action" disabled={busy}>Logga in</button>
     </form> : !config ? <p role="status">Hämtar administrationen…</p> : <>
-      <nav className="arena-admin-tabs" aria-label="Arena-administration">{[["portraits", "Profilbilder"],["reports", "Rapporter"],["activities", "Aktiviteter"], ["campaigns", "Kampanj / fokus"], ["goals", "Stationsmål & personliga mål"],...(bootstrap?.station.kind==="arena" ? [["sellers","Säljare"]]:[])].map(([value, label]) => <button key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setNotice(""); }}>{label}</button>)}{bootstrap?.station.kind!=="arena" && <a href="/">Personal hanteras i Tvättligan → Admin → Personal</a>}</nav>
-      {tab==="reports" && <ArenaReports sellers={bootstrap?.sellers??[]} />}
+      <nav className="arena-admin-tabs" aria-label="Arena-administration">{[["portraits", "Profilbilder"],...(access?.mode==="pin" ? [["pin","Admin-PIN"]]:[]),["reports", "Rapporter"],["activities", "Aktiviteter"], ["campaigns", "Kampanj / fokus"], ["goals", "Stationsmål & personliga mål"],...(bootstrap?.station.kind==="arena" ? [["sellers","Säljare"]]:[])].map(([value, label]) => <button key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setNotice(""); }}>{label}</button>)}{bootstrap?.station.kind!=="arena" && <a href="/">Personal hanteras i Tvättligan → Admin → Personal</a>}</nav>
+      {tab==="pin" && access?.mode==="pin" && <ArenaChangePin onChanged={()=>{setAuthorized(false);setConfig(null);}}/>}
+      {tab==="reports" && <Suspense fallback={<p role="status">Hämtar rapporter…</p>}><ArenaReports sellers={bootstrap?.sellers??[]} /></Suspense>}
       {tab==="portraits" && <ArenaPeopleAdmin sellers={bootstrap?.sellers??[]} onSaved={load} />}
       {tab==="sellers" && bootstrap?.station.kind==="arena" && <div className="arena-admin-grid"><section className="arena-panel"><h2>Stationens säljare</h2><p>Arkivering bevarar säljarens historik.</p><button className="arena-action" onClick={()=>setSeller({id:"",name:"",color:"#49caff",active:1})}>Ny säljare</button><ul className="arena-admin-list">{config.sellers?.map(s=><li key={s.id}><button aria-label={`Redigera säljare: ${s.name}`} onClick={()=>setSeller({id:s.id,name:s.name,color:s.color,active:s.active})}>{s.name}<small>{s.active ? "Aktiv":"Arkiverad"}</small></button></li>)}</ul></section><form className="arena-panel arena-form" onSubmit={e=>{e.preventDefault();void action(async()=>{const {id,...values}=seller;const r=await api<{id:string}>(`/admin/arena/sellers${id ? `/${id}`:""}`,send(id?"PATCH":"POST",values));setSeller(s=>({...s,id:r.id}));});}}><h2>{seller.id ? "Redigera säljare":"Ny säljare"}</h2><label>Säljarnamn<input value={seller.name} onChange={e=>setSeller(s=>({...s,name:e.target.value}))} maxLength={80} required /></label><label>Färg<input type="color" value={seller.color} onChange={e=>setSeller(s=>({...s,color:e.target.value}))} /></label><label className="arena-check"><input type="checkbox" checked={seller.active===1} onChange={e=>setSeller(s=>({...s,active:e.target.checked ? 1:0}))} />Aktiv säljare</label>{save}</form></div>}
       {tab === "activities" && <div className="arena-admin-grid"><section className="arena-panel"><h2>Aktiviteter</h2><p>Välj en post för att redigera. Arkivering bevarar alla historiska registreringar.</p><button className="arena-action" onClick={() => { setActivity(blankActivity()); setTbKronor("0,00");setBlob(null); }}><Plus size={18} /> Ny aktivitet</button>

@@ -21,6 +21,6 @@ it('realtime stats, goals and fight queries use indexed station/time searches',a
   const plans=captured.filter(q=>/^\s*SELECT/i.test(q.sql)&&/\b(?:FROM|JOIN) arena_registrations\b/.test(q.sql)).map(q=>({sql:q.sql,params:q.params,plan:f.arena.prepare('EXPLAIN QUERY PLAN '+q.sql).all(...q.params as SQLInputValue[]).map(p=>String(p.detail))}));
   expect(plans.length).toBeGreaterThanOrEqual(7);
   for(const p of plans){expect(p.plan.some(x=>/SEARCH (r|arena_registrations) USING (COVERING )?INDEX/.test(x))).toBe(true);expect(p.plan.some(x=>/SCAN (r|arena_registrations)( |$)/.test(x))).toBe(false);}
-  if(process.env.ARENA_QUERY_PLAN_REPORT)writeFileSync(process.env.ARENA_QUERY_PLAN_REPORT,JSON.stringify({rows:5000,engine:'Node SQLite EXPLAIN QUERY PLAN with current local Arena migrations (D1-compatible SQL)',plans},null,2));
+  if(process.env.ARENA_QUERY_PLAN_REPORT)writeFileSync(process.env.ARENA_QUERY_PLAN_REPORT,JSON.stringify({rows:5000,queryCount:captured.length,sql:captured,engine:'Node SQLite EXPLAIN QUERY PLAN with current local Arena migrations (D1-compatible SQL)',plans},null,2));
  }finally{f.close();vi.useRealTimers();}
 });

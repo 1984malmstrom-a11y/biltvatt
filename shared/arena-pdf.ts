@@ -68,6 +68,9 @@ export function arenaReportPDF(s:ArenaReportSnapshot):Uint8Array {
   if(s.totals.unknown_tb_count){ensure(40);text(`${s.totals.unknown_tb_count} äldre registreringar saknar historiskt TB.`,M,y,10,false,muted);y+=30;}
   if(y<=724)text('Resultatet är låst. Senare registreringar ändrar inte denna rapport.',M,y+4,9,false,muted);
   pages.forEach((p,i)=>{commands=p;line(M,775,W-2*M);text(`Fryst: ${s.created_at}`,M,786,8,false,muted,420);text(`Rapport-ID: ${s.id}`,M,800,8,false,muted,420);text(`${i+1} / ${pages.length}`,502,794,9,true,navy,60);});
+  return arenaPDFDocument(pages);
+}
+export function arenaPDFDocument(pages:string[][]):Uint8Array {
   const objects:string[]=['','', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
   const kids:number[]=[];
   for(const p of pages){const pageId=objects.length+1,streamId=pageId+1;kids.push(pageId);objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${streamId} 0 R >>`);const stream=p.join('\n');objects.push(`<< /Length ${enc.encode(stream).byteLength} >>\nstream\n${stream}\nendstream`);}

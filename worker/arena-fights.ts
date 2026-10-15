@@ -100,13 +100,14 @@ export async function arenaFightView(db:D1Database,id:string,now=new Date()):Pro
   return fail(409,"Ställningen uppdateras. Försök igen.");
 }
 const leadEvent=(db:D1Database,id:string)=>db.prepare("SELECT version,station_id,station_name,created_at FROM arena_fight_lead_events WHERE fight_id=? ORDER BY version DESC LIMIT 1").bind(id).first<NonNullable<ArenaFight["latest_lead_change"]>>();
-export async function arenaFightSummary(db:D1Database,station:string):Promise<ArenaFightSummary|null> {
+export async function arenaFightSummary(db:D1Database,station:string,objectiveSink?:(objective:import('../shared/arena').ArenaStats['fight_objective'])=>void):Promise<ArenaFightSummary|null> {
   await syncStationCompetitions(db,station);
   const now=new Date(),instant=now.toISOString(),recent=new Date(now.getTime()-86400000).toISOString();
-  const row=await db.prepare(`SELECT f.id FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id
+  const row=await db.prepare(`SELECT f.id${objectiveSink?`,f.scope_json,CASE WHEN f.scope_json IS NOT NULL AND f.result_json IS NULL THEN (SELECT json_group_array(q.activity_id) FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=s.station_id) END activity_ids`:''} FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id
     WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))
-    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1`).bind(station,instant,recent,instant).first<{id:string}>();
+    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1`).bind(station,instant,recent,instant).first<{id:string;scope_json?:string|null;activity_ids?:string|null}>();
   if(!row)return null;const fight=await arenaFightView(db,row.id);
+  if(objectiveSink&&fight.phase==='active')objectiveSink({fight_id:fight.id,scope:row.scope_json?JSON.parse(row.scope_json).kind:'all',activity_ids:row.scope_json?JSON.parse(row.activity_ids??'[]').sort():null});
   const {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,scoring_mode,day_win_points,day_tie_points,current_day,sudden_death,tie_break_reason,competition_id,effective_start_at}=fight;
   return {id,name,metric,phase,standings,version,start_at,end_at,snapshot_at,leader_ids,winner_ids,latest_lead_change,sudden_death,tie_break_reason,competition_id,effective_start_at,...(scoring_mode==='daily'?{scoring_mode,day_win_points,day_tie_points,current_day}:{})};
 }

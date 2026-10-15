@@ -1,20 +1,18 @@
-# Fysiskt kassadatortest (Peter)
+# Fysiskt kassadatortest
 
-Detta dokument ersätter inte ett test på riktig gammal stationsdator. CPU-throttle i Chromium är en syntetisk approximation.
+Status: MANUAL REQUIRED. Chromium 4× CPU och snabbspolad virtuell tid är approximationer; inget fysiskt kassadatortest har genomförts i denna miljö.
 
-1. Notera CPU, RAM, operativsystem, skärmupplösning och webbläsarversion. Använd stationens normala driftläge.
-2. Öppna en godkänd separat MASTER-testmiljö, aldrig live av misstag. Kontrollera URL, station och testpersonal.
-3. Testa 1920×1080, 1024×768 och tillgänglig 4:3-upplösning. Hela startvyn ska rymmas utan vertikal scroll. Vänsterkolumn till navigation, stats endast till höger, exakt sju aktiviteter.
-4. Klicka aktivitet, kontrollera stora tydliga porträtt och namn, välj person. Två tryck ska räcka.
-5. Upprepa tio gånger. Notera tid till säljarväljare och sparad registrering; inga dubbelregistreringar vid dubbelklick.
-6. Starta nästa registrering direkt medan en vanlig celebration visas och direkt under NY ETTA/veckomål. Overlayn får inte fånga nästa klick.
-7. Kontrollera att produkt, reward, namn och ansikte är läsbara. Kontrollera äldre skärmens kontrast.
-8. Aktivera reducerad rörelse i OS/webbläsare. Ingen konfetti/entréanimation ska behövas för att förstå resultatet.
-9. Testa tillfälligt avbruten nätanslutning. Visa tydligt fel, ingen påhittad framgång. Försök igen ska inte dubbelspara.
-10. Ångra, kontrollera vanlig topplista och achievement-dedupe. En redan fryst fight-final/rapport ska inte skrivas om.
-11. Byt/sudda en testprofilbild i stationens admin. Normal vy, Min Arena och hero ska följa samma person. Ta bort → stabilt fiktivt ansikte.
-12. Håll vyn öppen 30 minuter. Kontrollera minnesförbrukning, CPU i idle, inga timers som driver onödiga helsidere-renders.
-13. Kontrollera inloggning över natt, logout, sessionsåterkallning och nästa inloggning.
-14. Dokumentera blockerande fel med steg, upplösning, tidpunkt och screenshot. Notera faktisk svarstid; kalla aldrig ett 4× CPU-throttle-test för ett fysiskt kassatest.
-
-Godkänn först när tvåtrycksflödet är snabbt och stabilt på den faktiska datorn.
+1. Notera CPU, RAM, OS, webbläsare och 19,5-tumsskärm/touchmodell. Öppna endast en separat godkänd MASTER-testmiljö med testpersonal.
+2. Kontrollera 1920×1080 vid både 100% och 125% OS-/webbläsarskalning. Notera faktisk CSS-viewport. Testa också 1024×768 och tillgänglig 4:3-upplösning. Huvudvyn ska rymmas utan vertikal scroll: sju aktiviteter, vänsterspalt till navigationen och stats till höger.
+3. Använd touch: aktivitet → säljarens namn → klart. Upprepa minst 50 försäljningar, inklusive dubbeltryck och blandade aktiviteter. Notera tid till säljare och kvittens samt eventuella tappade tryck; inga dubbletter.
+4. Starta nästa försäljning direkt under vanlig celebration, NY ETTA och Goal Hero. Kontrollera att reward, namn, fiktiv showroom-person respektive riktig produktionsidentitet är läsbara och att heron inte blockerar nästa tryck.
+5. Kör aktiv Butiksfight, kvalificerande och icke-kvalificerande aktiviteter, tillfällig quick action, multistationsnamn och återgång till normal kontext. Öppna Fight Center, ligatabell och slutspel. Kontrollera att timersekunden inte ger helsideryck.
+6. Aktivera reduced motion. Bekräftelsen måste vara tydlig även utan animation. Kontrollera kontrast på den faktiska äldre skärmen.
+7. Bryt nätet kort. Försök igen med osäker kvittens får inte dubbelspara. Ångra och kontrollera vanlig topplista; redan fryst Fight/award ska inte ändras.
+8. Växla flik/fönster: dold vy ska inte pollas, synlig vy ska uppdateras direkt. Kontrollera 12s normalt / 5s Fight utan parallella dubbelförfrågningar.
+9. Öppna Admin med fysisk numpad och touch-keypad. Fel PIN, lockout, korrekt PIN, byte, återgång och tjugo minuters inaktivitet ska hanteras tydligt. Stationens vanliga displayinloggning ska bestå.
+10. Testa Owner/Superadmin-reset separat med behörigt testkonto. Ingen gammal PIN ska kunna visas. Kontrollera att alla gamla adminsessioner upphör.
+11. Öppna arkiverat award, ladda ned och skriv ut A4. Kontrollera svenska tecken, marginaler, namn, period och läsbarhet även på vanlig skrivare. Byt ett testnamn/TB efteråt och kontrollera att gammalt award är oförändrat.
+12. Låt normalvyn stå i verklig idle i 30 minuter och upprepa sedan med aktiv Fight. Notera CPU, arbetsminne, fläkt/temperatur, långsamma uppdateringar och minne före/efter. Kör ytterligare upprepade försäljningar och kontrollera att resurser återgår till stabil nivå.
+13. Kontrollera vanlig stationsinloggning över natt, logout, sessionsåterkallning och inloggning igen. Ta bort testprofilbild: produktion ska få stabil initial/fallback; showroom-porträtt får endast visas i explicit showcase.
+14. Dokumentera utfall, faktisk viewport/skala, tider och reproducerbara steg. Godkänn först när tvåtrycksflödet är snabbt och stabilt på den riktiga datorn.

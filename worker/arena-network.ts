@@ -1,3 +1,4 @@
+import {resetArenaAdminPin} from './arena-admin-pin';
 import {competitionApi} from './arena-competitions';
 import {reportsApi} from "./arena-reports";
 import {audit,auditApi,auditStatement} from "./arena-audit";
@@ -60,6 +61,8 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
 }
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
   const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
+  const pinReset=path.match(/^\/api\/arena\/superadmin\/stations\/([a-zA-Z0-9:_-]{1,120})\/admin-pin$/);
+  if(pinReset&&method==='POST')return resetArenaAdminPin(request,env,pinReset[1],actor);
   if(path.startsWith('/api/arena/superadmin/competitions'))return competitionApi(request,db,actor);
   if(path.startsWith("/api/arena/superadmin/reports"))return reportsApi(request,db,null,actor);
   const security=await securityAdminApi(request,env,actor);if(security)return security;

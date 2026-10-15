@@ -1,3 +1,4 @@
+import {arenaAdminPinApi,requireArenaAdminElevation} from './arena-admin-pin';
 import { arenaApi } from "./arena";
 import { arenaAdminApi } from "./arena-admin";
 import { arenaAuthApi, hasArenaStationCookie, renewedArenaCookie } from "./arena-auth";
@@ -93,7 +94,7 @@ async function api(
       fail(403, "Anrop från en annan webbplats är inte tillåtet.");
   }
   const now = new Date().toISOString();
-  if(path.startsWith("/api/arena/auth/")) return arenaAuthApi(request,env);
+  if(path.startsWith("/api/arena/auth/")) { const pin=await arenaAdminPinApi(request,env);return pin??arenaAuthApi(request,env); }
   if(path.startsWith("/api/arena/superadmin/")) return arenaSuperadminApi(request,env);
   if(env.ARENA_ONLY==="1" && !path.startsWith("/api/arena/") && !path.startsWith("/api/admin/arena/")) fail(404,"Den här tjänsten innehåller endast Arenan.");
   if (path.startsWith("/api/arena/")) {
@@ -145,8 +146,9 @@ async function api(
     });
   }
   if (path.startsWith("/api/admin/arena/")) {
-    if(!hasArenaStationCookie(request)) await requireAdmin(request,env);
-    return arenaAdminApi(request,env);
+    const identity=hasArenaStationCookie(request)?await requireArenaAdminElevation(request,env):undefined;
+    if(!identity)await requireAdmin(request,env);
+    return arenaAdminApi(request,env,identity);
   }
   if (path.startsWith("/api/admin/")) await requireAdmin(request, env);
   if (path.startsWith("/api/admin/launch/")) {

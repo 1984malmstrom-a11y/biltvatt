@@ -1,4 +1,4 @@
-import {fightDashboard,fightActivityObjective} from './arena-dashboard-context';
+import {fightDashboard} from './arena-dashboard-context';
 import {temporaryFightActivities} from './arena-temporary-activities';
 import {fightNoticeState} from './arena-challenges';
 import type { ArenaCampaign, ArenaGoal, ArenaPerson, ArenaRecentActivity, ArenaSeller, ArenaStats } from "../shared/arena";
@@ -66,8 +66,10 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
       WHERE station_id=? AND activity_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?`)
       .bind(key, campaign.activity_id, campaign.start_at, campaign.end_at).first<{ count: number; points: number }>() : null,
   ]);
-  const fight=await arenaFightSummary(db,key);
-  const [fight_dashboard,fight_activities,fight_objective]=await Promise.all([fightDashboard(db,fight,now),fight?.phase==='active'?temporaryFightActivities(db,key,fight.id):Promise.resolve([]),fightActivityObjective(db,fight,key)]);
+  let fight_objective:ArenaStats['fight_objective'];
+  // Piggyback frozen objective IDs on the indexed summary lookup: no extra D1 round trip.
+  const fight=await arenaFightSummary(db,key,value=>{fight_objective=value;});
+  const [fight_dashboard,fight_activities]=await Promise.all([fightDashboard(db,fight,now),fight?.phase==='active'?temporaryFightActivities(db,key,fight.id):Promise.resolve([])]);
   return {
     range, count: leaderboard.reduce((s, p) => s + p.count, 0), points: roundedPoints(leaderboard.reduce((s, p) => s + p.points, 0)), leaderboard,
     today: { count: today?.count ?? 0, points: roundedPoints(today?.points ?? 0), sellers: today?.sellers ?? 0 },

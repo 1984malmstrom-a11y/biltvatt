@@ -1,0 +1,18 @@
+import {it,expect,vi} from 'vitest';
+import {writeFileSync} from 'node:fs';
+import {arenaFixture} from './arena-fixture';
+import {arenaStats} from '../worker/arena-stats';
+it('measures normal and scoped ten-station Fight stats on 5000 receipts without unindexed receipt scans',async()=>{
+ const f=arenaFixture();vi.useFakeTimers();vi.setSystemTime(new Date('2026-10-15T12:00:00Z'));
+ try{for(let i=0;i<10;i++){const id='budget-'+i,at='2026-10-01T00:00:00Z';f.arena.prepare("INSERT INTO arena_stations(id,station_key,name,status,kind,created_at,updated_at) VALUES(?,?,?,'active','arena',?,?)").run(id,id,id,at,at);f.arena.prepare("INSERT INTO arena_sellers(id,station_id,name,source,created_at,updated_at) VALUES(?,?,?,'arena',?,?)").run(id+':seller',id,'Peter '+i,at,at);f.arena.prepare("INSERT INTO arena_activities(id,station_id,name,points,created_at,updated_at) VALUES(?,?,?,2,?,?)").run(id+':wash',id,'Biltvätt',at,at);f.arena.prepare("WITH RECURSIVE n(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM n WHERE x<500) INSERT INTO arena_registrations(id,request_id,station_id,seller_id,activity_id,points_awarded,tb_ore_awarded,registered_at,created_at) SELECT ?||x,?||x,?,?,?,2,3500,'2026-10-15T11:00:00Z','2026-10-15T11:00:00Z' FROM n").run(id+':r',id+':r',id,id+':seller',id+':wash');}
+ const db=f.env.ARENA_DB!,prepare=db.prepare.bind(db),queries:{sql:string;params:unknown[];ms:number}[]=[];
+ db.prepare=(sql:string)=>{const q={sql,params:[] as unknown[],ms:0},s=prepare(sql),bind=s.bind.bind(s);s.bind=(...params:unknown[])=>{q.params=params;return bind(...params);};for(const name of ['first','all','run'] as const){const run=s[name].bind(s);s[name]=(async()=>{const t=performance.now();try{return await run();}finally{q.ms=performance.now()-t;queries.push(q);}}) as typeof s[typeof name];}return s;};
+ const normal=await arenaStats(db,'budget-0',new URL('https://arena.test/?period=today'),new Date()),normalQueries=queries.splice(0);expect(normal.count).toBe(500);
+ f.arena.exec("INSERT INTO arena_fights(id,name,start_at,end_at,status,scope_json,created_at,updated_at) VALUES('budget-fight','Scoped QA','2026-10-15T10:00:00Z','2026-10-15T14:00:00Z','active','{\"kind\":\"all\"}','2026-10-01','2026-10-01')");for(let i=0;i<10;i++){const st='budget-'+i;f.arena.prepare("INSERT INTO arena_fight_stations(fight_id,station_id) VALUES('budget-fight',?)").run(st);f.arena.prepare("INSERT INTO arena_fight_activity_rules(fight_id,station_id,activity_id,snapshot_json) VALUES('budget-fight',?,?,'{}')").run(st,st+':wash');}
+ const first=await arenaStats(db,'budget-0',new URL('https://arena.test/?period=today'),new Date()),firstQueries=queries.splice(0);expect(first.fight_objective?.activity_ids).toEqual(['budget-0:wash']);
+ const warm=await arenaStats(db,'budget-0',new URL('https://arena.test/?period=today'),new Date()),warmQueries=queries.splice(0);expect(warm.fight_dashboard?.leaderboard).toHaveLength(10);
+ const reports=[['normal',normalQueries],['fight-first',firstQueries],['fight-warm',warmQueries]].map(([label,q])=>({label,queryCount:(q as typeof queries).length,queries:(q as typeof queries).map(x=>({...x,plan:/^\s*(SELECT|WITH)/i.test(x.sql)?f.arena.prepare('EXPLAIN QUERY PLAN '+x.sql).all(...x.params as never[]):[]}))}));
+ for(const r of reports)for(const q of r.queries)if(q.sql.includes('arena_registrations'))expect(q.plan.some((p:{detail?:unknown})=>/SCAN (r|arena_registrations)( |$)/.test(String(p.detail)))).toBe(false);
+ if(process.env.ARENA_BUDGET_REPORT)writeFileSync(process.env.ARENA_BUDGET_REPORT,JSON.stringify({stations:10,registrations:5000,engine:'local SQLite, not remote D1',rows_read:null,rows_written:null,reports},null,2));
+ }finally{f.close();vi.useRealTimers();}
+});

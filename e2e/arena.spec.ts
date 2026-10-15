@@ -449,6 +449,7 @@ for (const source of ["station", "campaign-points", "campaign-count"] as const) 
 
 test("Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras", async ({ page }) => {
   await visualData(page, () => stats);
+  await page.route('**/api/arena/auth/admin-access/status',r=>r.fulfill({json:{mode:'legacy'}}));
   await page.route("**/api/admin/arena/config", route => route.fulfill({ json:{ activities:cleanProducts, campaigns:[], station_goals:[], personal_goals:[] } }));
   await page.goto("/arena/admin");
   for (const [name,file] of productAssets) {
@@ -531,6 +532,7 @@ test("Arena-admin: mänskliga listor, vald post, ordning och periodförval", asy
   const config = { activities, campaigns:[boot.campaign], station_goals:stats.station_goals, personal_goals:[{ id:"personal", seller_id:"s-0", period_type:"week", start_date:"2026-10-12", end_date:"2026-10-18", target_points:100 }] };
   await visualData(page, () => stats);
   const saves: Record<string, unknown>[] = [];
+  await page.route('**/api/arena/auth/admin-access/status',r=>r.fulfill({json:{mode:'legacy'}}));
   await page.route("**/api/admin/arena/config", route => route.fulfill({ json:config }));
   await page.route("**/api/admin/arena/activities/*", route => { saves.push(route.request().postDataJSON()); return route.fulfill({ json:{ id:"activity-0" } }); });
   await page.route("**/api/admin/arena/campaigns/*", route => { saves.push(route.request().postDataJSON()); return route.fulfill({ json:{ id:"campaign" } }); });
@@ -697,6 +699,7 @@ for(const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,3
 }
 test("Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans",async({page})=>{
   await visualData(page,()=>stats);const config={activities:[{...activities[0],tb_ore:2900,display_mode:"points"}],campaigns:[],station_goals:[],personal_goals:[]};let payload:Record<string,unknown>|null=null;
+  await page.route('**/api/arena/auth/admin-access/status',r=>r.fulfill({json:{mode:'legacy'}}));
   await page.route("**/api/admin/arena/config",r=>r.fulfill({json:config}));
   await page.route(`**/api/admin/arena/activities/${activities[0].id}`,r=>{payload=r.request().postDataJSON();return r.fulfill({json:{id:activities[0].id}});});
   await page.goto("/arena/admin");await page.getByRole("button",{name:"Redigera aktivitet: Biltvätt",exact:true}).click();await page.getByLabel("TB (kr)",{exact:true}).fill("35,25");await page.getByLabel("Synlig badge",{exact:true}).selectOption("tb");

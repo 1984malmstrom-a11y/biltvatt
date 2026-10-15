@@ -6,10 +6,10 @@ import { body, checkFields, fail, json, text } from "./http";
 import { activityInput, campaignInput, goalInput } from "./arena-model";
 import { resolveArenaStation } from "./arena-auth";
 
-// Called only after requireAdmin in worker/index.ts.
-export async function arenaAdminApi(request: Request, env: Env): Promise<Response> {
+// Called only after legacy admin authentication or station-admin elevation in index.ts.
+export async function arenaAdminApi(request: Request, env: Env,authorizedIdentity?:Awaited<ReturnType<typeof resolveArenaStation>>): Promise<Response> {
   if (!env.ARENA_DB) return fail(503, "Arena-databasen är inte konfigurerad.");
-  const identity=await resolveArenaStation(request,env);
+  const identity=authorizedIdentity??await resolveArenaStation(request,env);
   const db = env.ARENA_DB, key = identity.key, path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
   if(path.startsWith('/api/admin/arena/challenges')||path==='/api/admin/arena/competition-availability')return challengeAdminApi(request,env,key);
   if(path.startsWith("/api/admin/arena/reports"))return reportsApi(request,db,key,{id:key,display_name:identity.station?.name??key,role:"station"});

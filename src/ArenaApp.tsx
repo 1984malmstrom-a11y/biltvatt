@@ -1,3 +1,4 @@
+import {arenaRequests} from './arena-requests';
 import ArenaSellerSelector,{type ArenaSellerSelectorHandle} from "./ArenaSellerSelector";
 import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
 import {arenaLocalSale} from "./arena-local-sale";
@@ -190,16 +191,17 @@ function ArenaHome() {
   const celebrationAllowed = useRef("");
   const query = new URLSearchParams({ period, metric,...(period === "custom" ? { start, end } : {}), ...(activityFilter ? { activity_id: activityFilter } : {}), ...(category ? { category } : {}) }).toString();
   const queryRef = useRef(query); queryRef.current = query;
+  const statsRequests=useMemo(()=>arenaRequests<ArenaStats>((key,signal)=>api(`/arena/stats?${key}`,{signal})),[]);
   const refresh = useCallback(async () => {
     const version = ++statsVersion.current;
     try {
-      const todayRequest = api<ArenaStats>("/arena/stats?period=today&metric=points");
-      const selectedRequest = queryRef.current === "period=today&metric=points" ? todayRequest : api<ArenaStats>(`/arena/stats?${queryRef.current}`);
+      const todayRequest = statsRequests.request("period=today&metric=points");
+      const selectedRequest = queryRef.current === "period=today&metric=points" ? todayRequest : statsRequests.request(queryRef.current);
       const [next, today] = await Promise.all([selectedRequest, todayRequest]);
       if (version === statsVersion.current) { statsRef.current = next; todayRef.current=today; startTransition(()=>{setStats(next);setTodayStats(today);setStatsUnavailable(false);setError("");}); }
       return next;
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
-  }, []);
+  }, [statsRequests]);
   const onFightBoundary=useCallback(()=>{void refresh();},[refresh]);
   const bootstrap = useCallback(async () => {
     try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { if(e instanceof HttpError && e.status===401)window.location.assign("/arena/account");else setError((e as Error).message); }
@@ -207,8 +209,8 @@ function ArenaHome() {
   useEffect(() => {
     document.documentElement.classList.add("arena-view");
     void bootstrap();
-    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
-  }, [bootstrap]);
+    return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; ++statsVersion.current;statsRequests.invalidate(); clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
+  }, [bootstrap,statsRequests]);
   const activeFight=todayStats?.fight?.phase==="active";
   const fightContext=activeFight?todayStats?.fight_dashboard:undefined;
   const dashboardStats=useMemo(()=>fightContext&&todayStats?{...todayStats,metric:fightContext.metric,leaderboard:fightContext.leaderboard,recent:fightContext.recent}:todayStats,[fightContext,todayStats]);
@@ -249,6 +251,7 @@ function ArenaHome() {
       statsRef.current=next;todayRef.current=today;setStats(next);setTodayStats(today);
     };
     ++statsVersion.current; // Reject a poll started before this optimistic transaction.
+    statsRequests.invalidate();
     localSale({id:pending.requestId,seller_id:sellerId,activity_id:pending.activity.id,points_awarded:pending.activity.points,tb_ore_awarded:pending.activity.tb_ore,registered_at:new Date().toISOString(),voided_at:null});
     try {
       const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
@@ -296,6 +299,7 @@ function ArenaHome() {
   async function undo() {
     if (!receipt || lock.current) return;
     lock.current = true; setBusy(true);
+    ++statsVersion.current;statsRequests.invalidate();
     try {
       await api(`/arena/registrations/${receipt.registration.id}/void`, send("POST", { request_id: receipt.requestId }));
       celebrationAllowed.current = ""; setReceipt(null); setCelebration(null); setFightFinal(null); await refresh();
