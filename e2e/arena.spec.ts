@@ -300,10 +300,10 @@ for (const [width,height] of [[1920,1080],[1024,768],[1448,1086],[390,844],[844,
     await page.setViewportSize({width,height}); await visualData(page,() => current); await page.goto("/arena");
     const bar=page.getByRole("region",{name:"Dagens stats"});
     await expect(bar.locator("strong")).toHaveText(["27","42,5","5"]);
-    await expect(bar.locator(":scope>div:not(.arena-customer-brand) span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare"]);
+    await expect(bar.locator(":scope>div span")).toHaveText(["Registreringar","Poäng idag","Aktiva säljare"]);
     const fit=await bar.evaluate(el => {
       const bar=el.getBoundingClientRect();
-      return [...el.querySelectorAll(":scope>div:not(.arena-customer-brand)")].every(metric => {
+      return [...el.querySelectorAll(":scope>div")].every(metric => {
         const r=metric.getBoundingClientRect(),value=metric.querySelector("strong")!.getBoundingClientRect(),label=metric.querySelector("span")!.getBoundingClientRect();
         return value.right<=r.right && label.right<=r.right && r.right<=bar.right && label.bottom<=bar.bottom;
       });

@@ -20,7 +20,7 @@ import ArenaFocusTitle from './ArenaFocusTitle';
 import ArenaStatePanel from "./ArenaStatePanel";
 import ArenaChampion from "./ArenaChampion";
 import {ArenaPersonName,ArenaPersonContext} from "./ArenaPersonContext";
-import {ArenaEmblem,ArenaCustomerBrandSlot} from "./ArenaBrand";
+import {ArenaEmblem} from "./ArenaBrand";
 import "./arena-theme.css";
 import "./arena.css";
 import "./arena-showroom.css";
@@ -30,6 +30,7 @@ import "./arena-identity.css";
 import "./arena-fight-nav.css";
 import "./arena-stage-v2.css";
 import "./arena-victory.css";
+import "./arena-mini-polish.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
@@ -354,7 +355,6 @@ function ArenaHome() {
       <div><BarChart3 aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.count) : "—"}</strong><span>Registreringar</span></div>
       <div><Star aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.points) : "—"}</strong><span>Poäng idag</span></div>
       <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
-      <ArenaCustomerBrandSlot compact/>
     </section>
     <nav className="arena-nav" aria-label="Arena"><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><button className="arena-nav-home" aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><span className="arena-nav-core" aria-hidden="true"><ArenaEmblem className="arena-nav-emblem"/></span><span>START</span></button><a href="/arena/fights" className={todayStats?.fight_notices?.incoming?"has-fight-notice":todayStats?.fight?.phase==="active"?"has-live-fight":todayStats?.fight_notices?.outgoing?"has-pending-fight":todayStats?.fight_notices?.scheduled?"has-upcoming-fight":undefined}><Flag /> BUTIKSFIGHT{!!todayStats?.fight_notices?.incoming&&<span className="arena-fight-nav-badge" aria-label={`${todayStats.fight_notices.incoming} inkommande utmaningar`}>{todayStats.fight_notices.incoming}</span>}{!todayStats?.fight_notices?.incoming&&!!todayStats?.fight_notices?.outgoing&&<span className="arena-fight-nav-pending" aria-label="Utmaning väntar på svar"><Clock3/></span>}{!todayStats?.fight_notices?.incoming&&!todayStats?.fight_notices?.outgoing&&!!todayStats?.fight_notices?.unread&&<span className="arena-fight-nav-dot" aria-label="Nytt fightbesked"/>}</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />

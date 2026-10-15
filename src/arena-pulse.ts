@@ -10,5 +10,6 @@ export function arenaPulse(stats:ArenaStats|null){
  const activities=new Map<string,{id:string;name:string;count:number}>();
  for(const person of stats?.leaderboard??[])for(const a of person.activities){const row=activities.get(a.id)??{id:a.id,name:a.name,count:0};row.count+=a.count;activities.set(a.id,row);}
  const strongest=[...activities.values()].filter(a=>a.count>0).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'sv'))[0]??null;
- return {pace,strongest,lastActivity:stats?.recent?.[0]??null,goal};
+ const remaining=goal ? Math.max(0,roundedPoints(goal.target_points-goal.points)) : null;
+ return {pace,strongest,lastActivity:stats?.recent?.[0]??null,goal,remaining};
 }
