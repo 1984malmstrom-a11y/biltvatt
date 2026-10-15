@@ -2,7 +2,7 @@ import {reportsApi} from "./arena-reports";
 import {audit,auditApi,auditStatement} from "./arena-audit";
 import {securityAdminApi} from "./arena-security";
 import type { Env } from "./index";
-import type { ArenaGroupBoard, ArenaMetric, ArenaStationStanding } from "../shared/arena-network";
+import type { ArenaGroupBoard, ArenaMetric, ArenaStationStanding,ArenaNetworkPerson,ArenaNetworkRecent } from "../shared/arena-network";
 import { roundedPoints } from "../shared/arena";
 import { requireArenaSuperadmin } from "./arena-auth";
 import { arenaRange } from "./arena-model";
@@ -11,13 +11,16 @@ import { arenaFightAdminApi } from "./arena-fights";
 import {arenaLeagueApi} from './arena-leagues';
 
 export const standingScore=(row:ArenaStationStanding,metric:ArenaMetric)=>metric==="tb" ? row.tb_ore : metric==="count" ? row.count : row.points;
-export function rankStations(rows:ArenaStationStanding[],metric:ArenaMetric) {
+export function rankStations<T extends ArenaStationStanding>(rows:T[],metric:ArenaMetric) {
   const sorted=rows.map(row=>({...row,points:roundedPoints(row.points)})).sort((a,b)=>standingScore(b,metric)-standingScore(a,metric) || a.name.localeCompare(b.name,"sv") || a.id.localeCompare(b.id));
   for(let i=0;i<sorted.length;i++) sorted[i].rank=i && standingScore(sorted[i],metric)===standingScore(sorted[i-1],metric) ? sorted[i-1].rank : i+1;
   return sorted;
 }
 export async function arenaGroupBoard(db:D1Database,url:URL,group:string | null,name:string):Promise<ArenaGroupBoard> {
-  const filtered=new URL(url);filtered.searchParams.delete("group_id");const range=arenaRange(filtered);
+  const filtered=new URL(url);filtered.searchParams.delete("group_id");
+  const showPeople=filtered.searchParams.get('people')==='1';
+  if(filtered.searchParams.has('people')&&!['0','1'].includes(filtered.searchParams.get('people')!))fail(400,'Välj giltig personvy.');
+  filtered.searchParams.delete('people');const range=arenaRange(filtered);
   const metric=(filtered.searchParams.get("metric")??"points") as ArenaMetric;
   if(filtered.searchParams.has("activity_id") || filtered.searchParams.has("category")) fail(400,"Gemensamma topplistor visar stationsresultat för hela perioden.");
   const rows=await db.prepare(`SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,
@@ -28,7 +31,21 @@ export async function arenaGroupBoard(db:D1Database,url:URL,group:string | null,
     .bind(range.from,range.to,group,group).all<ArenaStationStanding>();
   const standings=rankStations(rows.results,metric);
   // Equal totals have equal competition rank; no invented working hours or normalization.
-  return {name,metric,normalization:"total",period:(filtered.searchParams.get("period")??"today") as ArenaGroupBoard["period"],range,standings};
+  const board:ArenaGroupBoard={name,metric,normalization:"total",period:(filtered.searchParams.get("period")??"today") as ArenaGroupBoard["period"],range,standings};
+  if(!showPeople)return board;
+  // Opt-in presentation projection only; station totals and scoring are unchanged.
+  // The existing group membership / Superadmin guard runs before this function.
+  const [people,recent]=await Promise.all([
+   db.prepare(`SELECT p.id,p.name,CASE WHEN p.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||p.profile_image_id END profile_url,p.avatar_index,s.id station_id,s.name station_name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(CASE WHEN r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count
+    FROM arena_registrations r JOIN arena_sellers p ON p.id=r.seller_id AND p.station_id=r.station_id JOIN arena_stations s ON s.id=r.station_id
+    WHERE s.status='active' AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<? AND (? IS NULL OR EXISTS(SELECT 1 FROM arena_group_members m WHERE m.station_id=s.id AND m.group_id=?)) GROUP BY p.id`)
+    .bind(range.from,range.to,group,group).all<ArenaNetworkPerson>(),
+   db.prepare(`SELECT r.id,r.seller_id,p.name seller_name,CASE WHEN p.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||p.profile_image_id END profile_url,p.avatar_index,s.id station_id,s.name station_name,a.name activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode,r.registered_at
+    FROM arena_registrations r JOIN arena_sellers p ON p.id=r.seller_id AND p.station_id=r.station_id JOIN arena_stations s ON s.id=r.station_id JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id
+    WHERE s.status='active' AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<? AND (? IS NULL OR EXISTS(SELECT 1 FROM arena_group_members m WHERE m.station_id=s.id AND m.group_id=?)) ORDER BY r.registered_at DESC,r.id DESC LIMIT 20`)
+    .bind(range.from,range.to,group,group).all<ArenaNetworkRecent>()
+  ]);
+  return {...board,people:rankStations(people.results,metric).slice(0,100),recent:recent.results};
 }
 export async function arenaGroupApi(request:Request,db:D1Database,station:string):Promise<Response> {
   const url=new URL(request.url),path=url.pathname;if(request.method!=="GET")fail(405,"Metoden stöds inte.");

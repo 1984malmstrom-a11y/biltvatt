@@ -106,6 +106,21 @@ describe("Arena station authentication and tenant isolation",()=>{
   });
 });
 describe("multi-station groups",()=>{
+  it('opt-in people/feed projection respects group membership, metric, range, undo and station suspension',async()=>{
+    const f=setup(),a=await active(f),b=await active(f,'Karlskrona','karlskrona@example.test'),outside=await active(f,'Utomstående','outside@example.test');
+    const created=await f.call('/arena/superadmin/groups','POST',{name:'Sydost',station_ids:[a.station.id,b.station.id]},a.admin),group=(await created.json() as {id:string}).id;
+    const ids:string[]=[];
+    for(const [account,name,points,tb] of [[a,'Peter',2,'1'],[b,'Alva',1,'200'],[outside,'Utanför',99,'999']] as const){
+      const seller=(await(await f.call('/admin/arena/sellers','POST',{name,color:'#123456',active:1},account.cookie)).json() as {id:string}).id;
+      const activity=(await(await f.call('/admin/arena/activities','POST',{...draft,points,tb_kronor:tb},account.cookie)).json() as {id:string}).id;
+      const response=await f.call('/arena/registrations','POST',{request_id:crypto.randomUUID(),seller_id:seller,activity_id:activity},account.cookie);ids.push((await response.json() as {registration:{id:string}}).registration.id);
+    }
+    const get=async(metric='points')=>await(await f.call(`/arena/groups/${group}/leaderboard?period=month&metric=${metric}&people=1`,'GET',undefined,a.cookie)).json() as import('../shared/arena-network').ArenaPeopleBoard;
+    const board=await get();expect(board.people.map(p=>p.name)).toEqual(['Peter','Alva']);expect(board.people[0]).toMatchObject({station_id:a.station.id,station_name:'Malmö',points:2});expect(board.recent).toHaveLength(2);expect(JSON.stringify(board)).not.toContain('Utanför');expect((await get('tb')).people[0].name).toBe('Alva');expect((await f.call(`/arena/groups/${group}/leaderboard?people=1`,'GET',undefined,outside.cookie)).status).toBe(404);
+    expect((await(await f.call(`/arena/groups/${group}/leaderboard`,'GET',undefined,a.cookie)).json() as ArenaGroupBoard).people).toBeUndefined();
+    f.arena.prepare('UPDATE arena_registrations SET voided_at=? WHERE id=?').run(new Date().toISOString(),ids[0]);expect((await get()).people.map(p=>p.name)).toEqual(['Alva']);
+    f.arena.prepare("UPDATE arena_stations SET status='suspended' WHERE id=?").run(b.station.id);expect((await get()).people).toEqual([]);expect((await get()).recent).toEqual([]);
+  });
   it("groups support multiple memberships, station permission checks and separate total metrics",async()=>{
     const f=setup(),a=await active(f),b=await active(f,"Karlskrona","karlskrona@example.test");
     const create=async(name:string,station_ids:string[])=>{const r=await f.call("/arena/superadmin/groups","POST",{name,station_ids},a.admin);expect(r.status).toBe(201);return (await r.json() as {id:string}).id;};

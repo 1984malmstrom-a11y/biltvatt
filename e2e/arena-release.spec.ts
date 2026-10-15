@@ -1,10 +1,11 @@
+import {finishChampionCapture} from './arena-capture';
 import {test,expect,type Page} from '@playwright/test';
 import {writeFileSync} from 'node:fs';
 import {expectSellerPortraits} from './arena-portrait-assertions';
 import {boot,initial,now,fight,sampleReport} from './arena-release-fixture';
 import {arenaReportPDF} from '../shared/arena-pdf';
 const dir=process.env.ARENA_RELEASE_SCREENSHOT_DIR??process.env.ARENA_SCREENSHOT_DIR;
-async function capture(page:Page,name:string){if(!dir)return;await page.evaluate(()=>{document.querySelectorAll('.arena-celebration').forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=350;a.pause();}));});await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});if(await page.locator('.arena-celebration').count())await expect(page.locator('.arena-celebration')).toHaveCSS('opacity','1');await page.screenshot({path:`${dir}/${name}.png`});}
+async function capture(page:Page,name:string){if(!dir)return;await page.evaluate(()=>{document.querySelectorAll('.arena-celebration').forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=el.classList.contains('celebration-leader')?900:350;a.pause();}));});await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});if(await page.locator('.arena-celebration').count())await expect(page.locator('.arena-celebration')).toHaveCSS('opacity','1');await finishChampionCapture(page);await page.screenshot({path:`${dir}/${name}.png`});}
 async function setup(page:Page){await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:boot}));await page.route('**/api/arena/stats*',r=>r.fulfill({json:initial}));}
 async function noOverflow(page:Page,w:number,h:number){expect(await page.evaluate(()=>({w:document.documentElement.scrollWidth,h:document.documentElement.scrollHeight}))).toEqual({w,h});}
 for(const [width,height] of [[1920,1080],[1536,864],[1448,1086],[1024,768],[844,390],[390,844]]){
@@ -17,7 +18,7 @@ for(const [width,height] of [[1920,1080],[1536,864],[1448,1086],[1024,768],[844,
   await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.level-1')).toBeVisible();await page.clock.runFor(300);await capture(page,`standard-sale-${width}x${height}`);await page.clock.runFor(1600);
   await page.route('**/api/arena/registrations',r=>r.fulfill({json:{registration:{id:r.request().postDataJSON().request_id,registered_at:now.toISOString(),points_awarded:2,tb_ore_awarded:3500,voided_at:null},achievements:[{kind:'leader',level:3,special:true,text:'Ny etta!',scope:'Idag',previousLeader:'Alva'}]}}));
   await page.getByRole('button',{name:'Biltvätt, +2 poäng',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Peter',exact:true}).click();await expect(page.locator('.arena-victory-hero h2')).toHaveText('NY ETTA!');await page.clock.runFor(350);await capture(page,`new-leader-${width}x${height}`);await noOverflow(page,width,height);
-  if(width===390){const box=await page.locator('.arena-victory-hero').boundingBox();expect(box!.height).toBeLessThanOrEqual(700);}
+  if(width===390){const box=await page.locator('.arena-victory-hero').boundingBox();expect(box!.height).toBeLessThanOrEqual(height*.91);expect(box!.y).toBeGreaterThanOrEqual(0);expect(box!.y+box!.height).toBeLessThanOrEqual(height);}
  });
 }
 test('Release: portrait QA rejects zero-size and hidden portraits; uploaded images recover',async({page})=>{

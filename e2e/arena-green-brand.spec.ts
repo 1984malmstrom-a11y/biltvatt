@@ -1,3 +1,4 @@
+import {finishChampionCapture} from './arena-capture';
 import {test,expect,type Page} from '@playwright/test';
 import {writeFileSync} from 'node:fs';
 import {boot,initial,now,fight} from './arena-release-fixture';
@@ -7,14 +8,14 @@ import type {ArenaStats} from '../shared/arena';
 const dir=process.env.ARENA_GREEN_SCREENSHOT_DIR;
 async function capture(page:Page,name:string){
  if(!dir)return;
- await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));document.querySelectorAll('.arena-state-content').forEach(el=>el.getAnimations().forEach(a=>{a.currentTime=400;a.pause();}));document.querySelectorAll('.arena-celebration').forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=350;a.pause();}));});
- await page.mouse.move(0,0);await page.screenshot({path:`${dir}/${name}.png`});
+ await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));document.querySelectorAll('.arena-state-content').forEach(el=>el.getAnimations().forEach(a=>{a.currentTime=400;a.pause();}));document.querySelectorAll('.arena-celebration').forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=el.classList.contains('celebration-leader')?900:350;a.pause();}));});
+ await finishChampionCapture(page);await page.mouse.move(0,0);await page.screenshot({path:`${dir}/${name}.png`});
 }
 async function setup(page:Page,get:()=>ArenaStats){await page.clock.install({time:now});await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:boot}));await page.route('**/api/arena/stats*',r=>r.fulfill({json:get()}));await page.goto('/arena?showcase=0');await expect(page.locator('.arena-stage .arena-orb')).toHaveCount(7);await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now())+100));await page.clock.runFor(400);}
 async function overflow(page:Page,width:number,height:number){expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});}
 for(const [width,height]of [[1920,1080],[1536,864],[1448,1086],[1024,768],[390,844],[844,390]]){
  test(`Green brand: Stationspuls, all seven touch targets and no clipped UI ${width}x${height}`,async({page})=>{
-  await page.setViewportSize({width,height});await setup(page,()=>initial);await expect(page.locator('.arena-state-panel')).toHaveAttribute('data-mode','pulse');await expect(page.locator('.arena-pulse-primary')).toContainText('42');await expect(page.locator('.arena-pulse-pair')).toContainText('7');await overflow(page,width,height);
+  await page.setViewportSize({width,height});await setup(page,()=>initial);await expect(page.locator('.arena-state-panel')).toHaveAttribute('data-mode','pulse');await expect(page.locator('.arena-pulse-primary')).toContainText('153%');await expect(page.locator('.arena-pulse-pace')).toContainText('258,13 poäng före dagsplanen');await overflow(page,width,height);
   const theme=await page.locator('.arena-shell').evaluate(el=>({bg:getComputedStyle(el).getPropertyValue('--arena-bg').trim(),before:getComputedStyle(el,'::before').backgroundImage}));expect(theme.bg.toLowerCase()).toBe('#06110d');expect(theme.before).not.toContain('station-night');
   if(width>=951){await expect(page.locator('.arena-leaderboard li')).toHaveCount(5);await expect(page.locator('.arena-recent li')).toHaveCount(5);const r=await page.evaluate(()=>({l:document.querySelector('.arena-left-column')!.getBoundingClientRect().toJSON(),s:document.querySelector('.arena-stats-bar')!.getBoundingClientRect().toJSON(),n:document.querySelector('.arena-nav')!.getBoundingClientRect().toJSON()}));expect(r.s.x).toBeGreaterThan(r.l.right);expect(r.n.y-r.l.bottom).toBeLessThan(12);}
   await capture(page,`normal-${width}x${height}`);

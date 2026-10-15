@@ -17,11 +17,15 @@ import type { EvaluatedAchievement } from "../shared/arena-achievements";
 import { arenaMoney, arenaReward } from "../shared/arena-money";
 import ArenaAvatar, {ArenaShowcaseProvider,useArenaShowcase} from "./ArenaAvatar";
 import ArenaStatePanel from "./ArenaStatePanel";
+import ArenaChampion from "./ArenaChampion";
+import {ArenaPersonName} from "./ArenaPersonContext";
+import {ArenaEmblem,ArenaCustomerBrandSlot} from "./ArenaBrand";
 import "./arena-theme.css";
 import "./arena.css";
 import "./arena-showroom.css";
 import "./arena-brand.css";
 import "./arena-premium.css";
+import "./arena-identity.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
@@ -66,7 +70,7 @@ const People=memo(function People({ stats, onPerson, highlightId, newLeaderId, l
   const unit=stats?.metric === "tb" ? "TB" : stats?.metric === "count" ? "st" : "p";
   return <ol className="arena-leader-list">{stats?.leaderboard.slice(0, limit).map(p => <li key={p.id} className={[highlightId === p.id ? "is-celebrating" : "", newLeaderId === p.id ? "is-new-leader" : ""].filter(Boolean).join(" ") || undefined}>
     <button onClick={() => onPerson(p)} aria-label={`${p.name} ${value(p)} ${unit}`}><span className={`arena-rank rank-${p.rank}`} aria-hidden="true">
-      {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} avatarIndex={p.avatar_index} /><span>{p.name}{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
+      {p.rank}</span><span className="arena-seller-cell"><ArenaAvatar id={p.id} name={p.name} imageUrl={p.profile_url} avatarIndex={p.avatar_index} /><span><ArenaPersonName name={p.name}/>{newLeaderId === p.id && <small className="arena-new-leader"><Crown aria-hidden="true" /> Ny etta!</small>}{!p.active && <small>Historik</small>}</span></span><strong>{value(p)} <small>{unit}</small></strong>
     </button></li>)}{stats && !stats.leaderboard.length && <li className="arena-empty">Lägg till personal i stationens personalregister.</li>}</ol>;
 });
 const feedTime = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Stockholm", hour:"2-digit", minute:"2-digit" });
@@ -76,7 +80,7 @@ function FeedStatus({ stats, error }: { stats: ArenaStats | null; error: boolean
 const RecentActivities=memo(function RecentActivities({ stats, limit }: { stats: ArenaStats | null; limit?: number }) {
   const rows = stats?.recent?.slice(0, limit) ?? [];
   return rows.length ? <ol className="arena-recent-list">{rows.map(row => <li key={row.id} className={row.display_mode === "tb" && row.tb_ore_awarded != null ? "is-tb" : undefined}>
-    <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} avatarIndex={row.avatar_index} /><span><strong>{row.seller_name}</strong><small>{row.activity_name}</small></span></span>
+    <span className="arena-feed-seller"><ArenaAvatar id={row.seller_id || stats?.leaderboard.find(p=>p.name===row.seller_name)?.id} name={row.seller_name} imageUrl={row.profile_url} avatarIndex={row.avatar_index} /><span><ArenaPersonName name={row.seller_name}/><small>{row.activity_name}</small></span></span>
     <b>{row.display_mode === "tb" && row.tb_ore_awarded != null ? `+${arenaMoney(row.tb_ore_awarded)} TB` : `+${num(row.points_awarded)} p`}</b><time dateTime={row.registered_at}>{feedTime.format(new Date(row.registered_at))}</time>
   </li>)}</ol> : <p className="arena-recent-empty">{!stats ? "Hämtar dagens aktiviteter…" : stats.recent ? "Dagens första försäljning väntar. Kör på!" : "Aktivitetsflödet är inte tillgängligt."}</p>;
 });
@@ -108,9 +112,9 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
   if(event.fightEvent)return <FightAnnouncement event={event.fightEvent} seller={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}} activity={event.activity.name} reward={reward} secondary={event.secondary} />;
   if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-victory-hero">
-      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b><ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" /><Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
+      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b>{event.kind==="leader" ? <ArenaChampion eventKey={event.key}/> : <ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" />}<Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
       <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
-        <strong className="arena-reward-seller">{event.name}</strong>
+        {event.kind!=="leader" && <strong className="arena-reward-seller">{event.name}</strong>}
         <div className="arena-victory-sale"><strong className="arena-reward-points">{reward}!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
         {isGoal && event.goal && <div className="arena-reward-goal"><Check aria-hidden="true" />{num(event.goal.points)} / {num(event.goal.target_points)} {event.goalMetric === "count" ? "försäljningar" : "poäng"}</div>}
         {event.secondary?.length ? <p className="arena-victory-secondary">{event.secondary.join(" · ")}</p> : null}
@@ -314,9 +318,9 @@ function ArenaHome() {
   </>;
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
     <header className="arena-header">
-      <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><svg className="arena-brand-mark" viewBox="0 0 44 44" aria-hidden="true"><path d="M3 38 21 4l19 34h-9L21 19 12 38Z" /><path d="m17 29 14 9h-9l-9-6Z" /></svg><span><strong>ARENAN</strong><small>SÄLJ MER. TILLSAMMANS.</small></span></a>
+      <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><ArenaEmblem/><span><strong>ARENAN</strong><small>SÄLJ MER. TILLSAMMANS.</small></span></a>
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
-      <p className="arena-handwritten">Små insatser.<br />Större resultat.</p>
+      <p className="arena-header-station"><span>DIN ARENA</span><strong>{data?.station.name??"LAGETS ARENA"}</strong></p>
     </header>
     {(error || statsUnavailable) && <div className="arena-error" role="alert">{error || "Statistiken är tillfälligt otillgänglig."}<button onClick={() => { void bootstrap(); void refresh(); }}>Försök igen</button></div>}
     <main className="arena-main">
@@ -339,9 +343,9 @@ function ArenaHome() {
       <div><BarChart3 aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.count) : "—"}</strong><span>Registreringar</span></div>
       <div><Star aria-hidden="true" /><strong>{todayStats ? num(todayStats.today.points) : "—"}</strong><span>Poäng idag</span></div>
       <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
-      <p>Små merförsäljningar skapar stora resultat!</p>
+      <ArenaCustomerBrandSlot compact/>
     </section>
-    <nav className="arena-nav" aria-label="Arena"><button aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><Home /> START</button><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><a href="/arena/fights"><Flag /> BUTIKSFIGHT</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
+    <nav className="arena-nav" aria-label="Arena"><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><button className="arena-nav-home" aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><span className="arena-nav-core" aria-hidden="true"><ArenaEmblem className="arena-nav-emblem"/></span><span>START</span></button><a href="/arena/fights"><Flag /> BUTIKSFIGHT</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />

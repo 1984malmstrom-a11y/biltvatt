@@ -1,3 +1,4 @@
+import {finishChampionCapture} from './arena-capture';
 import {test,expect,type Page} from "@playwright/test";
 import type {ArenaBootstrap,ArenaStats,ArenaAchievement} from "../shared/arena";
 import type {ArenaFight,ArenaFightSummary} from "../shared/arena-fights";
@@ -11,7 +12,8 @@ async function capture(page:Page,name:string){
   if(!process.env.ARENA_SCREENSHOT_DIR)return;
   await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));await Promise.all(["portraits","champions"].map(file=>new Promise(resolve=>{const i=new Image();i.onload=i.onerror=resolve;i.src=`/arena-showroom/${file}.webp`;})));});
   if(await page.locator(".arena-celebration").count()){await expect(page.locator(".arena-celebration").last()).toHaveCSS("opacity","1");await expect(page.locator(".arena-celebration .arena-reward-ring").last()).toHaveCSS("opacity","1");}
-  await page.mouse.move(0,0);await page.screenshot({path:`${process.env.ARENA_SCREENSHOT_DIR}/${name}.png`,fullPage:false});
+  await page.evaluate(()=>document.querySelectorAll(".celebration-leader").forEach(el=>el.getAnimations({subtree:true}).forEach(a=>{a.currentTime=900;a.pause();})));
+  await finishChampionCapture(page);await page.mouse.move(0,0);await page.screenshot({path:`${process.env.ARENA_SCREENSHOT_DIR}/${name}.png`,fullPage:false});
 }
 async function setup(page:Page,current:()=>ArenaStats,data=boot){await page.route("**/api/arena/bootstrap",r=>r.fulfill({json:data}));await page.route("**/api/arena/stats*",r=>r.fulfill({json:current()}));}
 async function sale(page:Page){await page.getByRole("button",{name:/^Biltvätt, /}).click();await page.getByRole("dialog").getByRole("button",{name:"Peter",exact:true}).click();await expect(page.getByRole("dialog")).toHaveCount(0);await page.clock.runFor(450);}
@@ -28,7 +30,7 @@ for(const [width,height] of [[1920,1080],[1448,1086],[1024,768],[390,844],[844,3
     if(width<951){await page.getByRole("button",{name:"Öppna senaste aktiviteter",exact:true}).click();await expect(page.locator(".arena-dialog-recent .arena-demo-portrait")).toHaveCount(5);await capture(page,`mobile-feed-panel-${width}x${height}`);await page.getByRole("dialog").getByRole("button",{name:"Stäng",exact:true}).click();}
     await sale(page);await expect(page.locator(".level-1")).toBeVisible();await expect(page.locator(".arena-victory-art")).toHaveCount(0);await capture(page,`standard-sale-${width}x${height}`);await page.clock.runFor(1400);await expect(page.locator(".level-1")).toHaveCount(0);
     achievements=[{kind:"leader",level:3,special:true,text:"Ny etta!",scope:width===1448 ? "Biltvätt":"Idag",previousLeader:"Alva"}];await sale(page);
-    await expect(page.locator(".arena-victory-hero h2")).toHaveText("NY ETTA!");await expect(page.locator(".arena-champion-portrait")).toHaveAttribute("data-avatar-index",identity!);await expect(page.locator(".arena-milestone-subtitle")).toHaveText("Peter går om Alva");expect(await page.locator(".level-3").count()).toBe(1);await capture(page,`new-leader-${width===1448 ? "activity-":""}${width}x${height}`);await noOverflow(page,width,height);
+    await expect(page.locator(".arena-victory-hero h2")).toHaveText("NY ETTA!");await expect(page.locator(".arena-champion-art")).toHaveAttribute("data-champion-kind","fictional-celebration-art");await expect(page.locator(".celebration-leader [data-avatar-kind]")).toHaveCount(0);await expect(page.locator(".arena-milestone-subtitle")).toHaveText("Peter går om Alva");expect(await page.locator(".level-3").count()).toBe(1);await capture(page,`new-leader-${width===1448 ? "activity-":""}${width}x${height}`);await noOverflow(page,width,height);
     await page.getByRole("button",{name:"Stäng belöning",exact:true}).click();
     achievements=[{kind:"personal-goal",level:3,special:true,text:"Personliga målet uppnått!",scope:"Den här veckan",goal:{id:"personal",seller_id:"s-0",period_type:"week",start_date:"2026-10-12",end_date:"2026-10-18",points:100,target_points:100}},{kind:"leader",level:3,special:true,text:"Ny etta!",scope:"Idag",previousLeader:"Alva"}];await sale(page);await expect(page.locator(".arena-victory-hero")).toHaveCount(1);await expect(page.locator(".arena-victory-secondary")).toContainText("Ny etta!");await capture(page,`goal-hero-${width}x${height}`);
     await page.emulateMedia({reducedMotion:"reduce"});expect(await page.locator(".arena-confetti").first().evaluate(el=>getComputedStyle(el).display)).toBe("none");await page.getByRole("button",{name:"Korv med mos, +1 poäng",exact:true}).click();await expect(page.getByRole("dialog")).toBeVisible();

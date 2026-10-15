@@ -1,4 +1,5 @@
 import {demoAvatarIndex} from "../shared/arena-identities";
+import {showroomIdentity} from './arena-demo-identities';
 export {demoAvatarIndex} from "../shared/arena-identities";
 export type AvatarIdentity = { id?:string; name:string; imageUrl?:string | null; avatarIndex?:number|null };
 export type AvatarSource = { kind:"uploaded"; url:string } | { kind:"demo"; index:number; position:string; sheet:string } | { kind:"fallback" };
@@ -7,9 +8,9 @@ export type AvatarSource = { kind:"uploaded"; url:string } | { kind:"demo"; inde
 export function resolveArenaAvatar(person:AvatarIdentity,showcase:boolean):AvatarSource {
   if(person.imageUrl && /^(\/[^/]|https:\/\/)/.test(person.imageUrl))return {kind:"uploaded",url:person.imageUrl};
   // Fictional identities are the normal fallback, independently of showcase mode.
-  void showcase;
   if(!person.id && !person.name.trim())return {kind:"fallback"};
-  const index=person.avatarIndex!=null && Number.isInteger(person.avatarIndex) && person.avatarIndex>=0 && person.avatarIndex<16 ? person.avatarIndex:demoAvatarIndex(person.id || person.name.trim().toLocaleLowerCase("sv-SE"));
+  const curated=showroomIdentity(person.id,person.name,showcase);
+  const index=curated??(person.avatarIndex!=null && Number.isInteger(person.avatarIndex) && person.avatarIndex>=0 && person.avatarIndex<16 ? person.avatarIndex:demoAvatarIndex(person.id || person.name.trim().toLocaleLowerCase("sv-SE")));
   return {kind:"demo",index,sheet:index>=8?"-extra":"",position:`${(index%4)*100/3}% ${Math.floor((index%8)/4)*100}%`};
 }
 export function readShowcaseMode(search:string,storage:Pick<Storage,"getItem"|"setItem"|"removeItem">):boolean {

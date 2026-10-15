@@ -46,7 +46,7 @@ export default function ArenaFight() {
         })}</div>
       </section>
       {fight.phase==="active" && fight.leader_ids.length>1 && <div className="arena-fight-tie-state" role="status"><strong>DET ÄR LIKA!</strong><span>Aktuell ställning · {fight.standings.filter(s=>fight.leader_ids.includes(s.id)).map(s=>s.name).join(" · ")}</span></div>}
-      {fight.scoring_mode==="daily" && <ArenaFightDays fight={fight} />}<FightEventFeed events={fight.events??[]} /><p className="arena-fight-fairness">{fight.scoring_mode==="daily" ? `Varje avslutad Stockholmsdag ger ${fight.day_win_points} matchpoäng till dagsvinnaren. Vid delad dagsledning får ledarna ${fight.day_tie_points} var. Dagens resultat är preliminärt; stängda dagar låses. Serien avgörs av matchpoäng, utan extra skiljeregel.`:"Totalresultat för den valda perioden. Ingen normalisering per säljare eller arbetstid."}</p>
+      {fight.scoring_mode==="daily" && <ArenaFightDays fight={fight} />}<FightEventFeed events={fight.events??[]} stationIds={fight.standings.map(s=>s.id)}/><p className="arena-fight-fairness">{fight.scoring_mode==="daily" ? `Varje avslutad Stockholmsdag ger ${fight.day_win_points} matchpoäng till dagsvinnaren. Vid delad dagsledning får ledarna ${fight.day_tie_points} var. Dagens resultat är preliminärt; stängda dagar låses. Serien avgörs av matchpoäng, utan extra skiljeregel.`:"Totalresultat för den valda perioden. Ingen normalisering per säljare eller arbetstid."}</p>
     </main>}
     {announcement && <FightAnnouncement event={announcement} className="arena-fight-lead-event" />}
   </div>;

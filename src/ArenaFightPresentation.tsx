@@ -6,6 +6,8 @@ import {arenaMoney} from "../shared/arena-money";
 import {arenaNumber} from "../shared/arena";
 import ArenaFightClock from "./ArenaFightClock";
 import ArenaAvatar from "./ArenaAvatar";
+import ArenaChampion from "./ArenaChampion";
+import {ArenaPersonContext,ArenaPersonName} from "./ArenaPersonContext";
 import type {FightFeedback} from "./arena-fight-feedback";
 export const formatFightScore=(score:number,metric:ArenaFightSummary["metric"],mode:ArenaFightMode="total")=>mode==="daily" ? `${arenaNumber(score)} mp`:metric==="tb" ? `${arenaMoney(score)} TB`:`${arenaNumber(score)} ${metric==="count" ? "st":"p"}`;
 const date=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",day:"numeric",month:"short"});
@@ -45,7 +47,7 @@ export function FightAnnouncement({event,seller,activity,reward,secondary,classN
   const title=kind==="lead" ? `${own?.name ?? "Stationen"} tar ledningen!`:kind==="tie" ? "DET ÄR LIKA!":tie ? "OAVGJORT!":`${winners[0]?.name ?? "Laget"} VINNER!`;
   return <div className={`arena-celebration arena-fight-celebration ${kind==="tie" ? "level-2":"level-3"} fight-celebration-${kind} ${className}`} role="status" style={{"--reward-life":`${kind==="tie" ? 2600:3600}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-fight-event-hero"><div className="arena-fight-event-emblem" aria-hidden="true"><Crown /><Trophy /><span>{tie ? "=":kind==="final" ? <Check />:"VS"}</span></div><span className="arena-eyebrow">BUTIKSFIGHT · {kind==="final" ? "SLUTRESULTAT":event.daily ? "DAGENS DUELL":"LAGETS MOMENT"}</span><h2>{title}</h2><strong className="arena-fight-event-score">{(event.daily ? fight.current_day?.standings??[]:fight.standings).slice(0,3).map(s=>formatFightScore(fightScore(s,fight.metric,event.daily ? "total":fight.scoring_mode),fight.metric,event.daily ? "total":fight.scoring_mode)).join(" – ")}</strong><p>{fight.standings.map(s=>s.name).join(" · ")}</p>
-      {seller && <ArenaAvatar {...seller} champion className="arena-fight-champion" />}{seller && <div className="arena-fight-event-sale"><ArenaAvatar {...seller} /><strong>{seller.name}<small>{own?.name}</small></strong><span>{activity}</span><b>{reward}</b></div>}
+      {seller && <ArenaChampion eventKey={event.key} className="arena-fight-champion"/>}{seller && <div className="arena-fight-event-sale"><ArenaAvatar {...seller} /><ArenaPersonContext stationIds={fight.standings.map(s=>s.id)}><ArenaPersonName name={seller.name} stationName={own?.name}/></ArenaPersonContext><span>{activity}</span><b>{reward}</b></div>}
       {kind==="lead" && event.previousLeader && <strong className="arena-fight-passed">{event.previousLeader} PASSERAD</strong>}
       {kind==="final" && fight.start_at && fight.end_at && <span className="arena-fight-event-period">{date.format(new Date(fight.start_at))}–{date.format(new Date(fight.end_at))}</span>}
       <strong className="arena-reward-pep">{kind==="final" && !won && !tie ? "STARKT JOBBAT, LAGET. NÄSTA FIGHT VÄNTAR!":tie ? "VARJE FÖRSÄLJNING KAN AVGÖRA!":"DET HÄR ÄR VAD DRIV SER UT SOM!"}</strong>
@@ -54,8 +56,8 @@ export function FightAnnouncement({event,seller,activity,reward,secondary,classN
     </div>
   </div>;
 }
-export function FightEventFeed({events}:{events:ArenaFightEvent[]}) {
-  return <section className="arena-fight-feed arena-panel"><header><h3>SENASTE FIGHT-EVENTS</h3><span>FIGHTENS HÄNDELSER</span></header>{events.length ? <ol>{events.map(event=><li key={event.id} className={`fight-feed-${event.kind}`}>
-    {event.kind==="sale" ? <ArenaAvatar id={event.seller_id} name={event.seller_name ?? "Säljare"} imageUrl={event.profile_url} avatarIndex={event.avatar_index} />:event.kind==="tie" ? <span className="arena-fight-tie-icon" aria-hidden="true">=</span>:<Crown aria-hidden="true" />}<div><strong>{event.kind==="lead" ? `${event.station_name} TAR LEDNINGEN`:event.kind==="tie" ? "DET ÄR LIKA!":event.seller_name}</strong><small className="arena-person-station">{event.station_name}</small>{event.activity_name && <span>{event.activity_name}</span>}</div>{event.kind==="sale" && <b>{event.display_mode==="tb" && event.tb_ore_awarded!=null ? `+${arenaMoney(event.tb_ore_awarded)} TB`:`+${arenaNumber(event.points_awarded ?? 0)} p`}</b>}<time dateTime={event.created_at}>{time.format(new Date(event.created_at))}</time>
-  </li>)}</ol>:<p>Första försäljningen sätter tonen. Kör på!</p>}</section>;
+export function FightEventFeed({events,stationIds=events.map(e=>e.station_id)}:{events:ArenaFightEvent[];stationIds?:string[]}) {
+  return <ArenaPersonContext stationIds={stationIds}><section className="arena-fight-feed arena-panel"><header><h3>SENASTE FIGHT-EVENTS</h3><span>FIGHTENS HÄNDELSER</span></header>{events.length ? <ol>{events.map(event=><li key={event.id} className={`fight-feed-${event.kind}`}>
+    {event.kind==="sale" ? <ArenaAvatar id={event.seller_id} name={event.seller_name ?? "Säljare"} imageUrl={event.profile_url} avatarIndex={event.avatar_index} />:event.kind==="tie" ? <span className="arena-fight-tie-icon" aria-hidden="true">=</span>:<Crown aria-hidden="true" />}<div>{event.kind==="sale" ? <ArenaPersonName name={event.seller_name??"Säljare"} stationName={event.station_name}/>:<strong>{event.kind==="lead" ? `${event.station_name} TAR LEDNINGEN`:"DET ÄR LIKA!"}</strong>}{event.activity_name && <span>{event.activity_name}</span>}</div>{event.kind==="sale" && <b>{event.display_mode==="tb" && event.tb_ore_awarded!=null ? `+${arenaMoney(event.tb_ore_awarded)} TB`:`+${arenaNumber(event.points_awarded ?? 0)} p`}</b>}<time dateTime={event.created_at}>{time.format(new Date(event.created_at))}</time>
+  </li>)}</ol>:<p>Första försäljningen sätter tonen. Kör på!</p>}</section></ArenaPersonContext>;
 }
