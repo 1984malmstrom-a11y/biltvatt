@@ -38,6 +38,9 @@ export type ArenaStats = {
   station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
   tb_ore?:number; unknown_tb_count?:number; metric?:"points" | "tb" | "count";
   fight_activities?:ArenaFightActivity[];
+  // Null IDs mean a legacy unscoped fight. An empty array means no ordinary
+  // local activity qualifies. IDs come from frozen rules, never current labels.
+  fight_objective?:{fight_id:string;scope:'all'|'focus'|'category'|'activity';activity_ids:string[]|null};
   fight_dashboard?:{fight_id:string;station_ids:string[];metric:'points'|'tb'|'count';leaderboard:ArenaPerson[];recent:ArenaRecentActivity[]};
   fight_notices?:{incoming:number;unread:number;outgoing?:number;scheduled?:number};
   fight?:import("./arena-fights").ArenaFightSummary | null;

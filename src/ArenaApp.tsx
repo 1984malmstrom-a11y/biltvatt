@@ -18,6 +18,7 @@ import { arenaMoney, arenaReward } from "../shared/arena-money";
 import ArenaAvatar, {ArenaShowcaseProvider,useArenaShowcase} from "./ArenaAvatar";
 import ArenaFocusTitle from './ArenaFocusTitle';
 import ArenaStatePanel from "./ArenaStatePanel";
+import {arenaFightQualifies} from './arena-fight-objective';
 import ArenaChampion from "./ArenaChampion";
 import {ArenaPersonName,ArenaPersonContext} from "./ArenaPersonContext";
 import {ArenaEmblem} from "./ArenaBrand";
@@ -31,6 +32,7 @@ import "./arena-fight-nav.css";
 import "./arena-stage-v2.css";
 import "./arena-victory.css";
 import "./arena-mini-polish.css";
+import "./arena-fight-objective.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
@@ -42,11 +44,13 @@ function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: Ar
   return src ? <img src={src} alt="" loading={loading} decoding="sync" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
-export const ArenaActivityButton = memo(function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false }: {
-  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;
+export const ArenaActivityButton = memo(function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false, fightQualifying=false }: {
+  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;fightQualifying?:boolean;
 }) {
-  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
-    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${arenaReward(activity).replace("POÄNG","poäng")}`}>
+  return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}${fightQualifying?' is-fight-objective':''}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
+    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${arenaReward(activity).replace("POÄNG","poäng")}${fightQualifying?', räknas i Butiksfight':''}`}>
+    <span className="arena-objective-edge" aria-hidden="true"/>
+    {fightQualifying&&<span className="arena-objective-badge" aria-hidden="true"><Flag/> FIGHT</span>}
     {focus && <span className="arena-focus-cap"><ArenaFocusTitle label={campaignName || "LAGETS FOKUS"}/><strong className="arena-focus-name">{activity.name}</strong></span>}
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
@@ -344,8 +348,8 @@ function ArenaHome() {
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel(fightContext?"fight":"leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <div className="arena-cluster">
-          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} onClick={focus.activity ? activityActions.get(focus.activity.id) : undefined} /></div>
-          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
+          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} fightQualifying={arenaFightQualifies(todayStats,focus.activity)} onClick={focus.activity ? activityActions.get(focus.activity.id) : undefined} /></div>
+          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} fightQualifying={arenaFightQualifies(todayStats,activity)} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
         </div> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
       <ArenaStatePanel sellers={data?.sellers} stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />

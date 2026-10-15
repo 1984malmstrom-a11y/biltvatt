@@ -1,0 +1,90 @@
+/* Fight objective presentation uses frozen IDs; the seven-slot stage stays put. */
+@media(min-width:951px){
+ .arena-state-panel.is-pulse{height:52%;align-self:center}
+ .arena-state-panel.is-pulse .arena-pulse-card{padding:20px;gap:12px;justify-content:space-between}
+ .arena-state-panel.is-pulse .arena-pulse-primary{margin:0}
+ .arena-state-panel.is-pulse .arena-pulse-primary strong{font-size:clamp(30px,2.35vw,44px)}
+ .arena-state-panel.is-pulse .arena-pulse-primary>span{font-size:12px}
+ .arena-state-panel.is-pulse .arena-pulse-pace{font-size:12px;gap:6px}
+ .arena-state-panel.is-pulse .arena-pulse-goal{display:flex;gap:3px;padding-left:10px}
+ .arena-state-panel.is-pulse .arena-pulse-goal strong{font-size:clamp(16px,1.2vw,22px)}
+ .arena-state-panel.is-pulse .arena-pulse-card footer{padding-top:6px;font-size:10px}
+}
+@media(min-width:951px) and (max-height:900px){
+ .arena-state-panel.is-pulse .arena-pulse-card{padding:14px 16px;gap:8px}
+ .arena-state-panel.is-pulse .arena-pulse-card h2{font-size:15px}
+ .arena-state-panel.is-pulse .arena-pulse-primary strong{font-size:30px}
+ .arena-state-panel.is-pulse .arena-pulse-pace{font-size:10px;gap:5px}
+ .arena-state-panel.is-pulse .arena-pulse-pace small{display:none}
+ .arena-state-panel.is-pulse .arena-pulse-goal>small{font-size:8px}
+ .arena-state-panel.is-pulse .arena-pulse-goal>span{font-size:10px}
+}
+@media(max-width:950px) and (orientation:portrait){
+ .arena-state-panel.is-pulse .arena-pulse-card{grid-template-columns:.8fr 1fr 1.2fr}
+ .arena-state-panel.is-pulse .arena-pulse-pace{display:none}
+ .arena-state-panel.is-pulse .arena-pulse-goal{display:flex;border:0;padding:0;gap:3px}
+ .arena-state-panel.is-pulse .arena-pulse-goal>small{display:none}
+ .arena-state-panel.is-pulse .arena-pulse-goal>strong{font-size:13px}
+ .arena-state-panel.is-pulse .arena-pulse-goal>span{font-size:9px}
+ .arena-state-panel.is-pulse .arena-pulse-card footer{display:none}
+}
+.arena-stage-start .arena-objective-edge{position:absolute;inset:-7px;border-radius:50%;border:2px solid #e8d995;box-shadow:0 0 3px #fff0b9,0 0 15px #e4cb7899,0 0 31px #58ee9d88;opacity:0;pointer-events:none;transition:opacity .3s ease-out}
+.arena-stage-start .arena-orb-focus .arena-objective-edge{inset:-13px;border-color:#f4e2a3;box-shadow:0 0 3px #fff0b9,0 0 19px #e4cb7899,0 0 38px #58ee9d88}
+.arena-stage-start .is-fight-objective .arena-objective-edge{opacity:1}
+.arena-objective-badge{position:absolute;z-index:5;left:50%;bottom:-5%;transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid #ddce8f;border-radius:20px;background:#092819;color:#f7e5a5;font:700 clamp(7px,4cqw,10px)/1.1 system-ui;letter-spacing:.08em;white-space:nowrap;pointer-events:none}
+.arena-objective-badge svg{width:10px;height:10px}
+.arena-stage-start .arena-orb-focus .arena-objective-badge{bottom:-8%}
+@keyframes arena-objective-enter{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+/* Reuses Quick Action's seller dialog, request IDs, receipt and undo. */
+.arena-state-panel .arena-fight-quick-action.is-objective-ring{background:none;border:0;padding:0;max-width:none;display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.arena-fight-quick-action.is-objective-ring>span{font-size:9px;letter-spacing:.1em;justify-content:center}
+.arena-fight-quick-action.is-objective-ring .arena-temp-ring{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:clamp(126px,12vw,210px);aspect-ratio:1;height:auto;min-height:0;padding:10px 12px;border:2px solid #e7d38b;border-radius:50%;background:radial-gradient(ellipse at 50% 30%,#1b4f33,#06180f 72%);box-shadow:0 0 3px #ffebad,0 0 15px #78df9b70,inset 0 0 13px #9ad37c33;color:#f6efdc;white-space:normal;text-align:center;animation:arena-objective-enter .3s ease-out both;transition:transform .15s,box-shadow .2s}
+.arena-fight-quick-action.is-objective-ring .arena-temp-ring:not(:disabled):hover{transform:scale(1.025);box-shadow:0 0 5px #fff0bb,0 0 22px #78df9b99}
+.arena-fight-quick-action.is-objective-ring .arena-temp-ring:focus-visible{outline:2px solid #fff2c7;outline-offset:5px}
+.arena-temp-identity{display:flex;align-items:center;gap:4px;color:#e6d08c;font-size:9px;font-weight:700;letter-spacing:.06em}
+.arena-temp-identity svg{width:13px;height:13px}
+.arena-temp-product{display:grid;place-items:center;width:72%;height:43%;min-height:0}
+.arena-temp-product img{height:100%;width:100%;object-fit:contain;min-height:0}
+.arena-temp-product>svg{height:70%;width:70%;color:#c8dbb1}
+.arena-temp-ring>strong{font-size:clamp(11px,1vw,17px);line-height:1.15;max-width:100%;overflow-wrap:anywhere;text-transform:uppercase}
+.arena-fight-quick-action.is-objective-ring .arena-temp-ring>small{display:block;font-size:clamp(12px,1.1vw,19px);line-height:1.1;font-weight:750;color:#e9cc76}
+.arena-state-panel:has(.is-objective-ring) .arena-fight-widget{padding:16px;gap:8px}
+.arena-fight-quick-action.is-objective-ring .arena-quick-receipt{display:flex;padding:6px 8px;border:1px solid #68a47e55;border-radius:10px;background:#092316;width:100%;min-height:44px}
+.arena-fight-quick-action.is-objective-ring .arena-quick-receipt>svg{width:16px}
+@media(min-width:951px) and (max-height:900px){
+ .arena-fight-quick-action.is-objective-ring .arena-temp-ring{width:clamp(116px,10vw,154px);gap:3px;padding:8px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget{padding:10px;gap:6px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-pep{display:none}
+}
+@media(max-width:950px) and (orientation:portrait){
+ .arena-shell .arena-state-panel.is-fight:has(.is-objective-ring) .arena-state-content{flex-direction:row;gap:9px;align-items:stretch}
+ .arena-state-panel .is-objective-ring>span{display:none}
+ .arena-state-panel .arena-fight-quick-action.is-objective-ring{justify-content:center;gap:0;flex:none;width:66px}
+ .arena-fight-quick-action.is-objective-ring .arena-temp-ring{width:64px;gap:1px;padding:3px;border-width:1px}
+ .arena-temp-identity{font-size:6px;gap:2px;letter-spacing:0}.arena-temp-identity svg{width:8px;height:8px}
+ .arena-temp-product{height:37%;width:67%}.arena-temp-ring>strong{font-size:8px;line-height:1.05}
+ .arena-fight-quick-action.is-objective-ring .arena-temp-ring>small{font-size:8px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget{padding:5px;gap:2px 5px;grid-template-columns:1fr 1fr 1fr}
+ .arena-fight-quick-action.is-objective-ring .arena-quick-receipt{position:absolute;right:0;bottom:calc(100% + 4px);width:100%;z-index:6}
+ .arena-state-panel:has(.is-objective-ring){position:relative}
+}
+@media(max-width:950px) and (orientation:landscape){
+ .arena-shell .arena-state-panel.is-fight:has(.is-objective-ring) .arena-state-content{flex-direction:column;gap:6px}
+ .arena-state-panel .arena-fight-quick-action.is-objective-ring{gap:0}
+ .arena-state-panel .is-objective-ring>span{display:none}
+ .arena-fight-quick-action.is-objective-ring .arena-temp-ring{width:80px;gap:1px;padding:4px}
+ .arena-temp-identity{font-size:6px}.arena-temp-identity svg{width:8px;height:8px}
+ .arena-temp-ring>strong{font-size:9px}.arena-fight-quick-action.is-objective-ring .arena-temp-ring>small{font-size:9px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget{padding:6px;gap:3px;justify-content:space-between}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget-title strong{font-size:11px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget-title svg{display:none}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget-teams{font-size:10px;margin:0}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget-score{font-size:17px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-widget .arena-fight-clock{font-size:13px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-balance,.arena-state-panel:has(.is-objective-ring) .arena-fight-pep{display:none}
+ .arena-state-panel:has([data-fight-mode=daily]) .arena-temp-ring{width:64px}
+ .arena-state-panel:has(.is-objective-ring) .arena-fight-today{font-size:8px;line-height:1.15;gap:1px}
+}
+@media(prefers-reduced-motion:reduce){
+ .arena-stage-start .arena-objective-edge,.arena-fight-quick-action.is-objective-ring .arena-temp-ring{animation:none;transition:none}
+}

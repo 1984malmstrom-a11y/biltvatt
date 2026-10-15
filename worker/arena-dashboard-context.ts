@@ -1,5 +1,15 @@
 import type {ArenaFightSummary} from '../shared/arena-fights';
 import type {ArenaPerson,ArenaRecentActivity,ArenaStats} from '../shared/arena';
+export async function fightActivityObjective(db:D1Database,fight:ArenaFightSummary|null|undefined,stationId:string):Promise<ArenaStats['fight_objective']>{
+ if(fight?.phase!=='active')return undefined;
+ const rows=await db.prepare(`SELECT f.scope_json,q.activity_id FROM arena_fights f
+ JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=?
+ LEFT JOIN arena_fight_activity_rules q ON q.fight_id=f.id AND q.station_id=m.station_id
+ WHERE f.id=? AND f.status<>'cancelled' AND f.result_json IS NULL ORDER BY q.activity_id`).bind(stationId,fight.id).all<{scope_json:string|null;activity_id:string|null}>();
+ if(!rows.results.length)return undefined;
+ const scope=rows.results[0].scope_json;
+ return {fight_id:fight.id,scope:scope?JSON.parse(scope).kind:'all',activity_ids:scope?rows.results.flatMap(r=>r.activity_id?[r.activity_id]:[]):null};
+}
 // Presentation data only: no competition, daily snapshot or local scoring mutation.
 export async function fightDashboard(db:D1Database,fight:ArenaFightSummary|null|undefined,now:Date):Promise<ArenaStats['fight_dashboard']>{
  if(fight?.phase!=='active'||!fight.start_at||!fight.end_at)return undefined;
