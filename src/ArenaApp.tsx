@@ -29,6 +29,7 @@ import "./arena-premium.css";
 import "./arena-identity.css";
 import "./arena-fight-nav.css";
 import "./arena-stage-v2.css";
+import "./arena-victory.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
@@ -109,15 +110,15 @@ function PersonDetails({ person, stats, onClose }: { person: ArenaPerson; stats:
 }
 const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebration }) {
   const isGoal = event.kind === "personal-goal" || event.kind === "station-goal" || event.kind === "focus-goal";
-  const heading = event.kind === "leader" ? "NY ETTA!" : event.kind === "focus-goal" ? "FOKUSMÅL UPPNÅTT!" : isGoal ? event.goal?.period_type === "week" ? "VECKOMÅL UPPNÅTT!" : "MÅL UPPNÅTT!" : event.kind === "milestone" ? "VILKET DRIV!" : null;
+  const heading = event.kind === "leader" ? "NY ETTA!" : isGoal ? "MÅL UPPNÅTT!" : event.kind === "milestone" ? "VILKET DRIV!" : null;
   const encouragement = event.kind === "leader" ? event.previousLeader ? `${event.name} går om ${event.previousLeader}` : `${event.name} tar förstaplatsen!` : event.kind === "personal-goal" ? `${event.name} · ${event.text}` : event.kind === "station-goal" ? "Hela laget nådde målet!" : event.text;
   const level=event.level ?? (event.special ? 3 : 1);
   const reward=arenaReward(event.activity,event.points,event.tbOre);
   if(event.fightEvent)return <FightAnnouncement event={event.fightEvent} seller={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}} activity={event.activity.name} reward={reward} secondary={event.secondary} />;
-  if (level === 3) return <div className={`arena-celebration is-special level-3 celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
+  if (level === 3) return <div className={`arena-celebration is-special level-3${event.kind === "leader" || isGoal ? " is-champion-scene" : ""} celebration-${event.kind}`} role="status" style={{"--reward-life":`${rewardDuration(true)}ms`} as React.CSSProperties}>
     <div className="arena-reward-ring arena-victory-hero">
-      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "1":<Trophy />}</b>{event.kind==="leader" ? <ArenaChampion eventKey={event.key} identity={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}}/> : <ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" />}<Crown className="arena-champion-crown" /><Trophy className="arena-champion-trophy" /></div>
-      <div className="arena-victory-copy"><span className="arena-eyebrow">{event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
+      <div className="arena-victory-art" aria-hidden="true"><b className="arena-champion-number">{event.kind === "leader" ? "#1":<Trophy />}</b>{event.kind === "leader" || isGoal ? <ArenaChampion eventKey={event.key} identity={{id:event.sellerId,name:event.name,imageUrl:event.profileUrl,avatarIndex:event.avatarIndex}}/> : <ArenaAvatar id={event.sellerId} name={event.name} imageUrl={event.profileUrl} avatarIndex={event.avatarIndex} champion className="arena-champion-portrait" />}<Crown className="arena-champion-crown" />{event.kind !== "leader" && !isGoal && <Trophy className="arena-champion-trophy" />}</div>
+      <div className="arena-victory-copy"><span className="arena-eyebrow">{isGoal ? `${event.kind === "focus-goal" ? "FOKUSMÅL" : event.kind === "personal-goal" ? "PERSONLIGT MÅL" : "LAGETS MÅL"}${event.goal?.period_type === "week" ? " · VECKA" : event.goal?.period_type === "month" ? " · MÅNAD" : ""}` : event.scope || "DITT RESULTAT GÖR SKILLNAD"}</span><h2>{heading}</h2><span className="arena-milestone-subtitle">{encouragement}</span>
         {event.kind!=="leader" && <strong className="arena-reward-seller">{event.name}</strong>}
         <div className="arena-victory-sale"><strong className="arena-reward-points">{reward}!</strong><div className="arena-reward-activity">{event.activity.name}</div></div>
         {isGoal && event.goal && <div className="arena-reward-goal"><Check aria-hidden="true" />{num(event.goal.points)} / {num(event.goal.target_points)} {event.goalMetric === "count" ? "försäljningar" : "poäng"}</div>}

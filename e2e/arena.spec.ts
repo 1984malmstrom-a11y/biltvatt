@@ -752,7 +752,8 @@ for (const kind of ["leader","personal-goal","station-goal"] as const) {
       await page.getByRole("dialog").getByRole("button", { name:"Peter", exact:true }).click();
       const reward=page.locator(`.celebration-${kind}`);
       await expect(reward).toBeVisible(); await expect(reward).toContainText("+2 POÄNG!");
-      await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "VECKOMÅL UPPNÅTT!");
+      await expect(reward.getByRole("heading")).toHaveText(kind === "leader" ? "NY ETTA!" : "MÅL UPPNÅTT!");
+      if (kind !== "leader") await expect(reward.locator(".arena-eyebrow")).toContainText("VECKA");
       await expect.poll(() => reward.evaluate(el => getComputedStyle(el).opacity)).toBe("1");
     await expect.poll(() => reward.locator(".arena-reward-ring").evaluate(el => getComputedStyle(el).opacity)).toBe("1");
       expect(await reward.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");

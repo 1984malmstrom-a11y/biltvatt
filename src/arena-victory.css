@@ -1,0 +1,108 @@
+/* Bounded champion scenes. Opaque stage, no backdrop filter or blocking layer.
+   Keep selectors scoped so idle Arena geometry and standard sales stay intact. */
+.arena-celebration.level-3.is-champion-scene {
+  padding:16px 16px clamp(150px,18dvh,210px);
+  animation:arena-reward-dim .18s ease-out both,arena-reward-fade .18s ease-in calc(var(--reward-life) - 180ms) forwards;
+}
+.arena-celebration.level-3.is-champion-scene::before {
+  background:radial-gradient(ellipse at 50% 35%,#03160ff0,#010805ed 75%);
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-hero {
+  width:min(1100px,94vw);height:min(820px,calc(100dvh - clamp(150px,18dvh,210px) - 32px));
+  max-height:none;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:50% minmax(0,1fr);
+  gap:0;padding:16px 32px 22px;border:1px solid #d9c57566;border-radius:26px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 25%,#1e5537 0,transparent 62%),linear-gradient(155deg,#061d14,#020b07);
+  box-shadow:0 24px 70px #0009,inset 0 1px 0 #f5dd9255,0 0 28px #568f4a26;
+  container-type:normal;animation:none;
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-hero::before,
+.arena-celebration.level-3.is-champion-scene .arena-victory-hero::after {display:none}
+.arena-celebration.level-3.is-champion-scene .arena-victory-art {
+  position:relative;inset:auto;width:100%;height:100%;min-height:0;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 70%,#c7b96226,transparent 68%);
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-art::before,
+.arena-celebration.level-3.is-champion-scene .arena-victory-art::after {display:none}
+.arena-celebration.level-3.is-champion-scene .arena-champion-art {
+  inset:0 0 0 6%;width:min(450px,86%);height:100%;z-index:1;opacity:1;
+}
+.arena-celebration.level-3.is-champion-scene .arena-champion-art>img {
+  opacity:1;mask-image:none;object-fit:contain;object-position:50% 100%;
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-art>b.arena-champion-number {
+  position:absolute;left:15%;top:22%;font-size:clamp(150px,31dvh,320px);font-weight:950;line-height:.9;
+  color:#e4cc78;opacity:1;transform:rotate(-7deg);z-index:0;
+  text-shadow:0 2px 0 #856228,0 0 22px #d7bc6c88;animation:none;
+}
+.arena-celebration.level-3.is-champion-scene .arena-champion-number>svg {width:clamp(90px,17dvh,170px);height:clamp(110px,21dvh,210px);stroke-width:1.2;fill:#d2b86633}
+.arena-celebration.level-3.is-champion-scene .arena-victory-art>.arena-champion-crown {
+  position:absolute;left:23%;top:3%;width:clamp(55px,8dvh,90px);height:clamp(40px,6dvh,68px);
+  fill:#e6d183;color:#f4dfa3;transform:rotate(-7deg);filter:none;z-index:2;animation:none;
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-copy {
+  position:relative;inset:auto;z-index:2;align-self:center;justify-content:center;width:100%;height:auto;max-width:100%;
+  padding:8px 0 0;gap:10px;background:none;text-align:center;
+}
+.arena-celebration.level-3.is-champion-scene .arena-victory-copy>* {order:initial;flex:none;max-width:100%;margin:0;animation:none;overflow-wrap:anywhere}
+.arena-celebration.level-3.is-champion-scene .arena-victory-copy>.arena-eyebrow {font-size:10px;letter-spacing:.18em;color:#c7d6bb;order:-1}
+.arena-celebration.level-3.is-champion-scene .arena-victory-copy h2 {
+  font-size:clamp(56px,7vw,112px);font-weight:950;line-height:1.02;letter-spacing:-.025em;
+  background:linear-gradient(175deg,#fff1bc 10%,#e7c868 50%,#bb8c39);background-clip:text;-webkit-text-fill-color:transparent;
+  color:#edd080;text-shadow:0 0 18px #d2b65944;
+}
+.arena-celebration.level-3.is-champion-scene:not(.celebration-leader) .arena-victory-copy h2 {font-size:clamp(44px,5vw,74px)}
+.arena-celebration.level-3.is-champion-scene .arena-milestone-subtitle {font-size:clamp(18px,2vw,28px);line-height:1.2;color:#f0f3e9}
+.arena-celebration.level-3.is-champion-scene .arena-reward-seller {font-size:17px;color:#eee5bf}
+.arena-celebration.level-3.is-champion-scene .arena-victory-sale {
+  width:min(480px,100%);max-width:100%;padding:12px 20px;background:linear-gradient(145deg,#173425,#07170f);
+  border:1px solid #d9bf6b70;border-radius:14px;box-shadow:inset 0 1px 0 #e0ca7533;
+}
+.arena-celebration.level-3.is-champion-scene .arena-reward-points {font-size:clamp(28px,3.1vw,46px);line-height:1.1;white-space:normal;color:#f0d788;text-shadow:0 0 12px #dfb75633}
+.arena-celebration.level-3.is-champion-scene .arena-reward-activity {font-size:15px;margin-top:6px;letter-spacing:.08em;color:#f1f3e8}
+.arena-celebration.level-3.is-champion-scene .arena-reward-goal {display:flex;align-items:center;gap:7px;padding:6px 13px;border:1px solid #70bd8370;border-radius:20px;color:#bce7b8;font-size:14px}
+.arena-celebration.level-3.is-champion-scene .arena-reward-goal svg {width:18px;height:18px}
+.arena-celebration.level-3.is-champion-scene .arena-victory-secondary {font-size:12px;line-height:1.25;color:#c6d3bc}
+.arena-celebration.level-3.is-champion-scene .arena-reward-confirmation {font-size:10px;letter-spacing:.12em;color:#b9c9b7}
+.arena-celebration.level-3.is-champion-scene .arena-reward-pep {font-size:12px;letter-spacing:.17em;color:#e9cf81}
+@media(max-height:900px) and (min-width:951px){
+ .arena-celebration.level-3.is-champion-scene .arena-victory-hero{grid-template-columns:1fr 1.1fr;grid-template-rows:minmax(0,1fr);gap:16px;padding:20px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy h2{font-size:clamp(48px,7vw,84px)}
+ .arena-celebration.level-3.is-champion-scene:not(.celebration-leader) .arena-victory-copy h2{font-size:clamp(35px,4.5vw,58px)}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-art>b.arena-champion-number{left:0}
+}
+@media(max-width:950px) and (orientation:portrait){
+ .arena-celebration.level-3.is-champion-scene{padding:12px 10px 145px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-hero{width:100%;height:calc(100dvh - 157px);grid-template-rows:44% minmax(0,1fr);padding:10px 14px 14px;border-radius:20px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy{gap:8px;padding:6px 0 0}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy h2{font-size:52px}
+ .arena-celebration.level-3.is-champion-scene:not(.celebration-leader) .arena-victory-copy h2{font-size:34px}
+ .arena-celebration.level-3.is-champion-scene .arena-milestone-subtitle{font-size:20px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-art>b.arena-champion-number{font-size:190px;left:0;top:28%}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-art>.arena-champion-crown{left:12%;top:6%;width:55px;height:44px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-sale{padding:10px 12px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-points{font-size:32px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-activity{font-size:13px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-seller{font-size:15px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy>.arena-eyebrow{font-size:9px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-confirmation{font-size:8px}
+}
+@media(max-width:950px) and (orientation:landscape){
+ .arena-celebration.level-3.is-champion-scene{padding:8px 12px 96px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-hero{width:min(780px,100%);height:calc(100dvh - 104px);grid-template-columns:.8fr 1.2fr;grid-template-rows:minmax(0,1fr);gap:14px;padding:10px 18px;border-radius:18px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy{gap:5px;padding:0}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy h2{font-size:46px}
+ .arena-celebration.level-3.is-champion-scene:not(.celebration-leader) .arena-victory-copy h2{font-size:32px}
+ .arena-celebration.level-3.is-champion-scene .arena-milestone-subtitle{font-size:18px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-copy>.arena-eyebrow,.arena-celebration.level-3.is-champion-scene .arena-reward-confirmation{font-size:8px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-sale{padding:7px 12px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-points{font-size:28px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-activity{font-size:11px;margin-top:3px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-seller,.arena-celebration.level-3.is-champion-scene .arena-reward-goal{font-size:11px}
+ .arena-celebration.level-3.is-champion-scene .arena-reward-pep{font-size:9px}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-art>b.arena-champion-number{font-size:180px;left:0;top:28%}
+ .arena-celebration.level-3.is-champion-scene .arena-victory-art>.arena-champion-crown{left:13%;top:3%;width:55px;height:40px}
+}
+@media(prefers-reduced-motion:reduce){
+ .arena-celebration.level-3.is-champion-scene,.arena-celebration.level-3.is-champion-scene .arena-champion-art{animation:none;transform:none}
+ .arena-celebration.level-3.is-champion-scene .arena-confetti{display:none}
+}
