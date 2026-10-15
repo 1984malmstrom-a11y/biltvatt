@@ -1,3 +1,4 @@
+import {competitionApi} from './arena-competitions';
 import {reportsApi} from "./arena-reports";
 import {audit,auditApi,auditStatement} from "./arena-audit";
 import {securityAdminApi} from "./arena-security";
@@ -59,6 +60,7 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
 }
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
   const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
+  if(path.startsWith('/api/arena/superadmin/competitions'))return competitionApi(request,db,actor);
   if(path.startsWith("/api/arena/superadmin/reports"))return reportsApi(request,db,null,actor);
   const security=await securityAdminApi(request,env,actor);if(security)return security;
   if(path==='/api/arena/superadmin/audit'&&method==='GET')return auditApi(request,db);

@@ -1,15 +1,17 @@
+import {competitionAudit,systemActor} from './arena-competition-model';
 import type {ArenaFightDay} from '../shared/arena-fights';
 import {fightLeaders,fightScore} from '../shared/arena-fights';
 import type {ArenaMetric,ArenaStationStanding} from '../shared/arena-network';
 import {stockholmLocalDateTime} from '../shared/arena-clock';
 import {arenaNextDay,arenaDayStart} from '../shared/arena-leagues';
 import {rankStations} from './arena-network';
-type Config={id:string;start_at:string;end_at:string;score_metric:ArenaMetric;day_win_points:number;day_tie_points:number};
+type Config={participant_json?:string|null;id:string;start_at:string;end_at:string;score_metric:ArenaMetric;day_win_points:number;day_tie_points:number};
 export async function dailyFightRows(db:D1Database,f:Config,snapshot:string){
  const [members,saved]=await Promise.all([
   db.prepare('SELECT s.id,s.name FROM arena_fight_stations m JOIN arena_stations s ON s.id=m.station_id WHERE m.fight_id=? ORDER BY s.id').bind(f.id).all<{id:string;name:string}>(),
   db.prepare('SELECT day,result_json FROM arena_fight_days WHERE fight_id=? ORDER BY day').bind(f.id).all<{day:string;result_json:string}>()
  ]);
+ const names=f.participant_json?JSON.parse(f.participant_json) as Record<string,string>:{};for(const m of members.results)m.name=names[m.id]??m.name;
  const frozen=new Map(saved.results.map(r=>[r.day,JSON.parse(r.result_json) as ArenaFightDay]));
  const windows:{day:string;start_at:string;end_at:string;closed:boolean}[]=[];
  const first=stockholmLocalDateTime(new Date(f.start_at)).slice(0,10),last=stockholmLocalDateTime(new Date(Date.parse(f.end_at)-1)).slice(0,10);
@@ -30,15 +32,16 @@ export async function dailyFightRows(db:D1Database,f:Config,snapshot:string){
  FROM windows w CROSS JOIN arena_fight_stations m JOIN arena_stations s ON s.id=m.station_id
  LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=w.start_at AND r.registered_at<w.end_at AND r.registered_at<=?
   AND (r.voided_at IS NULL OR (w.closed=1 AND r.voided_at>=w.end_at))
+ AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=m.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=m.fight_id AND rule.station_id=s.id AND rule.activity_id=r.activity_id))
  WHERE m.fight_id=? GROUP BY w.day,s.id`).bind(JSON.stringify(windows),snapshot,f.id).all<ArenaStationStanding & {day:string}>():{results:[]};
  const computed=windows.map(window=>{
-  const standings=rankStations(rows.results.filter(r=>r.day===window.day).map(({day,...r})=>r),f.score_metric);
+  const standings=rankStations(rows.results.filter(r=>r.day===window.day).map(({day,...r})=>({...r,name:names[r.id]??r.name})),f.score_metric);
   const winners=window.closed ? fightLeaders(standings,f.score_metric):[];
   for(const row of standings)row.match_points=window.closed && winners.includes(row.id) ? winners.length===1 ? f.day_win_points:f.day_tie_points:0;
   return {...window,standings,winner_ids:winners};
  });
  const closing=computed.filter(d=>d.closed);
- if(closing.length){await db.batch(closing.map(d=>db.prepare('INSERT OR IGNORE INTO arena_fight_days(fight_id,day,result_json) VALUES(?,?,?)').bind(f.id,d.day,JSON.stringify(d))));
+ if(closing.length){await db.batch(closing.flatMap(d=>[db.prepare('INSERT OR IGNORE INTO arena_fight_days(fight_id,day,result_json) VALUES(?,?,?)').bind(f.id,d.day,JSON.stringify(d)),competitionAudit(db,systemActor,'daily.score.frozen',f.id,{day:d.day},`day:${f.id}:${d.day}`)]));
   // Read the winner of any concurrent publication, not our losing candidate.
   const published=await db.prepare('SELECT day,result_json FROM arena_fight_days WHERE fight_id=? ORDER BY day').bind(f.id).all<{day:string;result_json:string}>();
   for(const row of published.results)frozen.set(row.day,JSON.parse(row.result_json));

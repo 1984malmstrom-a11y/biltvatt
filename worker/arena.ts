@@ -1,3 +1,5 @@
+import {fightCenter} from './arena-challenges';
+import {competitionApi} from './arena-competitions';
 import {assignArenaIdentities} from "./arena-identities";
 import {arenaPortrait} from "./arena-portraits";
 import type { Env } from "./index";
@@ -41,6 +43,9 @@ export async function arenaApi(
   if(portrait && method==='GET')return arenaPortrait(request,env,portrait[1]);
   const identity=await resolveArenaStation(request,env),key=identity.key;
   const now = new Date().toISOString();
+  if(path==='/api/arena/fight-center/read'&&method==='POST'){const d=await body(request);checkFields(d,['ids']);if(!Array.isArray(d.ids)||d.ids.length>50||d.ids.some(id=>typeof id!=='string'))fail(400,'Välj giltiga besked.');await arena.prepare('UPDATE arena_fight_notifications SET read_at=? WHERE station_id=? AND read_at IS NULL AND id IN (SELECT value FROM json_each(?))').bind(now,key,JSON.stringify(d.ids)).run();return json({ok:true});}
+  if(path==='/api/arena/fight-center'&&method==='GET')return json(await fightCenter(arena,key));
+  if(path.startsWith('/api/arena/competitions'))return competitionApi(request,arena,undefined,key);
   if(path.startsWith("/api/arena/groups")) return arenaGroupApi(request,arena,key);
   if(path.startsWith("/api/arena/fights"))return arenaFightApi(request,arena,key);
   if(path.startsWith('/api/arena/leagues'))return arenaLeagueApi(request,arena,key);

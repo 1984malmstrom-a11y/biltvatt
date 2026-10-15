@@ -1,3 +1,4 @@
+import {fightNoticeState} from './arena-challenges';
 import type { ArenaCampaign, ArenaGoal, ArenaPerson, ArenaRecentActivity, ArenaSeller, ArenaStats } from "../shared/arena";
 import { roundedPoints } from "../shared/arena";
 import { fail, text } from "./http";
@@ -68,6 +69,6 @@ export async function arenaStats(db: D1Database, key: string, url: URL, now = ne
     today: { count: today?.count ?? 0, points: roundedPoints(today?.points ?? 0), sellers: today?.sellers ?? 0 },
     campaign: campaign ? { ...campaign, count: campaignResult?.count ?? 0, points: roundedPoints(campaignResult?.points ?? 0) } : null,
     station_goals, personal_goals, recent: recent.results.map(r => ({ ...r, points_awarded: roundedPoints(r.points_awarded) })),metric,tb_ore:leaderboard.reduce((s,p)=>s+(p.tb_ore??0),0),unknown_tb_count:leaderboard.reduce((s,p)=>s+(p.unknown_tb_count??0),0),
-    fight:await arenaFightSummary(db,key),
+    fight:await arenaFightSummary(db,key),fight_notices:await fightNoticeState(db,key),
   };
 }

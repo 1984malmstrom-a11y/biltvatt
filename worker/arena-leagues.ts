@@ -1,3 +1,4 @@
+import {competitionBatch} from './arena-competition-model';
 import type {ArenaLeague,ArenaLeagueFixture,ArenaLeagueRow} from '../shared/arena-leagues';
 import {roundRobin,arenaDayStart,arenaNextDay} from '../shared/arena-leagues';
 import type {ArenaMetric} from '../shared/arena-network';
@@ -40,7 +41,7 @@ export async function arenaLeagueView(db:D1Database,id:string):Promise<ArenaLeag
 export async function arenaLeagueApi(request:Request,db:D1Database,station:string|null,actor?:ArenaActor):Promise<Response>{
  const path=new URL(request.url).pathname,base=actor?'/api/arena/superadmin/leagues':'/api/arena/leagues';
  if(path===base && request.method==='GET'){
-  const rows=await db.prepare(`SELECT id,name,metric,start_day,day_win_points,day_tie_points FROM arena_leagues l ${station?'WHERE EXISTS(SELECT 1 FROM arena_league_members m WHERE m.league_id=l.id AND m.station_id=?)':''} ORDER BY created_at DESC LIMIT 100`).bind(...(station?[station]:[])).all();return json({leagues:rows.results});
+  const rows=await db.prepare(`SELECT id,name,metric,start_day,day_win_points,day_tie_points FROM arena_leagues l WHERE l.request_key IS NULL ${station?'AND EXISTS(SELECT 1 FROM arena_league_members m WHERE m.league_id=l.id AND m.station_id=?)':''} ORDER BY created_at DESC LIMIT 100`).bind(...(station?[station]:[])).all();return json({leagues:rows.results});
  }
  const id=path.startsWith(base+'/')?path.slice(base.length+1):'';
  if(id && /^[a-zA-Z0-9:_-]{1,120}$/.test(id) && request.method==='GET'){
@@ -62,9 +63,9 @@ export async function arenaLeagueApi(request:Request,db:D1Database,station:strin
  const statements=[
   db.prepare('INSERT INTO arena_leagues(id,name,metric,start_day,day_win_points,day_tie_points,created_at) VALUES(?,?,?,?,?,?,?)').bind(league,name,String(d.metric),start,Number(win),Number(tie),now),
   db.prepare('INSERT INTO arena_league_members(league_id,station_id) SELECT ?,value FROM json_each(?)').bind(league,JSON.stringify(ids)),
-  db.prepare(`INSERT INTO arena_fights(id,name,description,start_at,end_at,scoring,score_metric,status,scoring_mode,day_win_points,day_tie_points,created_at,updated_at)
-   SELECT json_extract(value,'$.id'),? || ' · omgång ' || json_extract(value,'$.round'),'Alla möter alla · en ny motståndare per omgång',json_extract(value,'$.start'),json_extract(value,'$.end'),?,?,CASE WHEN json_extract(value,'$.start')<=? THEN 'active' ELSE 'scheduled' END,'daily',?,?,?,? FROM json_each(?)`)
-   .bind(name,d.metric==='count'?'count':'points',String(d.metric),now,Number(win),Number(tie),now,now,fixtures),
+  db.prepare(`INSERT INTO arena_fights(id,name,description,start_at,end_at,scoring,score_metric,status,scoring_mode,day_win_points,day_tie_points,created_at,updated_at,competition_id)
+   SELECT json_extract(value,'$.id'),? || ' · omgång ' || json_extract(value,'$.round'),'Alla möter alla · en ny motståndare per omgång',json_extract(value,'$.start'),json_extract(value,'$.end'),?,?,CASE WHEN json_extract(value,'$.start')<=? THEN 'active' ELSE 'scheduled' END,'daily',?,?,?,?,? FROM json_each(?)`)
+   .bind(name,d.metric==='count'?'count':'points',String(d.metric),now,Number(win),Number(tie),now,now,league,fixtures),
   db.prepare(`INSERT INTO arena_fight_stations(fight_id,station_id)
    SELECT json_extract(value,'$.id'),json_extract(value,'$.home') FROM json_each(?)
    UNION ALL SELECT json_extract(value,'$.id'),json_extract(value,'$.away') FROM json_each(?)`).bind(fixtures,fixtures),

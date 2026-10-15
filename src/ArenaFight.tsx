@@ -1,7 +1,8 @@
+import {arenaRouteId} from './arena-route-id';
 import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
 import {useEffect,useRef,useState} from "react";
 import {ArrowLeft,Crown,Flag} from "lucide-react";
-import {api} from "./api";
+import {api,send} from "./api";
 import type {ArenaFight as Fight} from "../shared/arena-fights";
 import {fightScore} from "../shared/arena-fights";
 import {arenaMoney} from "../shared/arena-money";
@@ -14,7 +15,8 @@ import type {FightFeedback} from "./arena-fight-feedback";
 
 const periodTime=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",dateStyle:"medium",timeStyle:"short"});
 export default function ArenaFight() {
-  const path=window.location.pathname,id=path.split("/").at(-1)!,superadmin=path.startsWith("/arena/superadmin/");
+  const path=window.location.pathname,id=arenaRouteId(path),superadmin=path.startsWith("/arena/superadmin/");
+  const [cancelReason,setCancelReason]=useState(""),[cancelConfirm,setCancelConfirm]=useState(false);
   const [fight,setFight]=useState<Fight|null>(null),[error,setError]=useState(""),[announcement,setAnnouncement]=useState<FightFeedback|null>(null);
   const cursor=useRef<Fight|null>(null),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),refresh=useRef<(()=>Promise<void>)|null>(null);
   useEffect(()=>{
@@ -36,7 +38,7 @@ export default function ArenaFight() {
   const highest=fight?.standings.length ? fightScore(fight.standings[0],fight.metric,fight.scoring_mode):0;
   return <div className={`arena-page arena-theme arena-fight-page${fight?.phase==="active" ? " is-live-fight":""}${fight?.standings.length===2 ? " is-head-to-head":" is-multistation"}`}><header className="arena-page-header"><a href={superadmin ? "/arena/superadmin":"/arena"}><ArrowLeft /> {superadmin ? "Till Superadmin":"Till Arenan"}</a><h1><Flag /> Butiksfight</h1><span className={`arena-status${fight?.phase==="active" && !error ? " status-active":""}`}>{error ? "PAUSAD":fight?.phase==="active" ? "LIVE":fight?.phase==="finished" ? "SLUTRESULTAT":fight?.phase==="scheduled" ? "SNART START":fight?.phase==="cancelled" ? "AVBRUTEN":"BUTIKSFIGHT"}</span></header>
     {error && <p className="arena-error" role="alert">{error}</p>}
-    {!fight ? !error && <p role="status">Hämtar Butiksfight…</p>:<main className="arena-fight-main"><section className="arena-fight-heading"><span className="arena-eyebrow">SAMMA LAGKÄNSLA. STÖRRE RESULTAT.</span><h2>{fight.name}</h2><p>{fight.description}</p><small>{periodTime.format(new Date(fight.start_at))} – {periodTime.format(new Date(fight.end_at))} · Stockholm</small><ArenaFightClock fight={fight} onBoundary={()=>void refresh.current?.()} /></section>
+    {!fight ? !error && <p role="status">Hämtar Butiksfight…</p>:<main className="arena-fight-main"><section className="arena-fight-heading"><span className="arena-eyebrow">SAMMA LAGKÄNSLA. STÖRRE RESULTAT.</span><h2>{fight.name}</h2><p>{fight.description}</p><small>{periodTime.format(new Date(fight.start_at))} – {periodTime.format(new Date(fight.end_at))} · Stockholm</small>{fight.sudden_death?<div className="arena-sudden-death" role="status"><strong>SUDDEN DEATH</strong><p>NÄSTA GILTIGA REGISTRERING AVGÖR</p></div>:<ArenaFightClock fight={fight} onBoundary={()=>void refresh.current?.()} />}</section>
       {fight.phase==="finished" && <FightResult fight={fight} />}
       <section className="arena-fight-scoreboard" aria-label={fight.standings.length===2 ? "Station mot station":"Live ranking"}>
         {fight.standings.length===2 && <div className="arena-fight-vs" aria-hidden="true">VS</div>}
@@ -48,6 +50,7 @@ export default function ArenaFight() {
       {fight.phase==="active" && fight.leader_ids.length>1 && <div className="arena-fight-tie-state" role="status"><strong>DET ÄR LIKA!</strong><span>Aktuell ställning · {fight.standings.filter(s=>fight.leader_ids.includes(s.id)).map(s=>s.name).join(" · ")}</span></div>}
       {fight.scoring_mode==="daily" && <ArenaFightDays fight={fight} />}<FightEventFeed events={fight.events??[]} stationIds={fight.standings.map(s=>s.id)}/><p className="arena-fight-fairness">{fight.scoring_mode==="daily" ? `Varje avslutad Stockholmsdag ger ${fight.day_win_points} matchpoäng till dagsvinnaren. Vid delad dagsledning får ledarna ${fight.day_tie_points} var. Dagens resultat är preliminärt; stängda dagar låses. Serien avgörs av matchpoäng, utan extra skiljeregel.`:"Totalresultat för den valda perioden. Ingen normalisering per säljare eller arbetstid."}</p>
     </main>}
+    {superadmin&&fight&&!['finished','cancelled'].includes(fight.phase)&&<details className="arena-panel arena-cancel-controls"><summary>Avbryt denna match</summary><label>Anledning<input value={cancelReason} onChange={e=>setCancelReason(e.target.value)} maxLength={240}/></label><label><input type="checkbox" checked={cancelConfirm} onChange={e=>setCancelConfirm(e.target.checked)}/>Jag bekräftar avbrottet</label><button disabled={!cancelReason.trim()||!cancelConfirm} onClick={()=>void api(`/arena/superadmin/fights/${id}/cancel`,send('POST',{reason:cancelReason,confirm:true})).then(()=>refresh.current?.()).catch(e=>setError(e.message))}>Avbryt match och bevara ställningen</button></details>}
     {announcement && <FightAnnouncement event={announcement} className="arena-fight-lead-event" />}
   </div>;
 }

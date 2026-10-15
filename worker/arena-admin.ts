@@ -1,3 +1,4 @@
+import {challengeAdminApi} from './arena-challenges';
 import {reportsApi} from "./arena-reports";
 import {updateArenaPortrait,readArenaImage} from "./arena-portraits";
 import type { Env } from "./index";
@@ -10,10 +11,11 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   if (!env.ARENA_DB) return fail(503, "Arena-databasen är inte konfigurerad.");
   const identity=await resolveArenaStation(request,env);
   const db = env.ARENA_DB, key = identity.key, path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
+  if(path.startsWith('/api/admin/arena/challenges')||path==='/api/admin/arena/competition-availability')return challengeAdminApi(request,env,key);
   if(path.startsWith("/api/admin/arena/reports"))return reportsApi(request,db,key,{id:key,display_name:identity.station?.name??key,role:"station"});
   if (path === "/api/admin/arena/config" && method === "GET") {
     const queries = [
-      "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active FROM arena_activities WHERE station_id=? ORDER BY sort_order,id",
+      "SELECT id,name,offer_text,price_text,points,tb_ore,display_mode,image_key,category,sort_order,active,arena_category_id FROM arena_activities WHERE station_id=? ORDER BY sort_order,id",
       "SELECT id,name,activity_id,start_at,end_at,target_count,target_points,active FROM arena_campaigns WHERE station_id=? ORDER BY start_at DESC",
       "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? ORDER BY start_date DESC",
       "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? ORDER BY start_date DESC",
@@ -60,10 +62,10 @@ export async function arenaAdminApi(request: Request, env: Env): Promise<Respons
   if (kind === "activities") {
     const a = activityInput(data);
     if (a.image_key && !await db.prepare("SELECT id FROM arena_activity_images WHERE id=? AND station_id=?").bind(a.image_key, key).first()) fail(400, "Bilden tillhör inte stationen.");
-    const result = itemId ? await db.prepare(`UPDATE arena_activities SET name=?,offer_text=?,price_text=?,points=?,image_key=?,category=?,sort_order=?,active=?,tb_ore=COALESCE(?,tb_ore),display_mode=COALESCE(?,display_mode),updated_at=? WHERE id=? AND station_id=?`)
-      .bind(a.name, a.offer_text, a.price_text, a.points, a.image_key, a.category, a.sort_order, a.active,a.tb_ore??null,a.display_mode??null, now, id, key).run()
-      : await db.prepare(`INSERT INTO arena_activities(id,station_id,name,offer_text,price_text,points,image_key,category,sort_order,active,tb_ore,display_mode,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
-        .bind(id, key, a.name, a.offer_text, a.price_text, a.points, a.image_key, a.category, a.sort_order, a.active,a.tb_ore??0,a.display_mode??"points", now, now).run();
+    const result = itemId ? await db.prepare(`UPDATE arena_activities SET name=?,offer_text=?,price_text=?,points=?,image_key=?,category=?,sort_order=?,active=?,tb_ore=COALESCE(?,tb_ore),display_mode=COALESCE(?,display_mode),arena_category_id=?,updated_at=? WHERE id=? AND station_id=?`)
+      .bind(a.name, a.offer_text, a.price_text, a.points, a.image_key, a.category, a.sort_order, a.active,a.tb_ore??null,a.display_mode??null, a.arena_category_id,now, id, key).run()
+      : await db.prepare(`INSERT INTO arena_activities(id,station_id,name,offer_text,price_text,points,image_key,category,sort_order,active,tb_ore,display_mode,arena_category_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+        .bind(id, key, a.name, a.offer_text, a.price_text, a.points, a.image_key, a.category, a.sort_order, a.active,a.tb_ore??0,a.display_mode??"points",a.arena_category_id, now, now).run();
     if (!result.meta.changes) fail(404, "Aktiviteten finns inte.");
   } else if (kind === "campaigns") {
     const c = campaignInput(data);

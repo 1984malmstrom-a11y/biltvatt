@@ -1,3 +1,4 @@
+import {arenaRouteId} from './arena-route-id';
 import {useEffect,useState} from 'react';
 import {ArrowLeft,Crown} from 'lucide-react';
 import {api} from './api';
@@ -5,7 +6,7 @@ import {visibleArenaPolling,ARENA_FIGHT_SYNC_MS,ARENA_SYNC_MS} from './arena-pol
 import type {ArenaLeague as League} from '../shared/arena-leagues';
 import type {ArenaBootstrap} from '../shared/arena';
 export default function ArenaLeague(){
- const admin=location.pathname.startsWith('/arena/superadmin/'),id=location.pathname.split('/').at(-1)!;
+ const admin=location.pathname.startsWith('/arena/superadmin/'),id=arenaRouteId(location.pathname);
  const [league,setLeague]=useState<League|null>(null),[station,setStation]=useState(''),[error,setError]=useState('');
  useEffect(()=>{let alive=true,stop=()=>{};let current:League|null=null;
  const load=async()=>{if(document.hidden)return;try{const next=await api<League>(`/arena/${admin?'superadmin/':''}leagues/${id}`);if(alive){current=next;setLeague(next);setError('');}}catch(e){if(alive)setError((e as Error).message);}};

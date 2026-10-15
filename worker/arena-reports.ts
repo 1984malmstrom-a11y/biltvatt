@@ -1,3 +1,4 @@
+import type {Competition} from '../shared/arena-competitions';
 import type {ArenaReportSnapshot,ArenaReportType,ReportRow,ReportTotals,ReportIdentity} from '../shared/arena-reports';
 import type {ArenaFight} from '../shared/arena-fights';
 import {roundedPoints} from '../shared/arena';
@@ -34,6 +35,16 @@ export async function freezeStationReport(db:D1Database,station:string,input:{ty
   if(input.type==='diploma'&&board[0])s.subject={id:board[0].id,name:board[0].name,avatar_index:board[0].avatar_index,profile_url:board[0].profile_url};
   return (await persist(db,source,s))!;
 }
+export async function freezeCompetitionReport(db:D1Database,c:Competition){
+ if(!c.frozen)return;if(await db.prepare('SELECT id FROM arena_reports WHERE source_key=?').bind(`competition:${c.id}`).first())return;const source=`competition:${c.id}`,id=`competition-${c.id}`;
+ const fights=await db.prepare('SELECT result_json FROM arena_fights WHERE competition_id=? AND result_json IS NOT NULL ORDER BY start_at,id').bind(c.id).all<{result_json:string}>();
+ const totals=empty(),byStation=new Map<string,ReportRow>();
+ for(const f of fights.results)for(const r of (JSON.parse(f.result_json) as ArenaFight).standings){const old=byStation.get(r.id)??{...r,rank:c.standings.find(s=>s.id===r.id)?.rank??r.rank,count:0,points:0,tb_ore:0,unknown_tb_count:0};byStation.set(r.id,{...old,...add(old,r)});}
+ const rows=[...byStation.values()];const total=rows.reduce(add,totals);
+ const s:ArenaReportSnapshot={version:1,id,type:'fight',title:`${c.phase==='cancelled'?'AVBRUTEN':'BUTIKSFIGHT'} · ${c.name}`,created_at:new Date().toISOString(),period:{start:c.rules.start_day,end:c.rules.end_day},station:null,totals:total,leaderboard:rows,activities:[],goals:[],winner_names:c.champion_ids.map(id=>c.standings.find(s=>s.id===id)?.name??id),metric:c.rules.metric,source,competition:c};
+ await db.prepare('INSERT OR IGNORE INTO arena_reports(id,source_key,station_id,fight_id,competition_id,report_type,title,snapshot_json,created_at) VALUES(?,?,NULL,NULL,?,?,?,?,?)').bind(id,source,c.id,'fight',s.title,JSON.stringify(s),s.created_at).run();
+}
+
 export async function freezeFightReport(db:D1Database,f:ArenaFight){
   if(f.phase!=='finished')return;
   const source=`fight:${f.id}`,s:ArenaReportSnapshot={version:1,id:`fight-${f.id}`,type:'fight',title:`BUTIKSFIGHT · ${f.name}`,created_at:f.end_at,period:{start:f.start_at,end:f.end_at},station:null,totals:f.standings.reduce(add,empty()),leaderboard:f.standings.map(r=>({...r,unknown_tb_count:r.unknown_tb_count??0})),activities:[],goals:[],winner_names:f.standings.filter(r=>f.winner_ids?.includes(r.id)).map(r=>r.name),metric:f.metric,source,...(f.scoring_mode==='daily'?{scoring_mode:'daily' as const,day_win_points:f.day_win_points,day_tie_points:f.day_tie_points}:{})};
@@ -58,8 +69,8 @@ export async function reportsApi(request:Request,db:D1Database,station:string|nu
   const u=new URL(request.url),p=u.pathname,m=request.method,base=station?'/api/admin/arena/reports':'/api/arena/superadmin/reports';
   if(p===base&&m==='GET'){
     if(station)await archiveStationReports(db,station);
-    const q=station?`WHERE station_id=? OR EXISTS(SELECT 1 FROM arena_fight_stations m WHERE m.fight_id=arena_reports.fight_id AND m.station_id=?)`:'';
-    const rows=await db.prepare(`SELECT id,report_type,title,created_at,station_id,fight_id FROM arena_reports ${q} ORDER BY created_at DESC LIMIT 100`).bind(...(station?[station,station]:[])).all();return json({reports:rows.results});
+    const q=station?`WHERE station_id=? OR EXISTS(SELECT 1 FROM arena_fight_stations m WHERE m.fight_id=arena_reports.fight_id AND m.station_id=?) OR EXISTS(SELECT 1 FROM arena_league_members m WHERE m.league_id=arena_reports.competition_id AND m.station_id=?)`:'';
+    const rows=await db.prepare(`SELECT id,report_type,title,created_at,station_id,fight_id FROM arena_reports ${q} ORDER BY created_at DESC LIMIT 100`).bind(...(station?[station,station,station]:[])).all();return json({reports:rows.results});
   }
   if(p===base&&m==='POST'){
     const d=await body(request);checkFields(d,['type','start','end','seller_id','activity_id','station_id']);
@@ -71,7 +82,7 @@ export async function reportsApi(request:Request,db:D1Database,station:string|nu
   }
   const suffix=p.startsWith(base+'/')?p.slice(base.length+1).split('/'):[];
   if(suffix.length&&suffix.length<=2&&/^[a-zA-Z0-9:_-]{1,160}$/.test(suffix[0])&&m==='GET'){
-    const row=await db.prepare(`SELECT snapshot_json FROM arena_reports WHERE id=? ${station?'AND (station_id=? OR EXISTS(SELECT 1 FROM arena_fight_stations m WHERE m.fight_id=arena_reports.fight_id AND m.station_id=?))':''}`).bind(suffix[0],...(station?[station,station]:[])).first<{snapshot_json:string}>();
+    const row=await db.prepare(`SELECT snapshot_json FROM arena_reports WHERE id=? ${station?'AND (station_id=? OR EXISTS(SELECT 1 FROM arena_fight_stations m WHERE m.fight_id=arena_reports.fight_id AND m.station_id=?) OR EXISTS(SELECT 1 FROM arena_league_members m WHERE m.league_id=arena_reports.competition_id AND m.station_id=?))':''}`).bind(suffix[0],...(station?[station,station,station]:[])).first<{snapshot_json:string}>();
     if(!row)fail(404,'Rapporten finns inte.');const s=JSON.parse(row!.snapshot_json) as ArenaReportSnapshot;
     if(suffix[1]==='pdf'){
       await audit(db,actor,'report.pdf.exported','report',s.id,null,{snapshot_hash:await tokenHash(row!.snapshot_json)},station);

@@ -23,14 +23,16 @@ export function arenaTB(value:unknown) {
   return ore;
 }
 export function activityInput(data: Record<string, unknown>) {
-  checkFields(data, ["name", "offer_text", "price_text", "points", "image_key", "category", "sort_order", "active", "tb_kronor", "tb_ore", "display_mode"]);
+  checkFields(data, ["name", "offer_text", "price_text", "points", "image_key", "category", "sort_order", "active", "tb_kronor", "tb_ore", "display_mode", "arena_category_id"]);
   if(data.tb_kronor!==undefined && data.tb_ore!==undefined) fail(400,"Ange TB i kronor eller öre, inte båda.");
   if(data.display_mode!==undefined && !["points","tb"].includes(String(data.display_mode))) fail(400,"Välj poäng eller TB som badge.");
+  if(data.arena_category_id!=null&&!['wash','fika','food','drink','car-care','campaign','other'].includes(String(data.arena_category_id)))fail(400,'Välj giltig Arena-kategori.');
   const tb=data.tb_kronor!==undefined ? arenaTB(data.tb_kronor) : data.tb_ore!==undefined ? integer(data.tb_ore,"TB i öre",100000000) : undefined;
   return {
     name: text(data.name, "Namn"), offer_text: optionalText(data.offer_text, "Erbjudande"),
     price_text: optionalText(data.price_text, "Pristext"), points: arenaPoints(data.points),
     image_key: data.image_key === null ? null : arenaUUID(data.image_key),
+    arena_category_id:data.arena_category_id??null,
     category: optionalText(data.category, "Kategori", 40), sort_order: integer(data.sort_order, "Sortering", 10000), active: active(data.active),
     ...(tb!==undefined ? {tb_ore:tb} : {}),...(data.display_mode!==undefined ? {display_mode:String(data.display_mode)} : {}),
   };

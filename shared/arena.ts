@@ -1,4 +1,5 @@
 export type ArenaActivity = {
+  arena_category_id?:string|null;
   id: string; name: string; offer_text: string; price_text: string; points: number;
   image_key: string | null; category: string; sort_order: number; active: number;
   tb_ore?:number; display_mode?:"points" | "tb";
@@ -34,6 +35,7 @@ export type ArenaStats = {
   campaign: (ArenaCampaign & { points: number; count: number }) | null;
   station_goals: ArenaGoal[]; personal_goals: ArenaGoal[];
   tb_ore?:number; unknown_tb_count?:number; metric?:"points" | "tb" | "count";
+  fight_notices?:{incoming:number;unread:number;outgoing?:number;scheduled?:number};
   fight?:import("./arena-fights").ArenaFightSummary | null;
 };
 export type ArenaRegistration = { id: string; seller_id: string; activity_id: string; points_awarded: number; registered_at: string; voided_at: string | null; tb_ore_awarded?:number | null };

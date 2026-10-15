@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';import {arenaRouteId} from '../src/arena-route-id';
+it('normalizes host-encoded IDs, rejects separators and does not crash on malformed escapes',()=>{expect(arenaRouteId('/arena/competitions/duel%3A123')).toBe('duel:123');expect(arenaRouteId('/arena/fights/id%3Ar2%3A1')).toBe('id:r2:1');expect(arenaRouteId('/arena/competitions/bad%2Fid')).toBe('invalid-route');expect(arenaRouteId('/arena/competitions/%ZZ')).toBe('invalid-route');});
+import {competitionMonthEnd} from '../shared/arena-competitions';
+it('one-month periods follow calendar months rather than silently using 30 days',()=>{expect(competitionMonthEnd('2026-10-15')).toBe('2026-11-14');expect(competitionMonthEnd('2026-11-15')).toBe('2026-12-14');expect(competitionMonthEnd('2024-01-31')).toBe('2024-02-28');expect(()=>competitionMonthEnd('')).toThrow();});

@@ -26,8 +26,11 @@ import "./arena-showroom.css";
 import "./arena-brand.css";
 import "./arena-premium.css";
 import "./arena-identity.css";
+import "./arena-fight-nav.css";
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
+const ArenaTemporaryConcept=lazy(()=>import("./ArenaTemporaryConcept"));
+const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
 const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
 const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
 
@@ -145,6 +148,7 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
 export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
+  if(/^\/arena\/(?:superadmin\/)?competitions\//.test(window.location.pathname))return <ArenaCompetition/>;
   if(window.location.pathname==="/arena/fights")return <ArenaCompetitions/>;
   if(window.location.pathname.startsWith("/arena/leagues/") || window.location.pathname.startsWith("/arena/superadmin/leagues/"))return <ArenaLeague/>;
   if(window.location.pathname.startsWith("/arena/fights/") || window.location.pathname.startsWith("/arena/superadmin/fights/"))return <ArenaFight />;
@@ -317,6 +321,7 @@ function ArenaHome() {
     {period === "custom" && <div className="arena-dates"><label>Från<input type="date" value={start} onChange={e => setStart(e.target.value)} /></label><label>Till<input type="date" value={end} onChange={e => setEnd(e.target.value)} /></label></div>}
   </>;
   return <div className={`arena-shell arena-theme${celebration?.special ? " has-achievement" : ""}`}>
+    {import.meta.env.DEV&&new URLSearchParams(location.search).has("fightconcept")&&<Suspense fallback={null}><ArenaTemporaryConcept/></Suspense>}
     <header className="arena-header">
       <a href={data?.station.kind==="arena" ? "/arena":"/station"} className="arena-brand" aria-label={data?.station.kind==="arena" ? "Till Arenan":"Till stationsdashboarden"}><ArenaEmblem/><span><strong>ARENAN</strong><small>SÄLJ MER. TILLSAMMANS.</small></span></a>
       <div className="arena-team-goal">{goal ? <GoalProgress goal={goal} label="MÅNADENS MÅL" hud /> : campaign?.target_points ? <Progress points={campaign.points} target={campaign.target_points} label="MÅNADENS MÅL" hud /> : campaign?.target_count ? <Progress points={campaign.count} target={campaign.target_count} label="MÅNADENS MÅL" suffix="försäljningar" hud /> : <div className="arena-no-goal"><Star /><span>VARJE FÖRSÄLJNING RÄKNAS<strong>Tillsammans mot nästa mål</strong></span></div>}</div>
@@ -345,7 +350,7 @@ function ArenaHome() {
       <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
       <ArenaCustomerBrandSlot compact/>
     </section>
-    <nav className="arena-nav" aria-label="Arena"><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><button className="arena-nav-home" aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><span className="arena-nav-core" aria-hidden="true"><ArenaEmblem className="arena-nav-emblem"/></span><span>START</span></button><a href="/arena/fights"><Flag /> BUTIKSFIGHT</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
+    <nav className="arena-nav" aria-label="Arena"><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><button className="arena-nav-home" aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><span className="arena-nav-core" aria-hidden="true"><ArenaEmblem className="arena-nav-emblem"/></span><span>START</span></button><a href="/arena/fights" className={todayStats?.fight_notices?.incoming?"has-fight-notice":todayStats?.fight?.phase==="active"?"has-live-fight":todayStats?.fight_notices?.outgoing?"has-pending-fight":todayStats?.fight_notices?.scheduled?"has-upcoming-fight":undefined}><Flag /> BUTIKSFIGHT{!!todayStats?.fight_notices?.incoming&&<span className="arena-fight-nav-badge" aria-label={`${todayStats.fight_notices.incoming} inkommande utmaningar`}>{todayStats.fight_notices.incoming}</span>}{!todayStats?.fight_notices?.incoming&&!!todayStats?.fight_notices?.outgoing&&<span className="arena-fight-nav-pending" aria-label="Utmaning väntar på svar"><Clock3/></span>}{!todayStats?.fight_notices?.incoming&&!todayStats?.fight_notices?.outgoing&&!!todayStats?.fight_notices?.unread&&<span className="arena-fight-nav-dot" aria-label="Nytt fightbesked"/>}</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
     <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />

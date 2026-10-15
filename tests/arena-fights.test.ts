@@ -85,7 +85,7 @@ describe("Butiksfight scoring, lifecycle and authority",()=>{
   });
   it("ties preserve equal ranks and all winners, including a zero-sale fight",async()=>{
     const f=await setup(),id=await f.create();f.sale("t");f.sale("k");const fight=await f.view(id,end);expect(fight.winner_ids.sort()).toEqual(["k","t"]);expect(fight.standings.map(s=>s.rank)).toEqual([1,1]);
-    const zero=await f.create("points",["t","k"],"2026-10-14T10:30:00.000Z");const finished=await f.view(zero,end);expect(finished.winner_ids.sort()).toEqual(["k","t"]);expect(finished.standings.map(s=>s.count)).toEqual([0,0]);
+    const zero=await f.create("points",["t","k"],"2026-10-15T10:00:00.000Z","2026-10-15T11:00:00.000Z");const finished=await f.view(zero,"2026-10-15T11:00:00.000Z");expect(finished.winner_ids.sort()).toEqual(["k","t"]);expect(finished.standings.map(s=>s.count)).toEqual([0,0]);
   });
   it("acknowledged native registration updates fights once despite an idempotent retry",async()=>{
     const f=await setup(),id=await f.create(),body={request_id:crypto.randomUUID(),seller_id:"t:seller",activity_id:"t:activity"};
