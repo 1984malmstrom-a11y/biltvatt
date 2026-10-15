@@ -1,10 +1,10 @@
 import {test,expect,type Page} from '@playwright/test';
 import {mkdirSync} from 'node:fs';
 import {boot,initial,now,fight} from './arena-release-fixture';
+import {fightDashboardFixture as context} from './arena-fight-context-fixture';
 import type {ArenaStats,ArenaFightActivity} from '../shared/arena';
 const dir=process.env.ARENA_OBJECTIVE_REVIEW_DIR;
 const sizes=[[1920,1080],[1536,864],[1448,1086],[1024,768],[390,844],[844,390]];
-const context:ArenaStats['fight_dashboard']={fight_id:fight.id,station_ids:['review','k'],metric:'points',leaderboard:initial.leaderboard.slice(0,5),recent:initial.recent!};
 const temp:ArenaFightActivity={...boot.activities[3],id:'temp:review-objective',name:'Fight-fika',image_key:'review-fika',fight_id:fight.id,start_at:fight.start_at,end_at:fight.end_at,points:3,tb_ore:800};
 const active=(ids:string[]|null,scope:NonNullable<ArenaStats['fight_objective']>['scope']='activity'):ArenaStats=>({...structuredClone(initial),fight:structuredClone(fight),fight_dashboard:context,fight_objective:{fight_id:fight.id,scope,activity_ids:ids}});
 async function setup(page:Page,get:()=>ArenaStats){
