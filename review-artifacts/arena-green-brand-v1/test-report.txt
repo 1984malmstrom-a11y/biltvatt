@@ -1,0 +1,9 @@
+Typecheck: PASS
+Build: PASS
+Arena unit: 143/143, 18 files
+Arena Playwright: 153/153
+Final screenshot rerun: 14/14
+Backoffice capture: 1/1
+Full npm test: 349 passed, 1 known pre-existing CSV UTF-8 failure (tests/api.test.ts:402), 350 total.
+CSV, Worker, schema, migrations, scoring, polling engine and actual PDF generator unchanged.
+See logs for exact tests.

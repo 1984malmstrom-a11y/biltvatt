@@ -1,0 +1,26 @@
+
+Running 14 tests using 1 worker
+
+(node:247577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1920x1080 (5.0s)
+  ✓   2 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 1920x1080 (2.3s)
+  ✓   3 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1536x864 (3.8s)
+  ✓   4 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 1536x864 (1.7s)
+  ✓   5 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1448x1086 (4.0s)
+  ✓   6 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 1448x1086 (1.8s)
+  ✓   7 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1024x768 (3.9s)
+  ✓   8 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 1024x768 (1.6s)
+  ✓   9 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 390x844 (3.4s)
+  ✓  10 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 390x844 (1.3s)
+  ✓  11 e2e/arena-green-brand.spec.ts:16:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 844x390 (2.8s)
+  ✓  12 e2e/arena-green-brand.spec.ts:28:2 › Green brand: live fight card and responsive layout 844x390 (1.3s)
+  ✓  13 e2e/arena-green-brand.spec.ts:33:1 › Green brand: exact TB, urgency, perimeter motion, lead surge, final and return to pulse (5.9s)
+  ✓  14 e2e/arena-green-brand.spec.ts:49:1 › Green brand: sale hierarchy, portraits, Min Arena and full leaderboard (5.6s)
+
+  14 passed (45.6s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

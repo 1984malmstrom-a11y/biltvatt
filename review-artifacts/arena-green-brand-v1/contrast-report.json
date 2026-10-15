@@ -1,0 +1,113 @@
+{
+  "method": "WCAG relative luminance of central solid colour tokens; translucent compositing and photographic areas require visual review as well.",
+  "pairs": [
+    {
+      "foreground": "text",
+      "background": "bg",
+      "contrast": 17.0,
+      "AA_normal": true
+    },
+    {
+      "foreground": "text",
+      "background": "surface",
+      "contrast": 14.91,
+      "AA_normal": true
+    },
+    {
+      "foreground": "text",
+      "background": "raised",
+      "contrast": 12.0,
+      "AA_normal": true
+    },
+    {
+      "foreground": "gold",
+      "background": "bg",
+      "contrast": 11.59,
+      "AA_normal": true
+    },
+    {
+      "foreground": "gold",
+      "background": "surface",
+      "contrast": 10.17,
+      "AA_normal": true
+    },
+    {
+      "foreground": "gold",
+      "background": "raised",
+      "contrast": 8.18,
+      "AA_normal": true
+    },
+    {
+      "foreground": "muted",
+      "background": "bg",
+      "contrast": 9.23,
+      "AA_normal": true
+    },
+    {
+      "foreground": "muted",
+      "background": "surface",
+      "contrast": 8.09,
+      "AA_normal": true
+    },
+    {
+      "foreground": "muted",
+      "background": "raised",
+      "contrast": 6.52,
+      "AA_normal": true
+    },
+    {
+      "foreground": "energy",
+      "background": "bg",
+      "contrast": 9.11,
+      "AA_normal": true
+    },
+    {
+      "foreground": "energy",
+      "background": "surface",
+      "contrast": 7.99,
+      "AA_normal": true
+    },
+    {
+      "foreground": "energy",
+      "background": "raised",
+      "contrast": 6.43,
+      "AA_normal": true
+    },
+    {
+      "foreground": "warning",
+      "background": "bg",
+      "contrast": 8.72,
+      "AA_normal": true
+    },
+    {
+      "foreground": "warning",
+      "background": "surface",
+      "contrast": 7.65,
+      "AA_normal": true
+    },
+    {
+      "foreground": "warning",
+      "background": "raised",
+      "contrast": 6.16,
+      "AA_normal": true
+    },
+    {
+      "foreground": "danger",
+      "background": "bg",
+      "contrast": 5.3,
+      "AA_normal": true
+    },
+    {
+      "foreground": "danger",
+      "background": "surface",
+      "contrast": 4.64,
+      "AA_normal": true
+    },
+    {
+      "foreground": "danger",
+      "background": "raised",
+      "contrast": 3.74,
+      "AA_normal": false
+    }
+  ]
+}

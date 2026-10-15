@@ -1,0 +1,66 @@
+{
+  "mapping": {
+    "Biltvätt": "01_arena-biltvatt.webp",
+    "Korv med mos": "02_arena-korv-med-mos.webp",
+    "Två för 25:-": "03_arena-tva-for-25.webp",
+    "Kaffe + bulle": "04_arena-kaffe-bulle.webp",
+    "Spolarvätska": "05_arena-spolarvatska.webp",
+    "Räksallad": "06_arena-raksallad.webp",
+    "Två för 30:-": "07_arena-tva-for-30.webp",
+    "Extra dryck (ej startslot)": "08_arena-extra-dryck.webp"
+  },
+  "replaced": [
+    "01",
+    "03",
+    "04",
+    "06",
+    "07"
+  ],
+  "preserved": [
+    "02",
+    "05"
+  ],
+  "extraDryck": "Original energy-can photo retained byte-for-byte under 08 so the chocolate motif does not leak into Extra dryck.",
+  "files": [
+    {
+      "file": "01_arena-biltvatt.webp",
+      "bytes": 159154,
+      "sha256": "9896c33a5ca05eb31d5d00f2b3e9d68053787382502a13a86b172e97fa81c9a4"
+    },
+    {
+      "file": "02_arena-korv-med-mos.webp",
+      "bytes": 318038,
+      "sha256": "d222280b0fea4e067914ce9ed3cd2d7b93d895a5825b22559947db446fef10fd"
+    },
+    {
+      "file": "03_arena-tva-for-25.webp",
+      "bytes": 143052,
+      "sha256": "6f4cb7920bcf927dda01f41c4e440b7576e2ee94b9c185de0f173f3a847ad587"
+    },
+    {
+      "file": "04_arena-kaffe-bulle.webp",
+      "bytes": 70480,
+      "sha256": "e0064a1ffaeb4b3f9708c5936f9993cc4101fd4188ca1e3f55a83cbd5ae961ba"
+    },
+    {
+      "file": "05_arena-spolarvatska.webp",
+      "bytes": 113906,
+      "sha256": "ba28a67a116796270d9b540a2732743be99cd5ba9ef604cf1fe37ff3614c5b23"
+    },
+    {
+      "file": "06_arena-raksallad.webp",
+      "bytes": 115448,
+      "sha256": "4d164a68b5408ac60b1df18a29cdea5a4b842881764ba6076b58dd014587e856"
+    },
+    {
+      "file": "07_arena-tva-for-30.webp",
+      "bytes": 84376,
+      "sha256": "99b739e668412e72699154441fb62b72b75a4412171b5d7d2bd01fc506e35b48"
+    },
+    {
+      "file": "08_arena-extra-dryck.webp",
+      "bytes": 268298,
+      "sha256": "e52b731e15ae6283968a7c09497548c848971a93f162c604fc75d5c8823f5888"
+    }
+  ]
+}

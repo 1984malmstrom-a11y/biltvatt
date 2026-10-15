@@ -1,0 +1,42 @@
+{
+  "baseline": "e6dc4a466775abdab808cf5ae57914b23b442707",
+  "files": [
+    {
+      "path": "shared/arena-pdf.ts",
+      "unchanged": true
+    },
+    {
+      "path": "shared/arena-money.ts",
+      "unchanged": true
+    },
+    {
+      "path": "shared/arena-fights.ts",
+      "unchanged": true
+    },
+    {
+      "path": "shared/arena-achievements.ts",
+      "unchanged": true
+    },
+    {
+      "path": "src/arena-polling.ts",
+      "unchanged": true
+    },
+    {
+      "path": "src/arena-local-sale.ts",
+      "unchanged": true
+    },
+    {
+      "path": "src/ArenaAvatar.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "src/ArenaSellerSelector.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "worker/index.ts",
+      "unchanged": true
+    }
+  ],
+  "migrationDiff": []
+}

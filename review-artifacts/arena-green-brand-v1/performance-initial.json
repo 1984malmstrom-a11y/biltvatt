@@ -1,0 +1,1435 @@
+{
+  "method": "Paired immutable checkpoint e6dc4a466775abdab808cf5ae57914b23b442707 versus green brand working tree: identical React/Vite-only servers (5195 baseline/5194 current), Chromium CDP 4x CPU throttle, median of 3 trials each, same 5-seller fixture and simulated server receipt/stat update. No branch checkout. Not physical hardware. Historical one-shot Worker/Vite numbers are reference only; runtime/server and sampling differ.",
+  "results": [
+    {
+      "variant": "baseline",
+      "viewport": "1920x1080",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 271,
+      "nextDuringCelebrationMs": 560,
+      "initialStartRenderMs": 1579,
+      "before": {
+        "openSellerMs": 285,
+        "nextDuringCelebrationMs": 514
+      },
+      "trials": [
+        {
+          "openSellerMs": 243,
+          "nextDuringCelebrationMs": 523,
+          "initialStartRenderMs": 3052,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 583,
+          "longTasks": [
+            {
+              "start": 3147.6000000089407,
+              "duration": 93
+            },
+            {
+              "start": 3463.7999999970198,
+              "duration": 103
+            },
+            {
+              "start": 3687.7999999970198,
+              "duration": 78
+            },
+            {
+              "start": 4011,
+              "duration": 60
+            },
+            {
+              "start": 4164.79999999702,
+              "duration": 107
+            }
+          ]
+        },
+        {
+          "openSellerMs": 286,
+          "nextDuringCelebrationMs": 560,
+          "initialStartRenderMs": 1564,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 596,
+          "longTasks": [
+            {
+              "start": 1664.0999999940395,
+              "duration": 110
+            },
+            {
+              "start": 2045.9000000059605,
+              "duration": 116
+            },
+            {
+              "start": 2272.7999999970198,
+              "duration": 72
+            },
+            {
+              "start": 2346.9000000059605,
+              "duration": 50
+            },
+            {
+              "start": 2627.0999999940395,
+              "duration": 54
+            },
+            {
+              "start": 2755.7000000029802,
+              "duration": 102
+            }
+          ]
+        },
+        {
+          "openSellerMs": 271,
+          "nextDuringCelebrationMs": 570,
+          "initialStartRenderMs": 1579,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 630,
+          "longTasks": [
+            {
+              "start": 1686.8999999910593,
+              "duration": 103
+            },
+            {
+              "start": 2053.7000000029802,
+              "duration": 111
+            },
+            {
+              "start": 2287.5999999940395,
+              "duration": 84
+            },
+            {
+              "start": 2375.8999999910593,
+              "duration": 53
+            },
+            {
+              "start": 2611.7000000029802,
+              "duration": 62
+            },
+            {
+              "start": 2763.7000000029802,
+              "duration": 130
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1920x1080",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 267,
+      "nextDuringCelebrationMs": 524,
+      "initialStartRenderMs": 1609,
+      "before": {
+        "openSellerMs": 285,
+        "nextDuringCelebrationMs": 514
+      },
+      "trials": [
+        {
+          "openSellerMs": 267,
+          "nextDuringCelebrationMs": 483,
+          "initialStartRenderMs": 2952,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 524,
+          "longTasks": [
+            {
+              "start": 3041.4000000059605,
+              "duration": 117
+            },
+            {
+              "start": 3356.5,
+              "duration": 107
+            },
+            {
+              "start": 3567,
+              "duration": 81
+            },
+            {
+              "start": 3891.7000000029802,
+              "duration": 54
+            },
+            {
+              "start": 4023.2000000029802,
+              "duration": 106
+            }
+          ]
+        },
+        {
+          "openSellerMs": 245,
+          "nextDuringCelebrationMs": 587,
+          "initialStartRenderMs": 1512,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 609,
+          "longTasks": [
+            {
+              "start": 1606.699999988079,
+              "duration": 88
+            },
+            {
+              "start": 1911,
+              "duration": 115
+            },
+            {
+              "start": 2139.7999999970198,
+              "duration": 85
+            },
+            {
+              "start": 2233.0999999940395,
+              "duration": 57
+            },
+            {
+              "start": 2519.2999999970198,
+              "duration": 61
+            },
+            {
+              "start": 2653.199999988079,
+              "duration": 164
+            }
+          ]
+        },
+        {
+          "openSellerMs": 286,
+          "nextDuringCelebrationMs": 524,
+          "initialStartRenderMs": 1609,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 560,
+          "longTasks": [
+            {
+              "start": 1710.699999988079,
+              "duration": 109
+            },
+            {
+              "start": 2086.5999999940395,
+              "duration": 120
+            },
+            {
+              "start": 2292.699999988079,
+              "duration": 78
+            },
+            {
+              "start": 2370.7999999970198,
+              "duration": 56
+            },
+            {
+              "start": 2703.8999999910593,
+              "duration": 188
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1536x864",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 239,
+      "nextDuringCelebrationMs": 517,
+      "initialStartRenderMs": 1565,
+      "before": {
+        "openSellerMs": 287,
+        "nextDuringCelebrationMs": 531
+      },
+      "trials": [
+        {
+          "openSellerMs": 238,
+          "nextDuringCelebrationMs": 443,
+          "initialStartRenderMs": 1819,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 496,
+          "longTasks": [
+            {
+              "start": 1914,
+              "duration": 91
+            },
+            {
+              "start": 2233.2000000029802,
+              "duration": 100
+            },
+            {
+              "start": 2421.3999999910593,
+              "duration": 64
+            },
+            {
+              "start": 2802.8999999910593,
+              "duration": 94
+            }
+          ]
+        },
+        {
+          "openSellerMs": 239,
+          "nextDuringCelebrationMs": 517,
+          "initialStartRenderMs": 1559,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 516,
+          "longTasks": [
+            {
+              "start": 1668.5,
+              "duration": 76
+            },
+            {
+              "start": 1946.4000000059605,
+              "duration": 105
+            },
+            {
+              "start": 2148.5,
+              "duration": 59
+            },
+            {
+              "start": 2492.4000000059605,
+              "duration": 61
+            },
+            {
+              "start": 2556.5,
+              "duration": 140
+            }
+          ]
+        },
+        {
+          "openSellerMs": 273,
+          "nextDuringCelebrationMs": 529,
+          "initialStartRenderMs": 1565,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 612,
+          "longTasks": [
+            {
+              "start": 1672.6000000089407,
+              "duration": 101
+            },
+            {
+              "start": 2014.4000000059605,
+              "duration": 115
+            },
+            {
+              "start": 2267.2999999970198,
+              "duration": 83
+            },
+            {
+              "start": 2353.7999999970198,
+              "duration": 53
+            },
+            {
+              "start": 2633.2999999970198,
+              "duration": 53
+            },
+            {
+              "start": 2762.7999999970198,
+              "duration": 122
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1536x864",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 242,
+      "nextDuringCelebrationMs": 517,
+      "initialStartRenderMs": 1569,
+      "before": {
+        "openSellerMs": 287,
+        "nextDuringCelebrationMs": 531
+      },
+      "trials": [
+        {
+          "openSellerMs": 222,
+          "nextDuringCelebrationMs": 505,
+          "initialStartRenderMs": 1577,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 566,
+          "longTasks": [
+            {
+              "start": 1677.7999999970198,
+              "duration": 92
+            },
+            {
+              "start": 1955.2999999970198,
+              "duration": 113
+            },
+            {
+              "start": 2180.7999999970198,
+              "duration": 77
+            },
+            {
+              "start": 2552.5,
+              "duration": 168
+            }
+          ]
+        },
+        {
+          "openSellerMs": 242,
+          "nextDuringCelebrationMs": 556,
+          "initialStartRenderMs": 1569,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 638,
+          "longTasks": [
+            {
+              "start": 1660.6000000089407,
+              "duration": 104
+            },
+            {
+              "start": 1997.1000000089407,
+              "duration": 116
+            },
+            {
+              "start": 2209,
+              "duration": 85
+            },
+            {
+              "start": 2517.300000011921,
+              "duration": 71
+            },
+            {
+              "start": 2704,
+              "duration": 144
+            }
+          ]
+        },
+        {
+          "openSellerMs": 256,
+          "nextDuringCelebrationMs": 517,
+          "initialStartRenderMs": 1506,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 674,
+          "longTasks": [
+            {
+              "start": 1599.4000000059605,
+              "duration": 117
+            },
+            {
+              "start": 1934,
+              "duration": 157
+            },
+            {
+              "start": 2219.2000000029802,
+              "duration": 99
+            },
+            {
+              "start": 2318.2999999970198,
+              "duration": 64
+            },
+            {
+              "start": 2657.7000000029802,
+              "duration": 177
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1024x768",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 259,
+      "nextDuringCelebrationMs": 497,
+      "initialStartRenderMs": 1603,
+      "before": {
+        "openSellerMs": 248,
+        "nextDuringCelebrationMs": 491
+      },
+      "trials": [
+        {
+          "openSellerMs": 259,
+          "nextDuringCelebrationMs": 509,
+          "initialStartRenderMs": 1585,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 581,
+          "longTasks": [
+            {
+              "start": 1686.699999988079,
+              "duration": 114
+            },
+            {
+              "start": 2031.0999999940395,
+              "duration": 105
+            },
+            {
+              "start": 2242.0999999940395,
+              "duration": 76
+            },
+            {
+              "start": 2321.2999999970198,
+              "duration": 50
+            },
+            {
+              "start": 2611.699999988079,
+              "duration": 56
+            },
+            {
+              "start": 2680.3999999910593,
+              "duration": 114
+            }
+          ]
+        },
+        {
+          "openSellerMs": 265,
+          "nextDuringCelebrationMs": 497,
+          "initialStartRenderMs": 1740,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 561,
+          "longTasks": [
+            {
+              "start": 1869.2000000029802,
+              "duration": 104
+            },
+            {
+              "start": 2239.2000000029802,
+              "duration": 109
+            },
+            {
+              "start": 2452.800000011921,
+              "duration": 68
+            },
+            {
+              "start": 2906.4000000059605,
+              "duration": 95
+            }
+          ]
+        },
+        {
+          "openSellerMs": 238,
+          "nextDuringCelebrationMs": 447,
+          "initialStartRenderMs": 1603,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 535,
+          "longTasks": [
+            {
+              "start": 1709.6000000089407,
+              "duration": 101
+            },
+            {
+              "start": 2050,
+              "duration": 105
+            },
+            {
+              "start": 2248.2999999970198,
+              "duration": 70
+            },
+            {
+              "start": 2510.2000000029802,
+              "duration": 50
+            },
+            {
+              "start": 2628.6000000089407,
+              "duration": 106
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1024x768",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 240,
+      "nextDuringCelebrationMs": 561,
+      "initialStartRenderMs": 1578,
+      "before": {
+        "openSellerMs": 248,
+        "nextDuringCelebrationMs": 491
+      },
+      "trials": [
+        {
+          "openSellerMs": 240,
+          "nextDuringCelebrationMs": 524,
+          "initialStartRenderMs": 1624,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 630,
+          "longTasks": [
+            {
+              "start": 1712.3999999910593,
+              "duration": 97
+            },
+            {
+              "start": 2042.5999999940395,
+              "duration": 116
+            },
+            {
+              "start": 2261.5999999940395,
+              "duration": 81
+            },
+            {
+              "start": 2586,
+              "duration": 58
+            },
+            {
+              "start": 2734.0999999940395,
+              "duration": 98
+            }
+          ]
+        },
+        {
+          "openSellerMs": 240,
+          "nextDuringCelebrationMs": 561,
+          "initialStartRenderMs": 1558,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 687,
+          "longTasks": [
+            {
+              "start": 1651.9000000059605,
+              "duration": 91
+            },
+            {
+              "start": 1959,
+              "duration": 120
+            },
+            {
+              "start": 2234.6000000089407,
+              "duration": 98
+            },
+            {
+              "start": 2334.1000000089407,
+              "duration": 61
+            },
+            {
+              "start": 2690.1000000089407,
+              "duration": 207
+            }
+          ]
+        },
+        {
+          "openSellerMs": 253,
+          "nextDuringCelebrationMs": 591,
+          "initialStartRenderMs": 1578,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 689,
+          "longTasks": [
+            {
+              "start": 1670.2999999970198,
+              "duration": 118
+            },
+            {
+              "start": 2037,
+              "duration": 130
+            },
+            {
+              "start": 2309.4000000059605,
+              "duration": 99
+            },
+            {
+              "start": 2408.5999999940395,
+              "duration": 69
+            },
+            {
+              "start": 2826.5999999940395,
+              "duration": 172
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "1448x1086",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 258,
+      "nextDuringCelebrationMs": 473,
+      "initialStartRenderMs": 1613,
+      "before": {
+        "openSellerMs": 259,
+        "nextDuringCelebrationMs": 507
+      },
+      "trials": [
+        {
+          "openSellerMs": 258,
+          "nextDuringCelebrationMs": 434,
+          "initialStartRenderMs": 1786,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 593,
+          "longTasks": [
+            {
+              "start": 1886.699999988079,
+              "duration": 105
+            },
+            {
+              "start": 2218.0999999940395,
+              "duration": 109
+            },
+            {
+              "start": 2457.5,
+              "duration": 81
+            },
+            {
+              "start": 2541.3999999910593,
+              "duration": 54
+            },
+            {
+              "start": 2709.5,
+              "duration": 65
+            },
+            {
+              "start": 2900.5999999940395,
+              "duration": 89
+            }
+          ]
+        },
+        {
+          "openSellerMs": 245,
+          "nextDuringCelebrationMs": 591,
+          "initialStartRenderMs": 1568,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 635,
+          "longTasks": [
+            {
+              "start": 1662,
+              "duration": 103
+            },
+            {
+              "start": 1959.7000000029802,
+              "duration": 102
+            },
+            {
+              "start": 2216.7000000029802,
+              "duration": 89
+            },
+            {
+              "start": 2529.7999999970198,
+              "duration": 65
+            },
+            {
+              "start": 2702.2999999970198,
+              "duration": 150
+            }
+          ]
+        },
+        {
+          "openSellerMs": 361,
+          "nextDuringCelebrationMs": 473,
+          "initialStartRenderMs": 1613,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 558,
+          "longTasks": [
+            {
+              "start": 1781.0999999940395,
+              "duration": 130
+            },
+            {
+              "start": 2179,
+              "duration": 103
+            },
+            {
+              "start": 2381.4000000059605,
+              "duration": 67
+            },
+            {
+              "start": 2810.5,
+              "duration": 89
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "1448x1086",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 258,
+      "nextDuringCelebrationMs": 565,
+      "initialStartRenderMs": 1617,
+      "before": {
+        "openSellerMs": 259,
+        "nextDuringCelebrationMs": 507
+      },
+      "trials": [
+        {
+          "openSellerMs": 256,
+          "nextDuringCelebrationMs": 565,
+          "initialStartRenderMs": 1577,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 663,
+          "longTasks": [
+            {
+              "start": 1678.7000000029802,
+              "duration": 89
+            },
+            {
+              "start": 2024.5,
+              "duration": 139
+            },
+            {
+              "start": 2267.2999999970198,
+              "duration": 79
+            },
+            {
+              "start": 2348.4000000059605,
+              "duration": 52
+            },
+            {
+              "start": 2614.2999999970198,
+              "duration": 58
+            },
+            {
+              "start": 2771.1000000089407,
+              "duration": 133
+            }
+          ]
+        },
+        {
+          "openSellerMs": 258,
+          "nextDuringCelebrationMs": 524,
+          "initialStartRenderMs": 1664,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 585,
+          "longTasks": [
+            {
+              "start": 1764.7999999970198,
+              "duration": 109
+            },
+            {
+              "start": 2094.5999999940395,
+              "duration": 119
+            },
+            {
+              "start": 2309.8999999910593,
+              "duration": 52
+            },
+            {
+              "start": 2641.5,
+              "duration": 56
+            },
+            {
+              "start": 2778.2000000029802,
+              "duration": 112
+            }
+          ]
+        },
+        {
+          "openSellerMs": 259,
+          "nextDuringCelebrationMs": 587,
+          "initialStartRenderMs": 1617,
+          "portrait": {
+            "width": 117.59375,
+            "height": 117.59375,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 638,
+          "longTasks": [
+            {
+              "start": 1713.1000000089407,
+              "duration": 114
+            },
+            {
+              "start": 2031,
+              "duration": 128
+            },
+            {
+              "start": 2258.300000011921,
+              "duration": 80
+            },
+            {
+              "start": 2343.2000000029802,
+              "duration": 55
+            },
+            {
+              "start": 2669.4000000059605,
+              "duration": 55
+            },
+            {
+              "start": 2787.1000000089407,
+              "duration": 131
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "390x844",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 229,
+      "nextDuringCelebrationMs": 440,
+      "initialStartRenderMs": 1661,
+      "before": {
+        "openSellerMs": 247,
+        "nextDuringCelebrationMs": 346
+      },
+      "trials": [
+        {
+          "openSellerMs": 220,
+          "nextDuringCelebrationMs": 481,
+          "initialStartRenderMs": 1620,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 596,
+          "longTasks": [
+            {
+              "start": 1730.7000000029802,
+              "duration": 88
+            },
+            {
+              "start": 2013.2000000029802,
+              "duration": 103
+            },
+            {
+              "start": 2211.4000000059605,
+              "duration": 80
+            },
+            {
+              "start": 2521.0999999940395,
+              "duration": 66
+            },
+            {
+              "start": 2669.4000000059605,
+              "duration": 83
+            }
+          ]
+        },
+        {
+          "openSellerMs": 244,
+          "nextDuringCelebrationMs": 378,
+          "initialStartRenderMs": 1661,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 600,
+          "longTasks": [
+            {
+              "start": 1772.8999999910593,
+              "duration": 106
+            },
+            {
+              "start": 2104.3999999910593,
+              "duration": 126
+            },
+            {
+              "start": 2351.7000000029802,
+              "duration": 71
+            },
+            {
+              "start": 2575.2999999970198,
+              "duration": 50
+            },
+            {
+              "start": 2698.7000000029802,
+              "duration": 93
+            }
+          ]
+        },
+        {
+          "openSellerMs": 229,
+          "nextDuringCelebrationMs": 440,
+          "initialStartRenderMs": 1696,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 567,
+          "longTasks": [
+            {
+              "start": 1816.7000000029802,
+              "duration": 89
+            },
+            {
+              "start": 2095.0999999940395,
+              "duration": 106
+            },
+            {
+              "start": 2300.7000000029802,
+              "duration": 79
+            },
+            {
+              "start": 2380.0999999940395,
+              "duration": 50
+            },
+            {
+              "start": 2615.7000000029802,
+              "duration": 57
+            },
+            {
+              "start": 2715.7999999970198,
+              "duration": 79
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "390x844",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 237,
+      "nextDuringCelebrationMs": 493,
+      "initialStartRenderMs": 1582,
+      "before": {
+        "openSellerMs": 247,
+        "nextDuringCelebrationMs": 346
+      },
+      "trials": [
+        {
+          "openSellerMs": 237,
+          "nextDuringCelebrationMs": 580,
+          "initialStartRenderMs": 1527,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 756,
+          "longTasks": [
+            {
+              "start": 1623.800000011921,
+              "duration": 113
+            },
+            {
+              "start": 1972,
+              "duration": 145
+            },
+            {
+              "start": 2290.4000000059605,
+              "duration": 102
+            },
+            {
+              "start": 2647.6000000089407,
+              "duration": 71
+            },
+            {
+              "start": 2845.9000000059605,
+              "duration": 114
+            }
+          ]
+        },
+        {
+          "openSellerMs": 210,
+          "nextDuringCelebrationMs": 426,
+          "initialStartRenderMs": 1582,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 587,
+          "longTasks": [
+            {
+              "start": 1682.7000000029802,
+              "duration": 87
+            },
+            {
+              "start": 1966.2000000029802,
+              "duration": 130
+            },
+            {
+              "start": 2214.2000000029802,
+              "duration": 87
+            },
+            {
+              "start": 2641.2000000029802,
+              "duration": 70
+            }
+          ]
+        },
+        {
+          "openSellerMs": 237,
+          "nextDuringCelebrationMs": 493,
+          "initialStartRenderMs": 1588,
+          "portrait": {
+            "width": 90.1875,
+            "height": 90.1875,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 650,
+          "longTasks": [
+            {
+              "start": 1695.9000000059605,
+              "duration": 104
+            },
+            {
+              "start": 2025.7000000029802,
+              "duration": 137
+            },
+            {
+              "start": 2265.300000011921,
+              "duration": 95
+            },
+            {
+              "start": 2361.1000000089407,
+              "duration": 52
+            },
+            {
+              "start": 2598.6000000089407,
+              "duration": 65
+            },
+            {
+              "start": 2733.7000000029802,
+              "duration": 105
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "viewport": "844x390",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 238,
+      "nextDuringCelebrationMs": 390,
+      "initialStartRenderMs": 1582,
+      "before": {
+        "openSellerMs": 246,
+        "nextDuringCelebrationMs": 426
+      },
+      "trials": [
+        {
+          "openSellerMs": 267,
+          "nextDuringCelebrationMs": 340,
+          "initialStartRenderMs": 1582,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 556,
+          "longTasks": [
+            {
+              "start": 1702.7999999970198,
+              "duration": 102
+            },
+            {
+              "start": 2047.7999999970198,
+              "duration": 120
+            },
+            {
+              "start": 2287.5,
+              "duration": 73
+            },
+            {
+              "start": 2621.0999999940395,
+              "duration": 50
+            }
+          ]
+        },
+        {
+          "openSellerMs": 238,
+          "nextDuringCelebrationMs": 390,
+          "initialStartRenderMs": 1642,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 554,
+          "longTasks": [
+            {
+              "start": 1765.8999999910593,
+              "duration": 95
+            },
+            {
+              "start": 2063.2000000029802,
+              "duration": 111
+            },
+            {
+              "start": 2271.0999999940395,
+              "duration": 72
+            },
+            {
+              "start": 2520.5,
+              "duration": 57
+            },
+            {
+              "start": 2632.2000000029802,
+              "duration": 79
+            }
+          ]
+        },
+        {
+          "openSellerMs": 226,
+          "nextDuringCelebrationMs": 426,
+          "initialStartRenderMs": 1571,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 584,
+          "longTasks": [
+            {
+              "start": 1703.800000011921,
+              "duration": 76
+            },
+            {
+              "start": 1979.1000000089407,
+              "duration": 111
+            },
+            {
+              "start": 2200.300000011921,
+              "duration": 72
+            },
+            {
+              "start": 2462.2000000029802,
+              "duration": 53
+            },
+            {
+              "start": 2577,
+              "duration": 81
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "current",
+      "viewport": "844x390",
+      "cpuThrottle": 4,
+      "sellers": 5,
+      "openSellerMs": 201,
+      "nextDuringCelebrationMs": 455,
+      "initialStartRenderMs": 1620,
+      "before": {
+        "openSellerMs": 246,
+        "nextDuringCelebrationMs": 426
+      },
+      "trials": [
+        {
+          "openSellerMs": 201,
+          "nextDuringCelebrationMs": 415,
+          "initialStartRenderMs": 1620,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 603,
+          "longTasks": [
+            {
+              "start": 1705.2000000029802,
+              "duration": 97
+            },
+            {
+              "start": 2004.7000000029802,
+              "duration": 133
+            },
+            {
+              "start": 2248.5999999940395,
+              "duration": 86
+            },
+            {
+              "start": 2546.2999999970198,
+              "duration": 50
+            },
+            {
+              "start": 2633.2999999970198,
+              "duration": 91
+            }
+          ]
+        },
+        {
+          "openSellerMs": 192,
+          "nextDuringCelebrationMs": 455,
+          "initialStartRenderMs": 1661,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 654,
+          "longTasks": [
+            {
+              "start": 1748.5999999940395,
+              "duration": 82
+            },
+            {
+              "start": 2022.8999999910593,
+              "duration": 156
+            },
+            {
+              "start": 2276.3999999910593,
+              "duration": 85
+            },
+            {
+              "start": 2550.8999999910593,
+              "duration": 62
+            },
+            {
+              "start": 2691.2999999970198,
+              "duration": 93
+            }
+          ]
+        },
+        {
+          "openSellerMs": 206,
+          "nextDuringCelebrationMs": 476,
+          "initialStartRenderMs": 1516,
+          "portrait": {
+            "width": 80,
+            "height": 80,
+            "naturalWidth": 1774,
+            "naturalHeight": 887
+          },
+          "scriptMs": 635,
+          "longTasks": [
+            {
+              "start": 1606.2999999970198,
+              "duration": 92
+            },
+            {
+              "start": 1915.0999999940395,
+              "duration": 142
+            },
+            {
+              "start": 2194.2999999970198,
+              "duration": 93
+            },
+            {
+              "start": 2288.0999999940395,
+              "duration": 50
+            },
+            {
+              "start": 2642.5,
+              "duration": 104
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "polling": {
+    "visibleArenaMs": 12000,
+    "activeFightMs": 5000,
+    "bootstrapMs": 60000,
+    "normalRequestsPerMinute": 6,
+    "activeFightHomeRequestsPerMinute": 13,
+    "activeFightPageRequestsPerMinute": 12,
+    "hiddenNormalRequestsPerMinute": 0,
+    "notes": "Steady state estimates excluding initial load, sales, retries, filters and clock boundary refreshes. Cadence/pause/resume are verified with virtual-clock browser and unit tests."
+  }
+}

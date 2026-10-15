@@ -1,0 +1,580 @@
+{
+  "branch": "feat/arena-v1",
+  "startHead": "e6dc4a466775abdab808cf5ae57914b23b442707",
+  "finalHead": "f0eb11c39c56d3912c3647a1d2621f6f060bf11a",
+  "data": "synthetic local fixtures, fictional portraits; no production data",
+  "pngCount": 42,
+  "images": [
+    {
+      "file": "admin-profile-upload-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "auth-forgot-password-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "auth-recovery-codes-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "auth-session-management-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "center-fight-1920x1080.png",
+      "width": 866,
+      "height": 758,
+      "kind": "crop"
+    },
+    {
+      "file": "center-normal-1920x1080.png",
+      "width": 866,
+      "height": 758,
+      "kind": "crop"
+    },
+    {
+      "file": "fight-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-390x844.png",
+      "width": 390,
+      "height": 844,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-844x390.png",
+      "width": 844,
+      "height": 390,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-border-position-1000.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-border-position-4000.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-final-tie.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-lead-change.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-leader.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-reduced-motion.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-tie.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-under-15-minutes.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-under-5-minutes.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "fight-winner.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "full-leaderboard.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "goal-hero.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "min-arena.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "new-leader.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-1448x1086.png",
+      "width": 1448,
+      "height": 1086,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-390x844.png",
+      "width": 390,
+      "height": 844,
+      "kind": "viewport"
+    },
+    {
+      "file": "normal-844x390.png",
+      "width": 844,
+      "height": 390,
+      "kind": "viewport"
+    },
+    {
+      "file": "pdf-diploma-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "pdf-fight-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "pdf-seller-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "pdf-station-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "pdf-summary-preview-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "seller-selector.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "standard-sale.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "superadmin-accounts-roles-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "superadmin-audit-log-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    },
+    {
+      "file": "superadmin-reports-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "kind": "viewport"
+    }
+  ],
+  "tests": {
+    "arenaUnit": 143,
+    "arenaPlaywright": 153,
+    "captureRerun": 14,
+    "fullNpmPassed": 349,
+    "fullNpmKnownFailure": 1
+  },
+  "noPush": true,
+  "noDeploy": true,
+  "noRemoteMigration": true,
+  "noMerge": true,
+  "noBranchSwitch": true,
+  "files": [
+    {
+      "file": "admin-profile-upload-1920x1080.png",
+      "bytes": 586308,
+      "sha256": "084aa12b5a9d07010795d4679b664d2034d450bf9c391a11c4d49db23260ed98"
+    },
+    {
+      "file": "arena-playwright.log",
+      "bytes": 18345,
+      "sha256": "77468f0339662bbbf254d75260ce130e08fab183664ebd393594547866bb09b1"
+    },
+    {
+      "file": "arena-unit.log",
+      "bytes": 3159,
+      "sha256": "17dc23d1786bc323d321daf2d88abef1f93993c4ff123ed5a3d4a797ece1e006"
+    },
+    {
+      "file": "auth-forgot-password-1920x1080.png",
+      "bytes": 108299,
+      "sha256": "bc3aa6e0347160c34f88842abe3e9d3b4e98c093c4b0764e5e79a1e7bafb591c"
+    },
+    {
+      "file": "auth-recovery-codes-1920x1080.png",
+      "bytes": 375544,
+      "sha256": "410d7a62132d792faec49cffaf1817ba6f884b8029cfaecaa7242e7cef770b77"
+    },
+    {
+      "file": "auth-session-management-1920x1080.png",
+      "bytes": 272371,
+      "sha256": "dc8ef59c041d75e4cd9ed01ec212fcc6fc224dec22c0442d60dd47e686d587c0"
+    },
+    {
+      "file": "backoffice-capture.log",
+      "bytes": 542,
+      "sha256": "bec24a540d896ec1ca10fe69dcc4c71d7047e7f9ef34f08d37c29117a30e4005"
+    },
+    {
+      "file": "build.log",
+      "bytes": 1962,
+      "sha256": "15b05cdec1f0d763a146b104dd50712c84939eedfce6b5b9a63ebabdf6b16c4f"
+    },
+    {
+      "file": "capture-tests.log",
+      "bytes": 2199,
+      "sha256": "c847b65c806537ded2b44815ba9dae2b8cac41876499b9da930758b9a2ddc15e"
+    },
+    {
+      "file": "center-fight-1920x1080.png",
+      "bytes": 732856,
+      "sha256": "97278f5d517e0579e2243c0d02ea0b3afe6e7b4fd222812ae90980445bfca541"
+    },
+    {
+      "file": "center-normal-1920x1080.png",
+      "bytes": 727342,
+      "sha256": "2807bc9ae041f186b345d72710244980a22c2eb170bc9ec6ac4ebe5f06881706"
+    },
+    {
+      "file": "changed-files.txt",
+      "bytes": 565,
+      "sha256": "b92389709968e910a904648384a327be89a06f6689fceeb25b91f29f082208b7"
+    },
+    {
+      "file": "contrast-report.json",
+      "bytes": 2319,
+      "sha256": "2b75123c5706be884a90f747e06ba9f58dd5bb3061f64f69a1d09023ad2b8f5c"
+    },
+    {
+      "file": "fight-1024x768.png",
+      "bytes": 630842,
+      "sha256": "5c64ea050353a63fedf59894e12df1fbbc8156f07bdd2b4f153d6f7f75d51783"
+    },
+    {
+      "file": "fight-1448x1086.png",
+      "bytes": 1108023,
+      "sha256": "90c654fe190a136d5a8fdfc477673446cbf7cce4e34918feef0708763f219762"
+    },
+    {
+      "file": "fight-1536x864.png",
+      "bytes": 996034,
+      "sha256": "740c1d91779d8f7555cfe1936954681c2d32c83b29071288f27297a2146f930d"
+    },
+    {
+      "file": "fight-1920x1080.png",
+      "bytes": 1333050,
+      "sha256": "0de8b077f63d8984aed62dce89f87e946b75136bc984e3a920b102c1c067c049"
+    },
+    {
+      "file": "fight-390x844.png",
+      "bytes": 321810,
+      "sha256": "1d44f1424ede4aae473a410119aadc9a9372bece93466d0ab0b33d58edc33dfc"
+    },
+    {
+      "file": "fight-844x390.png",
+      "bytes": 310387,
+      "sha256": "d67d67b279ade3c03b44bff59d768b0ff00f51fb7ebc885ec06b66868c4b65f5"
+    },
+    {
+      "file": "fight-border-position-1000.png",
+      "bytes": 1396665,
+      "sha256": "fb3ecd6752265cfe91a0242bb0f68b65e8eca0abab40e741bfb08c25138285fc"
+    },
+    {
+      "file": "fight-border-position-4000.png",
+      "bytes": 1397099,
+      "sha256": "b695d41840c82258f8b05da70451f5e6e8ddac4b363b761cd77316864f85d7e0"
+    },
+    {
+      "file": "fight-final-tie.png",
+      "bytes": 1202329,
+      "sha256": "9f19c1d50cf59c4227b1e381cb8ea6a6519ef27254173627399627eddd2c97ec"
+    },
+    {
+      "file": "fight-lead-change.png",
+      "bytes": 1200651,
+      "sha256": "87ea851965fc93c9e6650a6b034fb014b71ea1752623b01875fc5d84f36d268e"
+    },
+    {
+      "file": "fight-leader.png",
+      "bytes": 1397768,
+      "sha256": "a8a3278f0acb686f2030f43ce6558454a9994068588bdf8e427130f39f295fb8"
+    },
+    {
+      "file": "fight-reduced-motion.png",
+      "bytes": 1413523,
+      "sha256": "8215e2e56825711e1ac0282f4ab7db4d736c79659d6893bf136137e29420bfc8"
+    },
+    {
+      "file": "fight-tie.png",
+      "bytes": 1395982,
+      "sha256": "9443a67a98e1631c152dcf1bf928e8a2ff7f9080bfa326083f9aa569cda0ea8c"
+    },
+    {
+      "file": "fight-under-15-minutes.png",
+      "bytes": 1382720,
+      "sha256": "f9ae6167788486ace59dc75a1ff9ee74887b4865b1708eb70ebf928da1b2ce15"
+    },
+    {
+      "file": "fight-under-5-minutes.png",
+      "bytes": 1397768,
+      "sha256": "a8a3278f0acb686f2030f43ce6558454a9994068588bdf8e427130f39f295fb8"
+    },
+    {
+      "file": "fight-winner.png",
+      "bytes": 1205057,
+      "sha256": "7b227d61be94d74dace6b8d6ed389351525e001282efa75c6bc147cadbee142f"
+    },
+    {
+      "file": "final-report.md",
+      "bytes": 6913,
+      "sha256": "ece847798971862a234c662059c47bf7e40ed526c07a41689e0fc39193553575"
+    },
+    {
+      "file": "full-leaderboard.png",
+      "bytes": 658674,
+      "sha256": "1100b4b4139aeae659eed2d050b16e9aeecf4416b6d55425acadcbe83fefbb5c"
+    },
+    {
+      "file": "goal-hero.png",
+      "bytes": 1497407,
+      "sha256": "21606ba674338fb3ff936dc86c0206ffa11a7288feb9c90f495ec30a39a8a18f"
+    },
+    {
+      "file": "index.html",
+      "bytes": 11261,
+      "sha256": "c7d6160de65883ad0f62927472ed3ea06a8d877eb83fec036e9a918acb1a462e"
+    },
+    {
+      "file": "min-arena.png",
+      "bytes": 581462,
+      "sha256": "45ca8c7694aefa2d7dca038ffc8ced21f2d67b73b8f975e7d86be471f5a23c8b"
+    },
+    {
+      "file": "motion-verification.json",
+      "bytes": 434,
+      "sha256": "fbd4433ea20b00cd48e4946a169d177f4661dec71085b8eb4f46169966c15e99"
+    },
+    {
+      "file": "new-leader.png",
+      "bytes": 1499287,
+      "sha256": "3c7890acbdeaf93c0734fc5943f49872298c53a4de5e4007a2beb2659ec9180c"
+    },
+    {
+      "file": "normal-1024x768.png",
+      "bytes": 615642,
+      "sha256": "83799e9ad4f85f732f93582d69f18fb7bfe546ca00be78ad84d636fc82918793"
+    },
+    {
+      "file": "normal-1448x1086.png",
+      "bytes": 1088260,
+      "sha256": "fd125593747917c4a492a4ef1bdd27fcc9f0158ee8b9f132d56a71ff79d007df"
+    },
+    {
+      "file": "normal-1536x864.png",
+      "bytes": 974218,
+      "sha256": "77390d08f54927a77a4196049a8db637fdb7ac0098d74e067933254168785420"
+    },
+    {
+      "file": "normal-1920x1080.png",
+      "bytes": 1374954,
+      "sha256": "99b2e0e31eaed2189756b727419551ffa857bb78680db2bb533e7e8237924817"
+    },
+    {
+      "file": "normal-390x844.png",
+      "bytes": 315288,
+      "sha256": "43dec6085a41927400cec94414174c5b62e7cb8edb1238d9cd98cc2976f362ae"
+    },
+    {
+      "file": "normal-844x390.png",
+      "bytes": 303038,
+      "sha256": "bc525fcb0e7ecddcf83813ec8b809898309f0488662883d1490a2b628c63f3a7"
+    },
+    {
+      "file": "npm-test.log",
+      "bytes": 10891,
+      "sha256": "9d095961dbbd80b8cb2b05c156f2629200b5224329309a118530f9c2be7bec88"
+    },
+    {
+      "file": "pdf-diploma-preview-1920x1080.png",
+      "bytes": 544354,
+      "sha256": "dc598fe4734843ec1bd1ac5951b92566c866e90c1e626a70dc4b06907d1d07ad"
+    },
+    {
+      "file": "pdf-fight-preview-1920x1080.png",
+      "bytes": 454567,
+      "sha256": "6871134871e1737769d7ff6542ca674a75828f1d56c13500f75098d75eaa33cb"
+    },
+    {
+      "file": "pdf-seller-preview-1920x1080.png",
+      "bytes": 545419,
+      "sha256": "bf8da6d4b4bd4c59ab20393fe3e9539785e57e01b70e2a82b3637ed8274b65a1"
+    },
+    {
+      "file": "pdf-station-preview-1920x1080.png",
+      "bytes": 440981,
+      "sha256": "4649824ba923d3038e481ab410d9d1052de07507323e59fcc51645ceccd0a8ae"
+    },
+    {
+      "file": "pdf-summary-preview-1920x1080.png",
+      "bytes": 442992,
+      "sha256": "f04573f95beb664aa9c38e133c93fff068a4b21a6c1d0d1788d7f3c1a8140393"
+    },
+    {
+      "file": "performance-initial.json",
+      "bytes": 36290,
+      "sha256": "6dea33a2b0446e68055f99b513bba533e40f61bc0ed29d6ccefb041c997984e3"
+    },
+    {
+      "file": "performance-report.json",
+      "bytes": 38842,
+      "sha256": "c05715c7a9ed0c02a3e7f114b14c62e553793325cbb1aa07a6a6d5d9c3f9c31e"
+    },
+    {
+      "file": "product-assets.json",
+      "bytes": 1972,
+      "sha256": "5bd0eb9da2a866839df218fd33afe69e8276b902666e8788c7ba4449b559b830"
+    },
+    {
+      "file": "protected-files-verification.json",
+      "bytes": 789,
+      "sha256": "720d6d154d44b938b44c2ec90f624f2870b19ba704c58462099d7e2ee333f191"
+    },
+    {
+      "file": "reference-comparison.md",
+      "bytes": 3323,
+      "sha256": "afa960fe2761f1ec61d533a02541818fb70dcdc8b8dbbcdfd1930aff788c74ad"
+    },
+    {
+      "file": "responsive-report.md",
+      "bytes": 2288,
+      "sha256": "530492372c4216deec13ce6c8df8e8ef7ba3d1c69466a5dff8a058f4e7aeac8a"
+    },
+    {
+      "file": "seller-selector.png",
+      "bytes": 743943,
+      "sha256": "8e545d6aa63d009c90f41544731a0b2e6767a63714486b71673c18fc015bf6f1"
+    },
+    {
+      "file": "standard-sale.png",
+      "bytes": 1346321,
+      "sha256": "d95e15238f69ca961d391030c09d80e1f7dfee0ed69eae96b8977d1691cc64c3"
+    },
+    {
+      "file": "superadmin-accounts-roles-1920x1080.png",
+      "bytes": 263508,
+      "sha256": "02b9245e133e5ff5bd86f45c614c9dd0bce3a8d98e6d73302e019b6ddd17e6cc"
+    },
+    {
+      "file": "superadmin-audit-log-1920x1080.png",
+      "bytes": 240661,
+      "sha256": "6c7d1b3b2e28e29046e401320d941c55fca3a50dd926a6ea0b4f03a5f85b1397"
+    },
+    {
+      "file": "superadmin-reports-1920x1080.png",
+      "bytes": 219005,
+      "sha256": "bd00f55717c5fafb23af60e81373c4bfc9fc1df48f0aababa2ab05076c039797"
+    },
+    {
+      "file": "test-report.txt",
+      "bytes": 359,
+      "sha256": "43e9a7fa124472f5aa7ff9a6a45e5697a1c0e6eb276e7349d80c48b3458c9f99"
+    },
+    {
+      "file": "typecheck.log",
+      "bytes": 254,
+      "sha256": "31fa748d865d3e344ee49d5828ee11adf82c11961f347c8f3816dfc985ca3a35"
+    }
+  ]
+}
