@@ -192,7 +192,7 @@ function ArenaHome() {
   const [activityFilter, setActivityFilter] = useState(""), [category, setCategory] = useState("");
   const [metric,setMetric]=useState("points");
   const [attempt, setAttempt] = useState<Attempt | null>(null), [busy, setBusy] = useState(false), [saleError, setSaleError] = useState("");
-  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | "fight" | null>(null);
+  const [error, setError] = useState(""), [personId, setPersonId] = useState<string | null>(null), [panel, setPanel] = useState<"leaders" | "recent" | "campaign" | "fight" | null>(new URLSearchParams(location.search).get("panel")==="campaign"?"campaign":null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const lock = useRef(false), statsRef = useRef(stats), attemptRef = useRef<Attempt | null>(null), statsVersion = useRef(0);

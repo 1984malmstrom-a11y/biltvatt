@@ -4,7 +4,7 @@ export type AwardVariant=typeof awardTypes[number][0];
 export type ArenaAward={variant:AwardVariant;recipient:ReportIdentity;source_report_id:string;context:string;result:string;standing?:{rank:number;played:number;won:number;drawn:number;lost:number;match_points:number}};
 export const awardLabel=(variant:AwardVariant)=>awardTypes.find(([v])=>v===variant)![1];
 export function awardOptions(s:ArenaReportSnapshot):{variant:AwardVariant;recipient:ReportIdentity}[]{
- if(s.award)return [];if(s.competition?.rules.contest&&(!s.competition.frozen||s.competition.phase!=='finished'||s.competition.champion_ids.length!==1))return [];
+ if(s.award)return [];if(s.type==='fight'&&(s.winner_ids?s.winner_ids.length!==1:s.winner_names.length!==1))return [];if(s.competition?.rules.contest&&(!s.competition.frozen||s.competition.phase!=='finished'||s.competition.champion_ids.length!==1))return [];
  const out:{variant:AwardVariant;recipient:ReportIdentity}[]=[],add=(variant:AwardVariant,recipient:ReportIdentity)=>out.push({variant,recipient});
  if(s.type==='diploma'&&s.subject&&s.totals.count>0){
   add('individual',s.subject);
