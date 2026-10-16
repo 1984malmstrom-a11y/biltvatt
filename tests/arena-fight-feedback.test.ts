@@ -27,8 +27,9 @@ describe("Fight crossings, never current-state celebration",()=>{
   });
   it("formats countdown boundaries without wrapping a day or inventing time",()=>{
     const now=Date.parse("2026-10-14T10:00:00Z");
-    expect(fightTime("2026-10-15T11:02:03Z",now)).toBe("1 d 01:02:03");expect(fightTime(undefined,now)).toBe("LIVE");
-    expect(fightUrgency(new Date(now+60*60000).toISOString(),now)).toBe("calm");
+    expect(fightTime("2026-10-15T11:02:03Z",now)).toBe("1 d 01:02:03");expect(fightTime(undefined,now)).toBe("LIVE");expect(fightTime("2026-10-15T11:02:03Z",now,true)).toBe("25:02:03");expect(fightTime("not-a-date",now,true)).toBe("LIVE");expect(fightTime(new Date(now-1000).toISOString(),now,true)).toBe("00:00:00");
+    expect(fightUrgency(new Date(now+15*60000).toISOString(),now)).toBe("quarter");expect(fightUrgency(new Date(now+5*60000).toISOString(),now)).toBe("final");
+    expect(fightUrgency(new Date(now+60*60000).toISOString(),now)).toBe("hour");
     expect(fightUrgency(new Date(now+59*60000).toISOString(),now)).toBe("hour");expect(fightUrgency(new Date(now+14*60000).toISOString(),now)).toBe("quarter");expect(fightUrgency(new Date(now+4*60000).toISOString(),now)).toBe("final");expect(fightUrgency(new Date(now-1).toISOString(),now)).toBe("calm");
   });
 });

@@ -1,5 +1,5 @@
 import {finishChampionCapture} from './arena-capture';
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect,type Page} from './arena-entry-fixture';
 import {existsSync,readFileSync,writeFileSync} from 'node:fs';
 import {boot,initial,now,fight,sampleReport} from './arena-release-fixture';
 import type {ArenaFight} from '../shared/arena-fights';
@@ -17,7 +17,7 @@ async function capture(page:Page,name:string,fullPage=false){if(!dir)return;awai
 async function dashboard(page:Page,get=()=>daily){await page.clock.install({time:now});await page.route('**/api/arena/bootstrap',r=>r.fulfill({json:boot}));await page.route('**/api/arena/stats*',r=>r.fulfill({json:{...initial,fight:get()}}));await page.goto('/arena?showcase=1');await expect(page.locator('.arena-stage .arena-orb')).toHaveCount(7);await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now())+100));await page.clock.runFor(400);}
 for(const [width,height] of [[1920,1080],[1536,864],[1024,768],[1448,1086],[390,844],[844,390]]){
  test(`Premium: daily match points and provisional result without overflow ${width}x${height}`,async({page})=>{
-  await page.setViewportSize({width,height});await dashboard(page);await expect(page.locator('.arena-fight-widget-score')).toContainText('3 mp');await expect(page.locator('.arena-fight-today')).toContainText('Karlskrona 10 p');expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
+  await page.setViewportSize({width,height});await dashboard(page);await expect(page.locator('.arena-war-scoreboard')).toContainText('3 mp');await expect(page.locator('.arena-fight-today')).toContainText('Karlskrona 10 p');expect(await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight}))).toEqual({width,height});
   // The day panel must fit its card, not merely avoid document overflow.
   const bounds=await page.locator('.arena-fight-today').evaluate(el=>({row:el.getBoundingClientRect().toJSON(),card:el.closest('.arena-fight-widget')!.getBoundingClientRect().toJSON()}));expect(bounds.row.bottom).toBeLessThanOrEqual(bounds.card.bottom);expect(bounds.row.right).toBeLessThanOrEqual(bounds.card.right);await capture(page,`daily-dashboard-${width}x${height}`);
   await page.getByRole('link',{name:'BUTIKSFIGHT',exact:true}).click();await expect(page).toHaveURL(/\/arena\/fights$/);

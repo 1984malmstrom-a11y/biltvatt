@@ -1,5 +1,5 @@
 import {hasLocalSuperadminCredentials,localSuperadminLogin,prepareLocalFightTest,availableLocalFightDay} from "./arena-test-auth";
-import {test,expect,type Page} from "@playwright/test";
+import {test,expect,type Page} from "./arena-entry-fixture";
 import {readFileSync,existsSync} from "node:fs";
 import {randomUUID} from "node:crypto";
 import type {ArenaFight} from "../shared/arena-fights";

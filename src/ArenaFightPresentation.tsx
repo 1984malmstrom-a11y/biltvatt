@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from "react";
-import {Crown,Flag,Trophy,ChevronRight,Check} from "lucide-react";
+import {Crown,Flag,Trophy,ChevronRight,Check,Swords} from "lucide-react";
 import type {ArenaFightSummary,ArenaFightEvent,ArenaFightMode} from "../shared/arena-fights";
 import {fightScore,fightLeaders} from "../shared/arena-fights";
 import {arenaMoney} from "../shared/arena-money";
@@ -8,11 +8,15 @@ import ArenaFightClock from "./ArenaFightClock";
 import ArenaAvatar from "./ArenaAvatar";
 import ArenaChampion from "./ArenaChampion";
 import {ArenaPersonContext,ArenaPersonName} from "./ArenaPersonContext";
+import {fightMetricLabel,fightDifference,stationInitials} from './arena-war-fight';
 import type {FightFeedback} from "./arena-fight-feedback";
 export const formatFightScore=(score:number,metric:ArenaFightSummary["metric"],mode:ArenaFightMode="total")=>mode==="daily" ? `${arenaNumber(score)} mp`:metric==="tb" ? `${arenaMoney(score)} TB`:`${arenaNumber(score)} ${metric==="count" ? "st":"p"}`;
 const date=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",day:"numeric",month:"short"});
 const time=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",hour:"2-digit",minute:"2-digit"});
-export function FightWidget({fight,stationId,onBoundary}:{fight:ArenaFightSummary;stationId:string;onBoundary:()=>void}) {
+export function FightWidget(props:{fight:ArenaFightSummary;stationId:string;onBoundary:()=>void;scope?:string;war?:boolean}){
+ return props.war?<WarFightWidget {...props}/>:<LegacyFightWidget {...props}/>;
+}
+function LegacyFightWidget({fight,stationId,onBoundary}:{fight:ArenaFightSummary;stationId:string;onBoundary:()=>void}) {
   const own=fight.standings.find(s=>s.id===stationId),opponent=fight.standings.find(s=>s.id!==stationId),leader=fight.standings[0];
   const leaders=fightLeaders(fight.standings,fight.metric,fight.scoring_mode),gap=own && opponent ? fightScore(own,fight.metric,fight.scoring_mode)-fightScore(opponent,fight.metric,fight.scoring_mode):0;
   const pair=fight.standings.length===2;
@@ -35,6 +39,39 @@ export function FightWidget({fight,stationId,onBoundary}:{fight:ArenaFightSummar
     <span className="arena-fight-balance" role="img" aria-label={pair ? `Andel av resultatet: ${Math.round(share)} procent för ${own?.name ?? "laget"}`:`Högsta resultat: ${formatFightScore(high,fight.metric,fight.scoring_mode)}`}><i style={{width:`${share}%`}}/></span>
     {fight.scoring_mode==="daily" && <span className="arena-fight-today"><b>DAGSPOÄNG · IDAG</b>{fight.current_day ? fight.current_day.standings.map(s=>`${s.name} ${formatFightScore(fightScore(s,fight.metric),fight.metric)}`).join(" · "):"Avslutade dagar avgör serien"}<small>Dagen låses vid dygnets eller fightens slut.</small></span>}
     <>{fight.sudden_death?<span className="arena-sudden-death-label"><strong>SUDDEN DEATH</strong><small>NÄSTA GILTIGA REGISTRERING AVGÖR</small></span>:<ArenaFightClock fight={fight} compact onBoundary={onBoundary} />}</><span className="arena-fight-pep">{fight.phase==="finished" ? "STARKT JOBBAT, LAGET!":"Tillsammans tar vi nästa poäng."}</span><ChevronRight className="arena-fight-widget-chevron" aria-hidden="true" />
+  </a>;
+}
+function WarFightWidget({fight,stationId,onBoundary,scope="Se fightens regler"}:{fight:ArenaFightSummary;stationId:string;onBoundary:()=>void;scope?:string}) {
+  const own=fight.standings.find(s=>s.id===stationId),opponent=fight.standings.find(s=>s.id!==stationId),leader=fight.standings[0];
+  const leaders=fightLeaders(fight.standings,fight.metric,fight.scoring_mode),gap=own && opponent ? fightScore(own,fight.metric,fight.scoring_mode)-fightScore(opponent,fight.metric,fight.scoring_mode):0;
+  const pair=fight.standings.length===2;
+  const leaderKey=[...leaders].sort().join(":"),previous=useRef({id:fight.id,leaderKey,version:fight.version});
+  const [surge,setSurge]=useState(false),surgeTimer=useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(()=>()=>clearTimeout(surgeTimer.current),[]);
+  useEffect(()=>{
+    const before=previous.current;previous.current={id:fight.id,leaderKey,version:fight.version};
+    if(before.id!==fight.id || before.leaderKey===leaderKey || fight.version<=before.version || fight.phase!=="active")return;
+    clearTimeout(surgeTimer.current);setSurge(true);surgeTimer.current=setTimeout(()=>setSurge(false),1600);
+  },[fight.id,fight.version,fight.phase,leaderKey]);
+  const high=fight.standings[0] ? fightScore(fight.standings[0],fight.metric,fight.scoring_mode):0;
+  const total=fight.standings.reduce((n,s)=>n+fightScore(s,fight.metric,fight.scoring_mode),0);
+  const share=total>0 && own ? 100*fightScore(own,fight.metric,fight.scoring_mode)/total:50;
+  const difference=fightDifference(fight,gap);
+  const confirmed=fight.phase==='finished'&&!!fight.winner_ids?.length;
+  const result=confirmed?(fight.winner_ids!.length===1?`${fight.standings.find(s=>s.id===fight.winner_ids![0])?.name??'Laget'} vann`:'OAVGJORT!'):fight.phase==='finished'?'Inväntar bekräftat slutresultat':leaders.length>1?'DET ÄR LIKA!':`${leader?.name??'Laget'} leder${pair&&gap!==0?` med ${difference}!`:''}`;
+  return <a className={`arena-fight-widget arena-war-fight${pair ? " is-duel":" is-ranking"}${surge ? " is-surging":""}${leaders.length>1 ? " is-tied":""}`} data-fight-mode={fight.scoring_mode??"total"} data-fight-metric={fight.metric} data-fight-phase={fight.phase} href={fight.competition_id?`/arena/competitions/${fight.competition_id}`:`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}>
+    <span className="arena-fight-perimeter" aria-hidden="true"/>
+    <span className="arena-war-header"><Swords aria-hidden="true"/><strong>BUTIKSFIGHT</strong><span className="arena-war-live"><i/>{fight.phase==='active'?'LIVE':fight.phase==='scheduled'?'SNART':'FINAL'}</span></span>
+    <span className="arena-war-scoreboard">
+      {pair&&own&&opponent?<><span className="arena-war-team"><span className="arena-war-station" aria-hidden="true">{stationInitials(own.name)}</span><span className="arena-war-name">{own.name}</span><b>{formatFightScore(fightScore(own,fight.metric,fight.scoring_mode),fight.metric,fight.scoring_mode)}</b></span><em>VS</em><span className="arena-war-team"><span className="arena-war-station" aria-hidden="true">{stationInitials(opponent.name)}</span><span className="arena-war-name">{opponent.name}</span><b>{formatFightScore(fightScore(opponent,fight.metric,fight.scoring_mode),fight.metric,fight.scoring_mode)}</b></span></>:<span className="arena-war-ranking"><span>{fight.name}</span><strong>#{own?.rank??'—'}</strong><b>{own?formatFightScore(fightScore(own,fight.metric,fight.scoring_mode),fight.metric,fight.scoring_mode):'Inväntar resultat'}</b></span>}
+    </span>
+    <span className="arena-war-metric">{fightMetricLabel(fight)}</span>
+    <span className="arena-fight-balance" role="img" aria-label={pair ? `Andel av resultatet: ${Math.round(share)} procent för ${own?.name ?? "laget"}`:`Högsta resultat: ${formatFightScore(high,fight.metric,fight.scoring_mode)}`}><i style={{width:`${Math.max(0,Math.min(100,share))}%`}}/></span>
+    <span className="arena-fight-widget-gap arena-war-lead">{result}</span>
+    {fight.sudden_death?<span className="arena-sudden-death-label"><strong>SUDDEN DEATH</strong><small>NÄSTA GILTIGA REGISTRERING AVGÖR</small></span>:<ArenaFightClock fight={fight} war onBoundary={onBoundary}/>}
+    <span className="arena-war-scope"><small>DET HÄR RÄKNAS</small><span title={scope}>{scope}</span></span>
+    {fight.scoring_mode==="daily"&&<span className="arena-fight-today"><b>DAGSPOÄNG · IDAG</b>{fight.current_day?fight.current_day.standings.map(s=>`${s.name} ${formatFightScore(fightScore(s,fight.metric),fight.metric)}`).join(' · '):'Avslutade dagar avgör serien'}<small>Dagen låses vid dygnets eller fightens slut.</small></span>}
+    <span className="arena-fight-pep">{fight.phase==='finished'?'STARKT JOBBAT, LAGET!':'Varje insats kan avgöra.'}<ChevronRight aria-hidden="true"/></span>
   </a>;
 }
 export function FightResult({fight}:{fight:ArenaFightSummary}) {

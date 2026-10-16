@@ -16,11 +16,11 @@ export function fightTransition(before:ArenaFightSummary|null|undefined,after:Ar
 }
 export function fightUrgency(end:string|undefined,now:number):"calm"|"hour"|"quarter"|"final" {
   const remaining=end ? Date.parse(end)-now:Infinity;
-  return remaining<=0 ? "calm":remaining<5*60000 ? "final":remaining<15*60000 ? "quarter":remaining<60*60000 ? "hour":"calm";
+  return remaining<=0 ? "calm":remaining<=5*60000 ? "final":remaining<=15*60000 ? "quarter":remaining<=60*60000 ? "hour":"calm";
 }
-export function fightTime(end:string|undefined,now:number):string {
-  if(!end)return "LIVE";
+export function fightTime(end:string|undefined,now:number,hoursOnly=false):string {
+  if(!end||!Number.isFinite(Date.parse(end)))return "LIVE";
   const seconds=Math.max(0,Math.floor((Date.parse(end)-now)/1000));
-  const days=Math.floor(seconds/86400),hours=Math.floor(seconds/3600)%24,minutes=Math.floor(seconds/60)%60;
-  return `${days ? `${days} d `:""}${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
+  const days=Math.floor(seconds/86400),hours=hoursOnly?Math.floor(seconds/3600):Math.floor(seconds/3600)%24,minutes=Math.floor(seconds/60)%60;
+  return `${days&&!hoursOnly ? `${days} d `:""}${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
 }

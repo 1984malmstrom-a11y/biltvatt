@@ -1,5 +1,5 @@
 import {finishChampionCapture} from './arena-capture';
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect,type Page} from './arena-entry-fixture';
 import {writeFileSync} from 'node:fs';
 import {expectSellerPortraits} from './arena-portrait-assertions';
 import {boot,initial,now,fight,sampleReport} from './arena-release-fixture';

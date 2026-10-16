@@ -1,4 +1,4 @@
-import {test,expect,type Page} from '@playwright/test';
+import {test,expect,type Page} from './arena-entry-fixture';
 import {mkdirSync} from 'node:fs';
 import {boot,initial,now,fight} from './arena-release-fixture';
 import {fightDashboardFixture} from './arena-fight-context-fixture';

@@ -1,5 +1,5 @@
 import {finishChampionCapture} from './arena-capture';
-import {test,expect,type Page} from "@playwright/test";
+import {test,expect,type Page} from "./arena-entry-fixture";
 import type {ArenaBootstrap,ArenaStats,ArenaAchievement} from "../shared/arena";
 import type {ArenaFight,ArenaFightSummary} from "../shared/arena-fights";
 const now=new Date("2026-10-14T10:00:00Z");
@@ -88,13 +88,13 @@ test("Showroom: one hero for simultaneous goal, leader and fight, undo clears re
  await page.route("**/api/arena/registrations/*/void",r=>{current.fight=structuredClone(fight);return r.fulfill({json:{ok:true}});});await page.goto("/arena?showcase=1");await sale(page);await expect(page.locator(".arena-celebration")).toHaveCount(1);await expect(page.locator(".arena-victory-secondary")).toContainText("Laget tar ledningen i Butiksfight!");await capture(page,"simultaneous-achievements-1920x1080");await page.getByRole("button",{name:/Ångra senaste/}).click();await expect(page.locator(".arena-celebration")).toHaveCount(0);await page.clock.runFor(4000);await expect(page.locator(".arena-celebration")).toHaveCount(0);await expect(page.locator(".arena-fight-widget-gap")).toContainText("Karlskrona leder");
 });
 test("Showroom: countdown alone becomes urgent and respects reduced motion",async({page})=>{
- await page.clock.install({time:now});await setup(page,()=>({...initial,fight}));await page.goto("/arena?showcase=1");await expect(page.locator(".arena-fight-widget .urgency-quarter")).toBeAttached();const stage=await page.locator(".arena-stage").innerHTML();await page.clock.fastForward(10*60000);await expect(page.locator(".arena-fight-widget .urgency-final")).toBeAttached();expect(await page.locator(".arena-stage").innerHTML()).toBe(stage);await capture(page,"fight-widget-final-sprint-1280x720");await page.emulateMedia({reducedMotion:"reduce"});expect(await page.locator(".arena-fight-widget .arena-fight-clock").evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
+ await page.clock.install({time:now});await setup(page,()=>({...initial,fight}));await page.goto("/arena?showcase=1");await expect(page.locator(".arena-fight-widget .urgency-quarter")).toBeAttached();const stage=await page.locator(".arena-stage").innerHTML();await page.clock.fastForward(10*60000);await expect(page.locator(".arena-fight-widget .urgency-final")).toBeAttached();expect(await page.locator(".arena-stage").innerHTML()).toBe(stage);await capture(page,"fight-widget-final-sprint-1280x720");await page.emulateMedia({reducedMotion:"reduce"});expect(await page.locator(".arena-fight-widget .arena-war-clock").evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
 });
 test("Showroom: full TB duel values fit wide and portrait widget",async({page})=>{
  const current={...structuredClone(initial),fight:{...structuredClone(fight),metric:"tb" as const}};await page.clock.install({time:now});await setup(page,()=>current);
  for(const [width,height] of [[1920,1080],[390,844]]){
-  await page.setViewportSize({width,height});await page.goto("/arena?showcase=1");const widget=page.locator(".arena-fight-widget");await expect(widget).toBeVisible();await expect(widget.locator(".arena-fight-widget-score")).toContainText("kr TB");
-  expect(await widget.evaluate(el=>{const r=el.getBoundingClientRect();return el.scrollWidth<=el.clientWidth+1 && [...el.querySelectorAll('.arena-fight-widget-score b')].every(b=>{const t=b.getBoundingClientRect();return t.left>=r.left && t.right<=r.right && t.top>=r.top && t.bottom<=r.bottom;});})).toBe(true);
+  await page.setViewportSize({width,height});await page.goto("/arena?showcase=1");const widget=page.locator(".arena-fight-widget");await expect(widget).toBeVisible();await expect(widget.locator(".arena-war-scoreboard")).toContainText("kr TB");
+  expect(await widget.evaluate(el=>{const r=el.getBoundingClientRect();return el.scrollWidth<=el.clientWidth+1 && [...el.querySelectorAll('.arena-war-scoreboard b')].every(b=>{const t=b.getBoundingClientRect();return t.left>=r.left && t.right<=r.right && t.top>=r.top && t.bottom<=r.bottom;});})).toBe(true);
   await noOverflow(page,width,height);await capture(page,`fight-widget-tb-${width}x${height}`);
  }
 });

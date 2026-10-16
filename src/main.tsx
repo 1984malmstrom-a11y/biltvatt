@@ -9,6 +9,7 @@ import "./preem-theme.css";
 import "./issues.css";
 import "./handbook.css";
 import { registerServiceWorker } from "./pwa";
+import ArenaEntry from './ArenaEntry';
 const ArenaApp = lazy(() => import("./ArenaApp"));
 void registerServiceWorker()?.catch(() => {
   /* UI offers useful feedback when push is requested. */
@@ -16,7 +17,7 @@ void registerServiceWorker()?.catch(() => {
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     {window.location.pathname === "/arena" || window.location.pathname.startsWith("/arena/") ? (
-      <Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaApp /></Suspense>
+      <ArenaEntry><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaApp /></Suspense></ArenaEntry>
     ) : window.location.pathname === "/station" ||
     window.location.pathname.startsWith("/station/") ? (
       <StationApp />

@@ -23,6 +23,7 @@ import {arenaFightQualifies} from './arena-fight-objective';
 import ArenaChampion from "./ArenaChampion";
 import {ArenaPersonName,ArenaPersonContext} from "./ArenaPersonContext";
 import {ArenaEmblem} from "./ArenaBrand";
+import {useArenaEntryStatus} from './ArenaEntry';
 import "./arena-theme.css";
 import "./arena.css";
 import "./arena-showroom.css";
@@ -34,6 +35,7 @@ import "./arena-stage-v2.css";
 import "./arena-victory.css";
 import "./arena-mini-polish.css";
 import "./arena-fight-objective.css";
+import './arena-war-fight.css';
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
@@ -155,6 +157,7 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
 });
 export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
+  useArenaEntryStatus(!['/arena','/arena/'].includes(window.location.pathname));
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
   if(/^\/arena\/(?:superadmin\/)?competitions\//.test(window.location.pathname))return <ArenaCompetition/>;
   if(window.location.pathname==="/arena/fights")return <ArenaCompetitions/>;
@@ -169,6 +172,7 @@ function ArenaHome() {
   const showcase=useArenaShowcase();
   const [fightPerson,setFightPerson]=useState<ArenaPerson|null>(null);
   const [data, setData] = useState<ArenaBootstrap | null>(null);
+  const [bootstrapError,setBootstrapError]=useState('');
   const [stats, setStats] = useState<ArenaStats | null>(null);
   const [todayStats, setTodayStats] = useState<ArenaStats | null>(null);
   const todayRef=useRef<ArenaStats|null>(null),fightSeen=useRef(new Set<string>()),finalTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
@@ -204,8 +208,11 @@ function ArenaHome() {
   }, [statsRequests]);
   const onFightBoundary=useCallback(()=>{void refresh();},[refresh]);
   const bootstrap = useCallback(async () => {
-    try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { if(e instanceof HttpError && e.status===401)window.location.assign("/arena/account");else setError((e as Error).message); }
+    setBootstrapError('');
+    try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { if(e instanceof HttpError && e.status===401)window.location.assign("/arena/account");else {setBootstrapError((e as Error).message);setError((e as Error).message);} }
   }, []);
+  const retryEntry=useCallback(()=>{setError('');void bootstrap();void refresh();},[bootstrap,refresh]);
+  useArenaEntryStatus(!!data&&!!todayStats,(!data||!todayStats)?bootstrapError||error||(!todayStats&&statsUnavailable?'Statistiken kunde inte laddas. Försök igen.':undefined):undefined,retryEntry);
   useEffect(() => {
     document.documentElement.classList.add("arena-view");
     void bootstrap();
@@ -356,7 +363,7 @@ function ArenaHome() {
           <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} fightQualifying={arenaFightQualifies(todayStats,activity)} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
         </div> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
-      <ArenaStatePanel sellers={data?.sellers} stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />
+      <ArenaStatePanel sellers={data?.sellers} activities={data?.activities} stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />
     </main>
     <div className="arena-utility"><div className="arena-utility-links">{data?.station.kind!=="arena" && <a href="/station"><ArrowLeft /> Stationsdashboard</a>}<a href="/arena/account" aria-label="Stationskonto"><Users /></a></div><div className="arena-utility-actions">{receipt && <button onClick={() => void undo()} disabled={busy}><RotateCcw /><span>Ångra senaste · {receipt.name}</span></button>}{celebration && <button aria-label="Stäng belöning" onClick={() => { celebrationAllowed.current = ""; setCelebration(null); }}><X /></button>}</div></div>
     <section className="arena-stats-bar" aria-label="Dagens stats"><h2>DAGENS STATS</h2>

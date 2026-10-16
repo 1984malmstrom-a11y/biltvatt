@@ -1,0 +1,33 @@
+/* One compressed, local still plate. Logo and typography remain real UI. */
+.arena-entry-content{display:contents}
+.arena-intro{position:fixed;inset:0;z-index:1000;isolation:isolate;overflow:hidden;display:grid;place-items:center;background:#020b08;color:#f7e8b2;font-family:Arial,sans-serif;opacity:1;transition:opacity 240ms ease-out;contain:layout paint}
+.arena-intro.is-leaving{opacity:0;pointer-events:none}
+.arena-intro-stadium{position:absolute;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(#01080519,#020b081a),url('/arena-brand/intro-stadium.webp') center/cover no-repeat,#020b08}
+.arena-intro-stadium::before,.arena-intro-stadium::after{content:'';position:absolute;width:65%;height:90%;top:0;background:repeating-linear-gradient(165deg,transparent 0 14%,#e7d18a0b 14.2% 14.6%,transparent 15% 21%),radial-gradient(ellipse at 30% 25%,#fff4b351,transparent 11%);clip-path:polygon(0 0,100% 40%,100% 85%,0 100%);transform:skewY(12deg);border-bottom:2px solid #d7b95c50}
+.arena-intro-stadium::before,.arena-intro-stadium::after{display:none}
+.arena-intro-light{position:absolute;top:-18%;left:10%;width:60%;height:115%;transform:rotate(-32deg);transform-origin:top;background:conic-gradient(from 159deg at 50% 0,transparent,#e7d18a08 8deg,#e7d18a32 15deg,#e7d18a08 22deg,transparent 30deg);opacity:.7}
+.arena-intro-light.light-right{left:auto;right:10%;transform:rotate(32deg)}
+.arena-intro-stands{display:none}
+.arena-intro-pitch{position:absolute;inset:76% 0 0;background:radial-gradient(ellipse at 50% 0,#d6bd6d25,transparent 65%),linear-gradient(#152b1c11,#010805);border-top:1px solid #bca86224}
+.arena-intro-center{width:min(650px,76vw);text-align:center;display:flex;flex-direction:column;align-items:center;padding:20px;position:relative}
+.arena-intro-symbol{width:clamp(100px,17vh,205px);height:clamp(100px,17vh,205px);position:relative;margin-bottom:4px;isolation:isolate}
+.arena-intro-symbol::before{content:'';position:absolute;inset:-40%;z-index:-1;background:radial-gradient(ellipse,#e9d2813b,transparent 65%);animation:arena-intro-glow 3.8s ease-in-out infinite alternate}
+.arena-intro-emblem{width:100%;height:100%;fill:#e4c76a;filter:drop-shadow(0 2px 2px #fcf0bf40)}
+.arena-intro-symbol>span{position:absolute;inset:0;mask-image:linear-gradient(115deg,transparent 40%,#000 50%,transparent 60%);mask-size:300% 100%;mask-position:100% 0;animation:arena-intro-sweep 3s ease-in-out 1;pointer-events:none;opacity:.45}.arena-intro-symbol>span svg{fill:#fff7d0}
+.arena-intro h1{margin:0;color:#eed697;letter-spacing:.18em;text-indent:.18em;font-size:clamp(34px,5.3vw,80px);font-weight:800;line-height:1.1;text-shadow:0 3px 0 #5e481e,0 0 35px #e4c76a45}
+.arena-intro-center>p{font-size:clamp(10px,1.25vw,16px);letter-spacing:.28em;margin:14px 0 32px;color:#f2ecd5}
+.arena-intro-track{height:10px;width:70%;max-width:400px;border:1px solid #bb9b4566;background:#101a12;box-shadow:0 0 18px #e4c76a19,inset 0 1px 5px #000;border-radius:20px;overflow:hidden}
+.arena-intro-track i{display:block;width:100%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#aa8033,#dfbc63,#fff0ac);transform:scaleX(.02);transform-origin:left;animation:arena-intro-load 3s cubic-bezier(.18,.6,.3,1) forwards}
+.arena-intro.is-waiting .arena-intro-track i{transform:scaleX(.92);animation:none}
+.arena-intro-caption{color:#d9c47f;letter-spacing:.23em;font-size:10px;margin-top:14px;line-height:1.5}
+.arena-intro-banner{position:absolute;top:27%;width:15%;max-width:220px;height:30%;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:18px;border:1px solid #bda4516b;border-top:3px solid #a98c3b;background:linear-gradient(110deg,#040c09,#18251a9c,#030905);box-shadow:0 12px 45px #0008;color:#d8bd6e;text-align:center;font-size:clamp(10px,1.5vw,23px);font-weight:700;letter-spacing:.05em;line-height:1.5}
+.banner-left{left:5%;transform:perspective(700px) rotateY(27deg) rotateZ(3deg)}.banner-right{right:5%;transform:perspective(700px) rotateY(-27deg) rotateZ(-3deg)}
+.arena-intro-recovery{max-width:430px;margin:16px 0 0;padding:14px;border:1px solid #e4c76a55;border-radius:12px;background:#06110df2;color:#f4f1e8;font-size:14px;line-height:1.5}
+.arena-intro-recovery p{margin:0 0 8px}.arena-intro-recovery button{min-height:44px;padding:8px 24px;border:1px solid #e4c76a;border-radius:8px;background:#e4c76a;color:#06110d;font:inherit;font-weight:700;cursor:pointer}
+@keyframes arena-intro-glow{to{opacity:.45;transform:scale(1.12)}}
+@keyframes arena-intro-sweep{to{mask-position:0 0}}
+@keyframes arena-intro-load{to{transform:scaleX(.92)}}
+@media(max-width:600px) and (orientation:portrait){.arena-intro-center{width:100%;padding:20px 10px;transform:translateY(-6vh)}.arena-intro-symbol{width:148px;height:148px}.arena-intro h1{font-size:46px}.arena-intro-center>p{font-size:10px;margin-bottom:26px;letter-spacing:.21em}.arena-intro-banner{top:auto;bottom:13%;height:16%;width:39%;font-size:11px;padding:10px;gap:4px}.banner-left{left:7%}.banner-right{right:7%}.arena-intro-track{width:65%}}
+@media(max-height:500px) and (orientation:landscape){.arena-intro-symbol{width:85px;height:85px}.arena-intro h1{font-size:36px}.arena-intro-center>p{margin:9px 0 17px;font-size:9px}.arena-intro-caption{margin-top:9px;font-size:8px}.arena-intro-banner{font-size:11px;height:40%;top:25%}.arena-intro-recovery{position:absolute;inset:0;background:#06110d;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.arena-intro,.arena-intro *,.arena-intro *::before{animation:none!important;transition:none!important}.arena-intro-track i{transform:scaleX(.6)}.arena-intro-symbol>span{display:none}}
+html[data-arena-hidden=true] .arena-intro *{animation-play-state:paused}

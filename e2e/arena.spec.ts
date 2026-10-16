@@ -1,5 +1,5 @@
 import {expectSellerPortraits} from "./arena-portrait-assertions";
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./arena-entry-fixture";
 import { readFileSync } from "node:fs";
 import type { ArenaActivity, ArenaBootstrap, ArenaStats } from "../shared/arena";
 
