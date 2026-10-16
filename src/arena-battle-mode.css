@@ -29,3 +29,7 @@
 .is-battle .arena-orb:disabled .arena-product-copy{display:none}
 @media(max-width:600px),(max-height:500px){.is-battle .arena-battle-copy{bottom:6%;gap:1px}.is-battle .arena-battle-copy .arena-product-copy strong{font-size:8px}.is-battle .arena-battle-copy .arena-battle-score{font-size:7px}.is-battle .arena-battle-copy .arena-points{font-size:9px}}
 @media(max-width:600px) and (orientation:portrait){.is-battle .arena-focus-insignia .arena-crown{top:65%;width:12cqw;height:12cqw}}
+/* Landscape already reserves the left strip for controls: keep the hero arc clear. */
+@media(max-height:500px) and (orientation:landscape){.arena-mode-switch{left:0;right:auto;top:0;width:88px;transform:none;flex-direction:column;border-radius:11px;box-sizing:border-box}.arena-mode-switch button,.arena-mode-switch a{width:100%;font-size:9px;min-height:28px;padding:4px!important;text-align:center}.arena-stage-start>.arena-mobile-panels{top:103px}.arena-stage-start>.arena-mobile-panels button{min-height:34px;padding:3px 5px}}
+@media(max-width:600px) and (orientation:portrait){.is-battle .arena-focus-cap{z-index:6}}
+@media(max-height:500px) and (orientation:landscape){.arena-shell .arena-mode-switch button,.arena-shell .arena-mode-switch a{font:600 9px/1.15 Arial,sans-serif!important;letter-spacing:.03em!important;box-sizing:border-box;white-space:nowrap;max-width:100%}}

@@ -1,7 +1,6 @@
 import {BattleSwords} from './ArenaBattle';
 import {battleSlots} from './arena-battle-mode';
 import {battlePreference} from '../shared/arena-battle';
-import './arena-battle-mode.css';
 import {arenaRequests} from './arena-requests';
 import ArenaSellerSelector,{type ArenaSellerSelectorHandle} from "./ArenaSellerSelector";
 import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
@@ -40,6 +39,7 @@ import "./arena-victory.css";
 import "./arena-mini-polish.css";
 import "./arena-fight-objective.css";
 import './arena-war-fight.css';
+import './arena-battle-mode.css';
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaContestHub=lazy(()=>import("./ArenaContestHub"));
