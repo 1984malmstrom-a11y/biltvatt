@@ -1,5 +1,5 @@
 import {useEffect,useMemo,useRef,useState,useSyncExternalStore,type MouseEvent} from 'react';
-import {Play,Pause,ChevronLeft,ChevronRight,RotateCcw,X} from 'lucide-react';
+import {Play,Pause,ChevronLeft,ChevronRight,RotateCcw,X,Compass} from 'lucide-react';
 import {api} from './api';
 import {ArenaEmblem} from './ArenaBrand';
 import {ArenaHome} from './ArenaApp';
@@ -9,6 +9,7 @@ import {createShowtime,showtimeBootstrap,showtimeScenes,type ShowtimeEngine} fro
 import {arenaProductImage} from './arena-product-images';
 import {arenaChampions} from './arena-champions';
 import ArenaDialog from './ArenaDialog';
+import ArenaDiscover from './ArenaDiscover';
 import ArenaAwardPreview from './ArenaAwardPreview';
 import {showtimeAward} from './arena-showtime-award';
 import './arena-presentation.css';
@@ -31,18 +32,20 @@ function PresentationStudio({back}:{back:string}){
 }
 function ShowtimeSession({engine,back}:{engine:ShowtimeEngine;back:string}){
  useSyncExternalStore(engine.subscribe,()=>engine.revision);
+ const [discover,setDiscover]=useState(location.pathname==='/arena/discover');
  const [started,setStarted]=useState(false),[assetsReady,setAssetsReady]=useState(false),[message,setMessage]=useState(''),[awardOpen,setAwardOpen]=useState(false);
  const images=useRef<HTMLImageElement[]>([]),memory=useMemo(()=>new Map<string,string>(),[engine]);
  const runtime=useMemo<ArenaRuntime>(()=>({request:engine.request,now:()=>engine.now,demo:true,storage:{getItem:key=>memory.get(key)??null,setItem:(key,value)=>{memory.set(key,value);}},subscribe:engine.subscribe}),[engine,memory]);
  useEffect(()=>{const timer=setInterval(()=>{if(!document.hidden)engine.tick(1000);},1000);const hide=()=>{if(document.hidden)engine.pause();};document.addEventListener('visibilitychange',hide);return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',hide);};},[engine]);
- useEffect(()=>{let alive=true;const paths=[...showtimeBootstrap.activities.map(a=>arenaProductImage(a)!),...arenaChampions.map(c=>c.src),'/arena-showroom/portraits.webp','/arena-showroom/portraits-extra.webp'];images.current=paths.map(src=>{const img=new Image();img.src=src;return img;});void Promise.all(images.current.map(img=>img.decode())).then(()=>{if(alive)setAssetsReady(true);}).catch(()=>{if(alive)setMessage('En demonstrationsbild kunde inte laddas. Ladda om presentationen med anslutning.');});return()=>{alive=false;images.current=[];};},[]);
+ useEffect(()=>{let alive=true;const paths=[...showtimeBootstrap.activities.map(a=>arenaProductImage(a)!),...arenaChampions.map(c=>c.src),'/arena-showroom/portraits.webp','/arena-showroom/portraits-extra.webp',...['station','battle','leader'].map(n=>`/arena-presentation/product-${n}.webp`)];images.current=paths.map(src=>{const img=new Image();img.src=src;return img;});void Promise.all(images.current.map(img=>img.decode())).then(()=>{if(alive)setAssetsReady(true);}).catch(()=>{if(alive)setMessage('En demonstrationsbild kunde inte laddas. Ladda om presentationen med anslutning.');});return()=>{alive=false;images.current=[];};},[]);
  const go=(scene:number)=>{memory.clear();engine.go(scene);setAwardOpen(false);setMessage('');};
  const intercept=(event:MouseEvent)=>{if((event.target as Element).closest('a')){event.preventDefault();setMessage('Du är kvar i Showtime. Avsluta presentationen för att öppna den ordinarie administrationen.');}};
  const award=useMemo(()=>showtimeAward(engine),[engine,engine.revision]);
+ if(discover)return <ArenaDiscover onClose={()=>{if(location.pathname==='/arena/discover'){engine.dispose();location.assign(back);}else setDiscover(false);}} onShowtime={()=>{memory.clear();engine.restart();setStarted(false);setDiscover(false);}}/>;
  return <ArenaShowcaseContext.Provider value={true}><ArenaRuntimeContext.Provider value={runtime}><div className="arena-showtime arena-theme" data-scene={engine.scene+1} data-playing={engine.playing}>
   <header className="showtime-presenter" aria-label="Showtime presentatörspanel">
    <div className="showtime-topline"><strong><ArenaEmblem/> ARENAN SHOWTIME</strong><span className="showtime-demo-label">DEMOLÄGE · SIMULERADE DATA</span><span className="showtime-context">Intern månadstävling · Nationell individ & station</span><button className="showtime-exit" onClick={()=>{engine.dispose();location.assign(back);}}><X/> <span>AVSLUTA SHOWTIME</span></button></div>
-   <div className="showtime-director"><div className="showtime-controls"><button aria-label="Föregående scen" disabled={!started||engine.scene===0} onClick={()=>go(engine.scene-1)}><ChevronLeft/></button><button className="showtime-play" disabled={!started} onClick={()=>engine.playing?engine.pause():engine.play()}>{engine.playing?<Pause/>:<Play/>}{engine.playing?'PAUSA':'FORTSÄTT'}</button><button aria-label="Nästa scen" disabled={!started||engine.scene===5} onClick={()=>go(engine.scene+1)}><ChevronRight/></button><button aria-label="Starta om Showtime" disabled={!started} onClick={()=>{memory.clear();engine.restart();setStarted(false);setAwardOpen(false);}}><RotateCcw/></button></div>
+   <div className="showtime-director"><div className="showtime-controls"><button aria-label="Upptäck Arenan" title="Upptäck Arenan" onClick={()=>{engine.pause();setDiscover(true);}}><Compass/></button><button aria-label="Föregående scen" disabled={!started||engine.scene===0} onClick={()=>go(engine.scene-1)}><ChevronLeft/></button><button className="showtime-play" disabled={!started} onClick={()=>engine.playing?engine.pause():engine.play()}>{engine.playing?<Pause/>:<Play/>}{engine.playing?'PAUSA':'FORTSÄTT'}</button><button aria-label="Nästa scen" disabled={!started||engine.scene===5} onClick={()=>go(engine.scene+1)}><ChevronRight/></button><button aria-label="Starta om Showtime" disabled={!started} onClick={()=>{memory.clear();engine.restart();setStarted(false);setAwardOpen(false);}}><RotateCcw/></button></div>
     <div className="showtime-scene-copy"><span>SCEN {engine.scene+1} / 6 · {engine.playing?'LIVE':'PAUSAD'}</span><strong>{showtimeScenes[engine.scene]}</strong><p>{instructions[engine.scene]}</p></div>
     <div className="showtime-scene-actions">{engine.scene===2&&<button onClick={()=>go(2)}>REPLAY NY ETTA</button>}{engine.scene===3&&!engine.fight()&&<button className="showtime-gold" onClick={()=>engine.startFight()}>STARTA BUTIKSFIGHT</button>}{engine.scene===4&&<><button onClick={()=>engine.urgency(10)}>10 MIN</button><button onClick={()=>engine.urgency(5)}>5 MIN</button><button onClick={()=>engine.urgency(1)}>1 MIN</button></>}{engine.scene===5&&!award&&<button className="showtime-gold" onClick={()=>engine.finish()}>AVGÖR MATCHEN</button>}{award&&<button className="showtime-gold" onClick={()=>setAwardOpen(true)}>VISA DEMODIPLOM</button>}</div>
    </div>

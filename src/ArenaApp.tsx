@@ -165,7 +165,7 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
 export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
   useArenaEntryStatus(!['/arena','/arena/'].includes(window.location.pathname));
-  if(window.location.pathname==='/arena/showtime')return <ArenaPresentation/>;
+  if(['/arena/showtime','/arena/discover'].includes(window.location.pathname))return <ArenaPresentation/>;
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
   if(window.location.pathname==="/arena/competitions")return <ArenaContestHub/>;
   if(window.location.pathname==="/arena/superadmin/contests")return <ArenaContestHub admin/>;
