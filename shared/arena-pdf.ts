@@ -70,13 +70,20 @@ export function arenaReportPDF(s:ArenaReportSnapshot):Uint8Array {
   pages.forEach((p,i)=>{commands=p;line(M,775,W-2*M);text(`Fryst: ${s.created_at}`,M,786,8,false,muted,420);text(`Rapport-ID: ${s.id}`,M,800,8,false,muted,420);text(`${i+1} / ${pages.length}`,502,794,9,true,navy,60);});
   return arenaPDFDocument(pages);
 }
-export function arenaPDFDocument(pages:string[][]):Uint8Array {
-  const objects:string[]=['','', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+export type ArenaPDFImage={name:string;width:number;height:number;jpeg:Uint8Array};
+export function arenaPDFDocument(pages:string[][],images:ArenaPDFImage[]=[]):Uint8Array {
+  const objects:(string|Uint8Array)[]=['','', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+  const imageRefs=images.map(image=>{
+    if(!/^[A-Za-z][A-Za-z0-9]*$/.test(image.name))throw Error('Invalid PDF image resource name');
+    const id=objects.length+1,head=enc.encode(`<< /Type /XObject /Subtype /Image /Width ${image.width} /Height ${image.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${image.jpeg.length} >>\nstream\n`),tail=enc.encode('\nendstream'),bytes=new Uint8Array(head.length+image.jpeg.length+tail.length);
+    bytes.set(head);bytes.set(image.jpeg,head.length);bytes.set(tail,head.length+image.jpeg.length);objects.push(bytes);return `/${image.name} ${id} 0 R`;
+  }).join(' ');
+  const italicId=images.length?objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>'):0;
   const kids:number[]=[];
-  for(const p of pages){const pageId=objects.length+1,streamId=pageId+1;kids.push(pageId);objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${streamId} 0 R >>`);const stream=p.join('\n');objects.push(`<< /Length ${enc.encode(stream).byteLength} >>\nstream\n${stream}\nendstream`);}
+  for(const p of pages){const pageId=objects.length+1,streamId=pageId+1;kids.push(pageId);objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R ${italicId?`/F3 ${italicId} 0 R`:''} >> ${imageRefs?`/XObject << ${imageRefs} >>`:''} >> /Contents ${streamId} 0 R >>`);const stream=p.join('\n');objects.push(`<< /Length ${enc.encode(stream).byteLength} >>\nstream\n${stream}\nendstream`);}
   objects[0]='<< /Type /Catalog /Pages 2 0 R >>';objects[1]=`<< /Type /Pages /Count ${kids.length} /Kids [${kids.map(id=>`${id} 0 R`).join(' ')}] >>`;
   const parts:Uint8Array[]=[enc.encode('%PDF-1.4\n')],offsets:number[]=[0];let offset=parts[0].length;
-  objects.forEach((obj,i)=>{offsets.push(offset);const bytes=enc.encode(`${i+1} 0 obj\n${obj}\nendobj\n`);parts.push(bytes);offset+=bytes.length;});
+  objects.forEach((obj,i)=>{offsets.push(offset);const head=enc.encode(`${i+1} 0 obj\n`),body=typeof obj==='string'?enc.encode(obj):obj,tail=enc.encode('\nendobj\n');parts.push(head,body,tail);offset+=head.length+body.length+tail.length;});
   const trailer=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n${offsets.slice(1).map(n=>`${String(n).padStart(10,'0')} 00000 n \n`).join('')}trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${offset}\n%%EOF\n`;
   parts.push(enc.encode(trailer));const result=new Uint8Array(parts.reduce((sum,p)=>sum+p.length,0));let at=0;for(const part of parts){result.set(part,at);at+=part.length;}return result;
 }

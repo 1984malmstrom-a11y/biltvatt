@@ -1,7 +1,20 @@
-import {Crown} from 'lucide-react';
+import {useId,useMemo} from 'react';
 import type {ArenaReportSnapshot} from '../shared/arena-reports';
 import {awardLabel} from '../shared/arena-awards';
-import {arenaMoney} from '../shared/arena-money';
-import {ArenaEmblem} from './ArenaBrand';
+import {arenaAwardScene,awardPage} from '../shared/arena-award-scene';
+import {awardArt} from '../shared/arena-award-art';
 import './arena-awards.css';
-export default function ArenaAwardPreview({snapshot:s}:{snapshot:ArenaReportSnapshot}){const a=s.award!;return <article className="arena-award-paper" aria-label={`Arena Award: ${awardLabel(a.variant)}`}><header><ArenaEmblem/><div><strong>A R E N A N</strong><small>SALES COMPETITION. BIGGER TOGETHER.</small></div></header><span className="arena-award-eyebrow">ARENA AWARD</span><Crown className="arena-award-crown" aria-hidden="true"/><span className="arena-award-eyebrow">VINNARDIPLOM</span><h2>{awardLabel(a.variant)}</h2><div className="arena-award-recipient"><h3>{a.recipient.name}</h3><p>{a.context}</p><strong>{a.result}</strong></div><div className="arena-award-metrics"><span><strong>{s.totals.points}</strong>POÄNG</span><span><strong>{s.totals.count}</strong>REGISTRERINGAR</span><span><strong>{arenaMoney(s.totals.tb_ore)}</strong>UPPSKATTAT TB</span></div><p>{s.period.start.slice(0,10)} – {s.period.end.slice(0,10)}</p>{a.standing&&<p>{a.standing.played} matcher · {a.standing.won} vinster · {a.standing.drawn} oavgjorda · {a.standing.lost} förluster</p>}{(a.variant==='personal-goal'||a.variant==='station-goal')&&s.goals.filter(g=>g.name===(a.variant==='personal-goal'?a.recipient.name:'Lagets mål')&&g.points>=g.target_points).map((g,i)=><p key={i}>{g.points} / {g.target_points} poäng · Målet uppnått</p>)}<p className="arena-award-motto">EN INSATS ATT VARA STOLT ÖVER.</p><div className="arena-award-seal">ARENAN<strong>CHAMPION</strong>{s.period.end.slice(0,4)}</div><footer>Fryst: {s.created_at}<br/>Award-ID: {s.id}<br/>Källrapport: {a.source_report_id}</footer></article>;}
+// Exactly the same text, layout and artwork as the PDF; responsive vector text
+// remains crisp without depending on a browser's built-in PDF viewer.
+export default function ArenaAwardPreview({snapshot}:{snapshot:ArenaReportSnapshot}){
+ const id=useId(),scene=useMemo(()=>arenaAwardScene(snapshot),[snapshot]);
+ return <article className="arena-award-paper" aria-label={`Arena Award: ${awardLabel(snapshot.award!.variant)}`}>
+  <h2 className="arena-award-accessible">{awardLabel(snapshot.award!.variant)}</h2>
+  <svg viewBox={`0 0 ${awardPage.width} ${awardPage.height}`} role="img" aria-labelledby={id}>
+   <title id={id}>{awardLabel(snapshot.award!.variant)} · {snapshot.award!.recipient.name}. Fryst resultat.</title>
+   <image href={`data:image/jpeg;base64,${awardArt[scene.template]}`} width={awardPage.width} height={awardPage.height} preserveAspectRatio="none"/>
+   {scene.ops.map((op,i)=>op.kind==='text'?<text key={i} x={op.x} y={op.y+op.size} fill={op.color} fontSize={op.size} fontWeight={op.bold?700:400} fontStyle={op.italic?'italic':undefined} fontFamily="Arial, Helvetica, sans-serif">{op.value}</text>:op.kind==='rect'?<rect key={i} x={op.x} y={op.y} width={op.width} height={op.height} fill={op.color}/>:<polygon key={i} points={op.points.map(p=>p.join(',')).join(' ')} fill={op.color}/>)}
+  </svg>
+  <footer className="arena-award-accessible">Fryst: {snapshot.created_at}. Award-ID: {snapshot.id}. Källrapport: {snapshot.award!.source_report_id}.</footer>
+ </article>;
+}
