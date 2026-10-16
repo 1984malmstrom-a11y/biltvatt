@@ -51,7 +51,7 @@ export async function prepareCompetition(db:D1Database,d:CompetitionInput,actor:
   const size=r.format==='cup'?r.station_ids.length:r.playoff_size;
   for(let round=1;round<=Math.log2(size);round++)for(let slot=0;slot<size/2**round;slot++)statements.push(db.prepare('INSERT INTO arena_bracket_slots(competition_id,round_no,slot_no) VALUES(?,?,?)').bind(id,round,slot));
  }
- for(const s of participants)statements.push(notice(db,s.id,'scheduled',id,'NY BUTIKSFIGHT',`${name} · start ${r.start_day}`,`created:${id}`));
+ for(const s of participants)statements.push(notice(db,s.id,'scheduled',id,isBoardContest(r)?'NY TÄVLING':'NY BUTIKSFIGHT',`${name} · start ${r.start_day}`,`created:${id}`));
  return {id,statements};
 }
 export async function createCompetition(db:D1Database,input:CompetitionInput,actor:ArenaActor){

@@ -13,6 +13,14 @@ it('one ledger sale contributes to parallel individual/station competitions, und
  const sale=f.sale('o1:s0');vi.setSystemTime('2026-10-16T12:00:00Z');for(const id of [station,person]){let c=await competitionView(f.env.ARENA_DB!,id,'o1:s0');expect(c.entries![0]).toMatchObject({count:1,points:2});}
  f.arena.prepare('UPDATE arena_registrations SET voided_at=? WHERE id=?').run('2026-10-16T11:00:00Z',sale);for(const id of [station,person])expect((await competitionView(f.env.ARENA_DB!,id)).entries!.every(e=>e.points===0)).toBe(true);
 });
+it('labels individual and station leaderboard notices as competitions, while a real duel stays a Butiksfight',async()=>{
+ const f=await setup();
+ for(const kind of ['individual','station','fight'] as const){
+  const id=await create(f,contestDraft(kind));
+  const notice=f.arena.prepare('SELECT title FROM arena_fight_notifications WHERE resource_id=? LIMIT 1').get(id)!;
+  expect(notice.title).toBe(kind==='fight'?'NY BUTIKSFIGHT':'NY TÄVLING');
+ }
+});
 it('rejects foreign organizations, forged customer snapshots, >7 categories and national scope without central mandate',async()=>{
  const f=await setup(),admin=await f.admin(),d=contestDraft();d.station_ids[1]='o2:s0';expect((await f.call('/arena/superadmin/competitions','POST',d,admin.cookie)).status).toBe(403);
  const national=contestDraft();national.contest!.level='national';national.station_ids=['o1:s0','o1:s1','o1:s2','o1:s3'];expect((await f.call('/arena/superadmin/competitions','POST',national,admin.cookie)).status).toBe(403);

@@ -11,9 +11,12 @@ export function fightScopeLabel(fightId:string,objective:ArenaStats['fight_objec
  const extra=temporary.filter(a=>a.fight_id===fightId&&a.active===1).map(a=>a.name);
  const withTemporary=(label:string)=>[label,...extra].filter(Boolean).join(' · ');
  if(!objective||objective.fight_id!==fightId)return withTemporary('Se fightens regler');
- if(objective.scope==='all')return withTemporary('ALLA KATEGORIER');
+ // The V2 builder starts from scope=all, then freezes a narrower category set.
+ // Only call it all when the authoritative local IDs cover the active products.
+ const ids=objective.activity_ids??[],selected=new Set(ids),active=activities.filter(a=>a.active===1);
+ if(objective.scope==='all'&&(objective.activity_ids===null||active.length>0&&active.every(a=>selected.has(a.id))))return withTemporary('ALLA KATEGORIER');
  if(objective.scope==='focus')return withTemporary('MÅNADENS FOKUS');
- const ids=objective.activity_ids??[],names=ids.map(id=>activities.find(a=>a.id===id)?.name);
+ const names=ids.map(id=>activities.find(a=>a.id===id)?.name);
  if(!ids.length)return extra.length?withTemporary(''):'INGA AKTIVA AKTIVITETER';
  if(names.some(n=>!n))return withTemporary(`${ids.length} VALDA AKTIVITETER`);
  return withTemporary(names.join(' · '));

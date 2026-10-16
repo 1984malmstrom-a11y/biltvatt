@@ -11,6 +11,12 @@ describe('Presentation follows authoritative fight data',()=>{
   expect(fightScopeLabel('f',{fight_id:'f',scope:'activity',activity_ids:[]})).toBe('INGA AKTIVA AKTIVITETER');
   expect(fightScopeLabel('f',{fight_id:'f',scope:'activity',activity_ids:[]},[],[{fight_id:'f',active:1,name:'Fight-fika'},{fight_id:'other',active:1,name:'Fel match'},{fight_id:'f',active:0,name:'Inaktiv'}])).toBe('Fight-fika');
  });
+ it('does not label a frozen category subset as all categories when the builder uses all as its base scope',()=>{
+  const activities=['Biltvätt','Kaffe + bulle','Korv med mos'].map((name,i)=>({id:`a${i}`,name,active:1,points:1,offer_text:'',price_text:'',image_key:null,category:'',sort_order:i}));
+  expect(fightScopeLabel('f',{fight_id:'f',scope:'all',activity_ids:['a0','a1']},activities)).toBe('Biltvätt · Kaffe + bulle');
+  expect(fightScopeLabel('f',{fight_id:'f',scope:'all',activity_ids:['a0','a1','a2']},activities)).toBe('ALLA KATEGORIER');
+  expect(fightScopeLabel('f',{fight_id:'f',scope:'all',activity_ids:['missing']},activities)).toBe('1 VALDA AKTIVITETER');
+ });
  it('labels series points independently of the underlying score metric',()=>{
   for(const metric of ['points','tb','count'] as const){const f={id:'f',name:'F',version:1,phase:'active' as const,standings:[],metric};expect(fightMetricLabel({...f,scoring_mode:'daily'})).toBe('MATCHPOÄNG');expect(fightMetricLabel(f)).toBe(metric==='tb'?'TB · kr':metric==='count'?'ANTAL':'POÄNG');expect(fightDifference(f,100)).toBe(metric==='tb'?'1 kr TB':metric==='count'?'100 registreringar':'100 poäng');expect(fightDifference({...f,scoring_mode:'daily'},3)).toBe('3 matchpoäng');if(metric==='count')expect(fightDifference(f,-1)).toBe('1 registrering');}
   expect(stationInitials('Tingsryd')).toBe('T');expect(stationInitials('Växjö Centrum')).toBe('VC');expect(stationInitials('  ')).toBe('–');
