@@ -1,0 +1,167 @@
+{
+  "start_head": "ea44439efd9a6fc828bfeef3f6c7117e24c05945",
+  "head": "61701deb5b579bcb40192c740c0efd49219763ff",
+  "synthetic": true,
+  "selected_png_count": 21,
+  "screenshots": [
+    {
+      "file": "battle-seven-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 778938,
+      "sha256": "0c07f934f22c8fdd7a6bb4cea2a26c3f6e6182459e7554b1d4f2cb5d2f10b960"
+    },
+    {
+      "file": "battle-seven-1536x864.png",
+      "width": 1536,
+      "height": 864,
+      "bytes": 1169560,
+      "sha256": "110fc05464df514d51d22ba099a317ddc6dc82770b5b219c83d5635dea4272a2"
+    },
+    {
+      "file": "battle-seven-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1659800,
+      "sha256": "c9b80b40fb525ee9daba605c8519a18d0df09db64f48947f7846578a99a8f461"
+    },
+    {
+      "file": "battle-seven-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 386255,
+      "sha256": "10a7cd9c1fb1ee98efffabf0277a0d3c37c865e5bc0875cc96a50478013d8e31"
+    },
+    {
+      "file": "battle-seven-844x390.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 371861,
+      "sha256": "3e9ae2011425cce5eb2f5256979b57d9c804cb6b2575432ea25f2006ebe3b3ac"
+    },
+    {
+      "file": "battle-three-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1582175,
+      "sha256": "61bda96d17f2bee698d0c90ba5f2a347df48e2d5a69c58f4bc461c8f0dc246fa"
+    },
+    {
+      "file": "battle-three-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 363868,
+      "sha256": "54157171c9f577ef079be9264201d50c1d03ba8f3d4707985b02b80f867933e7"
+    },
+    {
+      "file": "builder-fair-off-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 344632,
+      "sha256": "84d73ebf3a21cbc7ddcaa75f90f58280cb3f67a0743454199b19e1d9eb01f51b"
+    },
+    {
+      "file": "builder-fair-on-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 367462,
+      "sha256": "301850b14d69164eb09d0249403d9d744295a3b51d4359c6382cc42d9a235e3b"
+    },
+    {
+      "file": "builder-fair-on-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 108107,
+      "sha256": "4b309684c6d151200847eb1c00caade9c4c91d94260920f3c99b068d59c618b5"
+    },
+    {
+      "file": "builder-setup-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 324803,
+      "sha256": "ad216648fc7944833be7625e921610367d703caa9ab371eb9903813636bad9b9"
+    },
+    {
+      "file": "competition-hub-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 197985,
+      "sha256": "d24a5d1f64426b17765a14c1d8ede41bec717ca2d8478542032eb221b0ed1c80"
+    },
+    {
+      "file": "customer-flow-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 265755,
+      "sha256": "ad717bc73a56502b852c624b9a85336fb48dfd5c868a684e52a7af799984e072"
+    },
+    {
+      "file": "fight-final-sprint-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1716355,
+      "sha256": "98809430f7d2adb75afc0b52bc8ec38dd69db1ca0b8f606cb32c837e02a5931f"
+    },
+    {
+      "file": "individual-national-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 484044,
+      "sha256": "ee0e1861b1ffa8d774e5566d5f2015426e94a6c7337abd9d653aebf1e7035b30"
+    },
+    {
+      "file": "leaderboard-district-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 519913,
+      "sha256": "f117f01ba2635d86864539ce17c9997839de0a09a415543cbdd164ea7d31c165"
+    },
+    {
+      "file": "leaderboard-national-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 176153,
+      "sha256": "f1d183b1ec8224f7e50879b74fd6436247342443e679062c9e900caee6903b13"
+    },
+    {
+      "file": "leaderboard-region-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 308245,
+      "sha256": "e41a3d6eec8ff0bd5f009b1e9960f254e5ab4a4a3a10742ea213be5d5947a00b"
+    },
+    {
+      "file": "station-1024x768.png",
+      "width": 1024,
+      "height": 768,
+      "bytes": 733447,
+      "sha256": "7ee82375e2648a379a559591aa88c3eb5b69785c780c9283ec8182ac34641694"
+    },
+    {
+      "file": "station-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1719363,
+      "sha256": "66e1482345ecc9dc8c0d397e07fb0bf5c1b1bf0f46879d44b9def5c9e8c0f5c5"
+    },
+    {
+      "file": "station-390x844.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 387514,
+      "sha256": "ac0183f4a40d0e804e113591f6dfad4fc3de2575c4f9eb2031ce4e322f68cd28"
+    }
+  ],
+  "reports": [
+    "final-report.md",
+    "changed-files.txt",
+    "test-report.md",
+    "responsive-report.md",
+    "security-review.md",
+    "migration-review.md",
+    "manual-configuration.md",
+    "known-limitations.md",
+    "performance-report.json"
+  ],
+  "gallery": "index.html"
+}

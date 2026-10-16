@@ -1,0 +1,82 @@
+{
+  "synthetic": true,
+  "environment": "Local in-memory SQLite; not a Cloudflare D1 production latency guarantee",
+  "station_count": 40,
+  "sale_count": 10000,
+  "timings": [
+    {
+      "milliseconds": 21.14,
+      "queries": 4,
+      "entries": 40,
+      "score": 2000
+    },
+    {
+      "milliseconds": 17.35,
+      "queries": 4,
+      "entries": 40,
+      "score": 2000
+    },
+    {
+      "milliseconds": 29.72,
+      "queries": 4,
+      "entries": 40,
+      "score": 2000
+    }
+  ],
+  "public_payload_bytes": 25457,
+  "page_size": 50,
+  "entries_returned": 40,
+  "query_plan": [
+    {
+      "id": 8,
+      "parent": 0,
+      "notused": 0,
+      "detail": "SCAN json_each VIRTUAL TABLE INDEX 1:"
+    },
+    {
+      "id": 13,
+      "parent": 0,
+      "notused": 49,
+      "detail": "SEARCH r USING INDEX arena_registrations_activity_time (activity_id=? AND registered_at>? AND registered_at<?)"
+    },
+    {
+      "id": 38,
+      "parent": 0,
+      "notused": 0,
+      "detail": "USE TEMP B-TREE FOR GROUP BY"
+    }
+  ],
+  "heap_observation_bytes": {
+    "before": 9999568,
+    "after": 10267968,
+    "delta": 268400,
+    "note": "Single observation without forced GC; not a leak proof"
+  },
+  "chunks": [
+    {
+      "name": "ArenaApp-BqCS40nR.js",
+      "bytes": 77411
+    },
+    {
+      "name": "ArenaCompetition-hDa-KLCC.js",
+      "bytes": 18461
+    },
+    {
+      "name": "ArenaContestHub-WNDCzG1q.js",
+      "bytes": 19809
+    }
+  ],
+  "polling": {
+    "home_ms": 12000,
+    "active_fight_ms": 5000,
+    "unchanged": true
+  },
+  "limits": {
+    "stations": 100,
+    "sellers": 5000,
+    "activity_mappings": 5000,
+    "championship_stations": 40
+  },
+  "raster_assets_added": 0,
+  "animation_libraries_added": 0
+}
