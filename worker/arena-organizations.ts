@@ -6,6 +6,16 @@ import {body,checkFields,fail,json,text} from './http';
 import {arenaDayStart} from '../shared/arena-leagues';
 export type OrgStation={id:string;name:string;organization_id:string;region_id:string;district_id:string};
 export type OrgGrant={organization_id:string;level:string;region_id:string;district_id:string};
+// Station-admin invitations grant only a two-party duel inside one tenant.
+// Legacy unassigned stations may still challenge other unassigned stations.
+export async function challengeOrganization(db:D1Database,ids:string[]){
+ const rows=(await db.prepare('SELECT station_id,organization_id FROM arena_station_organization WHERE station_id IN (SELECT value FROM json_each(?))').bind(JSON.stringify(ids)).all<{station_id:string;organization_id:string}>()).results;
+ if(!rows.length)return null;
+ if(ids.length!==2||rows.length!==2||rows[0].organization_id!==rows[1].organization_id)fail(403,'Stationerna måste tillhöra samma organisation för att utmana varandra.');
+ return rows[0].organization_id;
+}
+const challengeOrg=(field:string)=>`COALESCE((SELECT organization_id FROM arena_station_organization WHERE station_id=${field}),'')`;
+export const challengeTenantBoundary=`${challengeOrg('c.challenger_id')}=${challengeOrg('c.challenged_id')} AND COALESCE(json_extract(c.rules_json,'$.organization_id'),'')=${challengeOrg('c.challenger_id')}`;
 export async function actorGrants(db:D1Database,actor:ArenaActor){return (await db.prepare('SELECT organization_id,level,region_id,district_id FROM arena_organization_grants WHERE account_id=?').bind(actor.id).all<OrgGrant>()).results;}
 export const coversStation=(g:OrgGrant,s:OrgStation)=>g.organization_id===s.organization_id&&(g.level==='national'||g.level==='region'&&g.region_id===s.region_id||g.level==='district'&&g.region_id===s.region_id&&g.district_id===s.district_id);
 export async function orgStations(db:D1Database,organization?:string,station?:string){return (await db.prepare(`SELECT s.id,s.name,m.organization_id,m.region_id,m.district_id FROM arena_station_organization m JOIN arena_stations s ON s.id=m.station_id WHERE s.status='active' ${organization?'AND m.organization_id=?':''} ${station?'AND m.station_id=?':''} ORDER BY s.id`).bind(...(organization?[organization]:[]),...(station?[station]:[])).all<OrgStation>()).results;}

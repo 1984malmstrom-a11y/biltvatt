@@ -5,7 +5,7 @@ import type {ArenaStats} from '../shared/arena';
 
 /* Real Worker handlers and the existing D1 adapter, exclusively SQLite :memory:.
    Only time, synthetic initial records and authentication sessions are fixtures. */
-export async function demoFunctionalFixture() {
+export async function demoFunctionalFixture({deferDuel=false}:{deferDuel?:boolean}={}) {
  const RealDate=globalThis.Date;
  let instant=RealDate.parse('2026-10-16T08:00:00.000Z');
  globalThis.Date=new Proxy(RealDate,{
@@ -44,19 +44,25 @@ export async function demoFunctionalFixture() {
   }
   setNow('2026-10-16T09:55:00.000Z');
   const stationAdmin=await base.stationAdmin(base.cookies[station]);
-  const challengeResponse=await base.call('/admin/arena/challenges','POST',{request_id:crypto.randomUUID(),opponent_id:opponent,day:'2026-10-16',metric:'points',scope:{kind:'category',category_id:'wash'}},stationAdmin);
-  const challenge={status:challengeResponse.status,body:await challengeResponse.json()};
-  const d=contestDraft('fight');Object.assign(d,{name:'TEST · Tingsryd mot Ronneby',start_day:'2026-10-16',end_day:'2026-10-16'});d.contest!.categories=[{id:'wash',name:'',points_milli:1000},{id:'fika',name:'',points_milli:1000}];
-  const duel=await create(d);
-  setNow('2026-10-16T09:56:00.000Z');
-  const r=await base.call('/arena/registrations','POST',{request_id:crypto.randomUUID(),activity_id:`${opponent}:wash`,seller_id:`${opponent}:person`},base.cookies[opponent]);
-  if(r.status!==200)throw Error(`Opponent seed sale: ${r.status} ${await r.text()}`);
+  let duel='',challenge:{status:number;body:any;accepted_status?:number}={status:0,body:null};
+  if(!deferDuel){
+   const response=await base.call('/admin/arena/challenges','POST',{request_id:crypto.randomUUID(),opponent_id:opponent,day:'2026-10-16',metric:'points',scope:{kind:'category',category_id:'wash'}},stationAdmin);
+   challenge={status:response.status,body:await response.json()};
+   if(response.status!==201)throw Error(`Synthetic station challenge: ${response.status} ${JSON.stringify(challenge.body)}`);
+   const accepted=await base.call(`/admin/arena/challenges/${challenge.body.id}/accept`,'POST',{confirm:true},await base.stationAdmin(base.cookies[opponent]));
+   challenge.accepted_status=accepted.status;
+   if(accepted.status!==200)throw Error(`Synthetic station accept: ${accepted.status} ${await accepted.text()}`);
+   duel=(await accepted.json() as {id:string}).id;
+   setNow('2026-10-16T09:56:00.000Z');
+   const r=await base.call('/arena/registrations','POST',{request_id:crypto.randomUUID(),activity_id:`${opponent}:wash`,seller_id:`${opponent}:person`},base.cookies[opponent]);
+   if(r.status!==200)throw Error(`Opponent seed sale: ${r.status} ${await r.text()}`);
+  }
   setNow('2026-10-16T10:00:00.000Z');
   const stats=async()=>{const r=await base.call('/arena/stats?period=today','GET',undefined,base.cookies[station]);if(r.status!==200)throw Error(`Stats: ${r.status} ${await r.text()}`);return await r.json() as ArenaStats;};
   const view=(id:string)=>competitionView(base.env.ARENA_DB!,id,station);
   const all=async()=>({internal:await view(internal),nationalPerson:await view(nationalPerson),nationalStation:await view(nationalStation),duel:await view(duel),stats:await stats()});
   const person=(c:Competition,id=viktor)=>c.entries!.find(e=>e.id===id)!;
   const team=(c:Competition,id=station)=>c.entries!.find(e=>e.id===id)!;
-  return {...base,station,opponent,viktor,alva,stationAdmin,ids:{internal,nationalPerson,nationalStation,duel},challenge,now:()=>instant,setNow,stats,all,view,person,team,close:()=>{base.close();globalThis.Date=RealDate;}};
+  return {...base,station,opponent,viktor,alva,stationAdmin,elevate:(id:string)=>base.stationAdmin(base.cookies[id]),ids:{internal,nationalPerson,nationalStation,duel},challenge,now:()=>instant,setNow,stats,all,view,person,team,close:()=>{base.close();globalThis.Date=RealDate;}};
  }catch(error){f?.close();globalThis.Date=RealDate;throw error;}
 }

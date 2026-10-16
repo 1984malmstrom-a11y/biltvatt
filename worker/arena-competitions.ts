@@ -1,6 +1,6 @@
 import {weightedFightPointsSQL} from './arena-weighted-points';
 import {isBoardContest,freezeContestRules,boardCompetitionView} from './arena-contest';
-import {authorizeContest,assertCompetitionAccess,accessibleStations} from './arena-organizations';
+import {authorizeContest,assertCompetitionAccess,accessibleStations,challengeOrganization} from './arena-organizations';
 import {temporaryFightActivities} from './arena-temporary-activities';
 import {arenaRequestPath} from './arena-route';
 import {fightWindows} from './arena-fight-windows';
@@ -29,12 +29,21 @@ export function fightStatements(db:D1Database,id:string,competition:string,name:
 }
 export async function prepareCompetition(db:D1Database,d:CompetitionInput,actor:ArenaActor,id:string=crypto.randomUUID()):Promise<{id:string;statements:D1PreparedStatement[]}>{
  const {name,request_id,...r}=d,start=arenaDayStart(r.start_day),end=arenaDayStart(competitionEnd(r));
- if(!r.contest&&await db.prepare('SELECT station_id FROM arena_station_organization WHERE station_id IN (SELECT value FROM json_each(?)) LIMIT 1').bind(JSON.stringify(r.station_ids)).first())fail(400,'Använd organisationsbundna tävlingsbyggaren för dessa stationer.');
+ let organizationId=r.contest?.organization_id??null;
+ if(!r.contest&&await db.prepare('SELECT station_id FROM arena_station_organization WHERE station_id IN (SELECT value FROM json_each(?)) LIMIT 1').bind(JSON.stringify(r.station_ids)).first()){
+  // Only the recipient of this stored, pending invitation may prepare its
+  // exact daily duel. Generic station/Owner creation retains its existing gate.
+  const invitation=actor.role==='station'&&request_id.startsWith('challenge:')&&r.format==='daily'
+   ?await db.prepare("SELECT id,challenger_id,challenged_id,day,rules_json FROM arena_challenges WHERE id=? AND challenged_id=? AND status='pending' AND expires_at>?").bind(request_id.slice(10),actor.id,new Date().toISOString()).first<{id:string;challenger_id:string;challenged_id:string;day:string;rules_json:string}>():null;
+  if(!invitation||id!==`duel:${invitation.id}`||r.station_ids.length!==2||r.station_ids[0]!==invitation.challenger_id||r.station_ids[1]!==invitation.challenged_id||r.start_day!==invitation.day||r.end_day!==invitation.day||r.metric!==JSON.parse(invitation.rules_json).metric)fail(400,'Använd organisationsbundna tävlingsbyggaren för dessa stationer.');
+  organizationId=await challengeOrganization(db,r.station_ids);
+  if(organizationId!==(JSON.parse(invitation!.rules_json).organization_id??null))fail(409,'Organisationstillhörigheten har ändrats. Skicka en ny utmaning.');
+ }
  if(r.contest)await authorizeContest(db,r.contest,r.station_ids,actor,actor.role==='station'?actor.id:undefined);
  const participants=isBoardContest(r)?(await db.prepare("SELECT id,name FROM arena_stations WHERE status='active' AND id IN (SELECT value FROM json_each(?))").bind(JSON.stringify(r.station_ids)).all<{id:string;name:string}>()).results:await assertStationsFree(db,r.station_ids,start,end);
  let activities=await resolveScope(db,r.station_ids,r.scope,start);if(r.contest)activities=await freezeContestRules(db,r,activities);
  const now=new Date().toISOString(),plan=competitionSchedule(r),names=new Map(participants.map(s=>[s.id,s.name]));
- const statements:D1PreparedStatement[]=[db.prepare(`INSERT INTO arena_leagues(id,name,metric,start_day,end_day,day_win_points,day_tie_points,match_win,match_draw,format,rules_json,request_key,created_at,organization_id) VALUES(?,?,?,?,?,1,0,?,?,?,?,?,?,?)`).bind(id,name,r.metric,r.start_day,competitionEnd(r),r.win,r.draw,r.format,JSON.stringify({...r,activities}),request_id,now,r.contest?.organization_id??null),...(isBoardContest(r)?[]:bookingStatements(db,id,r)),
+ const statements:D1PreparedStatement[]=[db.prepare(`INSERT INTO arena_leagues(id,name,metric,start_day,end_day,day_win_points,day_tie_points,match_win,match_draw,format,rules_json,request_key,created_at,organization_id) VALUES(?,?,?,?,?,1,0,?,?,?,?,?,?,?)`).bind(id,name,r.metric,r.start_day,competitionEnd(r),r.win,r.draw,r.format,JSON.stringify({...r,activities}),request_id,now,organizationId),...(isBoardContest(r)?[]:bookingStatements(db,id,r)),
  db.prepare(`INSERT INTO arena_league_members(league_id,station_id,snapshot_name,seed) SELECT ?,value,NULL,CAST(key AS INTEGER)+1 FROM json_each(?)`).bind(id,JSON.stringify(r.station_ids)),
  db.prepare(`UPDATE arena_league_members SET snapshot_name=(SELECT name FROM arena_stations WHERE id=station_id) WHERE league_id=?`).bind(id),
  competitionAudit(db,actor,'competition.created',id,r,`created:${id}`),competitionAudit(db,actor,'schedule.generated',id,{matches:plan.length,format:r.format},`schedule:${id}`)];

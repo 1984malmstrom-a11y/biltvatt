@@ -2,9 +2,10 @@ import {demoFunctionalFixture} from './arena-demo-functional-fixture';
 
 // Isolate the backend's deterministic clock from Playwright's own clock driver.
 let fixture:Awaited<ReturnType<typeof demoFunctionalFixture>>|undefined;
+const elevations=new Map<string,{cookie:string;until:number}>();
 async function command(kind:string,args:any) {
  if(kind==='init'){
-  fixture=await demoFunctionalFixture();const f=fixture;
+  elevations.clear();fixture=await demoFunctionalFixture(args);const f=fixture;
   return {station:f.station,opponent:f.opponent,viktor:f.viktor,alva:f.alva,ids:f.ids,challenge:f.challenge,now:f.now()};
  }
  const f=fixture;if(!f)throw Error('Isolated test fixture not initialized');
@@ -20,7 +21,14 @@ async function command(kind:string,args:any) {
   throw Error('Unknown verification query');
  }
  if(kind==='call'){
-  const cookie=args.role==='owner'?f.owner:args.role==='stationAdmin'?f.stationAdmin:f.cookies[args.role==='opponent'?f.opponent:f.station];
+  const identities:Record<string,string>={station:f.station,stationAdmin:f.station,opponent:f.opponent,opponentAdmin:f.opponent,third:'o1:s2',thirdAdmin:'o1:s2',foreign:'o2:s0',foreignAdmin:'o2:s0'};
+  if(args.role!=='owner'&&!identities[args.role])throw Error('Unknown test identity');
+  let cookie=args.role==='owner'?f.owner:f.cookies[identities[args.role]];
+  if(args.role.endsWith('Admin')){
+   let elevated=elevations.get(args.role);
+   if(!elevated||elevated.until<=f.now()){elevated={cookie:await f.elevate(identities[args.role]),until:f.now()+14*60*1000};elevations.set(args.role,elevated);}
+   cookie=elevated.cookie;
+  }
   const response=await f.call(args.path,args.method,args.data,cookie,{Origin:'https://tvattligan.test'});
   return {status:response.status,contentType:response.headers.get('content-type'),body:Buffer.from(await response.arrayBuffer()).toString('base64')};
  }
