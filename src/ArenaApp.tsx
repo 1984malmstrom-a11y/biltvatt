@@ -44,6 +44,7 @@ import './arena-battle-mode.css';
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
 const ArenaContestHub=lazy(()=>import("./ArenaContestHub"));
+const ArenaPresentation=lazy(()=>import('./ArenaPresentation'));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
 const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
 const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
@@ -164,6 +165,7 @@ const CelebrationCard=memo(function CelebrationCard({ event }: { event: Celebrat
 export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fallback={<p role="status">Laddar Arenan…</p>}><ArenaRoutes /></Suspense></ArenaShowcaseProvider>; }
 function ArenaRoutes() {
   useArenaEntryStatus(!['/arena','/arena/'].includes(window.location.pathname));
+  if(window.location.pathname==='/arena/showtime')return <ArenaPresentation/>;
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
   if(window.location.pathname==="/arena/competitions")return <ArenaContestHub/>;
   if(window.location.pathname==="/arena/superadmin/contests")return <ArenaContestHub admin/>;

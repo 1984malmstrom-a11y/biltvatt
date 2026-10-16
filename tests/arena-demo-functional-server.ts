@@ -14,6 +14,7 @@ async function command(kind:string,args:any) {
  if(kind==='view')return f.view(args.id);
  if(kind==='time'){f.setNow(args.value);return f.now();}
  if(kind==='inspect'){
+  if(args.kind==='total-changes')return {arena:f.arena.prepare('SELECT total_changes() n').get()!.n,station:f.db.prepare('SELECT total_changes() n').get()!.n};
   if(args.kind==='sale-id')return f.arena.prepare('SELECT COUNT(*) n FROM arena_registrations WHERE id=?').get(args.id);
   if(args.kind==='request-id')return f.arena.prepare('SELECT COUNT(*) n FROM arena_registrations WHERE request_id=?').get(args.id);
   if(args.kind==='voided')return f.arena.prepare('SELECT voided_at FROM arena_registrations WHERE id=?').get(args.id);

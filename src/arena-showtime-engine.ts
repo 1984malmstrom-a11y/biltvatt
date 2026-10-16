@@ -21,7 +21,7 @@ export function showtimeContribution(a:ArenaActivity,station=showtimeStation){co
 // fallback. The same receipt, achievement and fixed-point scoring functions used
 // by Arena drive this session's wholly synthetic in-memory ledger.
 export function createShowtime(){
- let scene=0,now=showtimeEpoch,playing=false,elapsed=0,nextAuto=6000,revision=0,disposed=false,serial=0;
+ let scene=0,now=showtimeEpoch,playing=false,elapsed=0,nextAuto=6000,revision=0,generation=0,disposed=false,serial=0;
  let sales:Sale[]=[],fightStart:number|null=null,fightEnd=0,frozen:ArenaFightSummary|null=null,last:ShowtimeReceipt|null=null;
  const listeners=new Set<()=>void>(),requests=new Map<string,{registration:ArenaRegistration;achievements:ReturnType<typeof evaluateArenaAchievements>}>();
  const emit=()=>{revision++;for(const listener of listeners)listener();};
@@ -32,7 +32,7 @@ export function createShowtime(){
  const ownRows=(list:Sale[],query=new URLSearchParams())=>{
   const day=new Date(now).toISOString().slice(0,10),start=query.get('period')==='custom'?query.get('start')??day:query.get('period')==='month'?'2026-10-01':query.get('period')==='week'?'2026-10-19':day,end=query.get('period')==='custom'?query.get('end')??day:day;
   let stats:ArenaStats={range:{start,end,from:`${start}T00:00:00Z`,to:`${end}T23:59:59Z`},metric:(query.get('metric')??'points') as ArenaStats['metric'],points:0,count:0,tb_ore:0,today:{count:0,points:0,sellers:0},leaderboard:showtimeBootstrap.sellers.map(s=>({...s,rank:1,points:0,count:0,tb_ore:0,activities:[]})),recent:[],campaign:{...showtimeBootstrap.campaign!,count:0,points:0},personal_goals:[],station_goals:[{id:'demo-monthly-goal',period_type:'month',start_date:'2026-10-01',end_date:'2026-10-31',target_points:500,points:0}]};
-  for(const s of list){const seller=showtimeBootstrap.sellers.find(p=>p.id===s.seller_id),a=activity(s.activity_id);if(seller&&a)stats=arenaLocalSale(stats,seller,a,s,{activityId:query.get('activity_id')??'',category:query.get('category')??''},new Date(now))!;}
+  for(const s of [...list].sort((a,b)=>a.registered_at.localeCompare(b.registered_at))){const seller=showtimeBootstrap.sellers.find(p=>p.id===s.seller_id),a=activity(s.activity_id);if(seller&&a)stats=arenaLocalSale(stats,seller,a,s,{activityId:query.get('activity_id')??'',category:query.get('category')??''},new Date(now))!;}
   // The authoritative demo snapshot uses the same rank tie breakers as local sales.
   stats.leaderboard.sort((a,b)=>(stats.metric==='tb'?(b.tb_ore??0)-(a.tb_ore??0):stats.metric==='count'?b.count-a.count:b.points-a.points)||b.points-a.points||b.count-a.count||a.name.localeCompare(b.name,'sv')||a.id.localeCompare(b.id));stats.leaderboard.forEach((p,i)=>p.rank=i+1);
   return stats;
@@ -58,15 +58,15 @@ export function createShowtime(){
   requests.set(request_id,result);last={id:registration.id,seller:showtimeBootstrap.sellers.find(s=>s.id===seller_id)!.name,product:a.name,...showtimeContribution(a),fight:fightStart!==null&&now<fightEnd&&qualifies(a)?a.points:0};emit();return structuredClone(result);
  }
  function startFight(){if(fightStart!==null)return;fightStart=now;fightEnd=now+2*3600000;for(let i=0;i<62;i++)append('demo-peter',showtimeBootstrap.activities[0],showtimeStation);for(let i=0;i<61;i++)append('demo-sofia',showtimeBootstrap.activities[0],showtimeOpponent);append('demo-anton',showtimeBootstrap.activities[3],showtimeOpponent);emit();}
- function reset(target=0){scene=Math.max(0,Math.min(5,target));now=showtimeEpoch;elapsed=0;nextAuto=6000;sales=[];serial=0;requests.clear();fightStart=null;fightEnd=0;frozen=null;last=null;
-  for(const [i,n] of [17,16,12,10,8].entries())for(let j=0;j<n;j++)append(showtimeBootstrap.sellers[i].id,showtimeBootstrap.activities[0],showtimeStation,now-(n-j)*60000);
+ function reset(target=0){generation++;scene=Math.max(0,Math.min(5,target));now=showtimeEpoch;elapsed=0;nextAuto=6000;sales=[];serial=0;requests.clear();fightStart=null;fightEnd=0;frozen=null;last=null;
+  for(const [i,n] of [17,16,12,10,8].entries())for(let j=0;j<n;j++)append(showtimeBootstrap.sellers[i].id,showtimeBootstrap.activities[0],showtimeStation,now-(n-j)*60000-i*5000);
   if(scene===2)append('demo-peter',showtimeBootstrap.activities[3]);
   if(scene>=4){now+=60000;startFight();now=fightEnd-600000;if(scene===5)append('demo-sofia',showtimeBootstrap.activities[0],showtimeOpponent);}
   emit();
  }
  const totals=()=>{const list=activeSales().filter(s=>s.station_id===showtimeStation);return list.reduce((total,s)=>{const c=showtimeContribution(activity(s.activity_id)!);return {internal:total.internal+c.internal,nationalIndividual:total.nationalIndividual+c.nationalIndividual,nationalStation:total.nationalStation+c.nationalStation};},{internal:0,nationalIndividual:0,nationalStation:0});};
  reset();
- return {subscribe:(listener:()=>void)=>{listeners.add(listener);return()=>{listeners.delete(listener);};},get revision(){return revision;},get scene(){return scene;},get playing(){return playing;},get receipt(){return last?{...last}:null;},get now(){return now;},stats,totals,fight,register,
+ return {subscribe:(listener:()=>void)=>{listeners.add(listener);return()=>{listeners.delete(listener);};},get revision(){return revision;},get generation(){return generation;},get scene(){return scene;},get playing(){return playing;},get receipt(){return last?{...last}:null;},get now(){return now;},stats,totals,fight,register,
   play(){if(disposed)return;playing=true;emit();},pause(){playing=false;emit();},go(target:number){if(disposed)return;const was=playing;playing=false;reset(target);playing=was;emit();},restart(){if(disposed)return;playing=false;reset();},startFight,
   urgency(minutes:number){if(fightStart===null||frozen)return;now=fightEnd-Math.max(1,Math.min(120,minutes))*60000;emit();},
   tick(ms:number){if(disposed||!playing||!Number.isFinite(ms)||ms<=0)return;const step=Math.min(ms,1000);now+=step;elapsed+=step;if((scene===1||scene===4)&&elapsed>=nextAuto){const i=Math.floor(nextAuto/6000)-1;nextAuto+=6000;if(scene===4){append('demo-sofia',showtimeBootstrap.activities[i%2?3:0],showtimeOpponent);}else register(`auto:${nextAuto}`,['demo-maja','demo-erik','demo-jonas'][i%3],showtimeBootstrap.activities[i%7].id);}if(fightStart!==null&&now>=fightEnd&&!frozen)frozen=fight();emit();},
