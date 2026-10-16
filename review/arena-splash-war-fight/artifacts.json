@@ -1,0 +1,425 @@
+{
+  "title": "Arena splash & premium War Fight",
+  "startHead": "52a6d87d8024e7b5bd995db0253536130717e50e",
+  "finalHead": "97da10c7c95a0c5b5fce6aab8e81e52e8be80559",
+  "curatedPngCount": 21,
+  "images": [
+    {
+      "file": "splash-1920x1080.png",
+      "group": "Splash",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "splash-1024x768.png",
+      "group": "Splash",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "splash-390x844.png",
+      "group": "Splash",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "splash-844x390.png",
+      "group": "Splash",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "home-after-splash-1920x1080.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-normal-1920x1080.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "after-fight-panel.png",
+      "group": "Comparison",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "element"
+    },
+    {
+      "file": "fight-normal-1536x864.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-normal-1448x1086.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-normal-1024x768.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-mobile-390x844.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-landscape-844x390.png",
+      "group": "Fight",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-leading-1920x1080.png",
+      "group": "States",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-tie-1920x1080.png",
+      "group": "States",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-60min-1920x1080.png",
+      "group": "States",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-15min-1920x1080.png",
+      "group": "States",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-5min-1920x1080.png",
+      "group": "States",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "reduced-motion-static-fight.png",
+      "group": "Accessibility",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "before-fight-panel.png",
+      "group": "Comparison",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "capture": "element"
+    },
+    {
+      "file": "splash-error-390x844.png",
+      "group": "Loading resilience",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "capture": "viewport"
+    },
+    {
+      "file": "splash-delayed-390x844.png",
+      "group": "Loading resilience",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "capture": "viewport"
+    }
+  ],
+  "workingTreeClean": true,
+  "files": [
+    {
+      "path": "after-fight-panel.png",
+      "bytes": 209803,
+      "sha256": "6abed805e137ee6bfbe076eda713e24661b8493cacac207c06c9ed123c997a55"
+    },
+    {
+      "path": "before-fight-panel.png",
+      "bytes": 251940,
+      "sha256": "e0af34bc2945425245daa88c8f037d867e837a0e0e0252510b91449f8331ba36"
+    },
+    {
+      "path": "build.log",
+      "bytes": 3014,
+      "sha256": "dc4952743acd8f4cc20d5ecd83182d48481d8253fdd2a35c31df1eebcfa644d8"
+    },
+    {
+      "path": "capture-manifest.json",
+      "bytes": 3491,
+      "sha256": "c54419260f0bd3bfa44f9541a97f8aa96f03b208a705a9c948bf505855966d40"
+    },
+    {
+      "path": "changed-files.txt",
+      "bytes": 647,
+      "sha256": "67c2533e5f37bc414dd6233b980da28408832a3aa2e3d6a75496fcc1dcd7e88b"
+    },
+    {
+      "path": "fight-15min-1920x1080.png",
+      "bytes": 1772118,
+      "sha256": "7aa5fe6d7bbece3a23665f05bd25a6c3eb3b40bae2c3960ab5eacd53542d45f4"
+    },
+    {
+      "path": "fight-5min-1920x1080.png",
+      "bytes": 1776143,
+      "sha256": "30136af92b41d000a16e0ac806f46cac1f3b3ccf094d4a0855ecfc5f891fe2ad"
+    },
+    {
+      "path": "fight-60min-1920x1080.png",
+      "bytes": 1769384,
+      "sha256": "e2aec433f4bd0ec94d9aa1c3800dc9a8c28086d4a6ea9a16f708b6a82564a80c"
+    },
+    {
+      "path": "fight-landscape-844x390.png",
+      "bytes": 365830,
+      "sha256": "0d78b802a14980dcabf805f88744b48af8fb59cb1053db27a1c8c6fadc6828ce"
+    },
+    {
+      "path": "fight-leading-1920x1080.png",
+      "bytes": 1764465,
+      "sha256": "f43d200b5ad87f51b87e884fce08a492d239b3345b16cd842e5d3023fcd2dda9"
+    },
+    {
+      "path": "fight-mobile-390x844.png",
+      "bytes": 387229,
+      "sha256": "df3c2785408d8f9066791d7c54742f1a80f5d7de551febf957b9e0b109e930f5"
+    },
+    {
+      "path": "fight-normal-1024x768.png",
+      "bytes": 771793,
+      "sha256": "df118210d97592f9df2885afa963570247eacfad99a2f46396e491b9645e4702"
+    },
+    {
+      "path": "fight-normal-1448x1086.png",
+      "bytes": 1392649,
+      "sha256": "097a1f2eb4d94f7ec07db05b44280e1cc5337886a7a08a802d0563af4b998c22"
+    },
+    {
+      "path": "fight-normal-1536x864.png",
+      "bytes": 1223230,
+      "sha256": "d110d91a44a7e440bba3740fd0388c5115330ad6c6652deb5304451e79ee4e81"
+    },
+    {
+      "path": "fight-normal-1920x1080.png",
+      "bytes": 1763721,
+      "sha256": "3b8ede19fe483488eabf6a015f5ac0208c61c567cc21d0f01d153c4fbc2a97cd"
+    },
+    {
+      "path": "fight-tie-1920x1080.png",
+      "bytes": 1760741,
+      "sha256": "06e26f5d4b1adb5fcabb75f7f16a5c3f6fd42bf09f4f8505735b8cf8fdd7dc4c"
+    },
+    {
+      "path": "final-report.md",
+      "bytes": 3670,
+      "sha256": "80838c8f66bef4ed44b4ad573e089e12dd945a23f35a4d341fc5d5c11cc645f9"
+    },
+    {
+      "path": "git-final-state.json",
+      "bytes": 449,
+      "sha256": "459b2adb7f995acf07f0c7643cd0a1c810c16c4d8961f87448f455a7d6903aed"
+    },
+    {
+      "path": "home-after-splash-1920x1080.png",
+      "bytes": 1677412,
+      "sha256": "8c0008f75f1d26d6cc54cce2f119d8e684cec66d80ca797ce4e4f531cf45decd"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6038,
+      "sha256": "982a4354195d036321149116789177c87015650d41cba5fadf69a5faecaf9e27"
+    },
+    {
+      "path": "performance-report.json",
+      "bytes": 10002,
+      "sha256": "721315cc4b797ffc64ccb12e46177c09d535e16dc8f78d55990b6bdda49a04c7"
+    },
+    {
+      "path": "performance-review.md",
+      "bytes": 1996,
+      "sha256": "442aa6f6f2b44af5caa91b293f0936459551eaa0858fcf6b0ebf864852b1feb8"
+    },
+    {
+      "path": "playwright-entry-results.json",
+      "bytes": 27686,
+      "sha256": "827abd53a09417581e7bab1bfc0d8a935b0ca14f26e1fff0645213b31a68541b"
+    },
+    {
+      "path": "playwright-entry.log",
+      "bytes": 3381,
+      "sha256": "9ede2252c036ca2e4107e55c925e828420908ebf91d2b7cedff489ada564ae5e"
+    },
+    {
+      "path": "playwright-followup-results.json",
+      "bytes": 72404,
+      "sha256": "03fe5d5986f01d87e64b259313f21c66d634277e67358422bbe2540b1fe0404e"
+    },
+    {
+      "path": "playwright-followup.log",
+      "bytes": 8157,
+      "sha256": "4e10f8b88ea897e1e027485b45065c0a0631916f165acb9c050ba0ac58da9a99"
+    },
+    {
+      "path": "playwright-native-results.json",
+      "bytes": 3090,
+      "sha256": "467d09b3fa9e3d3aead2d5e984f450ecc0962807e9b97f48b78b8b40d8b22cba"
+    },
+    {
+      "path": "playwright-native.log",
+      "bytes": 531,
+      "sha256": "c05a51a00e0642e6cf1712034ced44477a5af7f9537e90c9570433bead876c26"
+    },
+    {
+      "path": "playwright-new.log",
+      "bytes": 4502,
+      "sha256": "957ab2c8cf78e0582c777fcbceb96d35324b6a2fb7a4bfd20c7aabba6cd83521"
+    },
+    {
+      "path": "playwright-results.json",
+      "bytes": 271807,
+      "sha256": "b507320d7655ccfa39a0cdefc73725f936c12a4f460f8f9b31f5b6771e4e33b2"
+    },
+    {
+      "path": "playwright.log",
+      "bytes": 31720,
+      "sha256": "ba28c07696e5cef52c496b618dfc617637feff59dbbc95057ac1718b50ef1085"
+    },
+    {
+      "path": "reduced-motion-static-fight.png",
+      "bytes": 1784236,
+      "sha256": "c1cc503c64e4dbefe4f6eb731b7d108f2be18a9df0dbea31fd93975cf2966a91"
+    },
+    {
+      "path": "responsive-report.json",
+      "bytes": 5006,
+      "sha256": "eaf67c7001718db052ce535063db0031b11869591cca97d26451417f4f0a0efb"
+    },
+    {
+      "path": "responsive-report.md",
+      "bytes": 1097,
+      "sha256": "c55e9568db6470561a4f995d3cb06ccbdf10efe588d3c36df41b001cc6b0d278"
+    },
+    {
+      "path": "session-refresh-verification.json",
+      "bytes": 135,
+      "sha256": "4588d5b9ef2f992bd38c6f513cf6bf1ccd8f8831a2b0e2e92fa49da496f8e3cd"
+    },
+    {
+      "path": "splash-1024x768.png",
+      "bytes": 746187,
+      "sha256": "2ebce68e0194ddb4408ddfd661a744fed6f7c2615bc766585cb311b751bb0b74"
+    },
+    {
+      "path": "splash-1920x1080.png",
+      "bytes": 1997775,
+      "sha256": "17cd905826dac664a153868650a382c7bfb1bd7585f9b54587867a42c200030e"
+    },
+    {
+      "path": "splash-390x844.png",
+      "bytes": 224338,
+      "sha256": "cabcd447c5dfb3db4d49045af4f933d6184a3fa4482b6f996acf7efb8a503974"
+    },
+    {
+      "path": "splash-844x390.png",
+      "bytes": 405500,
+      "sha256": "8426c510983de1befb9a22b65b134fadee63df3fffd870b2496814cc4ba09433"
+    },
+    {
+      "path": "splash-delayed-390x844.png",
+      "bytes": 225866,
+      "sha256": "90b2c4599a4f0cd81f23d1469e4e627bf306c0602e325af4f1ef679b611eb20f"
+    },
+    {
+      "path": "splash-error-390x844.png",
+      "bytes": 226725,
+      "sha256": "e80523af941be3dcba6adbfc0e197021d66d3f0257d06f0bd348e4e0a38875ab"
+    },
+    {
+      "path": "test-report.md",
+      "bytes": 1648,
+      "sha256": "0ddbf2d1afb979625b08672ca8f38b807f2a6dc15d1a4bf3c6210d530d7cec6d"
+    },
+    {
+      "path": "test-summary.json",
+      "bytes": 53591,
+      "sha256": "88f475075c162e970dfd03fc4eaa3aa9f3dd9224b602b6e06652c10c1f15243c"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 254,
+      "sha256": "31fa748d865d3e344ee49d5828ee11adf82c11961f347c8f3816dfc985ca3a35"
+    },
+    {
+      "path": "unit-test.log",
+      "bytes": 7139,
+      "sha256": "f806400e6a0a83b7a98e3ee34ac2164bb2ef1fe7cd9fd66c4e205297cacc37b3"
+    }
+  ]
+}

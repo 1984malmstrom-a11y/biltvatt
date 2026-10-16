@@ -1,0 +1,191 @@
+[
+  {
+    "file": "splash-1920x1080.png",
+    "group": "Splash",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "splash-1024x768.png",
+    "group": "Splash",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "splash-390x844.png",
+    "group": "Splash",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "splash-844x390.png",
+    "group": "Splash",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "home-after-splash-1920x1080.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-normal-1920x1080.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "after-fight-panel.png",
+    "group": "Comparison",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "element"
+  },
+  {
+    "file": "fight-normal-1536x864.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 1536,
+      "height": 864
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-normal-1448x1086.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 1448,
+      "height": 1086
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-normal-1024x768.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-mobile-390x844.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-landscape-844x390.png",
+    "group": "Fight",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-leading-1920x1080.png",
+    "group": "States",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-tie-1920x1080.png",
+    "group": "States",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-60min-1920x1080.png",
+    "group": "States",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-15min-1920x1080.png",
+    "group": "States",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "fight-5min-1920x1080.png",
+    "group": "States",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "reduced-motion-static-fight.png",
+    "group": "Accessibility",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "before-fight-panel.png",
+    "group": "Comparison",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "capture": "element"
+  },
+  {
+    "file": "splash-error-390x844.png",
+    "group": "Loading resilience",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "capture": "viewport"
+  },
+  {
+    "file": "splash-delayed-390x844.png",
+    "group": "Loading resilience",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "capture": "viewport"
+  }
+]

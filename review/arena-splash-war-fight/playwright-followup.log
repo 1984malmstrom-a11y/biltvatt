@@ -1,0 +1,79 @@
+
+Running 66 tests using 1 worker
+
+(node:595853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1920x1080
+[2/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1536x864
+[3/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1448x1086
+[4/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1024x768
+[5/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 390x844
+[6/66] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 844x390
+[7/66] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen all authority only
+[8/66] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen activity authority only
+[9/66] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen focus authority only
+[10/66] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen category authority only
+[11/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1920x1080
+[12/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1536x864
+[13/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1448x1086
+[14/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1024x768
+[15/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 390x844
+[16/66] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 844x390
+[17/66] e2e/arena-fight-objective.spec.ts:37:1 › Fight objectives: live transitions remove frozen emphasis, reduced motion and missing authority fail closed
+[18/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1920x1080
+[19/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1920x1080
+[20/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1920x1080
+[21/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1536x864
+[22/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1536x864
+[23/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1536x864
+[24/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1448x1086
+[25/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1448x1086
+[26/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1448x1086
+[27/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1024x768
+[28/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1024x768
+[29/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1024x768
+[30/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 390x844
+[31/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 390x844
+[32/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 390x844
+[33/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 844x390
+[34/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 844x390
+[35/66] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 844x390
+[36/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1920x1080
+[37/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1536x864
+[38/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1448x1086
+[39/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1024x768
+[40/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 390x844
+[41/66] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 844x390
+[42/66] e2e/arena-fight-objective.spec.ts:49:1 › Fight objectives: lightweight entry with static reduced-motion alternative
+[43/66] e2e/arena-splash-war-fight.spec.ts:12:1 › Intro: first session holds presentation for three seconds, then refresh and internal navigation skip it
+[44/66] e2e/arena-splash-war-fight.spec.ts:20:1 › Intro: explicit showcase replay keeps the exact locked emblem artwork
+[45/66] e2e/arena-splash-war-fight.spec.ts:26:1 › Intro: delayed readiness stays honest after three seconds and recovers when data arrives
+[46/66] e2e/arena-splash-war-fight.spec.ts:32:1 › Intro: failed initialization offers retry instead of an endless progress loop
+[47/66] e2e/arena-splash-war-fight.spec.ts:36:1 › Intro: blocked sessionStorage never blocks initialization or internal navigation
+[48/66] e2e/arena-splash-war-fight.spec.ts:39:1 › Intro: a late bootstrap success cannot erase an initial statistics failure
+[49/66] e2e/arena-splash-war-fight.spec.ts:43:1 › Intro: failed lazy application chunk has a clear reload action
+[50/66] e2e/arena-splash-war-fight.spec.ts:46:1 › Intro: a stalled initialization offers retry after the bounded wait
+[51/66] e2e/arena-splash-war-fight.spec.ts:49:1 › Intro: reduced motion is static, exits as soon as ready and leaves keyboard access
+[52/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 1920x1080
+[53/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 1536x864
+[54/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 1448x1086
+[55/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 1024x768
+[56/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 390x844
+[57/66] e2e/arena-splash-war-fight.spec.ts:54:33 › War Fight: responsive contents and unchanged stage geometry 844x390
+[58/66] e2e/arena-splash-war-fight.spec.ts:65:80 › War Fight: inclusive 60 minute threshold
+[59/66] e2e/arena-splash-war-fight.spec.ts:65:80 › War Fight: inclusive 15 minute threshold
+[60/66] e2e/arena-splash-war-fight.spec.ts:65:80 › War Fight: inclusive 5 minute threshold
+[61/66] e2e/arena-splash-war-fight.spec.ts:68:54 › War Fight: honest points metric, station identity and lead
+[62/66] e2e/arena-splash-war-fight.spec.ts:68:54 › War Fight: honest tb metric, station identity and lead
+[63/66] e2e/arena-splash-war-fight.spec.ts:68:54 › War Fight: honest count metric, station identity and lead
+[64/66] e2e/arena-splash-war-fight.spec.ts:71:1 › War Fight: daily series distinguishes match points from today and shows tie and frozen server result
+[65/66] e2e/arena-splash-war-fight.spec.ts:75:1 › War Fight: isolated local second tick, no per-second requests, zero awaits server and hidden tab pauses
+[66/66] e2e/arena-splash-war-fight.spec.ts:82:1 › War Fight: reduced motion stops perimeter pulse and keeps countdown readable
+  66 passed (1.4m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

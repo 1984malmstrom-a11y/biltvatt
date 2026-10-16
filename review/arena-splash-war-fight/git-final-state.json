@@ -1,0 +1,15 @@
+{
+  "startHead": "52a6d87d8024e7b5bd995db0253536130717e50e",
+  "finalHead": "97da10c7c95a0c5b5fce6aab8e81e52e8be80559",
+  "branch": "feat/arena-v1",
+  "localCommitsCreated": 1,
+  "workingTreeClean": true,
+  "originFeatTrackingUnchanged": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "push": false,
+  "deploy": false,
+  "remoteMigration": false,
+  "merge": false,
+  "branchSwitch": false,
+  "changedFileCount": 24,
+  "lockedEmblemUnchanged": true
+}

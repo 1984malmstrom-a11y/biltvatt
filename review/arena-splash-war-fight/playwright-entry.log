@@ -1,0 +1,37 @@
+
+Running 24 tests using 1 worker
+
+(node:600566) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/24] e2e/arena-splash-war-fight.spec.ts:12:1 › Intro: first session holds presentation for three seconds, then refresh and internal navigation skip it
+[2/24] e2e/arena-splash-war-fight.spec.ts:21:1 › Intro: explicit showcase replay keeps the exact locked emblem artwork
+[3/24] e2e/arena-splash-war-fight.spec.ts:27:1 › Intro: delayed readiness stays honest after three seconds and recovers when data arrives
+[4/24] e2e/arena-splash-war-fight.spec.ts:33:1 › Intro: failed initialization offers retry instead of an endless progress loop
+[5/24] e2e/arena-splash-war-fight.spec.ts:37:1 › Intro: blocked sessionStorage never blocks initialization or internal navigation
+[6/24] e2e/arena-splash-war-fight.spec.ts:40:1 › Intro: a late bootstrap success cannot erase an initial statistics failure
+[7/24] e2e/arena-splash-war-fight.spec.ts:44:1 › Intro: failed lazy application chunk has a clear reload action
+[8/24] e2e/arena-splash-war-fight.spec.ts:47:1 › Intro: a stalled initialization offers retry after the bounded wait
+[9/24] e2e/arena-splash-war-fight.spec.ts:50:1 › Intro: reduced motion is static, exits as soon as ready and leaves keyboard access
+[10/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 1920x1080
+[11/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 1536x864
+[12/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 1448x1086
+[13/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 1024x768
+[14/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 390x844
+[15/24] e2e/arena-splash-war-fight.spec.ts:55:33 › War Fight: responsive contents and unchanged stage geometry 844x390
+[16/24] e2e/arena-splash-war-fight.spec.ts:66:80 › War Fight: inclusive 60 minute threshold
+[17/24] e2e/arena-splash-war-fight.spec.ts:66:80 › War Fight: inclusive 15 minute threshold
+[18/24] e2e/arena-splash-war-fight.spec.ts:66:80 › War Fight: inclusive 5 minute threshold
+[19/24] e2e/arena-splash-war-fight.spec.ts:69:54 › War Fight: honest points metric, station identity and lead
+[20/24] e2e/arena-splash-war-fight.spec.ts:69:54 › War Fight: honest tb metric, station identity and lead
+[21/24] e2e/arena-splash-war-fight.spec.ts:69:54 › War Fight: honest count metric, station identity and lead
+[22/24] e2e/arena-splash-war-fight.spec.ts:72:1 › War Fight: daily series distinguishes match points from today and shows tie and frozen server result
+[23/24] e2e/arena-splash-war-fight.spec.ts:76:1 › War Fight: isolated local second tick, no per-second requests, zero awaits server and hidden tab pauses
+[24/24] e2e/arena-splash-war-fight.spec.ts:83:1 › War Fight: reduced motion stops perimeter pulse and keeps countdown readable
+  24 passed (32.8s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

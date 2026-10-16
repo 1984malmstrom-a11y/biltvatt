@@ -1,0 +1,1534 @@
+{
+  "method": "Latest final result per unique file/title/project across the main production run, final scope follow-up, direct local Worker native rerun, and final entry/session run. Raw results are preserved.",
+  "stats": {
+    "expected": 244,
+    "skipped": 2,
+    "unexpected": 0,
+    "flaky": 0,
+    "totalUnique": 246
+  },
+  "runs": [
+    {
+      "file": "playwright-results.json",
+      "stats": {
+        "startTime": "2026-10-16T16:10:33.610Z",
+        "duration": 412088.363,
+        "expected": 243,
+        "skipped": 2,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "playwright-followup-results.json",
+      "stats": {
+        "startTime": "2026-10-16T16:22:12.542Z",
+        "duration": 82972.26299999999,
+        "expected": 66,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "playwright-native-results.json",
+      "stats": {
+        "startTime": "2026-10-16T16:21:52.272Z",
+        "duration": 4973.673000000001,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "playwright-entry-results.json",
+      "stats": {
+        "startTime": "2026-10-16T16:25:06.055Z",
+        "duration": 32801.282,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious single-category with normal non-qualifiers 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious monthly-focus with normal non-qualifiers 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: obvious all-categories with normal non-qualifiers 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: local versus Fight names, contributions and recent activity panels",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: larger portrait objective preserves seven-ring grid 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-context-correction.spec.ts",
+      "title": "Context correction: Fight event feed and sale lead-change retain station names",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: compact pulse and unchanged stage 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: frozen all authority only",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: frozen activity authority only",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: frozen focus authority only",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: frozen category authority only",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: temporary ring outside orbit and seller flow 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: live transitions remove frozen emphasis, reduced motion and missing authority fail closed",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily points temporary panel fits 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily tb temporary panel fits 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: daily count temporary panel fits 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 1920x1080",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 1536x864",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 1448x1086",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 1024x768",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 390x844",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: qualifying badges stay clear at 844x390",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fight-objective.spec.ts",
+      "title": "Fight objectives: lightweight entry with static reduced-motion alternative",
+      "status": "passed",
+      "source": "playwright-followup-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: active, lead change and finished 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: active, lead change and finished 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: active, lead change and finished 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: active, lead change and finished 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: active, lead change and finished 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: correct tie, count metric and reduced-motion announcement",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: boundary timer fetches final state without waiting for poll",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: Superadmin creates a timezone-safe event for approved stations",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-fights.spec.ts",
+      "title": "Butiksfight: native local Worker scores a sale and freezes result before later undo",
+      "status": "skipped",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader opaque scene, separated text and immediate next sale 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal opaque scene, separated text and immediate next sale 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: leader reduced motion and automatic dismissal",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-hero-correction.spec.ts",
+      "title": "Champion correction: station-goal reduced motion and automatic dismissal",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily match points and provisional result without overflow 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily history and league rounds 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily history and league rounds 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily history and league rounds 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily history and league rounds 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: daily sale crossing is distinct from series lead, shows station under seller and never repeats",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: combined achievement hierarchy, reduced motion and local station-name rule",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: Superadmin configures daily rules and previews a ten-team round robin",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: hub lists own fights and series, frozen daily PDF retains both result types",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: full fight announces the catching station at a tie, independently of stale lead metadata",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-premium-series.spec.ts",
+      "title": "Premium: native local Worker supports daily undo and private series without changing total fights",
+      "status": "skipped",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 1536x864",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: actual seller faces, start and hero 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: portrait QA rejects zero-size and hidden portraits; uploaded images recover",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: polling cadence, hidden pause/resume and active fight mode in React",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: immediate optimistic board/feed, selected state and rollback",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: fight polling, event feed, lead change and final",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-release.spec.ts",
+      "title": "Release: downloaded PDF bytes from frozen report renderer",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: portraits, profile and distinct champion hero 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: portraits, profile and distinct champion hero 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: portraits, profile and distinct champion hero 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: portraits, profile and distinct champion hero 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: portraits, profile and distinct champion hero 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: fight widget, true sale crossing, tie and final once 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: fight widget, true sale crossing, tie and final once 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: fight widget, true sale crossing, tie and final once 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: fight widget, true sale crossing, tie and final once 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: fight widget, true sale crossing, tie and final once 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: premium full fight duel",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: premium full fight ranking",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: premium full fight winner",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: premium full fight tie-final",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: Superadmin fight manager has participants, phases and leader",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: Arena final winner and motivating loss, once winner",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: Arena final winner and motivating loss, once loss",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: one hero for simultaneous goal, leader and fight, undo clears receipt",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: countdown alone becomes urgent and respects reduced motion",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-showroom.spec.ts",
+      "title": "Showroom: full TB duel values fit wide and portrait widget",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: first session holds presentation for three seconds, then refresh and internal navigation skip it",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: explicit showcase replay keeps the exact locked emblem artwork",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: delayed readiness stays honest after three seconds and recovers when data arrives",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: failed initialization offers retry instead of an endless progress loop",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: blocked sessionStorage never blocks initialization or internal navigation",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: a late bootstrap success cannot erase an initial statistics failure",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: failed lazy application chunk has a clear reload action",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: a stalled initialization offers retry after the bounded wait",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "Intro: reduced motion is static, exits as soon as ready and leaves keyboard access",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 1920x1080",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 1536x864",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 1448x1086",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 1024x768",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 390x844",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: responsive contents and unchanged stage geometry 844x390",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: inclusive 60 minute threshold",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: inclusive 15 minute threshold",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: inclusive 5 minute threshold",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: honest points metric, station identity and lead",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: honest tb metric, station identity and lead",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: honest count metric, station identity and lead",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: daily series distinguishes match points from today and shows tie and frozen server result",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: isolated local second tick, no per-second requests, zero awaits server and hidden tab pauses",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena-splash-war-fight.spec.ts",
+      "title": "War Fight: reduced motion stops perimeter pulse and keeps countdown readable",
+      "status": "passed",
+      "source": "playwright-entry-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: locked daily home, readable feed and independent modal filters 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: locked daily home, readable feed and independent modal filters 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: locked daily home, readable feed and independent modal filters 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: locked daily home, readable feed and independent modal filters 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: locked daily home, readable feed and independent modal filters 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Butiksfight state panel preserves activity hit areas 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Butiksfight state panel preserves activity hit areas 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Butiksfight state panel preserves activity hit areas 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Butiksfight state panel preserves activity hit areas 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Butiksfight state panel preserves activity hit areas 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: desktop-orbit anpassas till tillgängligt utrymme 1366x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: desktop-orbit anpassas till tillgängligt utrymme 1440x900",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: desktop-orbit anpassas till tillgängligt utrymme 1280x800",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: desktop-orbit anpassas till tillgängligt utrymme 1920x1200",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: desktop-orbit anpassas till tillgängligt utrymme 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: sju rena produktmotiv med contain och fri text 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: sju rena produktmotiv med contain och fri text 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: sju rena produktmotiv med contain och fri text 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: sju rena produktmotiv med contain och fri text 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: sju rena produktmotiv med contain och fri text 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: vanlig celebration 2,6 s löper ut utan att låsa nästa val",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: milestone 3,6 s löper ut utan att låsa nästa val",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: målrubrik skiljer sig från fokus och bevarar värden station",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-points",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-count",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: hero burst är läsbar, kort och klickar igenom 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: hero burst är läsbar, kort och klickar igenom 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: hero burst är läsbar, kort och klickar igenom 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: hero burst är läsbar, kort och klickar igenom 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena-admin: mänskliga listor, vald post, ordning och periodförval",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: långsamt milestone-svar missas inte efter en kort burst",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: långsamt milestone-svar stör inte nästa säljarval",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: säljarpopup och Min Arena med mål 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: säljarpopup och Min Arena med mål 1366x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: säljarpopup och Min Arena med mål 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: säljarpopup och Min Arena med mål 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: säljarpopup och Min Arena med mål 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1448x1086",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: TB-badge, snapshotbelöning, topplista och Min Arena 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: TB-badge, snapshotbelöning, topplista och Min Arena 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Idag, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Den här veckan, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Den här månaden, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Vald period, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Kaffe + bulle, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: centralt achievement-kvitto för Aktuellt fokus, en hero och dedup",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: leader firar utan att blockera nästa registrering 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: leader firar utan att blockera nästa registrering 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: leader firar utan att blockera nästa registrering 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: leader firar utan att blockera nästa registrering 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: personal-goal firar utan att blockera nästa registrering 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: personal-goal firar utan att blockera nästa registrering 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: personal-goal firar utan att blockera nästa registrering 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: personal-goal firar utan att blockera nästa registrering 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: station-goal firar utan att blockera nästa registrering 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: station-goal firar utan att blockera nästa registrering 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: station-goal firar utan att blockera nästa registrering 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: station-goal firar utan att blockera nästa registrering 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: touch och ingen vertikal overflow 1920x1080",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: touch och ingen vertikal overflow 1024x768",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: touch och ingen vertikal overflow 390x844",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: touch och ingen vertikal overflow 844x390",
+      "status": "passed",
+      "source": "playwright-results.json"
+    },
+    {
+      "file": "arena.spec.ts",
+      "title": "Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI",
+      "status": "passed",
+      "source": "playwright-native-results.json"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "pass": true,
+  "refreshDuringIntroAtMs": 228,
+  "introCountAfterRefresh": 0,
+  "sessionStorageRecordedAtFirstPresentation": true
+}

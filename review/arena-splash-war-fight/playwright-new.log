@@ -1,0 +1,65 @@
+
+Running 21 tests using 1 worker
+
+(node:556039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/21] e2e/arena-splash-war-fight.spec.ts:12:1 › Intro: first session holds presentation for three seconds, then refresh and internal navigation skip it
+[2/21] e2e/arena-splash-war-fight.spec.ts:20:1 › Intro: explicit showcase replay keeps the exact locked emblem artwork
+  1) e2e/arena-splash-war-fight.spec.ts:20:1 › Intro: explicit showcase replay keeps the exact locked emblem artwork 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 4
+
+    - Array []
+    + Array [
+    +   "M3 38 21 4l19 34h-9L21 19 12 38Z",
+    +   "m17 29 14 9h-9l-9-6Z",
+    + ]
+
+      21 |  await session(page);await mock(page);await page.goto('/arena?showcase=1&intro=1');await expect(page.locator('.arena-intro')).toBeVisible();
+      22 |  const path=await page.locator('.arena-intro-symbol>svg path').evaluateAll(es=>es.map(e=>e.getAttribute('d')));
+    > 23 |  expect(path).toEqual(await page.locator('.arena-brand>svg path').evaluateAll(es=>es.map(e=>e.getAttribute('d'))));
+         |               ^
+      24 |  await expect(page.locator('.arena-intro-symbol')).toHaveCSS('transform','none');
+      25 | });
+      26 | test('Intro: delayed readiness stays honest after three seconds and recovers when data arrives',async({page})=>{
+        at /workspace/biltvatt/e2e/arena-splash-war-fight.spec.ts:23:15
+
+    Error Context: test-results/arena-splash-war-fight-Int-9467d-exact-locked-emblem-artwork/error-context.md
+
+
+(node:556253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[3/21] e2e/arena-splash-war-fight.spec.ts:26:1 › Intro: delayed readiness stays honest after three seconds and recovers when data arrives
+[4/21] e2e/arena-splash-war-fight.spec.ts:32:1 › Intro: failed initialization offers retry instead of an endless progress loop
+[5/21] e2e/arena-splash-war-fight.spec.ts:36:1 › Intro: blocked sessionStorage never blocks initialization or internal navigation
+[6/21] e2e/arena-splash-war-fight.spec.ts:39:1 › Intro: reduced motion is static, exits as soon as ready and leaves keyboard access
+[7/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 1920x1080
+[8/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 1536x864
+[9/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 1448x1086
+[10/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 1024x768
+[11/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 390x844
+[12/21] e2e/arena-splash-war-fight.spec.ts:44:33 › War Fight: responsive contents and unchanged stage geometry 844x390
+[13/21] e2e/arena-splash-war-fight.spec.ts:55:80 › War Fight: inclusive 60 minute threshold
+[14/21] e2e/arena-splash-war-fight.spec.ts:55:80 › War Fight: inclusive 15 minute threshold
+[15/21] e2e/arena-splash-war-fight.spec.ts:55:80 › War Fight: inclusive 5 minute threshold
+[16/21] e2e/arena-splash-war-fight.spec.ts:58:54 › War Fight: honest points metric, station identity and lead
+[17/21] e2e/arena-splash-war-fight.spec.ts:58:54 › War Fight: honest tb metric, station identity and lead
+[18/21] e2e/arena-splash-war-fight.spec.ts:58:54 › War Fight: honest count metric, station identity and lead
+[19/21] e2e/arena-splash-war-fight.spec.ts:61:1 › War Fight: daily series distinguishes match points from today and shows tie and frozen server result
+[20/21] e2e/arena-splash-war-fight.spec.ts:65:1 › War Fight: isolated local second tick, no per-second requests, zero awaits server and hidden tab pauses
+[21/21] e2e/arena-splash-war-fight.spec.ts:72:1 › War Fight: reduced motion stops perimeter pulse and keeps countdown readable
+  1 failed
+    e2e/arena-splash-war-fight.spec.ts:20:1 › Intro: explicit showcase replay keeps the exact locked emblem artwork 
+  20 passed (40.9s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
