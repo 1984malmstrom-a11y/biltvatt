@@ -15,9 +15,9 @@ export function BattleSwords() {
    <path className="blade-fuller" d="M394 128 391 583M406 128 409 583"/>
    <g transform="translate(0 80)">
    <path className="sword-guard" fill={`url(#${id}-gold)`} d="M328 536 351 528 385 540 415 540 449 528 472 536 466 558 434 554 416 562 384 562 366 554 334 558Z"/>
-   <path fill={`url(#${id}-leather)`} stroke="#8f805b" d="M386 559 414 559 411 663 389 663Z"/>
+   <path className="sword-grip" fill={`url(#${id}-leather)`} stroke="#8f805b" d="M386 559 414 559 411 663 389 663Z"/>
    {Array.from({length:8},(_,i)=><path key={i} className="sword-binding" d={`M389 ${570+i*11}l22 6`}/>)}
-   <path fill={`url(#${id}-gold)`} stroke="#b9a773" d="M388 659 412 659 424 680 415 702 400 713 385 702 376 680Z"/>
+   <path className="sword-pommel-frame" fill={`url(#${id}-gold)`} stroke="#b9a773" d="M388 659 412 659 424 680 415 702 400 713 385 702 376 680Z"/>
    <path className="sword-pommel" d="m400 670 10 12-10 15-10-15Z"/>
    </g>
   </g>)}

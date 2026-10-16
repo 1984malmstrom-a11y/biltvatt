@@ -6,7 +6,7 @@ They contain only the isolated Showtime synthetic cast and ledger.
 
 Captured from `.showtime-product` at 1920×1080, with the presenter toolbar
 outside the captured element, then proportionally reduced to 1440px and
-compressed to WebP. Source build: local Night Build, based on checkpoint de24968.
+compressed to WebP. Source build: local Night Build with Battle V3 contours; based on checkpoint 20932cf.
 
 - product-station.webp: Station Mode, seven activities, leader/feed/pulse.
 - product-leader.webp: existing Ny etta hero after Peter overtakes Alva.
