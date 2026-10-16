@@ -2,9 +2,9 @@ import type {ArenaActivity,ArenaRegistration,ArenaSeller,ArenaStats} from '../sh
 import {roundedPoints} from '../shared/arena';
 const dayFormat=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Stockholm',year:'numeric',month:'2-digit',day:'2-digit'});
 // Provisional presentation only; the receipt and the next server snapshot remain authoritative.
-export function arenaLocalSale(stats:ArenaStats|null,seller:ArenaSeller,activity:ArenaActivity,sale:ArenaRegistration,filter={activityId:'',category:''}):ArenaStats|null {
+export function arenaLocalSale(stats:ArenaStats|null,seller:ArenaSeller,activity:ArenaActivity,sale:ArenaRegistration,filter={activityId:'',category:''},now=new Date()):ArenaStats|null {
   if(!stats)return null;
-  const day=dayFormat.format(new Date(sale.registered_at)),today=day===dayFormat.format(new Date());
+  const day=dayFormat.format(new Date(sale.registered_at)),today=day===dayFormat.format(now);
   const included=day>=stats.range.start&&day<=stats.range.end&&(!filter.activityId||filter.activityId===activity.id)&&(!filter.category||filter.category===activity.category);
   const points=sale.points_awarded,tb=sale.tb_ore_awarded??0;
   const leaderboard=stats.leaderboard.map(p=>{

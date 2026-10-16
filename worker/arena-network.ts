@@ -62,6 +62,12 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
 }
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
   const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
+  // Existing verified Superadmin/Owner authentication; no synthetic records,
+  // authorization tokens, audit events or customer data leave this endpoint.
+  if(path==='/api/arena/superadmin/presentation-access'){
+    if(method!=='GET')fail(405,'Presentationstillgång är skrivskyddad.');
+    return json({authorized:true,role:actor.role},200,{'Cache-Control':'no-store'});
+  }
   const pinReset=path.match(/^\/api\/arena\/superadmin\/stations\/([a-zA-Z0-9:_-]{1,120})\/admin-pin$/);
   if(pinReset&&method==='POST'&&actor.role!=='owner'&&await db.prepare('SELECT id FROM arena_organizations LIMIT 1').first())fail(403,'PIN-återställning kräver plattformsägaren.');
   if(pinReset&&method==='POST')return resetArenaAdminPin(request,env,pinReset[1],actor);

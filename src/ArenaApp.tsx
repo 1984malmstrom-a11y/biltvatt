@@ -2,6 +2,7 @@ import {BattleSwords} from './ArenaBattle';
 import {battleSlots} from './arena-battle-mode';
 import {battlePreference} from '../shared/arena-battle';
 import {arenaRequests} from './arena-requests';
+import {useArenaRuntime} from './arena-runtime';
 import ArenaSellerSelector,{type ArenaSellerSelectorHandle} from "./ArenaSellerSelector";
 import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
 import {arenaLocalSale} from "./arena-local-sale";
@@ -176,7 +177,8 @@ function ArenaRoutes() {
   if(["/arena/account","/arena/join","/arena/login"].includes(window.location.pathname))return <ArenaAccount />;
   return window.location.pathname.startsWith("/arena/admin") ? <ArenaAdmin /> : <ArenaHome />;
 }
-function ArenaHome() {
+export function ArenaHome() {
+  const runtime=useArenaRuntime(),api=runtime.request,localStorage=runtime.storage;
   const showcase=useArenaShowcase();
   const [fightPerson,setFightPerson]=useState<ArenaPerson|null>(null);
   const [data, setData] = useState<ArenaBootstrap | null>(null);
@@ -203,7 +205,7 @@ function ArenaHome() {
   const celebrationAllowed = useRef("");
   const query = new URLSearchParams({ period, metric,...(period === "custom" ? { start, end } : {}), ...(activityFilter ? { activity_id: activityFilter } : {}), ...(category ? { category } : {}) }).toString();
   const queryRef = useRef(query); queryRef.current = query;
-  const statsRequests=useMemo(()=>arenaRequests<ArenaStats>((key,signal)=>api(`/arena/stats?${key}`,{signal})),[]);
+  const statsRequests=useMemo(()=>arenaRequests<ArenaStats>((key,signal)=>api(`/arena/stats?${key}`,{signal})),[api]);
   const refresh = useCallback(async () => {
     const version = ++statsVersion.current;
     try {
@@ -214,11 +216,12 @@ function ArenaHome() {
       return next;
     } catch (e) { if (version === statsVersion.current) { setStatsUnavailable(true); setError((e as Error).message); } return null; }
   }, [statsRequests]);
+  useEffect(()=>runtime.subscribe?.(()=>{void refresh();}),[runtime,refresh]);
   const onFightBoundary=useCallback(()=>{void refresh();},[refresh]);
   const bootstrap = useCallback(async () => {
     setBootstrapError('');
     try { setData(await api<ArenaBootstrap>("/arena/bootstrap")); setError(""); } catch (e) { if(e instanceof HttpError && e.status===401)window.location.assign("/arena/account");else {setBootstrapError((e as Error).message);setError((e as Error).message);} }
-  }, []);
+  }, [api]);
   const retryEntry=useCallback(()=>{setError('');void bootstrap();void refresh();},[bootstrap,refresh]);
   useArenaEntryStatus(!!data&&!!todayStats,(!data||!todayStats)?bootstrapError||error||(!todayStats&&statsUnavailable?'Statistiken kunde inte laddas. Försök igen.':undefined):undefined,retryEntry);
   useEffect(() => {
@@ -238,11 +241,11 @@ function ArenaHome() {
   const fightContext=activeFight&&!battleUnavailable&&preferred==='battle'?todayStats?.fight_dashboard:undefined;
   const dashboardStats=useMemo(()=>fightContext&&todayStats?{...todayStats,metric:fightContext.metric,leaderboard:fightContext.leaderboard,recent:fightContext.recent}:todayStats,[fightContext,todayStats]);
   useEffect(()=>{
-    let lastBootstrap=Date.now();
+    let lastBootstrap=runtime.now();
     const stopPolling=visibleArenaPolling(async()=>{
       if(lock.current)return;
-      const reloadPeople=Date.now()-lastBootstrap>=60000;
-      if(reloadPeople){lastBootstrap=Date.now();await Promise.all([bootstrap(),refresh()]);}else await refresh();
+      const reloadPeople=runtime.now()-lastBootstrap>=60000;
+      if(reloadPeople){lastBootstrap=runtime.now();await Promise.all([bootstrap(),refresh()]);}else await refresh();
     },()=>todayRef.current?.fight?.phase==="active"?ARENA_FIGHT_SYNC_MS:ARENA_SYNC_MS);
     return stopPolling;
   }, [bootstrap,refresh,activeFight]);
@@ -273,19 +276,19 @@ function ArenaHome() {
       // via the idempotent receipt + refresh rather than showing a second gain.
       if(!seller || selected.sellerId)return;
       const query=new URLSearchParams(queryRef.current);
-      const next=arenaLocalSale(before,seller,pending.activity,registration,{activityId:query.get("activity_id")??"",category:query.get("category")??""});
-      const today=arenaLocalSale(beforeToday,seller,pending.activity,registration);
+      const next=arenaLocalSale(before,seller,pending.activity,registration,{activityId:query.get("activity_id")??"",category:query.get("category")??""},new Date(runtime.now()));
+      const today=arenaLocalSale(beforeToday,seller,pending.activity,registration,undefined,new Date(runtime.now()));
       statsRef.current=next;todayRef.current=today;setStats(next);setTodayStats(today);
     };
     ++statsVersion.current; // Reject a poll started before this optimistic transaction.
     statsRequests.invalidate();
-    localSale({id:pending.requestId,seller_id:sellerId,activity_id:pending.activity.id,points_awarded:pending.activity.points,tb_ore_awarded:pending.activity.tb_ore,registered_at:new Date().toISOString(),voided_at:null});
+    localSale({id:pending.requestId,seller_id:sellerId,activity_id:pending.activity.id,points_awarded:pending.activity.points,tb_ore_awarded:pending.activity.tb_ore,registered_at:new Date(runtime.now()).toISOString(),voided_at:null});
     try {
       const { registration, achievements } = await api<{ registration: ArenaRegistration; achievements?:EvaluatedAchievement[] }>("/arena/registrations", send("POST", {
         request_id: pending.requestId, activity_id: pending.activity.id, seller_id: sellerId,
         achievement_context:{period:period === "custom" && (!start || !end) ? "today" : period,metric,...(period === "custom" && start && end ? {start,end} : {})},
       }));
-      localSale({...registration,registered_at:registration.registered_at??new Date().toISOString()});
+      localSale({...registration,registered_at:registration.registered_at??new Date(runtime.now()).toISOString()});
       if (registration.voided_at) throw new HttpError("Registreringen har redan ångrats. Välj aktiviteten på nytt.", 409);
       const name = data?.sellers.find(s => s.id === sellerId)?.name ?? "Säljaren";
       const primary=achievements?.[0];
