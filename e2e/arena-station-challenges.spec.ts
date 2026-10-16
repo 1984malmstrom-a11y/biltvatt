@@ -3,7 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {isolatedDemoBackend} from './arena-demo-functional-client';
 
 type Backend=Awaited<ReturnType<typeof isolatedDemoBackend>>;
-const root='/workspace/work/artifacts/arena-station-challenges';
+const root=process.env.ARENA_CHALLENGE_ARTIFACT_DIR??'/workspace/work/artifacts/arena-station-challenges';
 async function stationPage(browser:Browser,f:Backend,role:string,width:number,height:number){
  const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'}),page=await context.newPage();
  context.setDefaultTimeout(10000);

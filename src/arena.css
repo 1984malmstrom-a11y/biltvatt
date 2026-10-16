@@ -701,3 +701,6 @@ html.arena-view,html.arena-view body,html.arena-view #root { height:100%; min-he
   .arena-stage-start .arena-focus-title { font-size:9px; padding:2px 5px; }
   .arena-stage-start .arena-focus-name { font-size:16px; }
 }
+
+/* Authorized presentation entry links are visible before lazy presentation CSS loads. */
+.arena-presentation-links{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}

@@ -67,9 +67,18 @@ export function createShowtime(){
  const totals=()=>{const list=activeSales().filter(s=>s.station_id===showtimeStation);return list.reduce((total,s)=>{const c=showtimeContribution(activity(s.activity_id)!);return {internal:total.internal+c.internal,nationalIndividual:total.nationalIndividual+c.nationalIndividual,nationalStation:total.nationalStation+c.nationalStation};},{internal:0,nationalIndividual:0,nationalStation:0});};
  reset();
  return {subscribe:(listener:()=>void)=>{listeners.add(listener);return()=>{listeners.delete(listener);};},get revision(){return revision;},get generation(){return generation;},get scene(){return scene;},get playing(){return playing;},get receipt(){return last?{...last}:null;},get now(){return now;},stats,totals,fight,register,
-  play(){if(disposed)return;playing=true;emit();},pause(){playing=false;emit();},go(target:number){if(disposed)return;const was=playing;playing=false;reset(target);playing=was;emit();},restart(){if(disposed)return;playing=false;reset();},startFight,
+  play(){if(disposed)return;playing=true;emit();},pause(){playing=false;emit();},go(target:number){if(disposed)return;
+   // Forward fight chapters retain the same ledger and frozen rules. Rewinds
+   // intentionally rebuild their scene; an explicit restart rebuilds everything.
+   if(target===scene+1&&scene>=3&&fightStart!==null){scene=Math.min(5,target);generation++;elapsed=0;nextAuto=6000;last=null;
+    if(!frozen&&scene===4)now=Math.max(now,fightEnd-600000);
+    if(!frozen&&scene===5){now=Math.min(fightEnd-1000,Math.max(now,fightEnd-60000));const rows=fight()!.standings,own=rows.find(s=>s.id===showtimeStation)!.points,other=rows.find(s=>s.id===showtimeOpponent)!.points;
+     const side=other-own>1?showtimeStation:showtimeOpponent,n=Math.abs(other-own-1);for(let i=0;i<n;i++)append(side===showtimeStation?'demo-peter':'demo-sofia',showtimeBootstrap.activities[3],side);
+    }emit();return;
+   }const was=playing;playing=false;reset(target);playing=was;emit();
+  },restart(){if(disposed)return;playing=false;reset();},startFight,
   urgency(minutes:number){if(fightStart===null||frozen)return;now=fightEnd-Math.max(1,Math.min(120,minutes))*60000;emit();},
-  tick(ms:number){if(disposed||!playing||!Number.isFinite(ms)||ms<=0)return;const step=Math.min(ms,1000);now+=step;elapsed+=step;if((scene===1||scene===4)&&elapsed>=nextAuto){const i=Math.floor(nextAuto/6000)-1;nextAuto+=6000;if(scene===4){append('demo-sofia',showtimeBootstrap.activities[i%2?3:0],showtimeOpponent);}else register(`auto:${nextAuto}`,['demo-maja','demo-erik','demo-jonas'][i%3],showtimeBootstrap.activities[i%7].id);}if(fightStart!==null&&now>=fightEnd&&!frozen)frozen=fight();emit();},
+  tick(ms:number){if(disposed||!playing||!Number.isFinite(ms)||ms<=0)return;const step=Math.min(ms,1000);now+=step;elapsed+=step;if((scene===1||scene===4)&&elapsed>=nextAuto&&nextAuto<=72000){const i=Math.floor(nextAuto/6000)-1;nextAuto+=6000;if(scene===4){const rows=fight()!.standings,behind=rows.at(-1)!;append(behind.id===showtimeStation?'demo-peter':'demo-sofia',showtimeBootstrap.activities[0],behind.id);}else register(`auto:${nextAuto}`,['demo-maja','demo-erik','demo-jonas'][i%3],showtimeBootstrap.activities[i%7].id);}if(fightStart!==null&&now>=fightEnd&&!frozen)frozen=fight();emit();},
   finish(){if(fightStart===null||frozen)return;register('demo-finale','demo-peter',showtimeBootstrap.activities[0].id);now=fightEnd;frozen=fight();playing=false;emit();},
   async request<T>(path:string,options:RequestInit={}):Promise<T>{if(disposed)throw new HttpError('Demosessionen har avslutats.',410);const url=new URL(path,'https://demo.invalid'),method=options.method??'GET';let result:unknown;
    if(method==='GET'&&url.pathname==='/arena/bootstrap')result=showtimeBootstrap;
