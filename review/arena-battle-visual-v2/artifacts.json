@@ -1,0 +1,171 @@
+{
+  "start_head": "61701deb5b579bcb40192c740c0efd49219763ff",
+  "synthetic": true,
+  "selected_png_count": 18,
+  "gallery": "index.html",
+  "screenshots": [
+    {
+      "file": "station-1920x1080.png",
+      "label": "Stationsläge · desktop",
+      "group": "Stationsläge",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "6935b655f17eb55e17a3d1c7056edf36e892043f97f694d55364b5a51c957e59"
+    },
+    {
+      "file": "station-390x844.png",
+      "label": "Stationsläge · mobil",
+      "group": "Stationsläge",
+      "width": 390,
+      "height": 844,
+      "sha256": "8c805196c35b9dc010bc1a55f19dab61a6747aab755fd1b50dc7141a8f5a866f"
+    },
+    {
+      "file": "battle-neutral-1920x1080.png",
+      "label": "Alla sju kategorier · 1920×1080",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "f704ddb876482389e2dc116a1eb7db3d9dfbfbcfaff52b9aeceaffd7d9472c75"
+    },
+    {
+      "file": "battle-neutral-1536x864.png",
+      "label": "Alla sju kategorier · 1536×864",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 1536,
+      "height": 864,
+      "sha256": "54c9c95a8e2671df9c2222fb3458161950de5437fad8a04bf14778cf1da2ddf1"
+    },
+    {
+      "file": "battle-neutral-1448x1086.png",
+      "label": "Alla sju kategorier · 1448×1086",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "8f66447784b4e4792e296257ce0693f8298cbb0e2f8dde950508966089ee0cf6"
+    },
+    {
+      "file": "battle-neutral-1024x768.png",
+      "label": "Alla sju kategorier · 1024×768",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 1024,
+      "height": 768,
+      "sha256": "35c4f644deadc85fd2da72b3bde2aa5fcd6eae447138d3a0cba7c51b6e6a1f7e"
+    },
+    {
+      "file": "battle-neutral-390x844.png",
+      "label": "Alla sju kategorier · 390×844",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 390,
+      "height": 844,
+      "sha256": "de8770d50023e392291dbd86e6c3e4b4ec9fe632e314ce35e6992c9fbc8e1e8e"
+    },
+    {
+      "file": "battle-neutral-844x390.png",
+      "label": "Alla sju kategorier · 844×390",
+      "group": "Battle Mode · neutral / alla kategorier",
+      "width": 844,
+      "height": 390,
+      "sha256": "51af1ef8a5290df2f2842ef2df1de0c5182c76659b96ecd80bc4f917a1020cc0"
+    },
+    {
+      "file": "battle-leading-1920x1080.png",
+      "label": "Egen station leder · lugnt",
+      "group": "Ledning och slutspurt",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "478ab9172b1ee4f8e383171f734198b85a2587a85ca3b8a1b214349901fedf90"
+    },
+    {
+      "file": "battle-urgency-60m-1920x1080.png",
+      "label": "≤60 minuter · amber",
+      "group": "Ledning och slutspurt",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "a7aa333168478827257b8b87ee070c38a6367c0e332b27bb5172a1521b01781d"
+    },
+    {
+      "file": "battle-urgency-15m-1920x1080.png",
+      "label": "≤15 minuter · starkare edge-light",
+      "group": "Ledning och slutspurt",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "e8fdfd0e43f6132a4fe969e3b3d6599fc2e998bd9070d27bb8b13e332608a368"
+    },
+    {
+      "file": "battle-urgency-5m-1920x1080.png",
+      "label": "≤5 minuter · slutspurt",
+      "group": "Ledning och slutspurt",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "9423a50759f2646e329c0104025d4980d77b2602f8eb6529c6883371b9e6cf3e"
+    },
+    {
+      "file": "battle-urgency-5m-390x844.png",
+      "label": "Slutspurt · mobil",
+      "group": "Ledning och slutspurt",
+      "width": 390,
+      "height": 844,
+      "sha256": "436f9e6c89eaecb53253fae41bf61436e70f791e30fc448ca1244d226ed0973b"
+    },
+    {
+      "file": "battle-selected-1920x1080.png",
+      "label": "Tre kategorier · desktop",
+      "group": "Urval och växlare",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "1bb5f9a89fc6a90d146358600015413815ac9cf89e6c317de915dc5ace4b2884"
+    },
+    {
+      "file": "battle-selected-390x844.png",
+      "label": "Tre kategorier · mobil",
+      "group": "Urval och växlare",
+      "width": 390,
+      "height": 844,
+      "sha256": "8793aef650c35e1ec67472165a28ccac5571826a4c9c1b5fb422a234aa0f1b0d"
+    },
+    {
+      "file": "battle-focus-1920x1080.png",
+      "label": "Endast månadsfokus · desktop",
+      "group": "Urval och växlare",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "25f4f58fe229bcda8ac2d072c5af9887a09fb802295cd8ca0fbf0b500dfe8a0e"
+    },
+    {
+      "file": "battle-focus-390x844.png",
+      "label": "Endast månadsfokus · mobil",
+      "group": "Urval och växlare",
+      "width": 390,
+      "height": 844,
+      "sha256": "2d10d73583f9f43148ea03fa3cfa6d2400c31f38ab609f79a6da733eec9a32cc"
+    },
+    {
+      "file": "mode-switch-desktop.png",
+      "label": "Ny tvåvalsväxlare · närbild",
+      "group": "Urval och växlare",
+      "width": 282,
+      "height": 42,
+      "sha256": "c81363d896e1960b484e5e407dbe8a4d380c0be8ce8aff75444b4a48410d2fcd"
+    }
+  ],
+  "reports": [
+    "final-report.md",
+    "changed-files.txt",
+    "test-report.md",
+    "responsive-report.md",
+    "performance-report.json"
+  ],
+  "head": "b0b320ae44806126b834e1de40fd43486afead05",
+  "branch": "feat/arena-v1",
+  "total_review_files": 25,
+  "verification": {
+    "typecheck": "PASS",
+    "build": "PASS",
+    "unit_tests_passed": 49,
+    "playwright_tests_passed": 44,
+    "gallery_images_decoded": 18,
+    "gallery_local_references_valid": 42,
+    "working_tree": "clean"
+  }
+}

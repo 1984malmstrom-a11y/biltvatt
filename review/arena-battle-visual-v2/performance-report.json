@@ -1,0 +1,34 @@
+{
+  "evidence": "Implementation inspection, source byte sizes and focused local browser tests; no hardware benchmark claimed",
+  "new_dependencies": 0,
+  "new_raster_assets": 0,
+  "canvas_webgl_particle_engines": 0,
+  "swords": "Static inline SVG, no filters or animation",
+  "battle_focus_halo": "Static; existing Station halo unchanged",
+  "urgency": "One bounded opacity animation on the existing panel perimeter; 5s / 3.8s / 2.6s",
+  "reduced_motion": "Pulse and control transitions disabled",
+  "polling": "Unchanged, existing hidden-tab and timer-request-budget tests pass",
+  "sizes": [
+    {
+      "file": "src/ArenaBattle.tsx",
+      "before_bytes": 656,
+      "after_bytes": 2005,
+      "before_gzip_bytes": 395,
+      "after_gzip_bytes": 888
+    },
+    {
+      "file": "src/arena-battle-mode.css",
+      "before_bytes": 6023,
+      "after_bytes": 9269,
+      "before_gzip_bytes": 1879,
+      "after_gzip_bytes": 2705
+    },
+    {
+      "file": "src/arena-war-fight.css",
+      "before_bytes": 15367,
+      "after_bytes": 19004,
+      "before_gzip_bytes": 3450,
+      "after_gzip_bytes": 4172
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+e2e/arena-battle-refinement.spec.ts
+e2e/arena-competition-v2.spec.ts
+src/ArenaApp.tsx
+src/ArenaBattle.tsx
+src/ArenaFightPresentation.tsx
+src/arena-battle-mode.css
+src/arena-war-fight.css
