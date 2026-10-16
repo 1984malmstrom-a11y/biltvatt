@@ -1,0 +1,15 @@
+{
+  "environment": "Headless system Chromium, Vite development server, local container, reduced motion; not physical POS hardware or production bundle",
+  "cold_ready_ms": 1235.408747,
+  "reset_start_pause_20": {
+    "p50_ms": 305.90636900000027,
+    "p95_ms": 375.31960400000025
+  },
+  "heap_used_before": 13279608,
+  "heap_used_after_20_resets": 13868548,
+  "heap_delta_bytes": 588940,
+  "production_mutations": 0,
+  "authorization_requests": 2,
+  "page_errors": [],
+  "limits": "Single-session smoke, not a long-duration memory-leak proof. Timings include Playwright round trips."
+}

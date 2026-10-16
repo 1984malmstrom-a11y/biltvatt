@@ -1,0 +1,9 @@
+{
+  "gallery": "index.html",
+  "relative_links": "all targets exist",
+  "png_decode": "29/29 PASS",
+  "browser": "Headless Chromium via temporary localhost static server; file:// navigation restricted by environment browser policy",
+  "broken_images": 0,
+  "png_count": 29,
+  "pdf_count": 3
+}

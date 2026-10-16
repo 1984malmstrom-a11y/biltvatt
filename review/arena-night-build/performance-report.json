@@ -1,0 +1,124 @@
+{
+  "environment": "Same local container, Vite production builds; start archive vs final checkpoint. No remote D1 or physical till measurements.",
+  "start_head": "d8277a53ff19a561454701a61cd64021876d1789",
+  "final_head": "d26020d222cb38a1c8ddb7b7f13777e16977f389",
+  "bundle_before": {
+    "arena_dashboard_js": {
+      "bytes": 78865,
+      "gzip_bytes": 23729
+    },
+    "arena_dashboard_css": {
+      "bytes": 262881,
+      "gzip_bytes": 43092
+    },
+    "lazy_presentation_js": {
+      "bytes": 0,
+      "gzip_bytes": 0
+    },
+    "lazy_presentation_css": {
+      "bytes": 0,
+      "gzip_bytes": 0
+    },
+    "lazy_award_js": {
+      "bytes": 1078523,
+      "gzip_bytes": 809404
+    },
+    "index_js": {
+      "bytes": 721544,
+      "gzip_bytes": 222884
+    }
+  },
+  "bundle_after": {
+    "arena_dashboard_js": {
+      "bytes": 79731,
+      "gzip_bytes": 24092
+    },
+    "arena_dashboard_css": {
+      "bytes": 264443,
+      "gzip_bytes": 43381
+    },
+    "lazy_presentation_js": {
+      "bytes": 26207,
+      "gzip_bytes": 10032
+    },
+    "lazy_presentation_css": {
+      "bytes": 15723,
+      "gzip_bytes": 3708
+    },
+    "lazy_award_js": {
+      "bytes": 1079705,
+      "gzip_bytes": 809999
+    },
+    "index_js": {
+      "bytes": 721910,
+      "gzip_bytes": 223107
+    }
+  },
+  "bundle_delta": {
+    "arena_dashboard_js": {
+      "bytes": 866,
+      "gzip_bytes": 363
+    },
+    "arena_dashboard_css": {
+      "bytes": 1562,
+      "gzip_bytes": 289
+    },
+    "lazy_presentation_js": {
+      "bytes": 26207,
+      "gzip_bytes": 10032
+    },
+    "lazy_presentation_css": {
+      "bytes": 15723,
+      "gzip_bytes": 3708
+    },
+    "lazy_award_js": {
+      "bytes": 1182,
+      "gzip_bytes": 595
+    },
+    "index_js": {
+      "bytes": 366,
+      "gzip_bytes": 223
+    }
+  },
+  "product_webp_bytes": 191034,
+  "engine": {
+    "environment": "Node 22, local container; no physical till, remote D1 or database benchmark",
+    "station_stats": {
+      "samples": 200,
+      "p50_ms": 0.2629669999999962,
+      "p95_ms": 0.41753999999998825,
+      "max_ms": 0.6173519999999968
+    },
+    "battle_stats": {
+      "samples": 200,
+      "p50_ms": 0.8542700000000139,
+      "p95_ms": 1.1348540000000185,
+      "max_ms": 1.3300590000000057
+    },
+    "battle_stats_after_30_virtual_minutes": {
+      "samples": 200,
+      "p50_ms": 0.7848659999999654,
+      "p95_ms": 1.0653090000000134,
+      "max_ms": 1.1713889999999765
+    },
+    "rows_after_30_virtual_minutes": 131,
+    "auto_events_per_scene_cap": 12,
+    "late_tick_clamp_ms": 1000,
+    "interval_ms": 1000
+  },
+  "browser": {
+    "environment": "Headless system Chromium, Vite development server, local container, reduced motion; not physical POS hardware or production bundle",
+    "cold_ready_ms": 1235.408747,
+    "reset_start_pause_20": {
+      "p50_ms": 305.90636900000027,
+      "p95_ms": 375.31960400000025
+    },
+    "heap_used_before": 13279608,
+    "heap_used_after_20_resets": 13868548,
+    "heap_delta_bytes": 588940,
+    "production_mutations": 0,
+    "authorization_requests": 2,
+    "page_errors": [],
+    "limits": "Single-session smoke, not a long-duration memory-leak proof. Timings include Playwright round trips."
+  }
+}

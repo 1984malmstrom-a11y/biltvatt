@@ -1,0 +1,23 @@
+{
+  "synthetic": true,
+  "challenge": "0ed69c69-86d9-487d-bada-4d68e762e776",
+  "competition": "duel:0ed69c69-86d9-487d-bada-4d68e762e776",
+  "live_day_sales": [
+    196,
+    1
+  ],
+  "frozen_day_sales": [
+    196,
+    1
+  ],
+  "frozen_match_points": [
+    1,
+    0
+  ],
+  "champions": [
+    "o1:s0"
+  ],
+  "foreign_access": "404",
+  "overlap_accept": "409",
+  "ui_decline": 200
+}

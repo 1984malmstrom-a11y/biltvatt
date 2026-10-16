@@ -1,0 +1,66 @@
+
+> tvattligan@1.0.0 build
+> tsc --noEmit && vite build
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+vite v7.3.7 building tvattligan_master_test environment for production...
+transforming...
+✓ 69 modules transformed.
+rendering chunks...
+Using secrets defined in .dev.vars
+dist/tvattligan_master_test/.dev.vars                0.02 kB
+dist/tvattligan_master_test/.vite/manifest.json      0.16 kB
+dist/tvattligan_master_test/wrangler.json            1.71 kB
+dist/tvattligan_master_test/index.js             1,487.99 kB
+✓ built in 680ms
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 2041 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore                                  0.02 kB
+dist/client/index.html                                     1.02 kB │ gzip:   0.48 kB
+dist/client/assets/arena-awards-BPkEgUp6.css               1.18 kB │ gzip:   0.56 kB
+dist/client/assets/ArenaAdminPin-DJYA0zFu.css              1.63 kB │ gzip:   0.69 kB
+dist/client/assets/ArenaFightQuickAction-DfBC0rYe.css      1.70 kB │ gzip:   0.56 kB
+dist/client/assets/arena-contest-DqKrD5Du.css              2.55 kB │ gzip:   0.82 kB
+dist/client/assets/ArenaPresentation-BjAZ3_6z.css         15.72 kB │ gzip:   3.72 kB
+dist/client/assets/arena-competition-8JPxLAyO.css         22.94 kB │ gzip:   4.68 kB
+dist/client/assets/index-Dwr6iL8U.css                    140.14 kB │ gzip:  29.96 kB
+dist/client/assets/ArenaApp-DM3h02bz.css                 264.44 kB │ gzip:  44.11 kB
+dist/client/assets/chevron-left-Di4ukRmS.js                0.13 kB │ gzip:   0.14 kB
+dist/client/assets/arena-route-id-nE-jfgl6.js              0.17 kB │ gzip:   0.16 kB
+dist/client/assets/ArenaPresentationLinks-DrmJTdjs.js      0.44 kB │ gzip:   0.29 kB
+dist/client/assets/arena-contest-BxO-q1-J.js               0.83 kB │ gzip:   0.55 kB
+dist/client/assets/ArenaFightQuickAction-ZhDguMOs.js       2.96 kB │ gzip:   1.32 kB
+dist/client/assets/arena-awards-CbNGscCz.js                3.04 kB │ gzip:   1.36 kB
+dist/client/assets/ArenaRecovery-aNrbbSLj.js               3.14 kB │ gzip:   1.31 kB
+dist/client/assets/ArenaLeague-yepJDP_s.js                 3.35 kB │ gzip:   1.38 kB
+dist/client/assets/ArenaAccount-CBmv5G3n.js                5.12 kB │ gzip:   2.03 kB
+dist/client/assets/ArenaAdminPin-8hNbPs9n.js               5.28 kB │ gzip:   2.17 kB
+dist/client/assets/arena-competitions-uS5ZGixv.js          5.51 kB │ gzip:   2.39 kB
+dist/client/assets/ArenaFight-B-OxE7g3.js                  7.39 kB │ gzip:   2.98 kB
+dist/client/assets/ArenaReports-CeqItTbn.js                7.91 kB │ gzip:   2.84 kB
+dist/client/assets/ArenaCompetitions-K2qVHrsx.js          11.18 kB │ gzip:   3.66 kB
+dist/client/assets/ArenaCompetition-BDUJzONq.js           18.50 kB │ gzip:   6.08 kB
+dist/client/assets/ArenaContestHub-DB_zB3tv.js            19.92 kB │ gzip:   6.09 kB
+dist/client/assets/ArenaAdmin-CoprgR1n.js                 20.32 kB │ gzip:   6.26 kB
+dist/client/assets/ArenaPresentation-CaSSkE_Q.js          26.21 kB │ gzip:  10.10 kB
+dist/client/assets/ArenaNetwork-BAsvnHED.js               42.26 kB │ gzip:  11.82 kB
+dist/client/assets/ArenaApp-Dv-jj9fb.js                   79.73 kB │ gzip:  24.32 kB
+dist/client/assets/index-AVLgCucl.js                     310.64 kB │ gzip:  99.48 kB
+dist/client/assets/index-DRL2MAe8.js                     411.27 kB │ gzip: 125.27 kB
+dist/client/assets/ArenaAwardPreview-SQgHr6ZM.js       1,079.71 kB │ gzip: 805.45 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.94s
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

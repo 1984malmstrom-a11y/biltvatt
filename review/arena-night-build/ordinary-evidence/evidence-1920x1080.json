@@ -1,0 +1,269 @@
+{
+  "viewport": {
+    "w": 1920,
+    "h": 1080
+  },
+  "challenge": {
+    "status": 201,
+    "body": {
+      "id": "d15596a3-20ca-4c6f-8f9e-30ceafabaebc"
+    },
+    "accepted_status": 200
+  },
+  "steps": [
+    "1–2: internal 98/96 and parallel national individual/station contests verified",
+    "3: same-organization station challenge sent and accepted through real API",
+    "4–11: UI Station/Battle sales, same ledger IDs, excluded category, refresh/poll, retry and UI undo verified",
+    "12: frozen 196–1 daily sales / 1–0 match points result/history and Station fallback; internal/national remain active and continue scoring"
+  ],
+  "sales": [
+    {
+      "payload": {
+        "request_id": "b7a060fe-51d3-49ae-a2a6-43df43501586",
+        "activity_id": "o1:s0:wash",
+        "seller_id": "o1:s0:person",
+        "achievement_context": {
+          "period": "today",
+          "metric": "points"
+        }
+      },
+      "body": {
+        "registration": {
+          "id": "8418afe6-0c37-46f1-9955-22d70b5c8f22",
+          "seller_id": "o1:s0:person",
+          "activity_id": "o1:s0:wash",
+          "points_awarded": 1,
+          "tb_ore_awarded": 3500,
+          "registered_at": "2026-10-16T10:00:00.000Z",
+          "voided_at": null
+        },
+        "achievements": []
+      }
+    },
+    {
+      "payload": {
+        "request_id": "8ab15a00-f9d5-4b0b-aa68-5dbf9e8bd10d",
+        "activity_id": "o1:s0:food",
+        "seller_id": "o1:s0:person",
+        "achievement_context": {
+          "period": "today",
+          "metric": "points"
+        }
+      },
+      "body": {
+        "registration": {
+          "id": "fdd34b42-aff4-48cf-a51c-0b95c7472b8f",
+          "seller_id": "o1:s0:person",
+          "activity_id": "o1:s0:food",
+          "points_awarded": 1,
+          "tb_ore_awarded": 3500,
+          "registered_at": "2026-10-16T10:00:00.000Z",
+          "voided_at": null
+        },
+        "achievements": [
+          {
+            "id": "leader:activity:o1:s0:food:2026-09-30T22:00:00.000Z:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Korv med mos",
+            "text": "Ny etta!"
+          }
+        ]
+      }
+    },
+    {
+      "payload": {
+        "request_id": "9fa92f06-46ae-42c2-9693-7686d9f49d50",
+        "activity_id": "o1:s0:wash",
+        "seller_id": "o1:s0:person",
+        "achievement_context": {
+          "period": "today",
+          "metric": "points"
+        }
+      },
+      "body": {
+        "registration": {
+          "id": "23476d15-491e-4e32-86e3-9c562974d50a",
+          "seller_id": "o1:s0:person",
+          "activity_id": "o1:s0:wash",
+          "points_awarded": 1,
+          "tb_ore_awarded": 3500,
+          "registered_at": "2026-10-16T10:00:00.000Z",
+          "voided_at": null
+        },
+        "achievements": [
+          {
+            "id": "leader:today:2026-10-16:points:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Idag",
+            "text": "Ny etta!",
+            "previousLeader": "Alva"
+          },
+          {
+            "id": "leader:week:2026-10-12:points:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Den här veckan",
+            "text": "Ny etta!",
+            "previousLeader": "Alva"
+          },
+          {
+            "id": "leader:month:2026-10-01:points:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Den här månaden",
+            "text": "Ny etta!",
+            "previousLeader": "Alva"
+          }
+        ]
+      }
+    },
+    {
+      "payload": {
+        "request_id": "c8338528-bb7e-49e9-afd7-9942a128a821",
+        "activity_id": "o1:s0:wash",
+        "seller_id": "o1:s0:person",
+        "achievement_context": {
+          "period": "today",
+          "metric": "points"
+        }
+      },
+      "body": {
+        "registration": {
+          "id": "66cc9696-9dcb-404b-8d88-58f3bb7ecd2c",
+          "seller_id": "o1:s0:person",
+          "activity_id": "o1:s0:wash",
+          "points_awarded": 1,
+          "tb_ore_awarded": 3500,
+          "registered_at": "2026-10-16T10:00:00.000Z",
+          "voided_at": null
+        },
+        "achievements": [
+          {
+            "id": "leader:activity:o1:s0:wash:2026-09-30T22:00:00.000Z:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Biltvätt",
+            "text": "Ny etta!",
+            "previousLeader": "Alva"
+          },
+          {
+            "id": "sales:today:2026-10-16:points:o1:s0:person:10",
+            "level": 2,
+            "special": true,
+            "kind": "milestone",
+            "scope": "Idag",
+            "text": "100 försäljningar idag. Vilket driv!"
+          }
+        ]
+      }
+    },
+    {
+      "payload": {
+        "request_id": "cafb7959-1330-414c-a829-844503f92b09",
+        "activity_id": "o1:s0:wash",
+        "seller_id": "o1:s0:person",
+        "achievement_context": {
+          "period": "today",
+          "metric": "points"
+        }
+      },
+      "body": {
+        "registration": {
+          "id": "89af7019-d3fb-45a2-b3b2-4c7f4906f145",
+          "seller_id": "o1:s0:person",
+          "activity_id": "o1:s0:wash",
+          "points_awarded": 1,
+          "tb_ore_awarded": 3500,
+          "registered_at": "2026-10-16T22:00:01.000Z",
+          "voided_at": null
+        },
+        "achievements": [
+          {
+            "id": "leader:today:2026-10-17:points:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Idag",
+            "text": "Ny etta!"
+          },
+          {
+            "id": "leader:activity:o1:s0:wash:2026-09-30T22:00:00.000Z:o1:s0:person",
+            "level": 3,
+            "special": true,
+            "kind": "leader",
+            "scope": "Biltvätt",
+            "text": "Ny etta!",
+            "previousLeader": "Alva"
+          }
+        ]
+      }
+    }
+  ],
+  "snapshots": {
+    "initial": {
+      "internal_viktor": 96,
+      "national_individual_viktor": 192,
+      "national_station_tingsryd": 1552,
+      "ordinary_today_count": 194,
+      "ordinary_today_points": 194,
+      "fight_tingsryd": 194
+    },
+    "station_wash": {
+      "internal_viktor": 97,
+      "national_individual_viktor": 194,
+      "national_station_tingsryd": 1560,
+      "ordinary_today_count": 195,
+      "ordinary_today_points": 195,
+      "fight_tingsryd": 195
+    },
+    "excluded_food": {
+      "internal_viktor": 97,
+      "national_individual_viktor": 195,
+      "national_station_tingsryd": 1564,
+      "ordinary_today_count": 196,
+      "ordinary_today_points": 196,
+      "fight_tingsryd": 195
+    },
+    "battle_wash": {
+      "internal_viktor": 98,
+      "national_individual_viktor": 197,
+      "national_station_tingsryd": 1572,
+      "ordinary_today_count": 197,
+      "ordinary_today_points": 197,
+      "fight_tingsryd": 196
+    },
+    "after_undo": {
+      "internal_viktor": 98,
+      "national_individual_viktor": 197,
+      "national_station_tingsryd": 1572,
+      "ordinary_today_count": 197,
+      "ordinary_today_points": 197,
+      "fight_tingsryd": 196
+    },
+    "continued_after_final": {
+      "internal_viktor": 99,
+      "national_individual_viktor": 199,
+      "national_station_tingsryd": 1580,
+      "ordinary_today_count": 1,
+      "ordinary_today_points": 1,
+      "fight_tingsryd": 196
+    }
+  },
+  "summary": {
+    "active_sales": 1,
+    "internal_viktor": 99,
+    "final": [
+      196,
+      1
+    ],
+    "requests": 38,
+    "registration_posts": 6
+  }
+}

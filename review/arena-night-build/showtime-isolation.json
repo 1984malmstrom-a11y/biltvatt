@@ -1,0 +1,9 @@
+{
+  "synthetic": true,
+  "authorization_requests": 6,
+  "production_demo_mutations": 0,
+  "database_changes_during_demo": 0,
+  "page_errors": [],
+  "offline_walkthrough": "PASS",
+  "back_refresh_restart": "PASS"
+}

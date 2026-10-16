@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "id": "synthetic-individual-award",
+  "type": "diploma",
+  "title": "MÅNADENS ETTA · Lisa Andersson",
+  "created_at": "2026-10-01T08:00:00Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": {
+    "id": "review",
+    "name": "Tingsryd"
+  },
+  "subject": {
+    "id": "s-0",
+    "name": "Lisa Andersson"
+  },
+  "totals": {
+    "count": 248,
+    "points": 342,
+    "tb_ore": 513800,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Lisa Andersson"
+  ],
+  "metric": "points",
+  "source": "award:synthetic-individual-source:monthly:s-0",
+  "leaderboard": [
+    {
+      "id": "s-0",
+      "name": "Lisa Andersson",
+      "rank": 1,
+      "count": 248,
+      "points": 342,
+      "tb_ore": 513800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-1",
+      "name": "Testsäljare 1",
+      "rank": 2,
+      "count": 238,
+      "points": 327,
+      "tb_ore": 503800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-2",
+      "name": "Testsäljare 2",
+      "rank": 3,
+      "count": 228,
+      "points": 312,
+      "tb_ore": 493800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-3",
+      "name": "Testsäljare 3",
+      "rank": 4,
+      "count": 218,
+      "points": 297,
+      "tb_ore": 483800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-4",
+      "name": "Testsäljare 4",
+      "rank": 5,
+      "count": 208,
+      "points": 282,
+      "tb_ore": 473800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-5",
+      "name": "Testsäljare 5",
+      "rank": 6,
+      "count": 198,
+      "points": 267,
+      "tb_ore": 463800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-6",
+      "name": "Testsäljare 6",
+      "rank": 7,
+      "count": 188,
+      "points": 252,
+      "tb_ore": 453800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-7",
+      "name": "Testsäljare 7",
+      "rank": 8,
+      "count": 178,
+      "points": 237,
+      "tb_ore": 443800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-8",
+      "name": "Testsäljare 8",
+      "rank": 9,
+      "count": 168,
+      "points": 222,
+      "tb_ore": 433800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-9",
+      "name": "Testsäljare 9",
+      "rank": 10,
+      "count": 158,
+      "points": 207,
+      "tb_ore": 423800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-10",
+      "name": "Testsäljare 10",
+      "rank": 11,
+      "count": 148,
+      "points": 192,
+      "tb_ore": 413800,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "seller-11",
+      "name": "Testsäljare 11",
+      "rank": 12,
+      "count": 138,
+      "points": 177,
+      "tb_ore": 403800,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [
+    {
+      "name": "Biltvätt",
+      "count": 94,
+      "points": 188,
+      "tb_ore": 329000
+    },
+    {
+      "name": "Kaffe + bulle",
+      "count": 154,
+      "points": 154,
+      "tb_ore": 184800
+    }
+  ],
+  "goals": [
+    {
+      "kind": "personal",
+      "seller_id": "s-0",
+      "name": "Personligt septembermål",
+      "target_points": 300,
+      "points": 342
+    }
+  ],
+  "winner_ids": [
+    "s-0"
+  ],
+  "award": {
+    "variant": "monthly",
+    "recipient": {
+      "id": "s-0",
+      "name": "Lisa Andersson"
+    },
+    "source_report_id": "synthetic-individual-source",
+    "context": "Tingsryd",
+    "result": "342 poäng"
+  }
+}

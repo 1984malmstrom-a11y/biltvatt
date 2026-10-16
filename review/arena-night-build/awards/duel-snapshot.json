@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "synthetic-duel-award",
+  "type": "fight",
+  "title": "BUTIKSFIGHT-MÄSTARE · Tingsryd",
+  "created_at": "2026-10-01T08:00:00Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": null,
+  "totals": {
+    "count": 124,
+    "points": 248,
+    "tb_ore": 434000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Tingsryd"
+  ],
+  "metric": "points",
+  "source": "award:synthetic-duel-source:fight:p-0",
+  "leaderboard": [
+    {
+      "id": "p-0",
+      "name": "Tingsryd",
+      "rank": 1,
+      "count": 124,
+      "points": 248,
+      "tb_ore": 434000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-1",
+      "name": "Ronneby",
+      "rank": 2,
+      "count": 115,
+      "points": 230,
+      "tb_ore": 402500,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [],
+  "goals": [
+    {
+      "kind": "station",
+      "seller_id": null,
+      "name": "Lagets mål",
+      "points": 402,
+      "target_points": 140
+    }
+  ],
+  "winner_ids": [
+    "p-0"
+  ],
+  "award": {
+    "variant": "fight",
+    "recipient": {
+      "id": "p-0",
+      "name": "Tingsryd"
+    },
+    "source_report_id": "synthetic-duel-source",
+    "context": "BUTIKSFIGHT · SYDOSTFINAL",
+    "result": "248 poäng"
+  }
+}

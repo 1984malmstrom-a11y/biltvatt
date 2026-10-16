@@ -1,0 +1,25 @@
+{
+  "environment": "Node 22, local container; no physical till, remote D1 or database benchmark",
+  "station_stats": {
+    "samples": 200,
+    "p50_ms": 0.2629669999999962,
+    "p95_ms": 0.41753999999998825,
+    "max_ms": 0.6173519999999968
+  },
+  "battle_stats": {
+    "samples": 200,
+    "p50_ms": 0.8542700000000139,
+    "p95_ms": 1.1348540000000185,
+    "max_ms": 1.3300590000000057
+  },
+  "battle_stats_after_30_virtual_minutes": {
+    "samples": 200,
+    "p50_ms": 0.7848659999999654,
+    "p95_ms": 1.0653090000000134,
+    "max_ms": 1.1713889999999765
+  },
+  "rows_after_30_virtual_minutes": 131,
+  "auto_events_per_scene_cap": 12,
+  "late_tick_clamp_ms": 1000,
+  "interval_ms": 1000
+}

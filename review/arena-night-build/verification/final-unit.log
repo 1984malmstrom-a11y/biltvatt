@@ -1,0 +1,75 @@
+
+ RUN  v3.2.7 /workspace/biltvatt
+
+ ✓ tests/arena-security.test.ts (18 tests) 7444ms
+   ✓ Individual Superadmins and Owner protection > uses individual identity, hashed sessions and no production shared-secret access  439ms
+   ✓ Individual Superadmins and Owner protection > invites an individual account; only a hashed one-time token persists outside dev delivery  715ms
+   ✓ Individual Superadmins and Owner protection > operational Superadmin cannot mutate Owner, accounts, recovery codes or ownership  564ms
+   ✓ Individual Superadmins and Owner protection > Owner is protected even from the normal account edit endpoint  413ms
+   ✓ Individual Superadmins and Owner protection > disabling an account immediately invalidates all of its sessions and reenable does not restore them  628ms
+   ✓ Individual Superadmins and Owner protection > transfers ownership only explicitly to a verified active individual and revokes sessions  562ms
+   ✓ Recovery, audit and security boundaries > email reset is single use, expires and revokes sessions; responses do not enumerate accounts  526ms
+   ✓ Recovery, audit and security boundaries > expired reset links fail without changing credentials  302ms
+   ✓ Recovery, audit and security boundaries > concurrent reset consumption succeeds exactly once  358ms
+   ✓ Recovery, audit and security boundaries > recovery codes are hashed, single use, regenerated and audited  483ms
+   ✓ Recovery, audit and security boundaries > upgrades existing 100k credentials on successful login without breaking existing passwords  382ms
+   ✓ Recovery, audit and security boundaries > accepts legacy hashes and versioned PBKDF2 hashes without exposing new credentials  506ms
+ ✓ tests/arena-network.test.ts (13 tests) 7830ms
+   ✓ Arena station authentication and tenant isolation > Arena-only works without a dashboard DB and rejects dashboard APIs  796ms
+   ✓ Arena station authentication and tenant isolation > approval preserves pending login, supports Arena-only sellers and rejects client station IDs  329ms
+   ✓ Arena station authentication and tenant isolation > login, renewal, logout and station-owned session revocation are persistent and isolated  541ms
+   ✓ Arena station authentication and tenant isolation > a reset racing a successful password check cannot issue a new session with the old credential  723ms
+   ✓ Arena station authentication and tenant isolation > suspension revokes station sessions and reactivation requires a fresh valid login  633ms
+   ✓ Arena station authentication and tenant isolation > credentials, station sessions and legacy admin sessions never grant Superadmin  356ms
+   ✓ Arena station authentication and tenant isolation > different stations cannot read/write each other's products, seller IDs, registrations or session IDs  767ms
+   ✓ Arena station authentication and tenant isolation > integrated stations still synchronize their own staff register and cannot manage Arena-only sellers  318ms
+   ✓ Arena station authentication and tenant isolation > rate limits login and signup, and preserves same-origin CSRF protection  1026ms
+   ✓ multi-station groups > opt-in people/feed projection respects group membership, metric, range, undo and station suspension  1231ms
+   ✓ multi-station groups > groups support multiple memberships, station permission checks and separate total metrics  975ms
+ ✓ tests/arena-station-challenges.test.ts (7 tests) 7983ms
+   ✓ discovers only own organization, sends and accepts a frozen same-organization duel, replays safely and preserves membership  1279ms
+   ✓ rejects cross-organization, mixed legacy/organization and non-admin or forged participant requests without records  1002ms
+   ✓ only intended parties can respond/read/cancel; future org changes cannot revive a pending challenge  1125ms
+   ✓ concurrent accepts cannot double-book; decline and authorized cancel retain audit/history and release only their bookings  1266ms
+   ✓ accepted org duel remains unreadable outside organization; generic creation cannot forge the challenge exception  1112ms
+   ✓ freezes invitation tenant even if both stations move together before acceptance  869ms
+   ✓ same-organization invitations retain recipient-owned activity mapping and reject foreign mapping  1329ms
+ ✓ tests/arena-championship-awards.test.ts (14 tests | 3 skipped) 5101ms
+   ✓ Three cinematic frozen championship templates > individual: one A4, Swedish searchable text, embedded art, byte-correct resources and deterministic re-export  996ms
+   ✓ Three cinematic frozen championship templates > duel: one A4, Swedish searchable text, embedded art, byte-correct resources and deterministic re-export  806ms
+   ✓ Three cinematic frozen championship templates > championship: one A4, Swedish searchable text, embedded art, byte-correct resources and deterministic re-export  938ms
+   ✓ Three cinematic frozen championship templates > long names and competition titles remain readable, complete and separated from neighboring text  2094ms
+ ✓ tests/arena-competition-builder.test.ts (34 tests) 6369ms
+   ✓ pending challenge acquires no booking; accept is idempotent and freezes activity mapping  490ms
+   ✓ simultaneous competing accepts cannot double-book and cannot leave partial competitions  721ms
+   ✓ tenant boundaries reject spoofing, foreign accept/decline/mapping and station league creation  988ms
+   ✓ decline and withdraw preserve audit and resolve queues; expired requests cannot be accepted  980ms
+   ✓ spontaneous cancellation freezes the score, releases bookings, notifies both and never crowns a winner  1094ms
+   ✓ station admin cannot cancel central competition; Superadmin can cancel an official match without winner  347ms
+ ✓ tests/arena-pdf.test.ts (12 tests | 5 skipped) 240ms
+ ✓ tests/arena-contest-v2.test.ts (21 tests) 1654ms
+   ✓ 40 station championship persists 780 independent two-station matches with no N-way fight  520ms
+ ✓ tests/arena-showtime.test.ts (11 tests) 105ms
+ ✓ tests/arena-awards.test.ts (14 tests) 7848ms
+   ✓ Arena Award template and frozen archive > renders weekly deterministically from frozen recipient/results  1010ms
+   ✓ Arena Award template and frozen archive > renders monthly deterministically from frozen recipient/results  727ms
+   ✓ Arena Award template and frozen archive > renders individual deterministically from frozen recipient/results  729ms
+   ✓ Arena Award template and frozen archive > renders station deterministically from frozen recipient/results  1006ms
+   ✓ Arena Award template and frozen archive > renders fight deterministically from frozen recipient/results  969ms
+   ✓ Arena Award template and frozen archive > renders league deterministically from frozen recipient/results  665ms
+   ✓ Arena Award template and frozen archive > renders playoffs deterministically from frozen recipient/results  583ms
+   ✓ Arena Award template and frozen archive > renders cup deterministically from frozen recipient/results  584ms
+   ✓ Arena Award template and frozen archive > renders personal-goal deterministically from frozen recipient/results  659ms
+   ✓ Arena Award template and frozen archive > renders station-goal deterministically from frozen recipient/results  795ms
+ ✓ tests/arena-competition-notifications.test.ts (3 tests) 99ms
+ ✓ tests/arena-requests.test.ts (2 tests) 8ms
+ ✓ tests/arena-war-fight.test.ts (4 tests) 8ms
+ ✓ tests/arena-identity.test.ts (10 tests) 29ms
+ ✓ tests/arena-achievements.test.ts (13 tests) 9ms
+ ✓ tests/arena-battle-mode.test.ts (3 tests) 11ms
+
+ Test Files  15 passed (15)
+      Tests  171 passed | 8 skipped (179)
+   Start at  20:57:45
+   Duration  18.43s (transform 1.91s, setup 0ms, collect 6.15s, tests 44.74s, environment 3ms, prepare 1.25s)
+

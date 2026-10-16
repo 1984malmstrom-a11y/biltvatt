@@ -1,0 +1,44 @@
+[
+  {
+    "template": "individual",
+    "bytes": 281037,
+    "sha256": "56c46347868c01cc525ab85baa9e78ce4dc24eb4aa4c4ffbbd938ca404d5db97",
+    "a4": true,
+    "pages": 1,
+    "swedish_searchable": true,
+    "synthetic_mark": true,
+    "pdfinfo": "PASS",
+    "pdftotext": "PASS",
+    "pymupdf_no_repair": "PASS",
+    "long_name_text_complete": true,
+    "long_name_text_collisions": []
+  },
+  {
+    "template": "duel",
+    "bytes": 273307,
+    "sha256": "9d2aaa421a77136e745f4ce6a4b1d8ab2eb634b7d848ce74c8af98f12c44d1ae",
+    "a4": true,
+    "pages": 1,
+    "swedish_searchable": true,
+    "synthetic_mark": true,
+    "pdfinfo": "PASS",
+    "pdftotext": "PASS",
+    "pymupdf_no_repair": "PASS",
+    "long_name_text_complete": true,
+    "long_name_text_collisions": []
+  },
+  {
+    "template": "championship",
+    "bytes": 277767,
+    "sha256": "c2387025828caafa14bb6a8dccc33c259a976f55ead16c09f658a017d3df4a8e",
+    "a4": true,
+    "pages": 1,
+    "swedish_searchable": true,
+    "synthetic_mark": true,
+    "pdfinfo": "PASS",
+    "pdftotext": "PASS",
+    "pymupdf_no_repair": "PASS",
+    "long_name_text_complete": true,
+    "long_name_text_collisions": []
+  }
+]

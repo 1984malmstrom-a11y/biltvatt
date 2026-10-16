@@ -1,0 +1,357 @@
+{
+  "synthetic_data_only": true,
+  "start_head": "d8277a53ff19a561454701a61cd64021876d1789",
+  "final_head": "d26020d222cb38a1c8ddb7b7f13777e16977f389",
+  "branch": "feat/arena-v1",
+  "curated_png_count": 29,
+  "pdf_count": 3,
+  "total_files_including_manifest": 64,
+  "curated_pngs": [
+    "showtime-1024x768.png",
+    "showtime-1536x864.png",
+    "showtime-390x844.png",
+    "showtime-844x390.png",
+    "showtime-lobby-1920x1080.png",
+    "showtime-ny-etta-1920x1080.png",
+    "showtime-sale-1920x1080.png",
+    "showtime-sprint-10-1920x1080.png",
+    "showtime-sprint-5-1920x1080.png",
+    "showtime-start-1920x1080.png",
+    "showtime-winner-1920x1080.png",
+    "battle-v2-before-1920x1080.png",
+    "showtime-battle-1920x1080.png",
+    "showtime-battle-390x844.png",
+    "showtime-battle-844x390.png",
+    "discover-1-1920x1080.png",
+    "discover-1-390x844.png",
+    "discover-2-1920x1080.png",
+    "discover-3-1920x1080.png",
+    "discover-4-1920x1080.png",
+    "discover-4-844x390.png",
+    "discover-5-1920x1080.png",
+    "discover-6-1920x1080.png",
+    "awards/championship.png",
+    "awards/duel.png",
+    "awards/individual.png",
+    "awards/before/championship.png",
+    "awards/before/duel.png",
+    "awards/before/individual.png"
+  ],
+  "files": [
+    {
+      "path": "award-validation.json",
+      "bytes": 1162,
+      "sha256": "3e9ad35a1f1d2743071ad330c1993e3ffc3f9711f11fefc65e2c50892d065d39"
+    },
+    {
+      "path": "awards/before/championship.png",
+      "bytes": 2644047,
+      "sha256": "fa282a90fe0491cb2201507e00d1391351d33c6e583d1268ac41ebf3917bf63f"
+    },
+    {
+      "path": "awards/before/duel.png",
+      "bytes": 2648686,
+      "sha256": "ab940c99bb4c90e340ecd75d9db91bdcde68608e5d4789316c33a1855bfa1163"
+    },
+    {
+      "path": "awards/before/individual.png",
+      "bytes": 2570692,
+      "sha256": "4e66bc701ebb23e5d0b62330149ff9cd7ad421b2f8b60ac129dc036aa31ea76d"
+    },
+    {
+      "path": "awards/championship-snapshot.json",
+      "bytes": 10183,
+      "sha256": "4568a2ee4245fe5c0d224d75043d2655d58f3eb550602d9a170ae776c99966c7"
+    },
+    {
+      "path": "awards/championship.pdf",
+      "bytes": 277767,
+      "sha256": "c2387025828caafa14bb6a8dccc33c259a976f55ead16c09f658a017d3df4a8e"
+    },
+    {
+      "path": "awards/championship.png",
+      "bytes": 2647125,
+      "sha256": "6f43297ff4fd356f2a3fdd6ee931f5623915f65a6a28524b15873080dac30141"
+    },
+    {
+      "path": "awards/duel-snapshot.json",
+      "bytes": 1265,
+      "sha256": "67fe9241cf92c297284b67b7450f5ef62da1275b494b5626fd3473e3d0c93745"
+    },
+    {
+      "path": "awards/duel.pdf",
+      "bytes": 273307,
+      "sha256": "9d2aaa421a77136e745f4ce6a4b1d8ab2eb634b7d848ce74c8af98f12c44d1ae"
+    },
+    {
+      "path": "awards/duel.png",
+      "bytes": 2653588,
+      "sha256": "c12620cb6524554de5a9f1759e39eef75d36cf25ec81341d551acb102cb10afb"
+    },
+    {
+      "path": "awards/individual-snapshot.json",
+      "bytes": 3436,
+      "sha256": "a27ce3608817c6f0735dec5325549232fd93f0d5cf9f0bc4df1d3f373b0cd564"
+    },
+    {
+      "path": "awards/individual.pdf",
+      "bytes": 281037,
+      "sha256": "56c46347868c01cc525ab85baa9e78ce4dc24eb4aa4c4ffbbd938ca404d5db97"
+    },
+    {
+      "path": "awards/individual.png",
+      "bytes": 2574212,
+      "sha256": "47ce8a4ad59878dc362dd3018177455d68811dcb5c08fb6c35b26c535888e251"
+    },
+    {
+      "path": "battle-v2-before-1920x1080.png",
+      "bytes": 1527834,
+      "sha256": "7a33f13a4bac67d8721915e7db3db5cd0b0cb63fd244a13f0e7987982a910c60"
+    },
+    {
+      "path": "browser-performance.json",
+      "bytes": 585,
+      "sha256": "67fd250c4f7cc476527633c59fc5709ff4afa2a033b1bc440a6e5acc85c9dbcf"
+    },
+    {
+      "path": "changed-files.md",
+      "bytes": 1226,
+      "sha256": "ecd65c3155a92c8717d7ad7f851c533375b48662aa7ba14506a91e4b95bde837"
+    },
+    {
+      "path": "demo-runbook.md",
+      "bytes": 3174,
+      "sha256": "5a02f967abd3fb97a7f17f52baf8e86e7a424a94ada589d74affbb083aa21468"
+    },
+    {
+      "path": "discover-1-1920x1080.png",
+      "bytes": 1170393,
+      "sha256": "699a1aaad82fe001f38ef90fd2631b0536f744d149c1812cd6d5474fe563f630"
+    },
+    {
+      "path": "discover-1-390x844.png",
+      "bytes": 145210,
+      "sha256": "d373301a6c630a4cd1a4236ca581870ea8304e3e4c97eaa50a766d153ebbd7d2"
+    },
+    {
+      "path": "discover-2-1920x1080.png",
+      "bytes": 738982,
+      "sha256": "c2656950c413a0882836825a9a5833ef639bf7d16d2773d0eb8a31ca58568058"
+    },
+    {
+      "path": "discover-3-1920x1080.png",
+      "bytes": 541997,
+      "sha256": "c83e1220bbf13faac57fe063ed0d25d2c217ad045c9e13113100921cb3b05972"
+    },
+    {
+      "path": "discover-4-1920x1080.png",
+      "bytes": 702111,
+      "sha256": "e202259dcf0729bf62fa9b9ea252a6dc322610efb65855d0900cced00d9c2029"
+    },
+    {
+      "path": "discover-4-844x390.png",
+      "bytes": 171319,
+      "sha256": "52b470dae9c4c149e038af25f641e710c0fcfb076e88cab5a0316ed6c415f46a"
+    },
+    {
+      "path": "discover-5-1920x1080.png",
+      "bytes": 461565,
+      "sha256": "03fdb30a84fdbc8b4817028b50bc0aa5fbd2dcd558f7e0da4894a2778aac70a3"
+    },
+    {
+      "path": "discover-6-1920x1080.png",
+      "bytes": 1182494,
+      "sha256": "8573ed4951910d52e550ecda10d6cb7069aa0ffaf7116780a4249c16a1e07588"
+    },
+    {
+      "path": "engine-performance.json",
+      "bytes": 691,
+      "sha256": "59b3a94a8d3adfe9e43315c781470153fb9f1e7d720774f318b0a616b546d9ee"
+    },
+    {
+      "path": "final-report.md",
+      "bytes": 2674,
+      "sha256": "665d16687e16ab46a79cbbc5c9947501ce07550485e126c117b420ef3875c8bc"
+    },
+    {
+      "path": "gallery-validation.json",
+      "bytes": 293,
+      "sha256": "1abc8d343f287ab0fdc6e10ae908df2a1b3069d9f5eadfa1290bd333d4beaef2"
+    },
+    {
+      "path": "implementation-status.md",
+      "bytes": 2239,
+      "sha256": "f15f0186abdc098110c1bfd4408b369ec4831922207f15e217446bfbb62ac2e5"
+    },
+    {
+      "path": "index.html",
+      "bytes": 8215,
+      "sha256": "2444f077c6f99794f52357318523eacdb961fce5cfda4931f5dc2ab566c1bc9b"
+    },
+    {
+      "path": "migration-review.md",
+      "bytes": 290,
+      "sha256": "1cd073e403366d5e76ddd9b4338ccc429f368c557ad99929685d336a3b77f826"
+    },
+    {
+      "path": "ordinary-evidence/evidence-1536x864.json",
+      "bytes": 7737,
+      "sha256": "9854b187f9fc5a427a2b0e963c44e526a7f9b98ae7c8371c0b238b2e0eae8a44"
+    },
+    {
+      "path": "ordinary-evidence/evidence-1920x1080.json",
+      "bytes": 7738,
+      "sha256": "305c8b752ba7ead4ec73c65fd695c883c0e63e7b2013c11df018c1794e0fb58e"
+    },
+    {
+      "path": "ordinary-evidence/evidence-390x844.json",
+      "bytes": 7736,
+      "sha256": "9ff08f6c905c52352ca4d7448299954e477921d97ddd959bd4cdcab9e9ac00db"
+    },
+    {
+      "path": "performance-report.json",
+      "bytes": 3201,
+      "sha256": "5611fb2d7c06888d349d20951b36c3be92edc8f383865f2202ba65198044b335"
+    },
+    {
+      "path": "performance-review.md",
+      "bytes": 1318,
+      "sha256": "3c5b9fdcf6a4de049e663fb1505ddd5895e14459073201d190f8e3142d649d49"
+    },
+    {
+      "path": "responsive-report.md",
+      "bytes": 840,
+      "sha256": "4662c4514455873b4865b4c7322a1ccd232c0b4863716691244533fa9be86916"
+    },
+    {
+      "path": "security-review.md",
+      "bytes": 1614,
+      "sha256": "dc90ef8fbe8aa976a30efd64bdac1342c12a4a57d51f372071ad86c9964bcfa4"
+    },
+    {
+      "path": "showtime-1024x768.png",
+      "bytes": 674898,
+      "sha256": "3355c62e4bea6105651322a6a72ee2f299b810adedad1458fb2281f9e19e0629"
+    },
+    {
+      "path": "showtime-1536x864.png",
+      "bytes": 1055533,
+      "sha256": "aa6d48e950b8653ed1ce9d2149831154da8e78a709b7bfe1fa27bbee1b5b6f3b"
+    },
+    {
+      "path": "showtime-390x844.png",
+      "bytes": 346463,
+      "sha256": "ed1b22c4005a9a6c7ebe1e8e8556a1957bcdd98d811c2f1ed3d2a03a7bc5d4e8"
+    },
+    {
+      "path": "showtime-844x390.png",
+      "bytes": 306879,
+      "sha256": "c63e9b9d0751e6f9228bb83da9c400c55cdb644f3156f005f5fe0fe9f057f582"
+    },
+    {
+      "path": "showtime-battle-1920x1080.png",
+      "bytes": 1561925,
+      "sha256": "75bb6f2b41f78cde124a88725665e19006ebb0c31a7409a13d8479d701326e14"
+    },
+    {
+      "path": "showtime-battle-390x844.png",
+      "bytes": 339214,
+      "sha256": "257109bef4cb368615bcb90a2e9604114127215cc45f51e03a578318fa6eff83"
+    },
+    {
+      "path": "showtime-battle-844x390.png",
+      "bytes": 295453,
+      "sha256": "40c3dab90831554fa7e3d0280eb009668d8c60820b546ddb10e81b261ea7dc2e"
+    },
+    {
+      "path": "showtime-isolation.json",
+      "bytes": 213,
+      "sha256": "6ba316bcd2045c5ca1cfe3fc47ee4ce32b91437a86a0a7cd70153840abbd4c4a"
+    },
+    {
+      "path": "showtime-lobby-1920x1080.png",
+      "bytes": 808363,
+      "sha256": "74b3f493665a21dc4d55b705aaac5fffa3ada441b811746af3ff5358972e8d07"
+    },
+    {
+      "path": "showtime-ny-etta-1920x1080.png",
+      "bytes": 1123327,
+      "sha256": "12d63e982bafe6caab53556f6045dfe966e00f377eea28bddfaff8ba72294c15"
+    },
+    {
+      "path": "showtime-sale-1920x1080.png",
+      "bytes": 1595597,
+      "sha256": "6e3bfbd5e99b1042d095c17070301a8e1e122196b76ea778995b1f4944ae2e24"
+    },
+    {
+      "path": "showtime-sprint-10-1920x1080.png",
+      "bytes": 1565832,
+      "sha256": "fa5a96964677336c509cf1bfc05d9cab5d7a0e5514d72d57374874e3a9b0924e"
+    },
+    {
+      "path": "showtime-sprint-5-1920x1080.png",
+      "bytes": 1568062,
+      "sha256": "278fe7d66220d1eb8788dcd59c0239c60964070f85afa76609081d6cdc74fe0e"
+    },
+    {
+      "path": "showtime-start-1920x1080.png",
+      "bytes": 1585381,
+      "sha256": "11c515c06cfc17b926d3323920f728233092d270e61c89b3e3c4ab5807d94510"
+    },
+    {
+      "path": "showtime-winner-1920x1080.png",
+      "bytes": 1261791,
+      "sha256": "6e7e1ce2ad1abba23ac95ffa04f97e746235bb495e31e0f3d7a98808f2082251"
+    },
+    {
+      "path": "test-results.md",
+      "bytes": 2730,
+      "sha256": "f1de91e286dc995524441237745d7bedcd8405330d01812f557040c2ae30a5f8"
+    },
+    {
+      "path": "verification/award-validation.log",
+      "bytes": 1163,
+      "sha256": "676c99ed3a80619ed0b2e112dce612b4169521d9aad128abc2fc25743066280d"
+    },
+    {
+      "path": "verification/battle-playwright.log",
+      "bytes": 1885,
+      "sha256": "4f9d657095cf289d182da32efafc48763ef0c5fb9b0fa85f059bcf2c12811e93"
+    },
+    {
+      "path": "verification/challenge-verification-1920x1080.json",
+      "bytes": 380,
+      "sha256": "bdb8af0abd31d4b1358b04c42b4696f090ce99a243a7c0c3428eea5a67edc7dd"
+    },
+    {
+      "path": "verification/challenge-verification-390x844.json",
+      "bytes": 380,
+      "sha256": "4e732f0b406508c585b430cdd24b3f318f6217d67df0009b8066cc1d0336ac2e"
+    },
+    {
+      "path": "verification/final-build.log",
+      "bytes": 4185,
+      "sha256": "891992b950310996e4bf96b45171f7fabcce6100e216101f9842a0a752458355"
+    },
+    {
+      "path": "verification/final-discover.log",
+      "bytes": 918,
+      "sha256": "161b2a345840bc625bda0bed7767cbf06e638db4ee44ca598ca8113302e61649"
+    },
+    {
+      "path": "verification/final-genrep.log",
+      "bytes": 3328,
+      "sha256": "ddbb108bad0460fc7d98329dfc8433f5886005d6c0317feb137662eb47372cd4"
+    },
+    {
+      "path": "verification/final-unit.log",
+      "bytes": 7836,
+      "sha256": "a689d72bd863da36707ff569d6a6e997d64d71075b6118e58b2e3697d77d3f65"
+    },
+    {
+      "path": "verification/typecheck.log",
+      "bytes": 46,
+      "sha256": "73a648d5409093a0e5b05edcdba362bc8ffb74267c83e934fe85719f2c638f5c"
+    }
+  ]
+}
