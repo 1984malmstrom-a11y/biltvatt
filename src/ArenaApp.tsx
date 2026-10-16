@@ -7,7 +7,7 @@ import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-pol
 import {arenaLocalSale} from "./arena-local-sale";
 
 import { lazy, memo, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Flag, Home, RotateCcw, Settings, ShoppingBag, Star, Target, Trophy, UserRound, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, Clock3, Crown, Flag, Home, RotateCcw, Settings, ShoppingBag, Star, Swords, Target, Trophy, UserRound, Users, X } from "lucide-react";
 import { api, HttpError, send } from "./api";
 import type { ArenaAchievement, ArenaActivity, ArenaBootstrap, ArenaGoal, ArenaPerson, ArenaRegistration, ArenaStats } from "../shared/arena";
 import { arenaAchievement, arenaNumber as num, roundedPoints } from "../shared/arena";
@@ -376,7 +376,7 @@ function ArenaHome() {
       </div></ArenaPersonContext>
       <section className={`arena-stage arena-stage-start${fullBattle?" is-battle":""}`} aria-label="Försäljningsaktiviteter">
         {fullBattle&&<BattleSwords/>}
-        <nav className="arena-mode-switch" aria-label="Visningsläge"><button aria-pressed={!activeFight||battleUnavailable||preferred==='station'} onClick={()=>chooseMode('station')}>STATION</button><a href="/arena/competitions">TÄVLINGAR</a><button disabled={!activeFight||battleUnavailable} title={todayStats?.battle?.unavailable_reason} aria-pressed={!!activeFight&&!battleUnavailable&&preferred==='battle'} onClick={()=>chooseMode('battle')}>BUTIKSFIGHT</button></nav>
+        <nav className="arena-mode-switch" aria-label="Visningsläge"><button aria-pressed={!activeFight||battleUnavailable||preferred==='station'} onClick={()=>chooseMode('station')}>STATIONSLÄGE</button><button disabled={!activeFight||battleUnavailable} title={todayStats?.battle?.unavailable_reason} aria-pressed={!!activeFight&&!battleUnavailable&&preferred==='battle'} onClick={()=>chooseMode('battle')}><Swords aria-hidden="true"/>BATTLE MODE</button></nav>
         <div className="arena-stage-atmosphere" aria-hidden="true"><i className="arena-stage-architecture"/><i className="arena-stage-beams"/><i className="arena-stage-floor"/><i className="arena-stage-sparks"/></div>
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel(fightContext?"fight":"leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>

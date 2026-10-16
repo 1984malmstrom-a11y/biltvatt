@@ -86,3 +86,30 @@
  .arena-state-panel:has(.is-objective-ring) .arena-war-fight[data-fight-mode=daily] .arena-fight-today{display:none}
 }
 @media(prefers-reduced-motion:reduce){.arena-war-fight,.arena-war-fight *,.arena-war-fight *::before{animation:none!important;transition:none!important}}
+
+/* Broadcast hierarchy in the existing rail. Only a bounded perimeter animates. */
+.arena-state-panel .arena-fight-widget.arena-war-fight{--war-edge:#b9a36a99;--war-halo:#b59a4d20;background:radial-gradient(ellipse at 50% 0,#a9924e1c,transparent 52%),linear-gradient(155deg,#10241a,#020c08 62%,#06180f);box-shadow:inset 0 1px 0 #f6e4a329,inset 0 0 18px #ccb1620b,0 6px 18px #0005,0 0 12px var(--war-halo)}
+.arena-war-fight .arena-war-header{border-bottom-color:#cfb97440;letter-spacing:.065em}
+.arena-war-fight .arena-war-header>strong{font-style:normal;font-weight:750;text-shadow:0 1px 8px #e4c76a25}
+.arena-war-fight .arena-war-scoreboard{position:relative}
+.arena-war-fight .arena-war-scoreboard>em{position:relative;z-index:1}
+.arena-war-fight .arena-war-scoreboard>em::before,.arena-war-fight .arena-war-scoreboard>em::after{content:'';position:absolute;left:50%;height:18px;width:1px;background:linear-gradient(transparent,#c1aa6b66);bottom:calc(100% + 7px)}
+.arena-war-fight .arena-war-scoreboard>em::after{bottom:auto;top:calc(100% + 7px);transform:rotate(180deg)}
+.arena-war-fight .arena-war-team>b{color:#f3e6c4;letter-spacing:-.025em;text-shadow:0 2px 9px #0008}
+.arena-state-panel .arena-war-fight.is-own-leading{--war-edge:#82b68a99;--war-halo:#45a97724}
+.arena-war-fight.is-own-leading .arena-war-team:first-child>b{color:#a3e5b8}
+.arena-state-panel .arena-war-fight.is-own-leading .arena-war-lead{border-color:#6cae804d;background:linear-gradient(120deg,#23553755,#0a251c44);color:#c3e7bc}
+.arena-war-fight .arena-war-scope>small{color:#b3ba9e;letter-spacing:.14em}
+.arena-state-panel .arena-war-fight .arena-fight-perimeter{animation:none;opacity:.4}
+.arena-state-panel .arena-war-fight:has(.urgency-hour){--war-edge:#bc875899;--war-halo:#ba754423}
+.arena-state-panel .arena-war-fight:has(.urgency-quarter){--war-edge:#cf7657ba;--war-halo:#d7684233}
+.arena-state-panel .arena-war-fight:has(.urgency-final){--war-edge:#e48b70d9;--war-halo:#df503c44}
+.arena-state-panel .arena-war-fight:has(.urgency-hour,.urgency-quarter,.urgency-final) .arena-fight-perimeter{--pulse-floor:.2;--pulse-peak:.48;opacity:var(--pulse-floor);border:1px solid #d7976059;background:linear-gradient(125deg,#d2794220,transparent 32% 68%,#d75a3825);box-shadow:inset 0 0 14px #d66e3420;animation:arena-war-breathe 5s ease-in-out infinite}
+.arena-state-panel .arena-war-fight:has(.urgency-quarter) .arena-fight-perimeter{--pulse-floor:.28;--pulse-peak:.7;border-color:#f19c6b80;box-shadow:inset 0 0 16px #e7613c25;animation-duration:3.8s}
+.arena-state-panel .arena-war-fight:has(.urgency-final) .arena-fight-perimeter{--pulse-floor:.32;--pulse-peak:.9;border-color:#f6a184b0;background:linear-gradient(125deg,#de46312e,transparent 35% 65%,#de46312e);box-shadow:inset 0 0 18px #df442d33;animation-duration:2.6s}
+.arena-war-clock.urgency-final>strong{color:#ffccb5;text-shadow:0 0 12px #e2644540}
+.arena-war-fight:has(.is-clock-hidden) .arena-fight-perimeter{animation-play-state:paused!important}
+@keyframes arena-war-breathe{50%{opacity:var(--pulse-peak)}}
+@media(max-width:950px) and (orientation:portrait){.arena-war-fight .arena-war-header{letter-spacing:.025em}.arena-war-fight .arena-war-scoreboard>em::before,.arena-war-fight .arena-war-scoreboard>em::after{display:none}.arena-state-panel .arena-war-fight.is-own-leading .arena-war-lead{border:0;background:none}}
+@media(prefers-reduced-motion:reduce){.arena-state-panel .arena-war-fight .arena-fight-perimeter{animation:none!important;opacity:.5}}
+@media(max-width:950px) and (orientation:landscape){.arena-shell .arena-state-panel .arena-fight-widget.arena-war-fight{padding:6px;gap:3px}}

@@ -60,7 +60,7 @@ function WarFightWidget({fight,stationId,onBoundary,scope="Se fightens regler"}:
   const difference=fightDifference(fight,gap);
   const confirmed=fight.phase==='finished'&&!!fight.winner_ids?.length;
   const result=confirmed?(fight.winner_ids!.length===1?`${fight.standings.find(s=>s.id===fight.winner_ids![0])?.name??'Laget'} vann`:'OAVGJORT!'):fight.phase==='finished'?'Inväntar bekräftat slutresultat':leaders.length>1?'DET ÄR LIKA!':`${leader?.name??'Laget'} leder${pair&&gap!==0?` med ${difference}!`:''}`;
-  return <a className={`arena-fight-widget arena-war-fight${pair ? " is-duel":" is-ranking"}${surge ? " is-surging":""}${leaders.length>1 ? " is-tied":""}`} data-fight-mode={fight.scoring_mode??"total"} data-fight-metric={fight.metric} data-fight-phase={fight.phase} href={fight.competition_id?`/arena/competitions/${fight.competition_id}`:`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}>
+  return <a className={`arena-fight-widget arena-war-fight${pair ? " is-duel":" is-ranking"}${surge ? " is-surging":""}${leaders.length>1 ? " is-tied":""}${fight.phase==='active'&&gap>0?' is-own-leading':''}`} data-fight-mode={fight.scoring_mode??"total"} data-fight-metric={fight.metric} data-fight-phase={fight.phase} href={fight.competition_id?`/arena/competitions/${fight.competition_id}`:`/arena/fights/${fight.id}`} aria-label={`Öppna Butiksfight: ${fight.name}`}>
     <span className="arena-fight-perimeter" aria-hidden="true"/>
     <span className="arena-war-header"><Swords aria-hidden="true"/><strong>BUTIKSFIGHT</strong><span className="arena-war-live"><i/>{fight.phase==='active'?'LIVE':fight.phase==='scheduled'?'SNART':'FINAL'}</span></span>
     <span className="arena-war-scoreboard">

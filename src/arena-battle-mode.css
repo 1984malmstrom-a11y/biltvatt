@@ -1,19 +1,43 @@
 /* Presentation only. Preserve the approved orbit geometry at every breakpoint. */
-.arena-stage-start.is-battle .arena-stage-atmosphere{background:radial-gradient(ellipse at center,#b79b3c16,transparent 65%)}
-.arena-battle-swords{position:absolute;inset:9% 8%;width:84%;height:82%;pointer-events:none;opacity:.2;z-index:0;animation:arena-battle-light 8s ease-in-out infinite alternate}
-.arena-battle-swords .blade{fill:url(#arena-battle-metal);stroke:#d6b766;stroke-width:.6}.arena-battle-swords .hilt{fill:#c5a456;stroke:#2d2b20;stroke-width:1}
-@keyframes arena-battle-light{from{opacity:.12}to{opacity:.23}}
-.arena-mode-switch{display:flex;align-items:center;justify-content:center;gap:3px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:4;padding:3px;border:1px solid #d8bd6655;border-radius:30px;background:#031d17ed;white-space:nowrap}
-.arena-mode-switch button,.arena-mode-switch a{padding:5px 10px!important;font:600 clamp(9px,.7vw,12px)/1.2 Arial,sans-serif;letter-spacing:.06em;color:#b8cabf;background:transparent;border:0;border-radius:20px;text-decoration:none;min-height:30px}
-.arena-mode-switch [aria-pressed=true]{background:linear-gradient(120deg,#f5de9a,#c9a953);color:#092319;box-shadow:0 0 12px #d2ad3a30}
+/* Battle's mood is scoped to the stage; approved orbit coordinates stay intact. */
+.arena-stage-start.is-battle .arena-stage-atmosphere{inset:0;border-radius:32% 32% 12% 12%;background:radial-gradient(ellipse at 50% 62%,#214d3938,transparent 62%),radial-gradient(ellipse at 50% 0,#b6a26118,transparent 52%),radial-gradient(ellipse at 50% 48%,#010906ee 12%,#010906d9 52%,#01130a75 77%,transparent 100%);box-shadow:none}
+.is-battle .arena-stage-architecture{opacity:.55;border-color:#b9a67124;box-shadow:inset 0 24px 36px #0008}
+.is-battle .arena-stage-beams{opacity:.7;background:linear-gradient(118deg,transparent 22%,#d6c18a12 29%,transparent 40%),linear-gradient(242deg,transparent 22%,#c3cdb412 29%,transparent 40%),radial-gradient(ellipse at 50% 15%,#e1ca7c13,transparent 55%)}
+.is-battle .arena-stage-sparks{opacity:.12}
+.is-battle .arena-stage-floor{opacity:.45}
+.arena-battle-swords{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.76;z-index:0;animation:none}
+.arena-battle-swords .blade{stroke:#c1b78b;stroke-width:1.2}
+.arena-battle-swords .blade-edge{fill:none;stroke:#e2d5ac;stroke-width:1;opacity:.7}
+.arena-battle-swords .blade-fuller{fill:none;stroke:#07140e;stroke-width:2;opacity:.65}
+.arena-battle-swords .sword-guard{stroke:#d7c38a;stroke-width:1}
+.arena-battle-swords .sword-binding{stroke:#8e8868;stroke-width:1.4;opacity:.65}
+.arena-battle-swords .sword-pommel{fill:#16291e;stroke:#b6a677;stroke-width:1}
+.arena-mode-switch{display:flex;align-items:center;justify-content:center;gap:3px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:4;padding:4px;border:1px solid #baa36770;border-radius:12px;background:linear-gradient(145deg,#10281ff5,#030f0cf5);box-shadow:inset 0 1px 0 #f6e1a418,0 4px 12px #0004;white-space:nowrap}
+.arena-mode-switch button{display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 12px!important;font:650 clamp(9px,.7vw,12px)/1.2 Arial,sans-serif;letter-spacing:.065em;color:#a8b9ac;background:transparent;border:1px solid transparent;border-radius:8px;min-height:32px;transition:color .15s,background .15s,box-shadow .15s}
+.arena-mode-switch button svg{width:14px;height:14px;flex:none}
+.arena-mode-switch [aria-pressed=true]{background:linear-gradient(150deg,#9c854d38,#6e62301c);border-color:#d8bf7a8c;color:#f4e1a6;box-shadow:inset 0 1px 0 #f2ddaa22,inset 0 -2px 5px #0006,0 0 12px #d2ad3a12}
+.arena-mode-switch button:not(:disabled):hover{color:#fff0c4;background-color:#baa36718}
+.arena-mode-switch button:focus-visible{outline:2px solid #f2dc96;outline-offset:3px}
+.arena-mode-switch button:disabled{opacity:.45;cursor:not-allowed}
+/* Restrained champagne perimeter, green aura; no moving focus halo in Battle. */
+.arena-stage-start.is-battle .arena-orb{background:linear-gradient(#07190f,#020b07) padding-box,linear-gradient(145deg,#d6c38caa,#55694766 58%,#baa76f99) border-box!important;box-shadow:0 0 2px #d8c89b65,0 0 13px #38835c26,inset 0 1px 6px #d9c7961c,inset 0 -9px 18px #0006}
+.arena-stage-start.is-battle .arena-orb::after{inset:-3px;border-color:#c7b78135;box-shadow:0 0 8px #5ea77e20;opacity:.65;animation:none}
+.arena-stage-start.is-battle .arena-orb-focus{box-shadow:0 0 2px #ead7a07a,0 0 17px #b6a36b20,0 0 26px #39845a25,inset 0 0 12px #d4bd6122}
+.arena-stage-start.is-battle .arena-orb-focus::after{inset:-9px;opacity:.55;animation:none}
+.arena-stage-start.is-battle .arena-objective-edge{inset:-3px;border:1px solid #e6d09b;box-shadow:0 0 2px #ecdda880,0 0 10px #cdbb7735,0 0 21px #4dba792b}
+.arena-stage-start.is-battle .arena-objective-edge::after{inset:-4px;border-color:#80bc9733;box-shadow:none}
+.arena-stage-start.is-battle .arena-orb-focus .arena-objective-edge{inset:-8px;border-width:2px;box-shadow:0 0 3px #ecdda866,0 0 13px #cdbb7738,0 0 26px #4dba7933}
+.arena-stage-start.is-battle .arena-orb:disabled{opacity:.45}
+.arena-stage-start.is-battle .arena-orb:disabled .arena-objective-edge{opacity:0}
+.arena-stage-start.is-battle .arena-orb:not(:disabled):hover{box-shadow:0 0 4px #e7d5a67a,0 0 18px #63ab7e40,inset 0 1px 8px #e6d39a20}
 .arena-battle-intro{position:fixed;inset:0;z-index:85;display:grid;place-content:center;text-align:center;background:radial-gradient(ellipse,#081e18db,#000b);pointer-events:none;animation:arena-battle-intro 1.5s both;color:#f6df9c}
 .arena-battle-intro strong{font-size:clamp(30px,5vw,80px);letter-spacing:.12em;text-shadow:0 0 25px #e5be5866}.arena-battle-intro span{font-size:clamp(13px,2vw,27px);margin-top:14px}
 @keyframes arena-battle-intro{0%{opacity:0;transform:scale(.98)}15%,65%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.02)}}
 .arena-battle-score{position:absolute;bottom:24%;left:10%;right:10%;font-size:clamp(9px,.68vw,13px);line-height:1.3;color:#e9d8a3;text-shadow:0 1px 4px #000;background:#001a14c9;border-radius:12px;padding:2px 0;z-index:4}.arena-orb-focus .arena-battle-score{bottom:20%}
 .is-battle .arena-orb:disabled .arena-product{opacity:.2}.is-battle .arena-orb:disabled .arena-product-copy{opacity:.65}
 .is-battle .arena-stage-label{pointer-events:none}.is-battle .arena-stage-label>span{visibility:hidden}
-@media(max-width:600px),(max-height:500px){.arena-mode-switch{top:0}.arena-mode-switch button,.arena-mode-switch a{padding:4px 7px!important;min-height:28px}.arena-battle-score{font-size:9px;bottom:25%;padding:0}.arena-orb-focus .arena-battle-score{bottom:20%}}
-@media(prefers-reduced-motion:reduce){.arena-battle-swords{animation:none;opacity:.16}.arena-battle-intro{animation:none;display:none}}
+@media(max-width:600px),(max-height:500px){.arena-mode-switch{top:0}.arena-mode-switch button{padding:4px 7px!important;min-height:28px}.arena-battle-score{font-size:9px;bottom:25%;padding:0}.arena-orb-focus .arena-battle-score{bottom:20%}}
+@media(prefers-reduced-motion:reduce){.arena-battle-swords{animation:none}.arena-mode-switch button{transition:none}.arena-battle-intro{animation:none;display:none}}
 /* Compact mode switch owns the top edge; mobile panel shortcuts sit below it. */
 @media(max-width:600px) and (orientation:portrait){.arena-mode-switch{z-index:6;top:-4px}.arena-stage-start>.arena-mobile-panels{top:31px}.arena-stage-start>.arena-mobile-panels button{min-height:25px;padding:2px 7px;font-size:10px}}
 @media(max-height:500px) and (orientation:landscape){.arena-mode-switch{left:62%;top:-3px;z-index:6}}
@@ -30,6 +54,9 @@
 @media(max-width:600px),(max-height:500px){.is-battle .arena-battle-copy{bottom:6%;gap:1px}.is-battle .arena-battle-copy .arena-product-copy strong{font-size:8px}.is-battle .arena-battle-copy .arena-battle-score{font-size:7px}.is-battle .arena-battle-copy .arena-points{font-size:9px}}
 @media(max-width:600px) and (orientation:portrait){.is-battle .arena-focus-insignia .arena-crown{top:65%;width:12cqw;height:12cqw}}
 /* Landscape already reserves the left strip for controls: keep the hero arc clear. */
-@media(max-height:500px) and (orientation:landscape){.arena-mode-switch{left:0;right:auto;top:0;width:88px;transform:none;flex-direction:column;border-radius:11px;box-sizing:border-box}.arena-mode-switch button,.arena-mode-switch a{width:100%;font-size:9px;min-height:28px;padding:4px!important;text-align:center}.arena-stage-start>.arena-mobile-panels{top:103px}.arena-stage-start>.arena-mobile-panels button{min-height:34px;padding:3px 5px}}
+@media(max-height:500px) and (orientation:landscape){.arena-mode-switch{left:0;right:auto;top:0;width:104px;transform:none;flex-direction:column;border-radius:11px;box-sizing:border-box}.arena-mode-switch button{width:100%;font-size:9px;min-height:28px;padding:4px!important;text-align:center}.arena-stage-start>.arena-mobile-panels{top:103px}.arena-stage-start>.arena-mobile-panels button{min-height:34px;padding:3px 5px}}
 @media(max-width:600px) and (orientation:portrait){.is-battle .arena-focus-cap{z-index:6}}
-@media(max-height:500px) and (orientation:landscape){.arena-shell .arena-mode-switch button,.arena-shell .arena-mode-switch a{font:600 9px/1.15 Arial,sans-serif!important;letter-spacing:.03em!important;box-sizing:border-box;white-space:nowrap;max-width:100%}}
+@media(max-height:500px) and (orientation:landscape){.arena-shell .arena-mode-switch button{font:650 8px/1.15 Arial,sans-serif!important;letter-spacing:.03em!important;box-sizing:border-box;white-space:nowrap;max-width:100%}}
+
+@media(max-height:500px) and (orientation:landscape){.arena-mode-switch button{gap:3px;letter-spacing:.01em!important}.arena-mode-switch button svg{width:11px;height:11px}}
+@media(min-width:951px) and (max-height:900px){.arena-mode-switch{top:-3px;padding:3px}.arena-mode-switch button{padding:5px 9px!important;font-size:10px;min-height:28px;letter-spacing:.04em}}
