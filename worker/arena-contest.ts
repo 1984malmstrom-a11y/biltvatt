@@ -19,9 +19,9 @@ export function contestInput(value:unknown):ContestRules{
  return r;
 }
 export async function freezeContestRules(db:D1Database,r:CompetitionRules,activities:ActivitySnapshot[]){
- const c=r.contest!;const categories=(await db.prepare('SELECT id,name FROM arena_activity_categories').all<{id:string;name:string}>()).results;
+ const c=r.contest!;c.locked_at=new Date().toISOString();const categories=(await db.prepare('SELECT id,name FROM arena_activity_categories').all<{id:string;name:string}>()).results;
  for(const cat of c.categories){const canonical=categories.find(v=>v.id===cat.id);if(!canonical)fail(400,'En kategori är inte en kanonisk Arena-kategori.');cat.name=canonical!.name;}
- const selected=activities.filter(a=>c.categories.some(cat=>cat.id===a.arena_category_id));
+ const selected=activities.filter(a=>c.categories.some(cat=>cat.id===a.arena_category_id));if(selected.length>5000)fail(400,'Tävlingsmappningen får innehålla högst 5 000 lokala aktiviteter.');
  if(r.station_ids.some(station=>c.categories.some(cat=>!selected.some(a=>a.station_id===station&&a.arena_category_id===cat.id))))fail(400,'Varje station måste ha en aktiv lokal mappning för varje vald kategori.');
  if(c.fair_play){
   const flows=(await db.prepare('SELECT * FROM arena_customer_flow f WHERE station_id IN (SELECT value FROM json_each(?)) AND id=(SELECT id FROM arena_customer_flow WHERE station_id=f.station_id ORDER BY recorded_at DESC,id DESC LIMIT 1)').bind(JSON.stringify(r.station_ids)).all<CustomerFlow>()).results;
@@ -38,13 +38,14 @@ export type ContestAggregate={station_id:string;seller_id:string;activity_id:str
 // One grouped ledger query, independent of participant count. Membership and local
 // activity IDs come exclusively from the immutable competition snapshot.
 export async function contestAggregates(db:D1Database,r:CompetitionRules,activities:ActivitySnapshot[],from:string,to:string,now:string,finished:boolean):Promise<ContestAggregate[]>{
- return (await db.prepare(`WITH rules AS (SELECT json_extract(value,'$.station_id') station_id,json_extract(value,'$.id') activity_id FROM json_each(?)) SELECT r.station_id,r.seller_id,r.activity_id,COUNT(*) count,COALESCE(SUM(r.points_awarded),0) raw_points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM rules a JOIN arena_registrations r ON r.station_id=a.station_id AND r.activity_id=a.activity_id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?)) GROUP BY r.station_id,r.seller_id,r.activity_id`).bind(JSON.stringify(activities),from,to,now,finished?1:0,to).all<ContestAggregate>()).results;
+ const seller=r.contest?.kind==='individual'?'r.seller_id':"''";
+ return (await db.prepare(`WITH rules AS (SELECT json_extract(value,'$.station_id') station_id,json_extract(value,'$.id') activity_id,json_extract(value,'$.arena_category_id') category_id FROM json_each(?)) SELECT r.station_id,${seller} seller_id,MIN(r.activity_id) activity_id,COUNT(*) count,COALESCE(SUM(r.points_awarded),0) raw_points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM rules a JOIN arena_registrations r ON r.station_id=a.station_id AND r.activity_id=a.activity_id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?)) GROUP BY r.station_id,${seller},a.category_id`).bind(JSON.stringify(activities),from,to,now,finished?1:0,to).all<ContestAggregate>()).results;
 }
 export function contestEntries(r:CompetitionRules,activities:ActivitySnapshot[],members:{id:string;name:string}[],rows:ContestAggregate[]){
  const c=r.contest!,people=c.kind==='individual'?c.people!:members.map(p=>({...p,station_id:p.id}));
  const entries:ContestEntry[]=people.map(p=>({...p,station_name:members.find(m=>m.id===p.station_id)?.name??'',rank:0,count:0,points:0,raw_points:0,base_milli:0,adjusted_milli:0,tb_ore:0,unknown_tb_count:0}));
- const byId=new Map(entries.map(e=>[e.id,e]));
- for(const row of rows){const e=byId.get(c.kind==='individual'?row.seller_id:row.station_id),a=activities.find(a=>a.id===row.activity_id&&a.station_id===row.station_id),cat=c.categories.find(c=>c.id===a?.arena_category_id);if(!e||!cat)continue;
+ const byId=new Map(entries.map(e=>[e.id,e])),byActivity=new Map(activities.map(a=>[`${a.station_id}:${a.id}`,a]));
+ for(const row of rows){const e=byId.get(c.kind==='individual'?row.seller_id:row.station_id),a=byActivity.get(`${row.station_id}:${row.activity_id}`),cat=c.categories.find(c=>c.id===a?.arena_category_id);if(!e||!cat)continue;
   e.count+=row.count;e.raw_points+=row.raw_points;e.tb_ore+=row.tb_ore;e.unknown_tb_count+=row.unknown_tb_count;e.base_milli+=row.count*cat.points_milli;e.adjusted_milli+=row.count*contestSalePoints(c,row.station_id,cat.points_milli);
  }
  for(const e of entries){if(!Number.isSafeInteger(e.adjusted_milli)||!Number.isSafeInteger(e.base_milli))throw Error('Tävlingspoängen överskrider säker heltalsgräns.');e.points=e.adjusted_milli/1000;}
@@ -52,7 +53,7 @@ export function contestEntries(r:CompetitionRules,activities:ActivitySnapshot[],
  entries.sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name,'sv')||a.id.localeCompare(b.id));entries.forEach((e,i)=>e.rank=i&&score(e)===score(entries[i-1])?entries[i-1].rank:i+1);return entries;
 }
 export async function boardCompetitionView(db:D1Database,row:{id:string;name:string;status:string;rules_json:string},now:Date):Promise<Competition>{
- const r=JSON.parse(row.rules_json) as CompetitionRules&{activities:ActivitySnapshot[]},start=arenaDayStart(r.start_day),end=arenaDayStart(arenaNextDay(r.end_day)),finished=now.toISOString()>=end;
+ const r=JSON.parse(row.rules_json) as CompetitionRules&{activities:ActivitySnapshot[]},start=r.contest?.locked_at&&r.contest.locked_at>arenaDayStart(r.start_day)?r.contest.locked_at:arenaDayStart(r.start_day),end=arenaDayStart(arenaNextDay(r.end_day)),finished=now.toISOString()>=end;
  const members=(await db.prepare('SELECT station_id id,snapshot_name name FROM arena_league_members WHERE league_id=? ORDER BY seed').bind(row.id).all<{id:string;name:string}>()).results;
  const entries=contestEntries(r,r.activities,members,await contestAggregates(db,r,r.activities,start,end,now.toISOString(),finished));
  const phase=row.status==='cancelled'?'cancelled':finished?'finished':now.toISOString()>=start?'active':'scheduled';

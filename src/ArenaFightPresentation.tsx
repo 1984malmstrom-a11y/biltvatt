@@ -10,7 +10,8 @@ import ArenaChampion from "./ArenaChampion";
 import {ArenaPersonContext,ArenaPersonName} from "./ArenaPersonContext";
 import {fightMetricLabel,fightDifference,stationInitials} from './arena-war-fight';
 import type {FightFeedback} from "./arena-fight-feedback";
-export const formatFightScore=(score:number,metric:ArenaFightSummary["metric"],mode:ArenaFightMode="total")=>mode==="daily" ? `${arenaNumber(score)} mp`:metric==="tb" ? `${arenaMoney(score)} TB`:`${arenaNumber(score)} ${metric==="count" ? "st":"p"}`;
+const precisePoints=(value:number)=>new Intl.NumberFormat('sv-SE',{maximumFractionDigits:3}).format(value);
+export const formatFightScore=(score:number,metric:ArenaFightSummary["metric"],mode:ArenaFightMode="total")=>mode==="daily" ? `${arenaNumber(score)} mp`:metric==="tb" ? `${arenaMoney(score)} TB`:`${precisePoints(score)} ${metric==="count" ? "st":"p"}`;
 const date=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",day:"numeric",month:"short"});
 const time=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",hour:"2-digit",minute:"2-digit"});
 export function FightWidget(props:{fight:ArenaFightSummary;stationId:string;onBoundary:()=>void;scope?:string;war?:boolean}){
@@ -96,6 +97,6 @@ export function FightAnnouncement({event,seller,activity,reward,secondary,classN
 }
 export function FightEventFeed({events,stationIds=events.map(e=>e.station_id)}:{events:ArenaFightEvent[];stationIds?:string[]}) {
   return <ArenaPersonContext stationIds={stationIds}><section className="arena-fight-feed arena-panel"><header><h3>SENASTE FIGHT-EVENTS</h3><span>FIGHTENS HÄNDELSER</span></header>{events.length ? <ol>{events.map(event=><li key={event.id} className={`fight-feed-${event.kind}`}>
-    {event.kind==="sale" ? <ArenaAvatar id={event.seller_id} name={event.seller_name ?? "Säljare"} imageUrl={event.profile_url} avatarIndex={event.avatar_index} />:event.kind==="tie" ? <span className="arena-fight-tie-icon" aria-hidden="true">=</span>:<Crown aria-hidden="true" />}<div>{event.kind==="sale" ? <ArenaPersonName name={event.seller_name??"Säljare"} stationName={event.station_name}/>:<strong>{event.kind==="lead" ? `${event.station_name} TAR LEDNINGEN`:"DET ÄR LIKA!"}</strong>}{event.activity_name && <span>{event.activity_name}</span>}</div>{event.kind==="sale" && <b>{event.display_mode==="tb" && event.tb_ore_awarded!=null ? `+${arenaMoney(event.tb_ore_awarded)} TB`:`+${arenaNumber(event.points_awarded ?? 0)} p`}</b>}<time dateTime={event.created_at}>{time.format(new Date(event.created_at))}</time>
+    {event.kind==="sale" ? <ArenaAvatar id={event.seller_id} name={event.seller_name ?? "Säljare"} imageUrl={event.profile_url} avatarIndex={event.avatar_index} />:event.kind==="tie" ? <span className="arena-fight-tie-icon" aria-hidden="true">=</span>:<Crown aria-hidden="true" />}<div>{event.kind==="sale" ? <ArenaPersonName name={event.seller_name??"Säljare"} stationName={event.station_name}/>:<strong>{event.kind==="lead" ? `${event.station_name} TAR LEDNINGEN`:"DET ÄR LIKA!"}</strong>}{event.activity_name && <span>{event.activity_name}</span>}</div>{event.kind==="sale" && <b>{event.display_mode==="tb" && event.tb_ore_awarded!=null ? `+${arenaMoney(event.tb_ore_awarded)} TB`:`+${precisePoints(event.points_awarded ?? 0)} p`}</b>}<time dateTime={event.created_at}>{time.format(new Date(event.created_at))}</time>
   </li>)}</ol>:<p>Första försäljningen sätter tonen. Kör på!</p>}</section></ArenaPersonContext>;
 }

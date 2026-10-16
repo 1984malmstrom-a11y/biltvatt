@@ -1,3 +1,7 @@
+import {BattleSwords} from './ArenaBattle';
+import {battleSlots} from './arena-battle-mode';
+import {battlePreference} from '../shared/arena-battle';
+import './arena-battle-mode.css';
 import {arenaRequests} from './arena-requests';
 import ArenaSellerSelector,{type ArenaSellerSelectorHandle} from "./ArenaSellerSelector";
 import {visibleArenaPolling,ARENA_SYNC_MS,ARENA_FIGHT_SYNC_MS} from "./arena-polling";
@@ -38,6 +42,7 @@ import "./arena-fight-objective.css";
 import './arena-war-fight.css';
 
 const ArenaAdmin=lazy(()=>import("./ArenaAdmin")),ArenaAccount=lazy(()=>import("./ArenaAccount")),ArenaRecovery=lazy(()=>import("./ArenaRecovery")),ArenaFight=lazy(()=>import("./ArenaFight"));
+const ArenaContestHub=lazy(()=>import("./ArenaContestHub"));
 const ArenaCompetition=lazy(()=>import("./ArenaCompetition"));
 const ArenaCompetitions=lazy(()=>import("./ArenaCompetitions")),ArenaLeague=lazy(()=>import("./ArenaLeague"));
 const ArenaGroups=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaGroups}))),ArenaSuperadmin=lazy(()=>import("./ArenaNetwork").then(m=>({default:m.ArenaSuperadmin})));
@@ -47,19 +52,19 @@ function ActivityImage({ activity, imageUrl, loading = "eager" }: { activity: Ar
   return src ? <img src={src} alt="" loading={loading} decoding="sync" draggable={false} /> : <ShoppingBag aria-hidden="true" />;
 }
 
-export const ArenaActivityButton = memo(function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false, fightQualifying=false }: {
-  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;fightQualifying?:boolean;
+export const ArenaActivityButton = memo(function ArenaActivityButton({ activity, focus = false, campaignName, onClick, imageUrl, unavailable = false, fightQualifying=false,battleInfo,battleReward,unavailableLabel }: {
+  activity: ArenaActivity; focus?: boolean; campaignName?: string; onClick?: () => void; imageUrl?: string; unavailable?: boolean;fightQualifying?:boolean;battleInfo?:string;battleReward?:string;unavailableLabel?:string;
 }) {
   return <button type="button" className={`arena-orb${focus ? " arena-orb-focus" : ""}${fightQualifying?' is-fight-objective':''}`} data-display-mode={activity.display_mode??"points"} onClick={onClick} disabled={unavailable}
-    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${arenaReward(activity).replace("POÄNG","poäng")}${fightQualifying?', räknas i Butiksfight':''}`}>
+    aria-label={unavailable ? `${activity.name}, ej upplagd` : `${activity.name}, ${battleReward??arenaReward(activity).replace("POÄNG","poäng")}${fightQualifying?', räknas i Butiksfight':''}`}>
     <span className="arena-objective-edge" aria-hidden="true"/>
     {fightQualifying&&<span className="arena-objective-badge" aria-hidden="true"><Flag/> FIGHT</span>}
     {focus && <span className="arena-focus-cap"><ArenaFocusTitle label={campaignName || "LAGETS FOKUS"}/><strong className="arena-focus-name">{activity.name}</strong></span>}
     <span className="arena-product">
       <ActivityImage activity={activity} imageUrl={imageUrl} loading="eager" />
     </span>
-    {!focus && <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>}
-    <span className="arena-points">{unavailable ? "EJ UPPLAGD" : arenaReward(activity)}</span>
+    {!focus && !battleInfo && <span className="arena-product-copy">{activity.offer_text && <span className="arena-offer">{activity.offer_text}</span>}<strong>{activity.name}</strong>{activity.price_text && <span className="arena-price">{activity.price_text}</span>}</span>}
+    <>{battleInfo&&!focus?<span className="arena-battle-copy"><span className="arena-product-copy"><strong>{activity.name}</strong></span><span className="arena-battle-score">{battleInfo}</span><span className="arena-points">{battleReward??`+${new Intl.NumberFormat("sv-SE",{maximumFractionDigits:3}).format(activity.points)} POÄNG`}</span></span>:<>{battleInfo&&<span className="arena-battle-score">{battleInfo}</span>}<span className="arena-points">{unavailable ? unavailableLabel??"EJ UPPLAGD" : battleInfo?battleReward??`+${new Intl.NumberFormat("sv-SE",{maximumFractionDigits:3}).format(activity.points)} POÄNG`:arenaReward(activity)}</span></>}</>
   </button>;
 });
 function Progress({ points, target, label, suffix = "poäng", hud = false }: { points: number; target: number; label: string; suffix?: string; hud?: boolean }) {
@@ -159,6 +164,9 @@ export default function ArenaApp() { return <ArenaShowcaseProvider><Suspense fal
 function ArenaRoutes() {
   useArenaEntryStatus(!['/arena','/arena/'].includes(window.location.pathname));
   if(window.location.pathname==="/arena/recovery")return <ArenaRecovery/>;
+  if(window.location.pathname==="/arena/competitions")return <ArenaContestHub/>;
+  if(window.location.pathname==="/arena/superadmin/contests")return <ArenaContestHub admin/>;
+  if(window.location.pathname==="/arena/admin/competitions")return <ArenaContestHub local/>;
   if(/^\/arena\/(?:superadmin\/)?competitions\//.test(window.location.pathname))return <ArenaCompetition/>;
   if(window.location.pathname==="/arena/fights")return <ArenaCompetitions/>;
   if(window.location.pathname.startsWith("/arena/leagues/") || window.location.pathname.startsWith("/arena/superadmin/leagues/"))return <ArenaLeague/>;
@@ -219,7 +227,15 @@ function ArenaHome() {
     return () => { document.documentElement.classList.remove("arena-view"); celebrationAllowed.current = ""; ++statsVersion.current;statsRequests.invalidate(); clearTimeout(refreshTimer.current); clearTimeout(celebrationTimer.current); clearTimeout(finalTimer.current); };
   }, [bootstrap,statsRequests]);
   const activeFight=todayStats?.fight?.phase==="active";
-  const fightContext=activeFight?todayStats?.fight_dashboard:undefined;
+  const modeKey=`${data?.station.id??''}:${todayStats?.fight?.id??''}`;
+  const [modeChoice,setModeChoice]=useState<{key:string;mode:'station'|'battle'}|null>(null);
+  const [battleChoices,setBattleChoices]=useState<ArenaActivity[]|null>(null),[battleIntro,setBattleIntro]=useState(false);
+  const preferred=modeChoice?.key===modeKey?modeChoice.mode:(()=>{try{return battlePreference(data?.station.id??'',todayStats?.fight?.id??'',localStorage);}catch{return 'battle';}})();
+  const battleUnavailable=!!todayStats?.battle?.unavailable_reason;
+  const fullBattle=!!(activeFight&&preferred==='battle'&&todayStats?.battle?.categories.length&&!todayStats.battle.unavailable_reason);
+  const chooseMode=(mode:'station'|'battle')=>{setModeChoice({key:modeKey,mode});try{localStorage.setItem(`arena:battle-mode:${data?.station.id}:${todayStats?.fight?.id}`,mode);}catch{/* memory fallback */}};
+  useEffect(()=>{if(!fullBattle||!todayStats?.fight)return;const key=`arena:battle-intro:${modeKey}`;try{if(localStorage.getItem(key))return;localStorage.setItem(key,'1');}catch{if(fightSeen.current.has(key))return;fightSeen.current.add(key);}setBattleIntro(true);const timer=setTimeout(()=>setBattleIntro(false),1500);return()=>{clearTimeout(timer);setBattleIntro(false);};},[fullBattle,modeKey]);
+  const fightContext=activeFight&&!battleUnavailable&&preferred==='battle'?todayStats?.fight_dashboard:undefined;
   const dashboardStats=useMemo(()=>fightContext&&todayStats?{...todayStats,metric:fightContext.metric,leaderboard:fightContext.leaderboard,recent:fightContext.recent}:todayStats,[fightContext,todayStats]);
   useEffect(()=>{
     let lastBootstrap=Date.now();
@@ -233,7 +249,7 @@ function ArenaHome() {
   useEffect(() => { if (period !== "custom" || (start && end)) { setStats(null); void refresh(); } }, [query, period, start, end, refresh]);
   const selectorRef=useRef<ArenaSellerSelectorHandle|null>(null);
   const setSelection = useCallback((next: Attempt | null) => { attemptRef.current = next; selectorRef.current?.select(next);startTransition(()=>setAttempt(next)); },[]);
-  const [focus, ...other] = useMemo(()=>arenaStartActivities(data?.activities ?? []),[data?.activities]);
+  const [focus, ...other] = useMemo(()=>fullBattle?battleSlots(todayStats!.battle!,data?.activities??[]):arenaStartActivities(data?.activities ?? []),[data?.activities,fullBattle,todayStats?.battle]);
   const begin = useCallback((activity: ArenaActivity) => {
     if (lock.current || attemptRef.current) return;
     celebrationAllowed.current = "";
@@ -241,6 +257,10 @@ function ArenaHome() {
     startTransition(()=>{setFightFinal(null);setSaleError("");});
   },[setSelection]);
   const activityActions=useMemo(()=>new Map((data?.activities??[]).map(activity=>[activity.id,()=>begin(activity)])),[data?.activities,begin]);
+  const battleAction=(key:string)=>{const cat=todayStats?.battle?.categories.find(c=>c.id===key);const activities=(cat?.activities??[]).flatMap(a=>data?.activities.find(l=>l.id===a.id&&l.active===1)??[]);if(activities.length===1)begin(activities[0]);else if(activities.length)setBattleChoices(activities);};
+  const battleInfo=(index:number)=>{const c=todayStats?.battle?.categories[index];return fullBattle&&c?todayStats?.fight?.metric==='count'?`${c.count} sålda i matchen`:todayStats?.fight?.metric==='tb'?`${c.count} sålda · ${arenaMoney(c.tb_ore??0)} TB`:`${c.count} sålda · ${new Intl.NumberFormat('sv-SE',{maximumFractionDigits:3}).format(c.points_milli/1000)} p`:undefined;};
+  const battleReward=todayStats?.fight?.metric==='count'?'+1 ST':todayStats?.fight?.metric==='tb'?'RÄKNAR TB':undefined;
+  const battleImage=(index:number)=>{const a=todayStats?.battle?.categories[index]?.activities[0];return fullBattle&&a?arenaProductImage(a)??undefined:undefined;};
   async function register(sellerId: string) {
     const selected = attemptRef.current;
     if (!selected || lock.current || (selected.sellerId && selected.sellerId !== sellerId)) return;
@@ -354,13 +374,15 @@ function ArenaHome() {
         <aside className="arena-leaderboard arena-panel" aria-label={fightContext?"Butiksfight live":"Topplista idag"}><header><h2>{fightContext?"BUTIKSFIGHT – LIVE":"TOPPLISTA – IDAG"}</h2><button className="arena-panel-more" onClick={()=>setPanel(fightContext?"fight":"leaders")}>Visa alla</button></header><People stats={dashboardStats} limit={5} emptyMessage={fightContext?"Fightens första kvalificerande försäljning väntar.":undefined} onPerson={fightContext?p=>{setPanel(null);setFightPerson(p);}:onTodayPerson} highlightId={celebration?.sellerId} newLeaderId={celebration?.kind === "leader" ? celebration.sellerId : undefined} /></aside>
         <aside className="arena-recent arena-panel"><header><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><h2>SENASTE AKTIVITETER</h2></button><FeedStatus stats={todayStats} error={statsUnavailable} /></header><RecentActivities stats={dashboardStats} fightMode={!!fightContext} limit={5} /></aside>
       </div></ArenaPersonContext>
-      <section className="arena-stage arena-stage-start" aria-label="Försäljningsaktiviteter">
+      <section className={`arena-stage arena-stage-start${fullBattle?" is-battle":""}`} aria-label="Försäljningsaktiviteter">
+        {fullBattle&&<BattleSwords/>}
+        <nav className="arena-mode-switch" aria-label="Visningsläge"><button aria-pressed={!activeFight||battleUnavailable||preferred==='station'} onClick={()=>chooseMode('station')}>STATION</button><a href="/arena/competitions">TÄVLINGAR</a><button disabled={!activeFight||battleUnavailable} title={todayStats?.battle?.unavailable_reason} aria-pressed={!!activeFight&&!battleUnavailable&&preferred==='battle'} onClick={()=>chooseMode('battle')}>BUTIKSFIGHT</button></nav>
         <div className="arena-stage-atmosphere" aria-hidden="true"><i className="arena-stage-architecture"/><i className="arena-stage-beams"/><i className="arena-stage-floor"/><i className="arena-stage-sparks"/></div>
         <div className="arena-stage-label"><span className="arena-eyebrow">SMÅ AFFÄRER. STORA RESULTAT.</span><small>Tryck på en aktivitet för att registrera</small></div>
         <div className="arena-mobile-panels"><button aria-label="Öppna topplistan" onClick={() => setPanel(fightContext?"fight":"leaders")}><BarChart3 aria-hidden="true" /> Topplista</button><button aria-label="Öppna senaste aktiviteter" onClick={() => setPanel("recent")}><Clock3 aria-hidden="true" /> Senaste aktiviteter<span className={`arena-live-dot${statsUnavailable ? " is-paused" : todayStats?.recent === undefined ? " is-loading" : ""}`} aria-hidden="true" /></button></div>
         {data ? <div className="arena-cluster">
-          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName="MÅNADENS FOKUS" unavailable={!focus.activity} fightQualifying={arenaFightQualifies(todayStats,focus.activity)} onClick={focus.activity ? activityActions.get(focus.activity.id) : undefined} /></div>
-          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} unavailable={!activity} fightQualifying={arenaFightQualifies(todayStats,activity)} onClick={activity ? activityActions.get(activity.id) : undefined} /></div>)}</div>
+          <div className="arena-focus-slot"><ArenaActivityButton activity={focus.view} focus campaignName={fullBattle?"BATTLE MODE":"MÅNADENS FOKUS"} battleInfo={battleInfo(0)} battleReward={battleReward} imageUrl={battleImage(0)} unavailableLabel={fullBattle?"INAKTIV":undefined} unavailable={!focus.activity} fightQualifying={arenaFightQualifies(todayStats,focus.activity)} onClick={focus.activity ? fullBattle?()=>battleAction(focus.key):activityActions.get(focus.activity.id) : undefined} /></div>
+          <div className="arena-satellites">{other.map(({ key, activity, view }, index) => <div key={key} className={`arena-satellite satellite-${index}`}><ArenaActivityButton activity={view} battleInfo={battleInfo(index+1)} battleReward={battleReward} imageUrl={battleImage(index+1)} unavailableLabel={fullBattle?"INAKTIV":undefined} unavailable={!activity} fightQualifying={arenaFightQualifies(todayStats,activity)} onClick={activity ? fullBattle?()=>battleAction(key):activityActions.get(activity.id) : undefined} /></div>)}</div>
         </div> : <div className="arena-empty-stage"><Crown /><h1>{data ? "Redo att skapa er Arena?" : "Laddar Arenan…"}</h1>{data && <><p>Lägg till aktiviteter och en fokus-kampanj för laget.</p><a href="/arena/admin">Öppna Arena-admin <ChevronRight /></a></>}</div>}
       </section>
       <ArenaStatePanel sellers={data?.sellers} activities={data?.activities} stats={todayStats} stationId={data?.station.id ?? ""} stationName={data?.station.name ?? "Laget"} onBoundary={onFightBoundary} />
@@ -372,6 +394,8 @@ function ArenaHome() {
       <div><Users aria-hidden="true" /><strong>{todayStats?.today.sellers ?? "—"}</strong><span>Aktiva säljare</span></div>
     </section>
     <nav className="arena-nav" aria-label="Arena"><button onClick={() => setPanel("leaders")}><BarChart3 /> TOPPLISTOR</button><button onClick={() => setPanel("campaign")}><Trophy /> KAMPANJER</button><button className="arena-nav-home" aria-current="page" onClick={() => { setPanel(null); setPersonId(null); }}><span className="arena-nav-core" aria-hidden="true"><ArenaEmblem className="arena-nav-emblem"/></span><span>START</span></button><a href="/arena/fights" className={todayStats?.fight_notices?.incoming?"has-fight-notice":todayStats?.fight?.phase==="active"?"has-live-fight":todayStats?.fight_notices?.outgoing?"has-pending-fight":todayStats?.fight_notices?.scheduled?"has-upcoming-fight":undefined}><Flag /> BUTIKSFIGHT{!!todayStats?.fight_notices?.incoming&&<span className="arena-fight-nav-badge" aria-label={`${todayStats.fight_notices.incoming} inkommande utmaningar`}>{todayStats.fight_notices.incoming}</span>}{!todayStats?.fight_notices?.incoming&&!!todayStats?.fight_notices?.outgoing&&<span className="arena-fight-nav-pending" aria-label="Utmaning väntar på svar"><Clock3/></span>}{!todayStats?.fight_notices?.incoming&&!todayStats?.fight_notices?.outgoing&&!!todayStats?.fight_notices?.unread&&<span className="arena-fight-nav-dot" aria-label="Nytt fightbesked"/>}</a><a href="/arena/admin"><Settings /> ADMIN</a></nav>
+    {battleIntro&&fullBattle&&<div className="arena-battle-intro" aria-hidden="true"><strong>BATTLE MODE</strong><span>{todayStats?.fight?.standings.map(s=>s.name).join(' VS ')}</span></div>}
+    {battleChoices&&<ArenaDialog title="Välj aktivitet i matchkategorin" onClose={()=>setBattleChoices(null)}>{battleChoices.map(a=><button className="arena-action" key={a.id} onClick={()=>{setBattleChoices(null);begin(a);}}>{a.name}</button>)}</ArenaDialog>}
     <ArenaSellerSelector ref={selectorRef} sellers={data?.sellers} busy={busy} error={saleError} onRegister={sellerId=>void register(sellerId)} onClose={()=>{setSelection(null);setSaleError("");}} Product={ActivityImage} />
     {person && <ArenaDialog title={`${person.name} · Min Arena`} heading="MIN ARENA" eyebrow="MIN UTVECKLING. MINA RESULTAT." className="arena-dialog-person" onClose={() => setPersonId(null)}>
       <PersonDetails person={person} stats={personStats!} onClose={() => setPersonId(null)} />

@@ -1,0 +1,31 @@
+/* Presentation only. Preserve the approved orbit geometry at every breakpoint. */
+.arena-stage-start.is-battle .arena-stage-atmosphere{background:radial-gradient(ellipse at center,#b79b3c16,transparent 65%)}
+.arena-battle-swords{position:absolute;inset:9% 8%;width:84%;height:82%;pointer-events:none;opacity:.2;z-index:0;animation:arena-battle-light 8s ease-in-out infinite alternate}
+.arena-battle-swords .blade{fill:url(#arena-battle-metal);stroke:#d6b766;stroke-width:.6}.arena-battle-swords .hilt{fill:#c5a456;stroke:#2d2b20;stroke-width:1}
+@keyframes arena-battle-light{from{opacity:.12}to{opacity:.23}}
+.arena-mode-switch{display:flex;align-items:center;justify-content:center;gap:3px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:4;padding:3px;border:1px solid #d8bd6655;border-radius:30px;background:#031d17ed;white-space:nowrap}
+.arena-mode-switch button,.arena-mode-switch a{padding:5px 10px!important;font:600 clamp(9px,.7vw,12px)/1.2 Arial,sans-serif;letter-spacing:.06em;color:#b8cabf;background:transparent;border:0;border-radius:20px;text-decoration:none;min-height:30px}
+.arena-mode-switch [aria-pressed=true]{background:linear-gradient(120deg,#f5de9a,#c9a953);color:#092319;box-shadow:0 0 12px #d2ad3a30}
+.arena-battle-intro{position:fixed;inset:0;z-index:85;display:grid;place-content:center;text-align:center;background:radial-gradient(ellipse,#081e18db,#000b);pointer-events:none;animation:arena-battle-intro 1.5s both;color:#f6df9c}
+.arena-battle-intro strong{font-size:clamp(30px,5vw,80px);letter-spacing:.12em;text-shadow:0 0 25px #e5be5866}.arena-battle-intro span{font-size:clamp(13px,2vw,27px);margin-top:14px}
+@keyframes arena-battle-intro{0%{opacity:0;transform:scale(.98)}15%,65%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.02)}}
+.arena-battle-score{position:absolute;bottom:24%;left:10%;right:10%;font-size:clamp(9px,.68vw,13px);line-height:1.3;color:#e9d8a3;text-shadow:0 1px 4px #000;background:#001a14c9;border-radius:12px;padding:2px 0;z-index:4}.arena-orb-focus .arena-battle-score{bottom:20%}
+.is-battle .arena-orb:disabled .arena-product{opacity:.2}.is-battle .arena-orb:disabled .arena-product-copy{opacity:.65}
+.is-battle .arena-stage-label{pointer-events:none}.is-battle .arena-stage-label>span{visibility:hidden}
+@media(max-width:600px),(max-height:500px){.arena-mode-switch{top:0}.arena-mode-switch button,.arena-mode-switch a{padding:4px 7px!important;min-height:28px}.arena-battle-score{font-size:9px;bottom:25%;padding:0}.arena-orb-focus .arena-battle-score{bottom:20%}}
+@media(prefers-reduced-motion:reduce){.arena-battle-swords{animation:none;opacity:.16}.arena-battle-intro{animation:none;display:none}}
+/* Compact mode switch owns the top edge; mobile panel shortcuts sit below it. */
+@media(max-width:600px) and (orientation:portrait){.arena-mode-switch{z-index:6;top:-4px}.arena-stage-start>.arena-mobile-panels{top:31px}.arena-stage-start>.arena-mobile-panels button{min-height:25px;padding:2px 7px;font-size:10px}}
+@media(max-height:500px) and (orientation:landscape){.arena-mode-switch{left:62%;top:-3px;z-index:6}}
+.is-battle .arena-objective-badge{display:none}
+.is-battle .arena-orb:not(.arena-orb-focus) .arena-product-copy{top:auto;bottom:34%;z-index:5;opacity:1}
+.is-battle .arena-orb:not(.arena-orb-focus) .arena-product-copy strong{color:#f4e6bd;text-shadow:0 2px 5px #000;font-size:clamp(10px,.9vw,16px)}
+@media(max-width:600px),(max-height:500px){.is-battle .arena-orb:not(.arena-orb-focus) .arena-product-copy{bottom:29%}.is-battle .arena-orb:not(.arena-orb-focus) .arena-product-copy strong{font-size:8px}.is-battle .arena-battle-score{bottom:17%;font-size:8px}.is-battle .arena-orb-focus .arena-battle-score{bottom:21%}.is-battle .arena-orb:not(.arena-orb-focus) .arena-points{bottom:3%;font-size:10px}}
+/* A single text stack keeps category, live total and reward apart at all sizes. */
+.is-battle .arena-battle-copy{position:absolute;bottom:8%;left:5%;right:5%;display:grid;gap:3px;z-index:5;text-align:center;background:linear-gradient(transparent,#011b15d9);border-radius:10px}
+.is-battle .arena-battle-copy .arena-product-copy,.is-battle .arena-battle-copy .arena-battle-score,.is-battle .arena-battle-copy .arena-points{position:static!important;inset:auto!important;transform:none!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;line-height:1.15!important;background:none;box-shadow:none}
+.is-battle .arena-battle-copy .arena-product-copy strong{display:block;font-size:clamp(10px,.9vw,16px)}
+.is-battle .arena-battle-copy .arena-battle-score{font-size:clamp(9px,.65vw,12px)}
+.is-battle .arena-orb:disabled .arena-product-copy{display:none}
+@media(max-width:600px),(max-height:500px){.is-battle .arena-battle-copy{bottom:6%;gap:1px}.is-battle .arena-battle-copy .arena-product-copy strong{font-size:8px}.is-battle .arena-battle-copy .arena-battle-score{font-size:7px}.is-battle .arena-battle-copy .arena-points{font-size:9px}}
+@media(max-width:600px) and (orientation:portrait){.is-battle .arena-focus-insignia .arena-crown{top:65%;width:12cqw;height:12cqw}}
