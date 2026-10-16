@@ -1,3 +1,4 @@
+import {weightedFightPointsSQL} from './arena-weighted-points';
 import {arenaRequestPath} from './arena-route';
 import {fightWindows} from './arena-fight-windows';
 import {cancelOfficialFight} from './arena-fight-cancel';
@@ -18,7 +19,7 @@ type FightRow={id:string;name:string;description:string;start_at:string;end_at:s
 type FightListing=ArenaFightListing;
 const listPhases=(rows:FightListing[])=>rows.map(row=>({...row,status:fightPhase(row.start_at,row.end_at,row.status)}));
 async function fightRows(db:D1Database,fight:FightRow,now:string,finished:boolean) {
-  const rows=await db.prepare(`SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,
+  const rows=await db.prepare(`SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,${weightedFightPointsSQL('r','f.fight_id')},COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,
     SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count
     FROM arena_fight_stations f JOIN arena_stations s ON s.id=f.station_id
     LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?
@@ -149,7 +150,7 @@ export async function arenaFightAdminApi(request:Request,db:D1Database,actor:Are
   if(Date.parse(end)<=Date.parse(start) || Date.parse(end)<=Date.now() || Date.parse(end)-Date.parse(start)>180*86400000)fail(400,"Fighten ska sluta efter start och nu, med högst 180 dagars period.");
   if(!["points","tb","count"].includes(String(data.metric)))fail(400,"Välj poäng, TB eller antal.");
   if(!Array.isArray(data.station_ids) || data.station_ids.length!==2 || data.station_ids.some(id=>typeof id!=="string" || id.length>120) || new Set(data.station_ids).size!==data.station_ids.length)fail(400,"En Butiksfight har exakt två olika stationer.");
-  const ids=data.station_ids as string[],found=await db.prepare(`SELECT id FROM arena_stations WHERE status='active' AND id IN (${ids.map(()=>"?").join(",")})`).bind(...ids).all();if(found.results.length!==ids.length)fail(400,"Alla deltagarstationer måste vara aktiva.");
+  const ids=data.station_ids as string[];if(await db.prepare('SELECT station_id FROM arena_station_organization WHERE station_id IN (SELECT value FROM json_each(?)) LIMIT 1').bind(JSON.stringify(ids)).first())fail(400,'Använd organisationsbundna tävlingsbyggaren.');const found=await db.prepare(`SELECT id FROM arena_stations WHERE status='active' AND id IN (${ids.map(()=>"?").join(",")})`).bind(...ids).all();if(found.results.length!==ids.length)fail(400,"Alla deltagarstationer måste vara aktiva.");
   const id=crypto.randomUUID(),now=new Date().toISOString(),status=Date.parse(start)<=Date.now() ? "active":"scheduled";
   await competitionBatch(db,[
     db.prepare("INSERT INTO arena_fights(id,name,description,start_at,end_at,scoring,score_metric,status,created_at,updated_at,scoring_mode,day_win_points,day_tie_points) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id,name,description,start,end,data.metric==="count" ? "count":"points",String(data.metric),status,now,now,String(mode),Number(win),Number(tie)),

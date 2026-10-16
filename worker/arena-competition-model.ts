@@ -33,7 +33,7 @@ export async function assertStationsFree(db:D1Database,ids:string[],start:string
  const sudden=await db.prepare(`SELECT f.id FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id WHERE f.result_json IS NULL AND f.status<>'cancelled' AND json_extract(f.live_json,'$.sudden_death')=1 AND m.station_id IN (SELECT value FROM json_each(?)) LIMIT 1`).bind(JSON.stringify(ids)).first();if(sudden)fail(409,'Stationen har en pågående sudden death. Vänta tills den är avgjord.');
  return active.results;
 }
-export type ActivitySnapshot={id:string;station_id:string;name:string;points:number;tb_ore:number|null;display_mode:string;image_key:string|null;category:string;arena_category_id:string|null};
+export type ActivitySnapshot={id:string;station_id:string;name:string;points:number;tb_ore:number|null;display_mode:string;image_key:string|null;category:string;arena_category_id:string|null;contest_base_milli?:number;contest_points_milli?:number};
 export async function resolveScope(db:D1Database,ids:string[],scope:FightScope,start:string):Promise<ActivitySnapshot[]>{
  const rows=await db.prepare(`SELECT id,station_id,name,points,tb_ore,display_mode,image_key,category,arena_category_id FROM arena_activities WHERE active=1 AND station_id IN (SELECT value FROM json_each(?)) ORDER BY sort_order,id`).bind(JSON.stringify(ids)).all<ActivitySnapshot>();
  if(scope.kind==='all')return rows.results;

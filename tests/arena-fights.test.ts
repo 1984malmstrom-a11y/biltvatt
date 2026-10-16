@@ -27,8 +27,9 @@ async function setup() {
   return {...f,cookies,admin,create,sale,view};
 }
 describe("Butiksfight scoring, lifecycle and authority",()=>{
-  it.each(["points","tb","count"])("scores %s independently across more than two stations",async metric=>{
-    const f=await setup(),id=await f.create(metric,["t","k","m"]);f.sale("t",time,10,100);f.sale("k",time,1,9000);for(let i=0;i<3;i++)f.sale("m",time,1,100);
+  it('new matches require exactly two stations',async()=>{const f=await setup();const res=await f.call('/arena/superadmin/fights','POST',{name:'Invalid',description:'',start_at:start,end_at:end,metric:'points',station_ids:['t','k','m']},f.admin);expect(res.status).toBe(400);expect(f.arena.prepare('SELECT COUNT(*) n FROM arena_fights').get()!.n).toBe(0);});
+  it.each(["points","tb","count"])("preserves grandfathered %s results across more than two stations",async metric=>{
+    const f=await setup(),id=crypto.randomUUID();f.arena.prepare("INSERT INTO arena_fights(id,name,description,start_at,end_at,scoring,score_metric,status,created_at,updated_at) VALUES(?,'Legacy','Historical fixture',?,?,?,?,'active',?,?)").run(id,start,end,metric==='count'?'count':'points',metric,time,time);for(const station of ['t','k','m'])f.arena.prepare('INSERT INTO arena_fight_stations VALUES(?,?)').run(id,station);f.sale("t",time,10,100);f.sale("k",time,1,9000);for(let i=0;i<3;i++)f.sale("m",time,1,100);
     const fight=await f.view(id);expect(fight.metric).toBe(metric);expect(fight.standings).toHaveLength(3);expect(fight.standings[0].id).toBe(metric==="points" ? "t":metric==="tb" ? "k":"m");expect(fight.standings.find(s=>s.id==="m")).toMatchObject({points:3,count:3,tb_ore:300});
   });
   it("only Superadmin creates fights; station reads and overview are membership-scoped",async()=>{

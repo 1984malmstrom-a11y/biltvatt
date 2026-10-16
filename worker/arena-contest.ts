@@ -32,7 +32,7 @@ export async function freezeContestRules(db:D1Database,r:CompetitionRules,activi
   c.people=c.seller_ids?people.filter(p=>c.seller_ids!.includes(p.id)):people;
   if(!c.people.length||c.people.length>5000||c.seller_ids&&c.people.length!==c.seller_ids.length)fail(400,'Välj högst 5 000 aktiva säljare som tillhör deltagarstationerna.');
  }
- return selected;
+ return selected.map(a=>{const base=c.categories.find(cat=>cat.id===a.arena_category_id)!.points_milli;return {...a,contest_base_milli:base,contest_points_milli:contestSalePoints(c,a.station_id,base)};});
 }
 export type ContestAggregate={station_id:string;seller_id:string;activity_id:string;count:number;raw_points:number;tb_ore:number;unknown_tb_count:number};
 // One grouped ledger query, independent of participant count. Membership and local

@@ -1,3 +1,4 @@
+import {weightedFightPointsSQL} from './arena-weighted-points';
 import {competitionAudit,systemActor} from './arena-competition-model';
 import type {ArenaFightDay} from '../shared/arena-fights';
 import {fightLeaders,fightScore} from '../shared/arena-fights';
@@ -27,7 +28,7 @@ export async function dailyFightRows(db:D1Database,f:Config,snapshot:string){
  const rows=windows.length ? await db.prepare(`WITH windows AS (
   SELECT json_extract(value,'$.day') day,json_extract(value,'$.start_at') start_at,
    json_extract(value,'$.end_at') end_at,json_extract(value,'$.closed') closed FROM json_each(?)
- ) SELECT w.day,s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,
+ ) SELECT w.day,s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,${weightedFightPointsSQL('r','m.fight_id')},
  COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count
  FROM windows w CROSS JOIN arena_fight_stations m JOIN arena_stations s ON s.id=m.station_id
  LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=w.start_at AND r.registered_at<w.end_at AND r.registered_at<=?
@@ -49,8 +50,8 @@ export async function dailyFightRows(db:D1Database,f:Config,snapshot:string){
  const days=[...frozen.values(),...computed.filter(d=>!d.closed)].sort((a,b)=>a.day.localeCompare(b.day));
  const standings=members.results.map(member=>{
   const row:ArenaStationStanding={...member,rank:0,points:0,tb_ore:0,count:0,unknown_tb_count:0,match_points:0};
-  for(const day of days){const s=day.standings.find(s=>s.id===row.id);if(s){row.points+=s.points;row.count+=s.count;row.tb_ore+=s.tb_ore;row.unknown_tb_count+=s.unknown_tb_count;row.match_points!+=s.match_points??0;}}
-  row.points=Math.round(row.points*100)/100;return row;
+  for(const day of days){const s=day.standings.find(s=>s.id===row.id);if(s){row.points+=s.points;if(s.points_milli!=null)row.points_milli=(row.points_milli??0)+s.points_milli;if(s.base_milli!=null)row.base_milli=(row.base_milli??0)+s.base_milli;row.count+=s.count;row.tb_ore+=s.tb_ore;row.unknown_tb_count+=s.unknown_tb_count;row.match_points!+=s.match_points??0;}}
+  row.points=row.points_milli!=null?row.points_milli/1000:Math.round(row.points*100)/100;return row;
  }).sort((a,b)=>fightScore(b,f.score_metric,'daily')-fightScore(a,f.score_metric,'daily')||a.name.localeCompare(b.name,'sv')||a.id.localeCompare(b.id));
  for(let i=0;i<standings.length;i++)standings[i].rank=i && standings[i].match_points===standings[i-1].match_points ? standings[i-1].rank:i+1;
  return {standings,days,current_day:days.find(d=>!d.closed)??null};

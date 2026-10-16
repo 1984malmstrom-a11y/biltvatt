@@ -15,7 +15,7 @@ import {arenaLeagueApi} from './arena-leagues';
 
 export const standingScore=(row:ArenaStationStanding,metric:ArenaMetric)=>metric==="tb" ? row.tb_ore : metric==="count" ? row.count : row.points;
 export function rankStations<T extends ArenaStationStanding>(rows:T[],metric:ArenaMetric) {
-  const sorted=rows.map(row=>({...row,points:roundedPoints(row.points)})).sort((a,b)=>standingScore(b,metric)-standingScore(a,metric) || a.name.localeCompare(b.name,"sv") || a.id.localeCompare(b.id));
+  const sorted=rows.map(row=>({...row,...(row.points_milli!=null?{raw_points:row.points,points:row.points_milli/1000}:{points:roundedPoints(row.points)})})).sort((a,b)=>standingScore(b,metric)-standingScore(a,metric) || a.name.localeCompare(b.name,"sv") || a.id.localeCompare(b.id));
   for(let i=0;i<sorted.length;i++) sorted[i].rank=i && standingScore(sorted[i],metric)===standingScore(sorted[i-1],metric) ? sorted[i-1].rank : i+1;
   return sorted;
 }
@@ -63,6 +63,7 @@ export async function arenaGroupApi(request:Request,db:D1Database,station:string
 export async function arenaSuperadminApi(request:Request,env:Env):Promise<Response> {
   const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
   const pinReset=path.match(/^\/api\/arena\/superadmin\/stations\/([a-zA-Z0-9:_-]{1,120})\/admin-pin$/);
+  if(pinReset&&method==='POST'&&actor.role!=='owner'&&await db.prepare('SELECT id FROM arena_organizations LIMIT 1').first())fail(403,'PIN-återställning kräver plattformsägaren.');
   if(pinReset&&method==='POST')return resetArenaAdminPin(request,env,pinReset[1],actor);
   const org=await organizationApi(request,db,actor);if(org)return org;
   if(path.startsWith('/api/arena/superadmin/competitions'))return competitionApi(request,db,actor);

@@ -30,6 +30,7 @@ export type ArenaRecentActivity = {
   display_mode?:"points" | "tb";
 };
 export type ArenaStats = {
+  battle?:import("./arena-battle").BattleContext;
   range: { start: string; end: string; from: string; to: string };
   points: number; count: number; leaderboard: ArenaPerson[];
   today: { count: number; points: number; sellers: number };
