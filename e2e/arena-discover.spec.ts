@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 import {discoverChapters} from '../src/arena-discover-chapters';
 import {mkdir} from 'node:fs/promises';
-const root='/workspace/work/artifacts/arena-night-build';
+const root=process.env.ARENA_PRESENTATION_ARTIFACT_DIR??'/workspace/work/artifacts/arena-night-build';
 async function setup(page:Page,width=1920,height=1080){await page.setViewportSize({width,height});await page.emulateMedia({reducedMotion:'reduce'});await page.addInitScript(()=>sessionStorage.setItem('arena:intro-seen:v1','1'));await page.route('**/api/arena/superadmin/presentation-access',r=>r.fulfill({json:{authorized:true,role:'owner'}}));await page.goto('/arena/discover?return=%2Farena%2Fsuperadmin');await expect(page.locator('.arena-discover h1')).toHaveText(discoverChapters[0].title);}
 async function capture(page:Page,name:string){await mkdir(root,{recursive:true});await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});await page.screenshot({path:`${root}/${name}.png`,animations:'disabled'});}
 async function bounds(page:Page,w:number,h:number){expect(await page.evaluate(()=>[document.documentElement.scrollWidth,document.documentElement.scrollHeight])).toEqual([w,h]);const heading=await page.locator('.discover-copy h1').boundingBox(),footer=await page.locator('.discover-footer').boundingBox();expect(heading!.y+heading!.height).toBeLessThan(footer!.y);}

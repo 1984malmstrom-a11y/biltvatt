@@ -2,6 +2,7 @@ import type {Env} from './index';
 import {arenaImage} from './arena-model';
 import {resolveArenaStation,requireArenaSuperadmin} from './arena-auth';
 import {ApiError,fail,json} from './http';
+import {accessibleStations} from './arena-organizations';
 
 // Bounded reader shared by activity and portrait uploads. Never trust Content-Length.
 export async function readArenaImage(request:Request,max=250000,maxDimension=640) {
@@ -34,7 +35,16 @@ export async function updateArenaPortrait(request:Request,env:Env,sellerId:strin
 export async function arenaPortrait(request:Request,env:Env,id:string) {
   const db=env.ARENA_DB!;
   let key:string|null=null,superadmin=false;
-  if(request.headers.get('Cookie')?.includes('arena_superadmin_session=')){try{await requireArenaSuperadmin(request,env);superadmin=true;}catch(error){if(!(error instanceof ApiError)||![401,403].includes(error.status))throw error;}}
+  if(request.headers.get('Cookie')?.includes('arena_superadmin_session=')){try{
+    const actor=await requireArenaSuperadmin(request,env);
+    // Match the existing organization-bound administration policy. A scoped
+    // admin's valid session is not blanket permission to every tenant portrait.
+    if(actor.role!=='owner'&&await db.prepare('SELECT id FROM arena_organizations LIMIT 1').first()){
+      const image=await db.prepare('SELECT station_id FROM arena_profile_images WHERE id=?').bind(id).first<{station_id:string}>();
+      if(!image||!(await accessibleStations(db,actor)).some(s=>s.id===image.station_id))fail(404,'Porträttet finns inte.');
+    }
+    superadmin=true;
+  }catch(error){if(!(error instanceof ApiError)||![401,403].includes(error.status))throw error;}}
   if(!superadmin)key=(await resolveArenaStation(request,env)).key;
   const image=await db.prepare(`SELECT mime_type,image_bytes FROM arena_profile_images p WHERE p.id=? AND
     (?=1 OR p.station_id=? OR EXISTS(SELECT 1 FROM arena_group_members a JOIN arena_group_members b ON a.group_id=b.group_id WHERE a.station_id=? AND b.station_id=p.station_id)

@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {isolatedDemoBackend} from './arena-demo-functional-client';
-const root='/workspace/work/artifacts/arena-night-build';
+const root=process.env.ARENA_PRESENTATION_ARTIFACT_DIR??'/workspace/work/artifacts/arena-night-build';
 async function capture(page:Page,name:string){await mkdir(root,{recursive:true});await page.screenshot({path:`${root}/${name}.png`,animations:'disabled'});}
 async function ready(page:Page){await expect(page.locator('.arena-orb')).toHaveCount(7);await expect(page.locator('.arena-intro')).toHaveCount(0);}
 async function sale(page:Page,name='Peter',product='Biltvätt'){

@@ -5,7 +5,11 @@ import { randomToken } from "../shared/arena-crypto";
 
 export function arenaFixture() {
   const base=fixture(),arena=new DatabaseSync(":memory:");arena.exec("PRAGMA foreign_keys=ON");
-  for(const name of readdirSync(new URL("../migrations-arena/",import.meta.url)).filter(n=>n.endsWith(".sql")).sort())arena.exec(readFileSync(new URL(`../migrations-arena/${name}`,import.meta.url),"utf8"));
+  // SQLite trigger clocks otherwise bypass Vitest/fixture time and make valid
+  // synthetic invitations expire as the host date advances. Only this memory
+  // schema substitutes the clock; shipped migration SQL stays unchanged.
+  arena.function('arena_test_now',()=>new Date().toISOString());
+  for(const name of readdirSync(new URL("../migrations-arena/",import.meta.url)).filter(n=>n.endsWith(".sql")).sort())arena.exec(readFileSync(new URL(`../migrations-arena/${name}`,import.meta.url),"utf8").replaceAll("strftime('%Y-%m-%dT%H:%M:%fZ','now')",'arena_test_now()'));
   const prepare=(sql:string)=>{
     // Vitest's fake clock also controls the SQLite clock at statement execution.
     const compile=()=>arena.prepare(sql.replaceAll("strftime('%Y-%m-%dT%H:%M:%fZ','now')",`'${new Date().toISOString()}'`));
