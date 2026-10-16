@@ -1,5 +1,6 @@
 import type {ArenaReportSnapshot,ReportRow} from './arena-reports';
 import {awardLabel} from './arena-awards';
+import {arenaEmblemPolygons,arenaEmblemBounds} from './arena-emblem';
 
 export type AwardTemplate='individual'|'duel'|'championship';
 export type AwardText={kind:'text';value:string;x:number;y:number;size:number;color:string;bold:boolean;italic?:boolean};
@@ -41,29 +42,37 @@ export function arenaAwardScene(s:ArenaReportSnapshot,{testPreview=false}:{testP
  const rect=(x:number,y:number,width:number,height:number,color:string)=>ops.push({kind:'rect',x,y,width,height,color});
  const shape=(points:number[][],color=GOLD)=>ops.push({kind:'shape',points,color});
  const emblem=(cx:number,y:number,scale:number,c=GOLD)=>{
-  // Exact locked ArenaEmblem geometry, not an AI-generated substitute.
-  const x=cx-21.5*scale;
-  shape([[3,38],[21,4],[40,38],[31,38],[21,19],[12,38]].map(([a,b])=>[x+a*scale,y+b*scale]),c);
-  shape([[17,29],[31,38],[22,38],[13,32]].map(([a,b])=>[x+a*scale,y+b*scale]),c);
+  const x=cx-(arenaEmblemBounds.left+arenaEmblemBounds.right)/2*scale;
+  for(const points of arenaEmblemPolygons)shape(points.map(([a,b])=>[x+a*scale,y+b*scale]),c);
+ };
+ const paragraph=(v:string,cx:number,y:number,width:number,size:number,maxLines=2,color=MUTED)=>{
+  // Keep all Swedish text, including long compound words, in bounded lines.
+  const wrap=(font:number)=>{const chunks=clean(v).split(' ').flatMap(word=>{const parts:string[]=[];let part='';for(const char of word){if(part&&awardTextWidth(part+char,font)>width){parts.push(part);part='';}part+=char;}if(part)parts.push(part);return parts;}),lines:string[]=[];let line='';for(const word of chunks){if(line&&awardTextWidth(line+' '+word,font)>width){lines.push(line);line='';}line+=(line?' ':'')+word;}if(line)lines.push(line);return lines;};
+  let lines=wrap(size);while(lines.length>maxLines&&size>8){size-=.25;lines=wrap(size);}lines.forEach((line,i)=>text(line,cx,y+i*(size+3),size,width,false,color));return y+lines.length*(size+3);
  };
  const name=(v:string,y:number,width:number,size:number,c=INK,x=W/2)=>{
   const words=clean(v).split(' ');let lines=[clean(v)];
   if(awardTextWidth(lines[0],size,false)>width&&words.length>1){let best=1;for(let i=1;i<words.length;i++)if(Math.max(awardTextWidth(words.slice(0,i).join(' '),size),awardTextWidth(words.slice(i).join(' '),size))<Math.max(awardTextWidth(words.slice(0,best).join(' '),size),awardTextWidth(words.slice(best).join(' '),size)))best=i;lines=[words.slice(0,best).join(' '),words.slice(best).join(' ')];}
-  const n=lines.length===2?Math.min(size,19):size;lines.forEach((line,i)=>text(line,x,y+(i-(lines.length-1)/2)*(n+2),n,width,false,c,true));
+  if(words.length===1&&awardTextWidth(v,Math.min(size,19))>width){const chars=Array.from(clean(v)),count=x===W/2?2:3;lines=Array.from({length:count},(_,i)=>chars.slice(Math.floor(i*chars.length/count),Math.floor((i+1)*chars.length/count)).join(''));}
+  let n=lines.length>1?Math.min(size,19):size;
+  n=Math.min(n,...lines.map(line=>width/Math.max(1,awardTextWidth(line,1))));
+  // Long shield names get a third line rather than illegibly small type.
+  if(x!==W/2&&n<10&&words.length>2){lines=[[],[],[]].map((_,i)=>words.slice(Math.floor(i*words.length/3),Math.floor((i+1)*words.length/3)).join(' '));n=Math.min(15,...lines.map(line=>width/Math.max(1,awardTextWidth(line,1))));}
+  lines.forEach((line,i)=>text(line,x,y+(i-(lines.length-1)/2)*(n+2),n,width,false,c,true));
  };
  const title=(v:string,y:number,size:number,max:number)=>{text(v,W/2+1,y+1.7,size,max,true,'#685022');center(v,y,size,max,true,GOLD);};
  const stars=(y:number)=>{for(let i=0;i<5;i++){const cx=W/2+(i-2)*19;shape(Array.from({length:10},(_,j)=>{const t=-Math.PI/2+j*Math.PI/5,r=j%2?2.3:5.6;return[cx+Math.cos(t)*r,y+Math.sin(t)*r];}));}};
- const meta=(values:{label:string;value:string}[],y:number)=>{const width=480/values.length;values.forEach((m,i)=>{const cx=57.6+(i+.5)*width;if(i)rect(57.6+i*width,y,0.5,47,'#846b38');text(m.value,cx,y+4,12,width-18,true,GOLD);text(m.label,cx,y+29,6.7,width-18,false,MUTED);});};
+ const meta=(values:{label:string;value:string}[],y:number)=>{const width=480/values.length;values.forEach((m,i)=>{const cx=57.6+(i+.5)*width;if(i)rect(57.6+i*width,y,0.5,59,'#846b38');paragraph(m.value,cx,y+2,width-18,10.5,2,GOLD);text(m.label,cx,y+42,8,width-18,false,MUTED);});};
  const period=`${s.period.start.slice(0,10)} – ${s.period.end.slice(0,10)}`;
  const scope=s.activity?.name??(s.competition?({all:'ALLA KATEGORIER',focus:'MÅNADENS FOKUS',category:'VALD KATEGORI',activity:'VALDA AKTIVITETER'} as const)[s.competition.rules.scope.kind]:'ALLA KATEGORIER');
  const shared=(s.winner_ids?.length??s.winner_names.length)>1;
- if(template==='individual'){emblem(223,18,.7);text('A R E N A N',320,25,16,230,true,GOLD);text('SÄLJ MER. TILLSAMMANS.',320,47,6,230,false);}else{emblem(W/2,19,1);center('A R E N A N',59,18,260,true,GOLD);center('SÄLJ MER. TILLSAMMANS.',84,6.5,250,false);}
+ if(template==='individual'){emblem(W/2,13,.6);center('A R E N A N',40,9,230,true,GOLD);}else{emblem(W/2,19,1);center('A R E N A N',59,18,260,true,GOLD);center('SÄLJ MER. TILLSAMMANS.',84,7,250,false);}
  if(template==='individual'){
   center('ARENAN',168,17,300,true,GOLD);title('CHAMPION',194,49,358);title('AWARD',247,24,300);stars(287);
-  center('DENNA UTMÄRKELSE TILLDELAS',298,7,360,false,GOLD);
+  center('DENNA UTMÄRKELSE TILLDELAS',294,8.5,360,false,GOLD);
   name(a.recipient.name,324,390,32);
-  center(awardLabel(a.variant),393,11,455,true,GOLD);center(a.context,416,10,440,false);
-  center('FÖR EN INSATS ATT VARA STOLT ÖVER.',444,8,440,false,MUTED);
+  center(awardLabel(a.variant),393,11.5,455,true,GOLD);paragraph(a.context,W/2,414,440,10,2,WHITE);
+  center('FÖR EN INSATS ATT VARA STOLT ÖVER.',450,9,440,false,MUTED);
   const row=s.leaderboard.find(r=>r.id===a.recipient.id);
   const metrics=[{label:'REGISTRERINGAR',value:fmt(s.totals.count)},{label:'POÄNG',value:fmt(s.totals.points)}];
   if(row)metrics.push({label:'PLACERING',value:fmt(row.rank)});
@@ -71,18 +80,28 @@ export function arenaAwardScene(s:ArenaReportSnapshot,{testPreview=false}:{testP
   if(goal)metrics.push({label:'MÅLUPPFYLLELSE',value:`${fmt(goal.points/goal.target_points*100)} %`});
   else metrics.push({label:'UPPSKATTAT TB',value:`${fmt(s.totals.tb_ore/100)} kr`});
   const gap=7,w=(480-gap*(metrics.length-1))/metrics.length;
-  metrics.forEach((m,i)=>{const x=57.6+i*(w+gap);rect(x,480,w,69,'#08281e');rect(x,480,w,1,'#c5a455');text(m.value,x+w/2,494,22,w-12,true,GOLD);text(m.label,x+w/2,531,6.7,w-10,false,WHITE);});
+  metrics.forEach((m,i)=>{const x=57.6+i*(w+gap);rect(x,480,w,69,'#08281e');rect(x,480,w,1,'#c5a455');text(m.value,x+w/2,494,22,w-12,true,GOLD);text(m.label,x+w/2,531,8,w-10,false,WHITE);});
   center('STORA RESULTAT SKAPAS TILLSAMMANS.',574,9,470,true,GOLD);
-  center(period,589,10,475,false);emblem(W/2,654,1.5,INK);center('CHAMPION',716,8,100,true,INK);
-  if(s.totals.unknown_tb_count)center(`${s.totals.unknown_tb_count} registreringar saknar historiskt TB.`,752,7,470,false,MUTED);
+  center(period,591,10.5,475,false);emblem(W/2,644,1.4,INK);center('CHAMPION',708,8,100,true,INK);
+  if(s.totals.unknown_tb_count)center(`${s.totals.unknown_tb_count} registreringar saknar historiskt TB.`,752,8,470,false,MUTED);
  }else{
-  // Sword motif is vector decoration, never a result or fabricated signature.
-  shape([[285,103],[312,130],[316,127],[289,100]]);shape([[306,100],[279,127],[282,131],[310,103]]);
+  // Filled blades, bevels, guards, wrapped grips and pommels; lightweight PDF
+  // vectors shared with the browser preview, not two crossing line segments.
+  for(const angle of [-Math.PI/4,Math.PI/4]){
+   const sword=(points:number[][],color=GOLD)=>shape(points.map(([x,y])=>[W/2+x*Math.cos(angle)-y*Math.sin(angle),115+x*Math.sin(angle)+y*Math.cos(angle)]),color);
+   sword([[0,-19],[3,-12],[2,7],[-2,7],[-3,-12]]);
+   sword([[0,-17],[1.4,-11],[.6,6],[0,7]],'#fff1bc');
+   sword([[-8,7],[-6,5],[-2,7],[2,7],[6,5],[8,7],[7,10],[2,9],[-2,9],[-7,10]],'#b18b3e');
+   sword([[-6,7],[-2,8],[2,8],[6,7],[6,8],[2,10],[-2,10],[-6,8]]);
+   sword([[-1.8,10],[1.8,10],[1.5,17],[-1.5,17]],INK);
+   for(let i=0;i<3;i++)sword([[-1.5,11+i*2],[1.5,11.6+i*2],[1.5,12.2+i*2],[-1.5,11.6+i*2]],'#bda365');
+   sword([[0,16],[3,19],[0,22],[-3,19]]);
+  }
   title(s.competition?.rules.contest?.kind==='station'?'STATIONSMÄSTARE':'BUTIKSFIGHT',138,21,330);title('CHAMPION',163,38,370);
-  center(shared?'DELAD VINNANDE STATION':'VINNANDE STATION',207,8,340,true,GOLD);stars(224);
+  center(shared?'DELAD VINNANDE STATION':'VINNANDE STATION',207,9.5,340,true,GOLD);stars(227);
   emblem(W/2,302,1.35,'#f8e6a4');
   if(template==='duel'){
-   const d=awardDuel(s);d.rows.forEach((r,i)=>{const cx=i?484:111;emblem(cx,333,1.05);name(r.name,380,125,18,WHITE,cx);text(fmt(d.scores[i]),cx,418,36,118,true,i?WHITE:GOLD);text(d.unit,cx,464,7,120,false,MUTED);text(i===0?(shared?'DELAD SEGER':'VINNARE'):'FINALRESULTAT',cx,312,7,122,true,i===0?GOLD:MUTED);});
+   const d=awardDuel(s);d.rows.forEach((r,i)=>{const cx=i?484:111;emblem(cx,322,1.05);name(r.name,380,125,18,WHITE,cx);text(fmt(d.scores[i]),cx,422,34,118,true,i?WHITE:GOLD);text(d.unit,cx,466,8,120,false,MUTED);text(i===0?(shared?'DELAD SEGER':'VINNARE'):'FINALRESULTAT',cx,312,8,122,true,i===0?GOLD:MUTED);});
    title('VS',465,26,90);name(a.recipient.name,574,370,30);
    center('TILLSAMMANS GJORDE NI SKILLNAD',638,9,440,true,GOLD);
    center('Stark insats. Starkt lag. Starkare tillsammans.',659,9,440,false);
@@ -97,8 +116,8 @@ export function arenaAwardScene(s:ArenaReportSnapshot,{testPreview=false}:{testP
   }
  }
  rect(57,778,482,33,INK);rect(58,780,480,.5,'#9d8448');
- center(`Fryst: ${s.created_at} · Award-ID: ${s.id}`,787,6.2,475,false,MUTED);
- center(`Källrapport: ${a.source_report_id}`,800,6.2,475,false,MUTED);
+ center(`Fryst: ${s.created_at} · Award-ID: ${s.id}`,786,7,475,false,MUTED);
+ center(`Källrapport: ${a.source_report_id}`,800,7,475,false,MUTED);
  if(testPreview){rect(102,812,391,15,INK);center('TESTFÖRHANDSVISNING · SYNTETISKA DATA',815,7,380,true,GOLD);}
  else center('ARENAN | SÄLJ MER. TILLSAMMANS.',815,6,420,false,GOLD);
  return {template,ops};

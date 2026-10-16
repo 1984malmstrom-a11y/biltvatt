@@ -55,4 +55,15 @@ describe('Three cinematic frozen championship templates',()=>{
  it('marks a shared winner honestly instead of inventing an exclusive victory',()=>{
   const s=championshipAwardExample('duel');s.winner_ids=s.leaderboard.map(r=>r.id);s.leaderboard[1].points=248;expect(extract(arenaAwardPDF(s))).toContain('DELAD SEGER');
  });
+ it('premium polish centers the exact locked emblem and keeps the compact header clear of the crown',()=>{
+  for(const template of templates){const ops=arenaAwardScene(championshipAwardExample(template)).ops,mark=ops.filter(o=>o.kind==='shape').slice(0,2);const xs=mark.flatMap(o=>o.kind==='shape'?o.points.map(p=>p[0]):[]);expect((Math.min(...xs)+Math.max(...xs))/2).toBeCloseTo(595.276/2,8);}
+  const header=arenaAwardScene(championshipAwardExample('individual')).ops.find(o=>o.kind==='text'&&o.value==='A R E N A N')!;expect(header.kind==='text'&&header.y+header.size).toBeLessThan(50);
+ });
+ it('long names and competition titles remain readable, complete and separated from neighboring text',()=>{
+  for(const template of templates){const s=championshipAwardExample(template),before=JSON.stringify(s);const pdf=arenaAwardPDF(s);expect(JSON.stringify(s)).toBe(before);expect(arenaAwardPDF(structuredClone(s))).toEqual(pdf);
+   s.award!.recipient.name=template==='duel'?'ÖstraSödraTingsrydKarlskronaSöderströmStationen':'Åsa Ann-Christine Östermalm Andersson Söderström';if(template==='duel')s.leaderboard[0].name=s.award!.recipient.name;s.award!.context='Nationella höstmästerskapet för service, försäljning och starkare gemensamma stationsresultat i hela Sverige';
+   const text=arenaAwardScene(s).ops.filter(o=>o.kind==='text');for(const t of text.filter(o=>o.italic))expect(t.size).toBeGreaterThanOrEqual(9);
+   for(let i=0;i<text.length;i++)for(let j=i+1;j<text.length;j++){const a=text[i],b=text[j];if(a.value===b.value)continue;const overlapX=Math.min(a.x+awardTextWidth(a.value,a.size,a.bold),b.x+awardTextWidth(b.value,b.size,b.bold))-Math.max(a.x,b.x),overlapY=Math.min(a.y+a.size,b.y+b.size)-Math.max(a.y,b.y);expect(overlapX>.8&&overlapY>.8,`${template}: ${a.value} overlaps ${b.value}`).toBe(false);}
+  }
+ });
 });
