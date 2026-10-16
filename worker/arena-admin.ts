@@ -1,3 +1,5 @@
+import {organizationApi} from './arena-organizations';
+import {competitionApi} from './arena-competitions';
 import {challengeAdminApi} from './arena-challenges';
 import {reportsApi} from "./arena-reports";
 import {updateArenaPortrait,readArenaImage} from "./arena-portraits";
@@ -11,6 +13,8 @@ export async function arenaAdminApi(request: Request, env: Env,authorizedIdentit
   if (!env.ARENA_DB) return fail(503, "Arena-databasen är inte konfigurerad.");
   const identity=authorizedIdentity??await resolveArenaStation(request,env);
   const db = env.ARENA_DB, key = identity.key, path = new URL(request.url).pathname, method = request.method, now = new Date().toISOString();
+  const actor={id:key,display_name:identity.station?.name??key,role:'station' as const};const org=await organizationApi(request,db,actor,key);if(org)return org;
+  if(path.startsWith('/api/admin/arena/competitions'))return competitionApi(request,db,actor,key);
   if(path.startsWith('/api/admin/arena/challenges')||path==='/api/admin/arena/competition-availability')return challengeAdminApi(request,env,key);
   if(path.startsWith("/api/admin/arena/reports"))return reportsApi(request,db,key,{id:key,display_name:identity.station?.name??key,role:"station"});
   if (path === "/api/admin/arena/config" && method === "GET") {

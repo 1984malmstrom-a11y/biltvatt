@@ -1,3 +1,4 @@
+import {organizationApi} from './arena-organizations';
 import {resetArenaAdminPin} from './arena-admin-pin';
 import {competitionApi} from './arena-competitions';
 import {reportsApi} from "./arena-reports";
@@ -63,7 +64,9 @@ export async function arenaSuperadminApi(request:Request,env:Env):Promise<Respon
   const actor=await requireArenaSuperadmin(request,env);const db=env.ARENA_DB!,url=new URL(request.url),path=url.pathname,method=request.method,now=new Date().toISOString();
   const pinReset=path.match(/^\/api\/arena\/superadmin\/stations\/([a-zA-Z0-9:_-]{1,120})\/admin-pin$/);
   if(pinReset&&method==='POST')return resetArenaAdminPin(request,env,pinReset[1],actor);
+  const org=await organizationApi(request,db,actor);if(org)return org;
   if(path.startsWith('/api/arena/superadmin/competitions'))return competitionApi(request,db,actor);
+  if(actor.role!=='owner'&&!path.startsWith('/api/arena/superadmin/security')&&await db.prepare('SELECT id FROM arena_organizations LIMIT 1').first())fail(403,'Använd organisationsbundna tävlingar. Globala administrationsvyer kräver plattformsägare.');
   if(path.startsWith("/api/arena/superadmin/reports"))return reportsApi(request,db,null,actor);
   const security=await securityAdminApi(request,env,actor);if(security)return security;
   if(path==='/api/arena/superadmin/audit'&&method==='GET')return auditApi(request,db);
@@ -93,7 +96,7 @@ export async function arenaSuperadminApi(request:Request,env:Env):Promise<Respon
   if(group && ((method==="POST" && !group[1]) || (method==="PATCH" && group[1]))) {
     const data=await body(request);checkFields(data,["name","station_ids"]);const name=text(data.name,"Gruppnamn");
     const ids=data.station_ids;if(!Array.isArray(ids) || ids.length>100 || ids.some(id=>typeof id!=="string" || id.length>120) || new Set(ids).size!==ids.length)fail(400,"Välj en giltig lista med stationer.");
-    const stationIds=ids as string[];
+    const stationIds=ids as string[];if(stationIds.length&&await db.prepare('SELECT station_id FROM arena_station_organization WHERE station_id IN (SELECT value FROM json_each(?)) LIMIT 1').bind(JSON.stringify(stationIds)).first())fail(400,'Organisationsstationer använder organisationsbundna tävlingar, inte äldre globala grupper.');
     if(stationIds.length) {const found=await db.prepare(`SELECT id FROM arena_stations WHERE id IN (${stationIds.map(()=>"?").join(",")})`).bind(...stationIds).all();if(found.results.length!==stationIds.length)fail(400,"En deltagarstation finns inte.");}
     const id=group[1]??crypto.randomUUID();if(group[1] && !await db.prepare("SELECT id FROM arena_groups WHERE id=?").bind(id).first())fail(404,"Gruppen finns inte.");
     const previous=group[1]?await db.prepare("SELECT id,name FROM arena_groups WHERE id=?").bind(id).first():null;

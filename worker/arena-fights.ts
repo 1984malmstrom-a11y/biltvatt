@@ -148,7 +148,7 @@ export async function arenaFightAdminApi(request:Request,db:D1Database,actor:Are
   let start:string,end:string;try{start=arenaInstant(data.start_at);end=arenaInstant(data.end_at);}catch(e){return fail(400,(e as Error).message);}
   if(Date.parse(end)<=Date.parse(start) || Date.parse(end)<=Date.now() || Date.parse(end)-Date.parse(start)>180*86400000)fail(400,"Fighten ska sluta efter start och nu, med högst 180 dagars period.");
   if(!["points","tb","count"].includes(String(data.metric)))fail(400,"Välj poäng, TB eller antal.");
-  if(!Array.isArray(data.station_ids) || data.station_ids.length<2 || data.station_ids.length>32 || data.station_ids.some(id=>typeof id!=="string" || id.length>120) || new Set(data.station_ids).size!==data.station_ids.length)fail(400,"Välj 2–32 olika stationer.");
+  if(!Array.isArray(data.station_ids) || data.station_ids.length!==2 || data.station_ids.some(id=>typeof id!=="string" || id.length>120) || new Set(data.station_ids).size!==data.station_ids.length)fail(400,"En Butiksfight har exakt två olika stationer.");
   const ids=data.station_ids as string[],found=await db.prepare(`SELECT id FROM arena_stations WHERE status='active' AND id IN (${ids.map(()=>"?").join(",")})`).bind(...ids).all();if(found.results.length!==ids.length)fail(400,"Alla deltagarstationer måste vara aktiva.");
   const id=crypto.randomUUID(),now=new Date().toISOString(),status=Date.parse(start)<=Date.now() ? "active":"scheduled";
   await competitionBatch(db,[

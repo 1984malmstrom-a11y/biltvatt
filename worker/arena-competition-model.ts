@@ -1,3 +1,4 @@
+import {contestInput} from './arena-contest';
 import type {CompetitionInput,CompetitionRules,FightScope} from '../shared/arena-competitions';
 import {competitionSchedule,competitionEnd,competitionFormats} from '../shared/arena-competitions';
 import {arenaDayStart,arenaNextDay} from '../shared/arena-leagues';
@@ -7,16 +8,19 @@ import {fail,text} from './http';
 export const systemActor:ArenaActor={id:'arena-engine',display_name:'Arena tävlingsmotor',role:'system'};
 export const categories=[['wash','BILTVÄTT'],['fika','KAFFE / FIKA'],['food','MAT'],['drink','DRYCK'],['car-care','BILVÅRD'],['campaign','KAMPANJ'],['other','ÖVRIGT']] as const;
 export function competitionInput(d:Record<string,unknown>):CompetitionInput{
- const allowed=['name','request_id','format','metric','station_ids','start_day','end_day','double_round','playoff_size','match_days','win','draw','secondary_metric','tie_rule','scope'];
+ const allowed=['name','request_id','format','metric','station_ids','start_day','end_day','double_round','playoff_size','match_days','win','draw','secondary_metric','tie_rule','scope','contest'];
  if(Object.keys(d).some(k=>!allowed.includes(k)))fail(400,'Tävlingsinställningen innehåller okända fält.');
  const r={name:text(d.name,'Tävlingsnamn',80),request_id:text(d.request_id,'Begäran',120),format:d.format,metric:d.metric,station_ids:d.station_ids,start_day:d.start_day,end_day:d.end_day??d.start_day,double_round:d.double_round??false,playoff_size:d.playoff_size??4,match_days:d.match_days??1,win:d.win??1,draw:d.draw??.5,secondary_metric:d.secondary_metric??(d.metric==='tb'?'points':'tb'),tie_rule:d.tie_rule??'secondary',scope:d.scope??{kind:'all'}} as CompetitionInput;
  if(!competitionFormats.some(f=>f[0]===r.format)||!['points','tb','count'].includes(r.metric)||!['points','tb','count'].includes(r.secondary_metric)||r.secondary_metric===r.metric||!['secondary','seed','sudden-death'].includes(r.tie_rule)||typeof r.double_round!=='boolean')fail(400,'Välj giltiga tävlings- och skiljeregler.');
  if(r.tie_rule==='seed'&&r.format!=='playoffs')fail(400,'Högre seed får bara avgöra liga med slutspel.');
  if(!Array.isArray(r.station_ids)||r.station_ids.some(s=>typeof s!=='string'||!s||s.length>120)||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(r.start_day)||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(r.end_day))fail(400,'Välj giltiga stationer och kalenderdagar.');
+ if(d.contest!==undefined)r.contest=contestInput(d.contest);
+ if(r.contest?.fair_play&&r.metric!=='points')fail(400,'FAIR PLAY används med tävlingspoäng.');
  const scope=r.scope;if(!scope||!['all','focus','category','activity'].includes(scope.kind)||Object.keys(scope).some(k=>!['kind','category_id','activity_ids'].includes(k)))fail(400,'Välj giltig omfattning.');
  if(scope.kind==='category'&&!categories.some(c=>c[0]===scope.category_id))fail(400,'Välj en Arena-kategori.');
  if(scope.kind==='activity'&&(!scope.activity_ids||typeof scope.activity_ids!=='object'||Array.isArray(scope.activity_ids)))fail(400,'Välj lokal aktivitet för varje station.');
  try{competitionSchedule(r);const end=competitionEnd(r);if(Date.parse(arenaDayStart(end))-Date.parse(arenaDayStart(r.start_day))>366*86400000)throw Error('Spelschemat får omfatta högst ett år.');if(!['sprint','daily'].includes(r.format))r.end_day=arenaNextDay(end,-1);}catch(e){fail(400,(e as Error).message);}
+ if(!r.contest&&r.format==='sprint'&&r.station_ids.length!==2)fail(400,'En Butiksfight har exakt två stationer. Använd stationstävling för en gemensam topplista.');
  if(r.start_day<stockholmLocalDateTime().slice(0,10))fail(400,'En ny tävling ska börja idag eller senare.');
  return r;
 }

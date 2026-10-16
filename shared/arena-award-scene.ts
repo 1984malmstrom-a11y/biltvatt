@@ -19,7 +19,7 @@ export function awardTemplate(s:ArenaReportSnapshot):AwardTemplate{
  if(s.type!=='fight')return 'individual';
  const c=s.competition;
  // A two-station cup is still a championship, never a duel certificate.
- if(c&&['league','playoffs','cup'].includes(c.format))return 'championship';
+ if(c&&(c.rules.contest?.kind==='station'||['league','playoffs','cup'].includes(c.format)))return 'championship';
  return s.leaderboard.length===2?'duel':'championship';
 }
 export function awardDuel(s:ArenaReportSnapshot){
@@ -78,7 +78,7 @@ export function arenaAwardScene(s:ArenaReportSnapshot,{testPreview=false}:{testP
  }else{
   // Sword motif is vector decoration, never a result or fabricated signature.
   shape([[285,103],[312,130],[316,127],[289,100]]);shape([[306,100],[279,127],[282,131],[310,103]]);
-  title('BUTIKSFIGHT',138,21,330);title('CHAMPION',163,38,370);
+  title(s.competition?.rules.contest?.kind==='station'?'STATIONSMÄSTARE':'BUTIKSFIGHT',138,21,330);title('CHAMPION',163,38,370);
   center(shared?'DELAD VINNANDE STATION':'VINNANDE STATION',207,8,340,true,GOLD);stars(224);
   emblem(W/2,302,1.35,'#f8e6a4');
   if(template==='duel'){
@@ -89,7 +89,7 @@ export function arenaAwardScene(s:ArenaReportSnapshot,{testPreview=false}:{testP
    meta([{label:'TÄVLINGSPERIOD',value:period},{label:'OMFATTNING',value:scope},{label:`DIFFERENS · ${d.unit}`,value:fmt(Math.abs(d.scores[0]-d.scores[1]))}],701);
   }else{
    name(a.recipient.name,554,365,32);
-   center('BUTIKSFIGHT CHAMPION',599,11,400,true,GOLD);
+   center(s.competition?.rules.contest?.kind==='station'?'STATION CHAMPION':'BUTIKSFIGHT CHAMPION',599,11,400,true,GOLD);
    center('TILLSAMMANS GÖR VI SKILLNAD',634,9,430,true,GOLD);
    center('Stark insats. Starkare lag. En gemensam seger.',657,9,450,false);
    // No opponent identities, match scores or leaderboard in this template.

@@ -6,8 +6,8 @@ export type ArenaLeagueFixture={fight_id:string;round:number;day:string;home:{id
 export type ArenaLeague={id:string;name:string;metric:ArenaMetric;start_day:string;day_win_points:number;day_tie_points:number;phase:'scheduled'|'active'|'finished';standings:ArenaLeagueRow[];fixtures:ArenaLeagueFixture[]};
 export function arenaNextDay(day:string,amount=1){arenaInstant(`${day}T12:00:00Z`);const date=new Date(`${day}T12:00:00Z`);date.setUTCDate(date.getUTCDate()+amount);return date.toISOString().slice(0,10);}
 export const arenaDayStart=(day:string)=>stockholmInstant(`${day}T00:00`);
-export function roundRobin(stations:string[],startDay:string):ArenaRoundRobinMatch[]{
- if(stations.length<2 || stations.length>16 || new Set(stations).size!==stations.length || stations.some(id=>!id))throw new Error('Välj 2–16 olika stationer för serien.');
+export function roundRobin(stations:string[],startDay:string,max=16):ArenaRoundRobinMatch[]{
+ if(stations.length<2 || stations.length>max || new Set(stations).size!==stations.length || stations.some(id=>!id))throw new Error(`Välj 2–${max} olika stationer för serien.`);
  arenaNextDay(startDay,0);const wheel:(string|null)[]=[...stations];if(wheel.length%2)wheel.push(null);
  const fixtures:ArenaRoundRobinMatch[]=[];
  for(let round=1;round<wheel.length;round++){

@@ -39,6 +39,11 @@ export async function freezeStationReport(db:D1Database,station:string,input:{ty
 }
 export async function freezeCompetitionReport(db:D1Database,c:Competition){
  if(!c.frozen)return;if(await db.prepare('SELECT id FROM arena_reports WHERE source_key=?').bind(`competition:${c.id}`).first())return;const source=`competition:${c.id}`,id=`competition-${c.id}`;
+ if(c.entries){
+  const winner=c.entries.find(e=>c.champion_ids.includes(e.id)),individual=c.rules.contest?.kind==='individual';
+  const s:ArenaReportSnapshot={version:1,id,type:individual?'diploma':'fight',title:c.name,created_at:new Date().toISOString(),period:{start:c.rules.start_day,end:c.rules.end_day},station:null,competition:c,totals:winner?{count:winner.count,points:winner.points,tb_ore:winner.tb_ore,unknown_tb_count:winner.unknown_tb_count}:empty(),...(individual&&winner?{subject:{id:winner.id,name:winner.name}}:{}),leaderboard:c.entries.map(e=>({...e})),activities:[],goals:[],winner_ids:c.champion_ids,winner_names:c.entries.filter(e=>c.champion_ids.includes(e.id)).map(e=>e.name),metric:c.rules.metric,source};
+  await db.prepare('INSERT OR IGNORE INTO arena_reports(id,source_key,station_id,competition_id,report_type,title,snapshot_json,created_at) VALUES(?,?,NULL,?,?,?,?,?)').bind(id,source,c.id,s.type,s.title,JSON.stringify(s),s.created_at).run();return;
+ }
  const fights=await db.prepare('SELECT result_json FROM arena_fights WHERE competition_id=? AND result_json IS NOT NULL ORDER BY start_at,id').bind(c.id).all<{result_json:string}>();
  const totals=empty(),byStation=new Map<string,ReportRow>();
  for(const f of fights.results)for(const r of (JSON.parse(f.result_json) as ArenaFight).standings){const old=byStation.get(r.id)??{...r,rank:c.standings.find(s=>s.id===r.id)?.rank??r.rank,count:0,points:0,tb_ore:0,unknown_tb_count:0};byStation.set(r.id,{...old,...add(old,r)});}
