@@ -1,0 +1,12 @@
+[
+  {
+    "phase": "baseline",
+    "case": "visible refresh while initial identical stats request remains pending",
+    "requests": 3
+  },
+  {
+    "phase": "after",
+    "case": "visible refresh while initial identical stats request remains pending",
+    "requests": 2
+  }
+]

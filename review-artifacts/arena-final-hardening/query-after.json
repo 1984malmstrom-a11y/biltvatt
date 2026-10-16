@@ -1,0 +1,370 @@
+{
+  "rows": 5000,
+  "queryCount": 22,
+  "sql": [
+    {
+      "sql": "SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url FROM arena_sellers WHERE station_id=?",
+      "params": [
+        "mastertest"
+      ]
+    },
+    {
+      "sql": "SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count\n      FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)\n      GROUP BY r.seller_id,a.id",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers\n      FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT c.id,c.name,c.activity_id,c.start_at,c.end_at,c.target_count,c.target_points,c.active\n    FROM arena_campaigns c JOIN arena_activities a ON a.id=c.activity_id AND a.station_id=c.station_id\n    WHERE c.station_id=? AND c.active=1 AND a.active=1 AND c.start_at<=? AND c.end_at>?\n    ORDER BY c.start_at DESC,c.id LIMIT 1",
+      "params": [
+        "mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+      "params": [
+        "mastertest",
+        "2026-10-15",
+        "2026-10-15"
+      ]
+    },
+    {
+      "sql": "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+      "params": [
+        "mastertest",
+        "2026-10-15",
+        "2026-10-15"
+      ]
+    },
+    {
+      "sql": "SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at\n      FROM arena_registrations r\n      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id\n      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT COALESCE(SUM(points_awarded),0) points FROM arena_registrations\n        WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<? AND (? IS NULL OR seller_id=?)",
+      "params": [
+        "mastertest",
+        "2026-09-30T22:00:00.000Z",
+        "2026-10-31T23:00:00.000Z",
+        null,
+        null
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points FROM arena_registrations\n      WHERE station_id=? AND activity_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+      "params": [
+        "mastertest",
+        "qa-car",
+        "2026-10-01",
+        "2026-11-01"
+      ]
+    },
+    {
+      "sql": "SELECT l.id FROM arena_leagues l JOIN arena_league_members m ON m.league_id=l.id WHERE m.station_id=? AND l.request_key IS NOT NULL AND l.result_json IS NULL AND l.status='open' AND l.start_day<=? ORDER BY l.start_day LIMIT 1",
+      "params": [
+        "mastertest",
+        "2026-10-15"
+      ]
+    },
+    {
+      "sql": "SELECT f.id,f.scope_json,CASE WHEN f.scope_json IS NOT NULL AND f.result_json IS NULL THEN (SELECT json_group_array(q.activity_id) FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=s.station_id) END activity_ids FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id\n    WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))\n    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1",
+      "params": [
+        "mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "2026-10-14T12:00:00.000Z",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT id,name,description,start_at,end_at,score_metric,status,result_json,live_json,leader_signature,leader_checked_at,revision,version,competition_id,knockout_json,participant_json,scoring_mode,COALESCE(match_win,day_win_points) day_win_points,COALESCE(match_draw,day_tie_points) day_tie_points FROM arena_fights WHERE id=?",
+      "params": [
+        "qa-fight"
+      ]
+    },
+    {
+      "sql": "SELECT current.id,previous.id previous_id,previous.result_json,previous.live_json\n FROM arena_fights current JOIN arena_fights previous ON previous.start_at<current.start_at AND previous.id<>current.id\n WHERE previous.knockout_json IS NOT NULL AND current.id IN (SELECT value FROM json_each(?)) AND (json_extract(previous.live_json,'$.sudden_death')=1 OR json_extract(previous.result_json,'$.sudden_death_ended_at') IS NOT NULL)\n AND EXISTS(SELECT 1 FROM arena_fight_stations a JOIN arena_fight_stations b ON b.station_id=a.station_id WHERE a.fight_id=current.id AND b.fight_id=previous.id)",
+      "params": [
+        "[\"qa-fight\"]"
+      ]
+    },
+    {
+      "sql": "SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,\n    SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count\n    FROM arena_fight_stations f JOIN arena_stations s ON s.id=f.station_id\n    LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n      AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=f.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=f.fight_id AND rule.station_id=s.id AND rule.activity_id=r.activity_id))\n    WHERE f.fight_id=? GROUP BY s.id",
+      "params": [
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z",
+        0,
+        "2026-10-15T14:00:00Z",
+        "qa-fight"
+      ]
+    },
+    {
+      "sql": "SELECT 'sale:'||r.id id,'sale' kind,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,r.registered_at created_at,r.seller_id,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),seller.name) seller_name,seller.avatar_index,CASE WHEN seller.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||seller.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode\n    FROM arena_fight_stations member JOIN arena_registrations r ON r.station_id=member.station_id\n    JOIN arena_stations station ON station.id=r.station_id\n    JOIN arena_sellers seller ON seller.id=r.seller_id AND seller.station_id=r.station_id\n    JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n    WHERE member.fight_id=? AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=member.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=member.fight_id AND rule.station_id=r.station_id AND rule.activity_id=r.activity_id)) AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL\n    FROM arena_fight_lead_events WHERE fight_id=? AND created_at>=? AND created_at<? AND created_at<=?\n    ORDER BY created_at DESC,id DESC LIMIT 20",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z",
+        0,
+        "2026-10-15T14:00:00Z",
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "UPDATE arena_fights SET status='active',leader_signature=?,leader_checked_at=?,live_json=?,revision=revision+1,version=?\n      WHERE id=? AND revision=? AND leader_checked_at<=? AND result_json IS NULL",
+      "params": [
+        "mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "{\"competition_id\":null,\"id\":\"qa-fight\",\"name\":\"QA\",\"description\":\"\",\"start_at\":\"2026-10-15T10:00:00Z\",\"end_at\":\"2026-10-15T14:00:00Z\",\"metric\":\"points\",\"phase\":\"active\",\"snapshot_at\":\"2026-10-15T12:00:00.000Z\",\"version\":1,\"standings\":[{\"id\":\"mastertest\",\"name\":\"Mastertest\",\"rank\":1,\"count\":333,\"points\":666,\"tb_ore\":1165500,\"unknown_tb_count\":0}],\"leader_ids\":[\"mastertest\"],\"winner_ids\":[],\"events\":[{\"id\":\"lead:1\",\"kind\":\"lead\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T12:00:00.000Z\"},{\"id\":\"sale:qa-989\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-974\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-959\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-944\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-929\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-914\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-899\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-89\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-884\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-869\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-854\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-839\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-824\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-809\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-794\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-779\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-764\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-749\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:qa-74\",\"kind\":\"sale\",\"station_id\":\"mastertest\",\"station_name\":\"Mastertest\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"mastertest:emma\",\"seller_name\":\"Emma\",\"avatar_index\":6,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"}]}",
+        1,
+        "qa-fight",
+        0,
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "INSERT OR IGNORE INTO arena_fight_lead_events(id,fight_id,version,station_id,station_name,created_at)\n      SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM arena_fights WHERE id=? AND revision=? AND version=? AND leader_signature=?)",
+      "params": [
+        "d6897496-01bf-4cbc-8ecc-569ac0ca4580",
+        "qa-fight",
+        1,
+        "mastertest",
+        "Mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "qa-fight",
+        1,
+        1,
+        "mastertest"
+      ]
+    },
+    {
+      "sql": "SELECT version,station_id,station_name,created_at FROM arena_fight_lead_events WHERE fight_id=? ORDER BY version DESC LIMIT 1",
+      "params": [
+        "qa-fight"
+      ]
+    },
+    {
+      "sql": "SELECT s.id,s.external_staff_id,s.name,s.color,s.active,s.avatar_index,s.station_id,COALESCE(json_extract(f.participant_json,'$.\"'||s.station_id||'\"'),station.name) station_name,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) GROUP BY s.id ORDER BY s.id",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT r.id,r.seller_id,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),s.name) seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    },
+    {
+      "sql": "SELECT t.*,f.status,f.result_json FROM arena_temporary_fight_activities t JOIN arena_fights f ON f.id=t.fight_id JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=t.station_id WHERE t.station_id=? AND t.fight_id=? AND t.start_at<=strftime('%Y-%m-%dT%H:%M:%fZ','now') AND (t.end_at>strftime('%Y-%m-%dT%H:%M:%fZ','now') OR json_extract(f.live_json,'$.sudden_death')=1) AND f.status<>'cancelled' AND f.result_json IS NULL",
+      "params": [
+        "mastertest",
+        "qa-fight"
+      ]
+    },
+    {
+      "sql": "SELECT (SELECT COUNT(*) FROM arena_challenges WHERE challenged_id=? AND status='pending' AND expires_at>?) incoming,(SELECT COUNT(*) FROM arena_fight_notifications WHERE station_id=? AND read_at IS NULL) unread,(SELECT COUNT(*) FROM arena_challenges WHERE challenger_id=? AND status='pending' AND expires_at>?) outgoing,(SELECT COUNT(*) FROM arena_station_bookings WHERE station_id=? AND released_at IS NULL AND start_at>?) scheduled",
+      "params": [
+        "mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "mastertest",
+        "mastertest",
+        "2026-10-15T12:00:00.000Z",
+        "mastertest",
+        "2026-10-15T12:00:00.000Z"
+      ]
+    }
+  ],
+  "engine": "Node SQLite EXPLAIN QUERY PLAN with current local Arena migrations (D1-compatible SQL)",
+  "plans": [
+    {
+      "sql": "SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count\n      FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)\n      GROUP BY r.seller_id,a.id",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z",
+        null,
+        null,
+        null,
+        null
+      ],
+      "plan": [
+        "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)",
+        "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)",
+        "USE TEMP B-TREE FOR GROUP BY"
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers\n      FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z"
+      ],
+      "plan": [
+        "USE TEMP B-TREE FOR count(DISTINCT)",
+        "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+      ]
+    },
+    {
+      "sql": "SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at\n      FROM arena_registrations r\n      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id\n      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+      "params": [
+        "mastertest",
+        "2026-10-14T22:00:00.000Z",
+        "2026-10-15T22:00:00.000Z"
+      ],
+      "plan": [
+        "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)",
+        "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)",
+        "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)",
+        "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+      ]
+    },
+    {
+      "sql": "SELECT COALESCE(SUM(points_awarded),0) points FROM arena_registrations\n        WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<? AND (? IS NULL OR seller_id=?)",
+      "params": [
+        "mastertest",
+        "2026-09-30T22:00:00.000Z",
+        "2026-10-31T23:00:00.000Z",
+        null,
+        null
+      ],
+      "plan": [
+        "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points FROM arena_registrations\n      WHERE station_id=? AND activity_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+      "params": [
+        "mastertest",
+        "qa-car",
+        "2026-10-01",
+        "2026-11-01"
+      ],
+      "plan": [
+        "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+      ]
+    },
+    {
+      "sql": "SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,\n    SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count\n    FROM arena_fight_stations f JOIN arena_stations s ON s.id=f.station_id\n    LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n      AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=f.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=f.fight_id AND rule.station_id=s.id AND rule.activity_id=r.activity_id))\n    WHERE f.fight_id=? GROUP BY s.id",
+      "params": [
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z",
+        0,
+        "2026-10-15T14:00:00Z",
+        "qa-fight"
+      ],
+      "plan": [
+        "SEARCH f USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)",
+        "SEARCH s USING INDEX sqlite_autoindex_arena_stations_1 (id=?)",
+        "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?) LEFT-JOIN",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)",
+        "CORRELATED SCALAR SUBQUERY 2",
+        "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)",
+        "USE TEMP B-TREE FOR GROUP BY"
+      ]
+    },
+    {
+      "sql": "SELECT 'sale:'||r.id id,'sale' kind,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,r.registered_at created_at,r.seller_id,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),seller.name) seller_name,seller.avatar_index,CASE WHEN seller.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||seller.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode\n    FROM arena_fight_stations member JOIN arena_registrations r ON r.station_id=member.station_id\n    JOIN arena_stations station ON station.id=r.station_id\n    JOIN arena_sellers seller ON seller.id=r.seller_id AND seller.station_id=r.station_id\n    JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n    WHERE member.fight_id=? AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=member.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=member.fight_id AND rule.station_id=r.station_id AND rule.activity_id=r.activity_id)) AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL\n    FROM arena_fight_lead_events WHERE fight_id=? AND created_at>=? AND created_at<? AND created_at<=?\n    ORDER BY created_at DESC,id DESC LIMIT 20",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z",
+        0,
+        "2026-10-15T14:00:00Z",
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ],
+      "plan": [
+        "MERGE (UNION ALL)",
+        "LEFT",
+        "SEARCH member USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)",
+        "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)",
+        "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)",
+        "CORRELATED SCALAR SUBQUERY 2",
+        "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)",
+        "SEARCH seller USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)",
+        "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)",
+        "USE TEMP B-TREE FOR ORDER BY",
+        "RIGHT",
+        "SEARCH arena_fight_lead_events USING INDEX sqlite_autoindex_arena_fight_lead_events_2 (fight_id=?)",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ]
+    },
+    {
+      "sql": "SELECT s.id,s.external_staff_id,s.name,s.color,s.active,s.avatar_index,s.station_id,COALESCE(json_extract(f.participant_json,'$.\"'||s.station_id||'\"'),station.name) station_name,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) GROUP BY s.id ORDER BY s.id",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ],
+      "plan": [
+        "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)",
+        "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)",
+        "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)",
+        "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)",
+        "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)",
+        "USE TEMP B-TREE FOR GROUP BY"
+      ]
+    },
+    {
+      "sql": "SELECT r.id,r.seller_id,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),s.name) seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+      "params": [
+        "qa-fight",
+        "2026-10-15T10:00:00Z",
+        "2026-10-15T14:00:00Z",
+        "2026-10-15T12:00:00.000Z"
+      ],
+      "plan": [
+        "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)",
+        "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)",
+        "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)",
+        "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)",
+        "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)",
+        "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ]
+    }
+  ]
+}

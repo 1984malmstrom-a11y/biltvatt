@@ -1,0 +1,111 @@
+{
+  "method": "Accelerated 20-minute virtual-clock session, 60 real UI registrations, normal motion, 1920x1080, deterministic API, heap after explicit GC at 0/5/10/15/20 virtual minutes. Not a real 20-minute soak, thermal test, GPU memory measurement or physical cashier validation. FastForward coalesces timers; polling frequency is verified separately.",
+  "results": [
+    {
+      "phase": "baseline",
+      "virtualMinutes": 20,
+      "sales": 60,
+      "wallMs": 28989,
+      "samples": [
+        {
+          "virtualMinutes": 0,
+          "heapBytes": 11366120,
+          "nodes": 528,
+          "listeners": 195,
+          "documents": 1,
+          "domNodes": 338,
+          "requests": 2
+        },
+        {
+          "virtualMinutes": 5,
+          "heapBytes": 13358956,
+          "nodes": 551,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 22
+        },
+        {
+          "virtualMinutes": 10,
+          "heapBytes": 13591840,
+          "nodes": 551,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 42
+        },
+        {
+          "virtualMinutes": 15,
+          "heapBytes": 13681628,
+          "nodes": 553,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 62
+        },
+        {
+          "virtualMinutes": 20,
+          "heapBytes": 13925832,
+          "nodes": 551,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 82
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "virtualMinutes": 20,
+      "sales": 60,
+      "wallMs": 27417,
+      "samples": [
+        {
+          "virtualMinutes": 0,
+          "heapBytes": 11373612,
+          "nodes": 528,
+          "listeners": 195,
+          "documents": 1,
+          "domNodes": 338,
+          "requests": 2
+        },
+        {
+          "virtualMinutes": 5,
+          "heapBytes": 13597356,
+          "nodes": 551,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 17
+        },
+        {
+          "virtualMinutes": 10,
+          "heapBytes": 13546756,
+          "nodes": 551,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 32
+        },
+        {
+          "virtualMinutes": 15,
+          "heapBytes": 13940428,
+          "nodes": 566,
+          "listeners": 198,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 47
+        },
+        {
+          "virtualMinutes": 20,
+          "heapBytes": 13757048,
+          "nodes": 538,
+          "listeners": 196,
+          "documents": 1,
+          "domNodes": 344,
+          "requests": 62
+        }
+      ]
+    }
+  ]
+}

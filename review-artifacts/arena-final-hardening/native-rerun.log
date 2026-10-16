@@ -1,0 +1,12 @@
+
+Running 4 tests using 1 worker
+
+(node:458189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/4] e2e/arena-competition-builder.spec.ts:36:1 › Native local Competition 2.0: challenge accept, cancel and simultaneous conflict use real Worker
+[2/4] e2e/arena-final.spec.ts:39:1 › Final: native local Worker verifies Owner, invites/revokes Superadmin, uploads photo and exports frozen PDF
+[3/4] e2e/arena-network.spec.ts:39:1 › Arena: real local onboarding, approval, own sellers, TB registration and logout
+[4/4] e2e/arena.spec.ts:814:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI
+  4 passed (15.9s)

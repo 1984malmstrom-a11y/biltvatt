@@ -1,0 +1,50 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mFailed to write to log file Error: ENOENT: no such file or directory, mkdir '/home/agent/.config/.wrangler'[0m
+
+      at async Object.mkdir (node:internal/fs/promises:916:10)
+      at async ensureDirectoryExists (/workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65007:3)
+      at async /workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65088:7
+      at async Mutex.runWith (/workspace/biltvatt/node_modules/miniflare/dist/src/index.js:70213:16)
+      at async appendToDebugLogFile (/workspace/biltvatt/node_modules/wrangler/wrangler-dist/cli.js:65086:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: '/home/agent/.config/.wrangler'
+  }
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mWould have written: [0m
+
+  --- 2026-10-15T20:38:40.304Z debug
+  🪵  Writing logs to "/home/agent/.config/.wrangler/logs/wrangler-2026-10-15_20-38-40_087.log"
+  ---
+  
+
+
+
+ ⛅️ wrangler 4.148.0
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+Migrations to be applied:
+┌────────────────────────────────┐
+│ name                           │
+├────────────────────────────────┤
+│ 0011_arena_admin_elevation.sql │
+└────────────────────────────────┘
+? About to apply 1 migration(s)
+Your database may not be available to serve requests during the migration, continue?
+🤖 Using fallback value in non-interactive context: yes
+🌀 Executing on local database arena-master-test (767b5a12-6b40-4516-9f7c-e072c1130480) from ../work/arena-e2e-state/v3/d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 7 commands executed successfully.
+┌────────────────────────────────┬────────┐
+│ name                           │ status │
+├────────────────────────────────┼────────┤
+│ 0011_arena_admin_elevation.sql │ ✅     │
+└────────────────────────────────┴────────┘
+🪵  Logs were written to "/home/agent/.config/.wrangler/logs/wrangler-2026-10-15_20-38-40_087.log"

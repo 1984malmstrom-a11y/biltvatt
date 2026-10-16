@@ -1,0 +1,330 @@
+
+Running 321 tests using 1 worker
+
+(node:474978) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1920x1080
+[2/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1536x864
+[3/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1448x1086
+[4/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1024x768
+[5/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 390x844
+[6/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 844x390
+[7/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 951x768
+[8/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1100x768
+[9/321] e2e/arena-compact-headers.spec.ts:5:126 › Compact headers: readable titles, separate actions and five rows 1200x768
+[10/321] e2e/arena-compact-headers.spec.ts:16:1 › Compact headers: live fight keeps separate header action and status
+[11/321] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation sprint
+[12/321] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation daily
+[13/321] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation league
+[14/321] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation playoffs
+[15/321] e2e/arena-competition-builder.spec.ts:12:2 › Competition builder: complete preview and creation cup
+[16/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1920x1080
+[17/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1536x864
+[18/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1448x1086
+[19/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 1024x768
+[20/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 390x844
+[21/321] e2e/arena-competition-builder.spec.ts:17:2 › Fight Center: match, table, fixtures, bracket and champions 844x390
+[22/321] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 1920x1080
+[23/321] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 390x844
+[24/321] e2e/arena-competition-builder.spec.ts:25:2 › Challenges: review, mappings, accept, decline, busy and cancellation 844x390
+[25/321] e2e/arena-competition-builder.spec.ts:32:1 › Competition: homepage badge and no eighth production ring; old concepts retired
+[26/321] e2e/arena-competition-builder.spec.ts:36:1 › Native local Competition 2.0: challenge accept, cancel and simultaneous conflict use real Worker
+[27/321] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 390x844
+[28/321] e2e/arena-competition-builder.spec.ts:42:48 › Competition builder: mobile preview has no horizontal page overflow 844x390
+[29/321] e2e/arena-competition-builder.spec.ts:43:1 › Fight Center polling: one scoped payload, 5s active cadence, hidden pause and immediate resume
+[30/321] e2e/arena-competition-builder.spec.ts:44:1 › Competition: TB uses kronor in tables and brackets; multi-station Sprint lists every participant
+[31/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1920x1080
+[32/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1920x1080
+[33/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1920x1080
+[34/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1536x864
+[35/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1536x864
+[36/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1536x864
+[37/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1448x1086
+[38/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1448x1086
+[39/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1448x1086
+[40/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 1024x768
+[41/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 1024x768
+[42/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 1024x768
+[43/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 390x844
+[44/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 390x844
+[45/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 390x844
+[46/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious single-category with normal non-qualifiers 844x390
+[47/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious monthly-focus with normal non-qualifiers 844x390
+[48/321] e2e/arena-fight-context-correction.spec.ts:17:170 › Context correction: obvious all-categories with normal non-qualifiers 844x390
+[49/321] e2e/arena-fight-context-correction.spec.ts:21:1 › Context correction: local versus Fight names, contributions and recent activity panels
+[50/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1920x1080
+[51/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1536x864
+[52/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1448x1086
+[53/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 1024x768
+[54/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 390x844
+[55/321] e2e/arena-fight-context-correction.spec.ts:27:24 › Context correction: larger portrait objective preserves seven-ring grid 844x390
+[56/321] e2e/arena-fight-context-correction.spec.ts:33:1 › Context correction: Fight event feed and sale lead-change retain station names
+[57/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1920x1080
+[58/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1536x864
+[59/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1448x1086
+[60/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 1024x768
+[61/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 390x844
+[62/321] e2e/arena-fight-objective.spec.ts:22:33 › Fight objectives: compact pulse and unchanged stage 844x390
+[63/321] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen all authority only
+[64/321] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen activity authority only
+[65/321] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen focus authority only
+[66/321] e2e/arena-fight-objective.spec.ts:27:229 › Fight objectives: frozen category authority only
+[67/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1920x1080
+[68/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1536x864
+[69/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1448x1086
+[70/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 1024x768
+[71/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 390x844
+[72/321] e2e/arena-fight-objective.spec.ts:30:33 › Fight objectives: temporary ring outside orbit and seller flow 844x390
+[73/321] e2e/arena-fight-objective.spec.ts:37:1 › Fight objectives: live transitions remove frozen emphasis, reduced motion and missing authority fail closed
+[74/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1920x1080
+[75/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1920x1080
+[76/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1920x1080
+[77/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1536x864
+[78/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1536x864
+[79/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1536x864
+[80/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1448x1086
+[81/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1448x1086
+[82/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1448x1086
+[83/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 1024x768
+[84/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 1024x768
+[85/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 1024x768
+[86/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 390x844
+[87/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 390x844
+[88/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 390x844
+[89/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily points temporary panel fits 844x390
+[90/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily tb temporary panel fits 844x390
+[91/321] e2e/arena-fight-objective.spec.ts:41:87 › Fight objectives: daily count temporary panel fits 844x390
+[92/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1920x1080
+[93/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1536x864
+[94/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1448x1086
+[95/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 1024x768
+[96/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 390x844
+[97/321] e2e/arena-fight-objective.spec.ts:44:34 › Fight objectives: qualifying badges stay clear at 844x390
+[98/321] e2e/arena-fight-objective.spec.ts:49:1 › Fight objectives: lightweight entry with static reduced-motion alternative
+[99/321] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1920x1080
+[100/321] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1024x768
+[101/321] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 1448x1086
+[102/321] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 390x844
+[103/321] e2e/arena-fights.spec.ts:11:3 › Butiksfight: active, lead change and finished 844x390
+[104/321] e2e/arena-fights.spec.ts:20:1 › Butiksfight: correct tie, count metric and reduced-motion announcement
+[105/321] e2e/arena-fights.spec.ts:25:1 › Butiksfight: boundary timer fetches final state without waiting for poll
+[106/321] e2e/arena-fights.spec.ts:29:1 › Butiksfight: Superadmin creates a timezone-safe event for approved stations
+[107/321] e2e/arena-fights.spec.ts:37:1 › Butiksfight: native local Worker scores a sale and freezes result before later undo
+[108/321] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 1920x1080
+[109/321] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 1024x768
+[110/321] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 390x844
+[111/321] e2e/arena-final.spec.ts:14:2 › Final: people admin, accounts, security, audit and reports 844x390
+[112/321] e2e/arena-final.spec.ts:39:1 › Final: native local Worker verifies Owner, invites/revokes Superadmin, uploads photo and exports frozen PDF
+[113/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1920x1080
+[114/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1920x1080
+[115/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1536x864
+[116/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1536x864
+[117/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1448x1086
+[118/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1448x1086
+[119/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 1024x768
+[120/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 1024x768
+[121/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 390x844
+[122/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 390x844
+[123/321] e2e/arena-green-brand.spec.ts:17:2 › Green brand: Stationspuls, all seven touch targets and no clipped UI 844x390
+[124/321] e2e/arena-green-brand.spec.ts:29:2 › Green brand: live fight card and responsive layout 844x390
+[125/321] e2e/arena-green-brand.spec.ts:34:1 › Green brand: exact TB, urgency, perimeter motion, lead surge, final and return to pulse
+[126/321] e2e/arena-green-brand.spec.ts:50:1 › Green brand: sale hierarchy, portraits, Min Arena and full leaderboard
+[127/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1920x1080
+[128/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1536x864
+[129/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1448x1086
+[130/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1024x768
+[131/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 390x844
+[132/321] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 844x390
+[133/321] e2e/arena-hardening.spec.ts:9:1 › Hardening: idle locks elevation, keyboard controls and lockout feedback
+[134/321] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 1920x1080
+[135/321] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 390x844
+[136/321] e2e/arena-hardening.spec.ts:11:1 › Hardening: native local station PIN, real session isolation, reset/logout and unchanged display session
+[137/321] e2e/arena-hardening.spec.ts:12:1 › Hardening: identical overlapping stats reads coalesce while the next sale remains available
+[138/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1920x1080
+[139/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1536x864
+[140/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1448x1086
+[141/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 1024x768
+[142/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 390x844
+[143/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: leader opaque scene, separated text and immediate next sale 844x390
+[144/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1920x1080
+[145/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1536x864
+[146/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1448x1086
+[147/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 1024x768
+[148/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 390x844
+[149/321] e2e/arena-hero-correction.spec.ts:18:86 › Champion correction: station-goal opaque scene, separated text and immediate next sale 844x390
+[150/321] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: leader reduced motion and automatic dismissal
+[151/321] e2e/arena-hero-correction.spec.ts:34:54 › Champion correction: station-goal reduced motion and automatic dismissal
+[152/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1920x1080
+[153/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1536x864
+[154/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1448x1086
+[155/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 1024x768
+[156/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 390x844
+[157/321] e2e/arena-identity.spec.ts:11:2 › Identity: real dashboard, five balanced nav targets, local context and fictional champion 844x390
+[158/321] e2e/arena-identity.spec.ts:22:1 › Identity: multi-station names, period totals and cross-station recent feed use the same context
+[159/321] e2e/arena-identity.spec.ts:27:1 › Identity: fake character and static reduced-motion hero remain independent of the credited seller
+[160/321] e2e/arena-identity.spec.ts:31:1 › Identity: cinematic reveal paints on the real animation timeline
+[161/321] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1920x1080
+[162/321] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1536x864
+[163/321] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 1024x768
+[164/321] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 390x844
+[165/321] e2e/arena-mini-polish.spec.ts:7:82 › Mini polish: calm pulse, frame and crisp navigation 844x390
+[166/321] e2e/arena-mini-polish.spec.ts:17:1 › Mini polish: sourced pulse handles no goal, no sales and reached target
+[167/321] e2e/arena-mini-polish.spec.ts:21:1 › Mini polish: active fight remains a separate match state without customer branding and with nav intact
+[168/321] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 1920x1080
+[169/321] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 1920x1080
+[170/321] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 1920x1080
+[171/321] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 1024x768
+[172/321] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 1024x768
+[173/321] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 1024x768
+[174/321] e2e/arena-network.spec.ts:11:3 › Arena accounts: signup, pending and login 390x844
+[175/321] e2e/arena-network.spec.ts:22:3 › Arena Superadmin: stations, approval, groups and total metrics 390x844
+[176/321] e2e/arena-network.spec.ts:34:3 › Arena group: approved membership and premium leaderboard 390x844
+[177/321] e2e/arena-network.spec.ts:39:1 › Arena: real local onboarding, approval, own sellers, TB registration and logout
+[178/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1920x1080
+[179/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1536x864
+[180/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1024x768
+[181/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 1448x1086
+[182/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 390x844
+[183/321] e2e/arena-premium-series.spec.ts:19:2 › Premium: daily match points and provisional result without overflow 844x390
+[184/321] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 1920x1080
+[185/321] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 1024x768
+[186/321] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 390x844
+[187/321] e2e/arena-premium-series.spec.ts:27:2 › Premium: daily history and league rounds 844x390
+[188/321] e2e/arena-premium-series.spec.ts:32:1 › Premium: daily sale crossing is distinct from series lead, shows station under seller and never repeats
+[189/321] e2e/arena-premium-series.spec.ts:37:1 › Premium: combined achievement hierarchy, reduced motion and local station-name rule
+[190/321] e2e/arena-premium-series.spec.ts:42:1 › Premium: Superadmin configures daily rules and previews a ten-team round robin
+[191/321] e2e/arena-premium-series.spec.ts:48:1 › Premium: hub lists own fights and series, frozen daily PDF retains both result types
+[192/321] e2e/arena-premium-series.spec.ts:53:1 › Premium: full fight announces the catching station at a tie, independently of stale lead metadata
+[193/321] e2e/arena-premium-series.spec.ts:57:1 › Premium: native local Worker supports daily undo and private series without changing total fights
+[194/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1920x1080
+[195/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1536x864
+[196/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1448x1086
+[197/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 1024x768
+[198/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 844x390
+[199/321] e2e/arena-release.spec.ts:12:2 › Release: actual seller faces, start and hero 390x844
+[200/321] e2e/arena-release.spec.ts:24:1 › Release: portrait QA rejects zero-size and hidden portraits; uploaded images recover
+[201/321] e2e/arena-release.spec.ts:29:1 › Release: polling cadence, hidden pause/resume and active fight mode in React
+[202/321] e2e/arena-release.spec.ts:38:1 › Release: immediate optimistic board/feed, selected state and rollback
+[203/321] e2e/arena-release.spec.ts:43:1 › Release: fight polling, event feed, lead change and final
+[204/321] e2e/arena-release.spec.ts:49:1 › Release: downloaded PDF bytes from frozen report renderer
+[205/321] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1920x1080
+[206/321] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1448x1086
+[207/321] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 1024x768
+[208/321] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 390x844
+[209/321] e2e/arena-showroom.spec.ts:22:3 › Showroom: portraits, profile and distinct champion hero 844x390
+[210/321] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1920x1080
+[211/321] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1448x1086
+[212/321] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 1024x768
+[213/321] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 390x844
+[214/321] e2e/arena-showroom.spec.ts:40:3 › Showroom: fight widget, true sale crossing, tie and final once 844x390
+[215/321] e2e/arena-showroom.spec.ts:58:1 › Showroom: uploaded portrait wins, failed upload falls back, portraits persist outside showcase
+[216/321] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight duel
+[217/321] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight ranking
+[218/321] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight winner
+[219/321] e2e/arena-showroom.spec.ts:64:2 › Showroom: premium full fight tie-final
+[220/321] e2e/arena-showroom.spec.ts:72:1 › Showroom: Superadmin fight manager has participants, phases and leader
+[221/321] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once winner
+[222/321] e2e/arena-showroom.spec.ts:78:2 › Showroom: Arena final winner and motivating loss, once loss
+[223/321] e2e/arena-showroom.spec.ts:85:1 › Showroom: one hero for simultaneous goal, leader and fight, undo clears receipt
+[224/321] e2e/arena-showroom.spec.ts:90:1 › Showroom: countdown alone becomes urgent and respects reduced motion
+[225/321] e2e/arena-showroom.spec.ts:93:1 › Showroom: full TB duel values fit wide and portrait widget
+[226/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1920x1080
+[227/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1536x864
+[228/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1448x1086
+[229/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 1024x768
+[230/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 390x844
+[231/321] e2e/arena-visual-v2.spec.ts:14:94 › Visual V2: stage, curved focus and dynamic context 844x390
+[232/321] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 1920x1080
+[233/321] e2e/arena-visual-v2.spec.ts:24:50 › Visual V2: competition stage league bracket champions and invitation 390x844
+[234/321] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 1920x1080
+[235/321] e2e/arena-visual-v2.spec.ts:31:50 › Visual V2: Concept C existing seller flow receipt retry and undo 390x844
+[236/321] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 1920x1080
+[237/321] e2e/arena-visual-v2.spec.ts:34:50 › Visual V2: Swedish sale and new leader copy 390x844
+[238/321] e2e/arena-visual-v2.spec.ts:40:1 › Visual V2: production uploaded portrait, initial, failed image and explicit showroom
+[239/321] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1920x1080
+[240/321] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1448x1086
+[241/321] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 1024x768
+[242/321] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 390x844
+[243/321] e2e/arena.spec.ts:25:3 › Arena: locked daily home, readable feed and independent modal filters 844x390
+[244/321] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1920x1080
+[245/321] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1024x768
+[246/321] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 1448x1086
+[247/321] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 390x844
+[248/321] e2e/arena.spec.ts:62:3 › Arena: Butiksfight state panel preserves activity hit areas 844x390
+[249/321] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1366x768
+[250/321] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1440x900
+[251/321] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1280x800
+[252/321] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1920x1200
+[253/321] e2e/arena.spec.ts:82:3 › Arena: desktop-orbit anpassas till tillgängligt utrymme 1448x1086
+[254/321] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1920x1080
+[255/321] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1024x768
+[256/321] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 390x844
+[257/321] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 844x390
+[258/321] e2e/arena.spec.ts:109:3 › Arena: sju rena produktmotiv med contain och fri text 1448x1086
+[259/321] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1920x1080
+[260/321] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 1024x768
+[261/321] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 390x844
+[262/321] e2e/arena.spec.ts:241:3 › Arena: premium-topplista behåller perioder, poäng och Min Arena 844x390
+[263/321] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1920x1080
+[264/321] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1024x768
+[265/321] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 1448x1086
+[266/321] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 390x844
+[267/321] e2e/arena.spec.ts:298:3 › Arena: vänsterhierarki, mobilpaneler och statsbar utan overflow 844x390
+[268/321] e2e/arena.spec.ts:340:1 › Arena: aktivitetsflödet uppdateras efter försäljning och tar bort ångrad post
+[269/321] e2e/arena.spec.ts:362:1 › Arena: Live behåller avbrottsstatus efter sent bootstrap-svar och återhämtas genom retry
+[270/321] e2e/arena.spec.ts:379:1 › Arena: HUD glöder kort vid ökande målpoäng och stödjer reduced-motion
+[271/321] e2e/arena.spec.ts:401:3 › Arena: vanlig celebration 2,6 s löper ut utan att låsa nästa val
+[272/321] e2e/arena.spec.ts:401:3 › Arena: milestone 3,6 s löper ut utan att låsa nästa val
+[273/321] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden station
+[274/321] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-points
+[275/321] e2e/arena.spec.ts:434:3 › Arena: målrubrik skiljer sig från fokus och bevarar värden campaign-count
+[276/321] e2e/arena.spec.ts:450:1 › Arena-admin: samma sju produktbilder i preview och ny uppladdning prioriteras
+[277/321] e2e/arena.spec.ts:468:1 › Arena: startsidan väljer rätt sju trots fel kampanj, fler aktiviteter och annan listordning
+[278/321] e2e/arena.spec.ts:492:3 › Arena: hero burst är läsbar, kort och klickar igenom 1920x1080
+[279/321] e2e/arena.spec.ts:492:3 › Arena: hero burst är läsbar, kort och klickar igenom 1024x768
+[280/321] e2e/arena.spec.ts:492:3 › Arena: hero burst är läsbar, kort och klickar igenom 390x844
+[281/321] e2e/arena.spec.ts:492:3 › Arena: hero burst är läsbar, kort och klickar igenom 844x390
+[282/321] e2e/arena.spec.ts:518:1 › Arena: Min Arena på vanlig desktop har ett hjälpsamt tomt mål
+[283/321] e2e/arena.spec.ts:530:1 › Arena-admin: mänskliga listor, vald post, ordning och periodförval
+[284/321] e2e/arena.spec.ts:572:1 › Arena: tvåtrycksflöde, dubbelt tryck, nytt namnval och säkert nätverksretry
+[285/321] e2e/arena.spec.ts:606:3 › Arena: långsamt milestone-svar missas inte efter en kort burst
+[286/321] e2e/arena.spec.ts:606:3 › Arena: långsamt milestone-svar stör inte nästa säljarval
+[287/321] e2e/arena.spec.ts:640:3 › Arena: säljarpopup och Min Arena med mål 1920x1080
+[288/321] e2e/arena.spec.ts:640:3 › Arena: säljarpopup och Min Arena med mål 1366x768
+[289/321] e2e/arena.spec.ts:640:3 › Arena: säljarpopup och Min Arena med mål 1024x768
+[290/321] e2e/arena.spec.ts:640:3 › Arena: säljarpopup och Min Arena med mål 390x844
+[291/321] e2e/arena.spec.ts:640:3 › Arena: säljarpopup och Min Arena med mål 844x390
+[292/321] e2e/arena.spec.ts:683:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1920x1080
+[293/321] e2e/arena.spec.ts:683:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1024x768
+[294/321] e2e/arena.spec.ts:683:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 1448x1086
+[295/321] e2e/arena.spec.ts:683:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 390x844
+[296/321] e2e/arena.spec.ts:683:3 › Arena: TB-badge, snapshotbelöning, topplista och Min Arena 844x390
+[297/321] e2e/arena.spec.ts:700:1 › Arena-admin: decimal-TB, badge-val och poäng sparas tillsammans
+[298/321] e2e/arena.spec.ts:710:1 › Arena: level 2 nära personligt mål är större än standardsale och kan klickas igenom
+[299/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Idag, en hero och dedup
+[300/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Den här veckan, en hero och dedup
+[301/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Den här månaden, en hero och dedup
+[302/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Vald period, en hero och dedup
+[303/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Kaffe + bulle, en hero och dedup
+[304/321] e2e/arena.spec.ts:720:3 › Arena: centralt achievement-kvitto för Aktuellt fokus, en hero och dedup
+[305/321] e2e/arena.spec.ts:737:5 › Arena: leader firar utan att blockera nästa registrering 1920x1080
+[306/321] e2e/arena.spec.ts:737:5 › Arena: leader firar utan att blockera nästa registrering 1024x768
+[307/321] e2e/arena.spec.ts:737:5 › Arena: leader firar utan att blockera nästa registrering 390x844
+[308/321] e2e/arena.spec.ts:737:5 › Arena: leader firar utan att blockera nästa registrering 844x390
+[309/321] e2e/arena.spec.ts:737:5 › Arena: personal-goal firar utan att blockera nästa registrering 1920x1080
+[310/321] e2e/arena.spec.ts:737:5 › Arena: personal-goal firar utan att blockera nästa registrering 1024x768
+[311/321] e2e/arena.spec.ts:737:5 › Arena: personal-goal firar utan att blockera nästa registrering 390x844
+[312/321] e2e/arena.spec.ts:737:5 › Arena: personal-goal firar utan att blockera nästa registrering 844x390
+[313/321] e2e/arena.spec.ts:737:5 › Arena: station-goal firar utan att blockera nästa registrering 1920x1080
+[314/321] e2e/arena.spec.ts:737:5 › Arena: station-goal firar utan att blockera nästa registrering 1024x768
+[315/321] e2e/arena.spec.ts:737:5 › Arena: station-goal firar utan att blockera nästa registrering 390x844
+[316/321] e2e/arena.spec.ts:737:5 › Arena: station-goal firar utan att blockera nästa registrering 844x390
+[317/321] e2e/arena.spec.ts:788:3 › Arena: touch och ingen vertikal overflow 1920x1080
+[318/321] e2e/arena.spec.ts:788:3 › Arena: touch och ingen vertikal overflow 1024x768
+[319/321] e2e/arena.spec.ts:788:3 › Arena: touch och ingen vertikal overflow 390x844
+[320/321] e2e/arena.spec.ts:788:3 › Arena: touch och ingen vertikal overflow 844x390
+[321/321] e2e/arena.spec.ts:814:1 › Arena: riktig lokal Worker sparar snapshot, undo och adminbild genom UI
+  2 skipped
+  319 passed (11.4m)

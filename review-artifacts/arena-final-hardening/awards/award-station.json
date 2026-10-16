@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "award-review-station",
+  "type": "fight",
+  "title": "STATIONSVINNARE · Tingsryd",
+  "created_at": "2026-10-15T12:00:00.000Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": null,
+  "totals": {
+    "count": 87,
+    "points": 142,
+    "tb_ore": 1246000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Tingsryd"
+  ],
+  "metric": "points",
+  "source": "award:hardening-station:station:p-0",
+  "leaderboard": [
+    {
+      "id": "p-0",
+      "name": "Tingsryd",
+      "rank": 1,
+      "count": 87,
+      "points": 142,
+      "tb_ore": 1246000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-1",
+      "name": "Karlskrona",
+      "rank": 2,
+      "count": 82,
+      "points": 134,
+      "tb_ore": 1226000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-2",
+      "name": "Karlshamn",
+      "rank": 3,
+      "count": 77,
+      "points": 126,
+      "tb_ore": 1206000,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [],
+  "goals": [
+    {
+      "kind": "station",
+      "seller_id": null,
+      "name": "Lagets mål",
+      "points": 402,
+      "target_points": 140
+    }
+  ],
+  "award": {
+    "variant": "station",
+    "recipient": {
+      "id": "p-0",
+      "name": "Tingsryd"
+    },
+    "source_report_id": "hardening-station",
+    "context": "BUTIKSFIGHT · SYDOSTFINAL",
+    "result": "142 poäng"
+  }
+}

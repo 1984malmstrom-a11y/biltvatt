@@ -1,0 +1,21 @@
+
+Running 13 tests using 1 worker
+
+(node:492975) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/13] e2e/arena-fights.spec.ts:37:1 › Butiksfight: native local Worker scores a sale and freezes result before later undo
+[2/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1920x1080
+[3/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1536x864
+[4/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1448x1086
+[5/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 1024x768
+[6/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 390x844
+[7/13] e2e/arena-hardening.spec.ts:8:94 › Hardening: PIN touch/keyboard, change, return, responsive 844x390
+[8/13] e2e/arena-hardening.spec.ts:9:1 › Hardening: idle locks elevation, keyboard controls and lockout feedback
+[9/13] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 1920x1080
+[10/13] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 390x844
+[11/13] e2e/arena-hardening.spec.ts:11:1 › Hardening: native local station PIN, real session isolation, reset/logout and unchanged display session
+[12/13] e2e/arena-hardening.spec.ts:12:1 › Hardening: identical overlapping stats reads coalesce while the next sale remains available
+[13/13] e2e/arena-premium-series.spec.ts:57:1 › Premium: native local Worker supports daily undo and private series without changing total fights
+  13 passed (32.4s)

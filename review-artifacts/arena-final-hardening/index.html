@@ -1,0 +1,71 @@
+<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arena · Final hardening review</title><style>body{font:15px system-ui;margin:0;background:#061b13;color:#f3edda}main{max-width:1600px;margin:auto;padding:24px}a{color:#e7cd82}h1,h2{color:#ecd78e}.note{border:1px solid #927d47;padding:16px;border-radius:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px}figure{margin:0;padding:12px;border:1px solid #47623f;border-radius:10px;background:#0d291f}img{display:block;width:100%;height:250px;object-fit:contain;background:#04140d}figcaption{padding-top:10px;overflow-wrap:anywhere}small{color:#b7c8bc}nav{display:flex;gap:14px;flex-wrap:wrap;padding:20px 0}li{margin:6px}</style><main><h1>ARENAN · Final product hardening</h1><p class="note">35 kuraterade PNG-bilder och 10 riktiga A4-PDF:er. React/CSS-bilderna använder syntetisk testdata. PDF-sidorna är renderade med Poppler från frysta review-snapshots. Lokal kandidat: mänsklig designreview och fysisk kassaverifiering återstår. Ingen push, deploy eller remote migration.</p><nav>
+<a href="#g0">Startscreen</a>
+<a href="#g1">Fight regression</a>
+<a href="#g2">Celebration regression</a>
+<a href="#g3">Station admin PIN</a>
+<a href="#g4">Award archive</a>
+<a href="#g5">Gaming Awards · riktiga A4-PDF</a>
+</nav><h2>Rapporter och verifiering</h2><ul>
+<li><a href="final-report.md">final-report.md</a></li>
+<li><a href="test-report.md">test-report.md</a></li>
+<li><a href="performance-diff.md">performance-diff.md</a></li>
+<li><a href="query-plan-review.md">query-plan-review.md</a></li>
+<li><a href="bundle-review.md">bundle-review.md</a></li>
+<li><a href="memory-review.md">memory-review.md</a></li>
+<li><a href="request-budget.md">request-budget.md</a></li>
+<li><a href="award-pdf-validation.md">award-pdf-validation.md</a></li>
+<li><a href="responsive-report.md">responsive-report.md</a></li>
+<li><a href="security-review.md">security-review.md</a></li>
+<li><a href="migration-review.md">migration-review.md</a></li>
+<li><a href="deployment-readiness.md">deployment-readiness.md</a></li>
+<li><a href="changed-files.txt">changed-files.txt</a></li>
+<li><a href="artifacts.json">artifacts.json</a></li>
+</ul>
+<section id="g0"><h2>Startscreen</h2><div class="grid">
+<figure><a href="start-1920x1080.png"><img src="start-1920x1080.png" loading="lazy" alt="start-1920x1080.png"></a><figcaption>start-1920x1080.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="start-1536x864.png"><img src="start-1536x864.png" loading="lazy" alt="start-1536x864.png"></a><figcaption>start-1536x864.png<br><small>1536 × 864 px · viewport · viewport 1536 × 864</small></figcaption></figure>
+<figure><a href="start-1448x1086.png"><img src="start-1448x1086.png" loading="lazy" alt="start-1448x1086.png"></a><figcaption>start-1448x1086.png<br><small>1448 × 1086 px · viewport · viewport 1448 × 1086</small></figcaption></figure>
+<figure><a href="start-1024x768.png"><img src="start-1024x768.png" loading="lazy" alt="start-1024x768.png"></a><figcaption>start-1024x768.png<br><small>1024 × 768 px · viewport · viewport 1024 × 768</small></figcaption></figure>
+<figure><a href="start-390x844.png"><img src="start-390x844.png" loading="lazy" alt="start-390x844.png"></a><figcaption>start-390x844.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+<figure><a href="start-844x390.png"><img src="start-844x390.png" loading="lazy" alt="start-844x390.png"></a><figcaption>start-844x390.png<br><small>844 × 390 px · viewport · viewport 844 × 390</small></figcaption></figure>
+</div></section>
+<section id="g1"><h2>Fight regression</h2><div class="grid">
+<figure><a href="fight-1920x1080.png"><img src="fight-1920x1080.png" loading="lazy" alt="fight-1920x1080.png"></a><figcaption>fight-1920x1080.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="fight-1024x768.png"><img src="fight-1024x768.png" loading="lazy" alt="fight-1024x768.png"></a><figcaption>fight-1024x768.png<br><small>1024 × 768 px · viewport · viewport 1024 × 768</small></figcaption></figure>
+<figure><a href="fight-390x844.png"><img src="fight-390x844.png" loading="lazy" alt="fight-390x844.png"></a><figcaption>fight-390x844.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+</div></section>
+<section id="g2"><h2>Celebration regression</h2><div class="grid">
+<figure><a href="leader-1920x1080.png"><img src="leader-1920x1080.png" loading="lazy" alt="leader-1920x1080.png"></a><figcaption>leader-1920x1080.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="leader-390x844.png"><img src="leader-390x844.png" loading="lazy" alt="leader-390x844.png"></a><figcaption>leader-390x844.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+<figure><a href="leader-844x390.png"><img src="leader-844x390.png" loading="lazy" alt="leader-844x390.png"></a><figcaption>leader-844x390.png<br><small>844 × 390 px · viewport · viewport 844 × 390</small></figcaption></figure>
+<figure><a href="goal-1920x1080.png"><img src="goal-1920x1080.png" loading="lazy" alt="goal-1920x1080.png"></a><figcaption>goal-1920x1080.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="goal-390x844.png"><img src="goal-390x844.png" loading="lazy" alt="goal-390x844.png"></a><figcaption>goal-390x844.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+</div></section>
+<section id="g3"><h2>Station admin PIN</h2><div class="grid">
+<figure><a href="pin-1920x1080.png"><img src="pin-1920x1080.png" loading="lazy" alt="pin-1920x1080.png"></a><figcaption>pin-1920x1080.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="pin-390x844.png"><img src="pin-390x844.png" loading="lazy" alt="pin-390x844.png"></a><figcaption>pin-390x844.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+<figure><a href="pin-844x390.png"><img src="pin-844x390.png" loading="lazy" alt="pin-844x390.png"></a><figcaption>pin-844x390.png<br><small>844 × 390 px · viewport · viewport 844 × 390</small></figcaption></figure>
+<figure><a href="pin-wrong.png"><img src="pin-wrong.png" loading="lazy" alt="pin-wrong.png"></a><figcaption>pin-wrong.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="pin-locked.png"><img src="pin-locked.png" loading="lazy" alt="pin-locked.png"></a><figcaption>pin-locked.png<br><small>390 × 844 px · viewport · viewport 390 × 844</small></figcaption></figure>
+<figure><a href="pin-unconfigured.png"><img src="pin-unconfigured.png" loading="lazy" alt="pin-unconfigured.png"></a><figcaption>pin-unconfigured.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="admin-unlocked.png"><img src="admin-unlocked.png" loading="lazy" alt="admin-unlocked.png"></a><figcaption>admin-unlocked.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="admin-change-pin.png"><img src="admin-change-pin.png" loading="lazy" alt="admin-change-pin.png"></a><figcaption>admin-change-pin.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="superadmin-reset-pin.png"><img src="superadmin-reset-pin.png" loading="lazy" alt="superadmin-reset-pin.png"></a><figcaption>superadmin-reset-pin.png<br><small>1920 × 1080 px · viewport · viewport 1920 × 1080</small></figcaption></figure>
+</div></section>
+<section id="g4"><h2>Award archive</h2><div class="grid">
+<figure><a href="award-archive-1920x1080.png"><img src="award-archive-1920x1080.png" loading="lazy" alt="award-archive-1920x1080.png"></a><figcaption>award-archive-1920x1080.png<br><small>1920 × 1317 px · full-page · viewport 1920 × 1080</small></figcaption></figure>
+<figure><a href="award-archive-390x844.png"><img src="award-archive-390x844.png" loading="lazy" alt="award-archive-390x844.png"></a><figcaption>award-archive-390x844.png<br><small>390 × 2408 px · full-page · viewport 390 × 844</small></figcaption></figure>
+</div></section>
+<section id="g5"><h2>Gaming Awards · riktiga A4-PDF</h2><div class="grid">
+<figure><a href="awards/award-cup.png"><img src="awards/award-cup.png" loading="lazy" alt="award-cup.png"></a><figcaption>award-cup.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-cup.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-fight.png"><img src="awards/award-fight.png" loading="lazy" alt="award-fight.png"></a><figcaption>award-fight.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-fight.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-individual.png"><img src="awards/award-individual.png" loading="lazy" alt="award-individual.png"></a><figcaption>award-individual.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-individual.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-league.png"><img src="awards/award-league.png" loading="lazy" alt="award-league.png"></a><figcaption>award-league.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-league.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-monthly.png"><img src="awards/award-monthly.png" loading="lazy" alt="award-monthly.png"></a><figcaption>award-monthly.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-monthly.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-personal-goal.png"><img src="awards/award-personal-goal.png" loading="lazy" alt="award-personal-goal.png"></a><figcaption>award-personal-goal.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-personal-goal.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-playoffs.png"><img src="awards/award-playoffs.png" loading="lazy" alt="award-playoffs.png"></a><figcaption>award-playoffs.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-playoffs.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-station-goal.png"><img src="awards/award-station-goal.png" loading="lazy" alt="award-station-goal.png"></a><figcaption>award-station-goal.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-station-goal.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-station.png"><img src="awards/award-station.png" loading="lazy" alt="award-station.png"></a><figcaption>award-station.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-station.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+<figure><a href="awards/award-weekly.png"><img src="awards/award-weekly.png" loading="lazy" alt="award-weekly.png"></a><figcaption>award-weekly.png<br><small>778 × 1100 px · Poppler PDF render</small><br><a href="awards/award-weekly.pdf">Öppna riktig A4-PDF</a></figcaption></figure>
+</div></section>
+</main></html>

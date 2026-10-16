@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "id": "award-review-individual",
+  "type": "diploma",
+  "title": "INDIVIDUELL VINNARE · Åsa Östermalm",
+  "created_at": "2026-10-15T12:00:00.000Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": {
+    "id": "review",
+    "name": "Tingsryd"
+  },
+  "subject": {
+    "id": "s-0",
+    "name": "Åsa Östermalm"
+  },
+  "totals": {
+    "count": 87,
+    "points": 142,
+    "tb_ore": 1246000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Åsa Östermalm"
+  ],
+  "metric": "points",
+  "source": "award:hardening-individual:individual:s-0",
+  "leaderboard": [
+    {
+      "id": "p-0",
+      "name": "Åsa Östermalm",
+      "rank": 1,
+      "count": 87,
+      "points": 142,
+      "tb_ore": 1246000,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [
+    {
+      "name": "Biltvätt",
+      "count": 34,
+      "points": 68,
+      "tb_ore": 1000000
+    },
+    {
+      "name": "Kaffe + bulle",
+      "count": 18,
+      "points": 18,
+      "tb_ore": 72500
+    },
+    {
+      "name": "Korv med mos",
+      "count": 15,
+      "points": 15,
+      "tb_ore": 48000
+    },
+    {
+      "name": "Spolarvätska",
+      "count": 12,
+      "points": 24,
+      "tb_ore": 85600
+    },
+    {
+      "name": "Räksallad",
+      "count": 8,
+      "points": 17,
+      "tb_ore": 39900
+    }
+  ],
+  "goals": [
+    {
+      "kind": "station",
+      "seller_id": null,
+      "name": "Lagets mål",
+      "points": 142,
+      "target_points": 140
+    }
+  ],
+  "award": {
+    "variant": "individual",
+    "recipient": {
+      "id": "s-0",
+      "name": "Åsa Östermalm"
+    },
+    "source_report_id": "hardening-individual",
+    "context": "Tingsryd",
+    "result": "142 poäng"
+  }
+}

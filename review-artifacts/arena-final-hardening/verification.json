@@ -1,0 +1,14 @@
+{
+  "reviewPngs": 35,
+  "pdfs": 10,
+  "changedFiles": 45,
+  "unitPassed": 464,
+  "knownCsvFailure": 1,
+  "uniqueBrowserPassed": 321,
+  "rootOverflow": "none in six QA viewports",
+  "branch": "feat/arena-v1",
+  "originUnchanged": true,
+  "oldMigrationsUnchanged": true,
+  "csvImplementationUnchanged": true,
+  "links": "all resolve locally"
+}

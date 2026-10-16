@@ -1,0 +1,152 @@
+[
+  {
+    "file": "award-cup.pdf",
+    "bytes": 5175,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 417,
+    "render": "award-cup.png"
+  },
+  {
+    "file": "award-fight.pdf",
+    "bytes": 5171,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 425,
+    "render": "award-fight.png"
+  },
+  {
+    "file": "award-individual.pdf",
+    "bytes": 4981,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 378,
+    "render": "award-individual.png"
+  },
+  {
+    "file": "award-league.pdf",
+    "bytes": 5189,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 424,
+    "render": "award-league.png"
+  },
+  {
+    "file": "award-monthly.pdf",
+    "bytes": 4948,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 358,
+    "render": "award-monthly.png"
+  },
+  {
+    "file": "award-personal-goal.pdf",
+    "bytes": 5124,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 410,
+    "render": "award-personal-goal.png"
+  },
+  {
+    "file": "award-playoffs.pdf",
+    "bytes": 5207,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 433,
+    "render": "award-playoffs.png"
+  },
+  {
+    "file": "award-station-goal.pdf",
+    "bytes": 5119,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 408,
+    "render": "award-station-goal.png"
+  },
+  {
+    "file": "award-station.pdf",
+    "bytes": 5178,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 425,
+    "render": "award-station.png"
+  },
+  {
+    "file": "award-weekly.pdf",
+    "bytes": 4923,
+    "pages": 1,
+    "size": [
+      595.2760009765625,
+      841.8900146484375
+    ],
+    "pymupdf": "PASS",
+    "poppler": "PASS",
+    "warnings": "",
+    "clipped": [],
+    "textExtracted": 351,
+    "render": "award-weekly.png"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "elevation-token": {
+    "sql": "SELECT e.token_hash FROM arena_admin_elevations e JOIN arena_admin_pins p ON p.station_id=e.station_id AND p.version=e.pin_version WHERE e.token_hash=? AND e.station_id=? AND e.station_session_id=? AND e.revoked_at IS NULL AND e.expires_at>? AND e.last_active_at>?",
+    "plan": [
+      "SEARCH e USING INDEX sqlite_autoindex_arena_admin_elevations_1 (token_hash=?)",
+      "SEARCH p USING INDEX sqlite_autoindex_arena_admin_pins_1 (station_id=?)"
+    ]
+  },
+  "station-wide-revoke": {
+    "sql": "UPDATE arena_admin_elevations SET revoked_at=? WHERE station_id=? AND revoked_at IS NULL",
+    "plan": [
+      "SEARCH arena_admin_elevations USING INDEX arena_admin_elevation_station (station_id=? AND revoked_at=?)"
+    ]
+  },
+  "attempt-reservation": {
+    "sql": "SELECT attempts FROM arena_admin_pin_attempts WHERE station_id=?",
+    "plan": [
+      "SEARCH arena_admin_pin_attempts USING INDEX sqlite_autoindex_arena_admin_pin_attempts_1 (station_id=?)"
+    ]
+  }
+}

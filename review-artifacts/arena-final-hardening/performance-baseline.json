@@ -1,0 +1,3532 @@
+{
+  "startHead": "54f6b95e3b314cbf16b4b8db60c0e53fa87e5b06",
+  "method": "Final paired production client benchmark: 5 trials, alternating baseline/after and reversing order each trial; medians. Immutable START_HEAD versus candidate, identical local HTTP server and deterministic API. Chromium 4x CPU, 10 sellers, showcase full effects. Navigation-to-visible-goal, then fonts/visible-product decode readiness. Real Playwright pointer clicks to visible state, including actionability waits; next sale during celebration. No physical touch/cashier or remote network claim. Earlier development and initial production samples retained separately; final paired data is authoritative. Asset transfer collected separately without clock emulation.",
+  "results": [
+    {
+      "phase": "baseline",
+      "viewport": "1920x1080",
+      "kind": "standard",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1176,
+      "interactiveMs": 1183,
+      "selectorMs": 247,
+      "saleConfirmationMs": 357,
+      "nextSaleMs": 284,
+      "longTaskCount": 7,
+      "longTaskMs": 519,
+      "heapBytes": 4666016,
+      "trials": [
+        {
+          "initialRenderMs": 1206,
+          "interactiveMs": 1215,
+          "selectorMs": 240,
+          "saleConfirmationMs": 443,
+          "nextSaleMs": 368,
+          "longTaskCount": 7,
+          "longTaskMs": 579,
+          "heapBytes": 4649560
+        },
+        {
+          "initialRenderMs": 1208,
+          "interactiveMs": 1226,
+          "selectorMs": 325,
+          "saleConfirmationMs": 371,
+          "nextSaleMs": 284,
+          "longTaskCount": 5,
+          "longTaskMs": 484,
+          "heapBytes": 5990968
+        },
+        {
+          "initialRenderMs": 1139,
+          "interactiveMs": 1148,
+          "selectorMs": 247,
+          "saleConfirmationMs": 329,
+          "nextSaleMs": 240,
+          "longTaskCount": 7,
+          "longTaskMs": 501,
+          "heapBytes": 4666016
+        },
+        {
+          "initialRenderMs": 1160,
+          "interactiveMs": 1170,
+          "selectorMs": 240,
+          "saleConfirmationMs": 249,
+          "nextSaleMs": 230,
+          "longTaskCount": 7,
+          "longTaskMs": 529,
+          "heapBytes": 4675628
+        },
+        {
+          "initialRenderMs": 1176,
+          "interactiveMs": 1183,
+          "selectorMs": 298,
+          "saleConfirmationMs": 357,
+          "nextSaleMs": 321,
+          "longTaskCount": 6,
+          "longTaskMs": 519,
+          "heapBytes": 4662664
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "1920x1080",
+      "kind": "ny-etta",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1205,
+      "interactiveMs": 1215,
+      "selectorMs": 284,
+      "saleConfirmationMs": 318,
+      "nextSaleMs": 310,
+      "longTaskCount": 6,
+      "longTaskMs": 423,
+      "heapBytes": 4666456,
+      "trials": [
+        {
+          "initialRenderMs": 1175,
+          "interactiveMs": 1184,
+          "selectorMs": 238,
+          "saleConfirmationMs": 272,
+          "nextSaleMs": 295,
+          "longTaskCount": 4,
+          "longTaskMs": 341,
+          "heapBytes": 4667556
+        },
+        {
+          "initialRenderMs": 1125,
+          "interactiveMs": 1132,
+          "selectorMs": 213,
+          "saleConfirmationMs": 318,
+          "nextSaleMs": 310,
+          "longTaskCount": 6,
+          "longTaskMs": 423,
+          "heapBytes": 4666456
+        },
+        {
+          "initialRenderMs": 1251,
+          "interactiveMs": 1265,
+          "selectorMs": 336,
+          "saleConfirmationMs": 320,
+          "nextSaleMs": 357,
+          "longTaskCount": 4,
+          "longTaskMs": 412,
+          "heapBytes": 4693280
+        },
+        {
+          "initialRenderMs": 1205,
+          "interactiveMs": 1215,
+          "selectorMs": 284,
+          "saleConfirmationMs": 263,
+          "nextSaleMs": 331,
+          "longTaskCount": 7,
+          "longTaskMs": 633,
+          "heapBytes": 4665696
+        },
+        {
+          "initialRenderMs": 1429,
+          "interactiveMs": 1437,
+          "selectorMs": 302,
+          "saleConfirmationMs": 378,
+          "nextSaleMs": 254,
+          "longTaskCount": 6,
+          "longTaskMs": 502,
+          "heapBytes": 4662408
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "1536x864",
+      "kind": "standard",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1168,
+      "interactiveMs": 1177,
+      "selectorMs": 253,
+      "saleConfirmationMs": 288,
+      "nextSaleMs": 210,
+      "longTaskCount": 5,
+      "longTaskMs": 427,
+      "heapBytes": 5926424,
+      "trials": [
+        {
+          "initialRenderMs": 1328,
+          "interactiveMs": 1335,
+          "selectorMs": 226,
+          "saleConfirmationMs": 288,
+          "nextSaleMs": 178,
+          "longTaskCount": 6,
+          "longTaskMs": 492,
+          "heapBytes": 5956308
+        },
+        {
+          "initialRenderMs": 1156,
+          "interactiveMs": 1166,
+          "selectorMs": 215,
+          "saleConfirmationMs": 226,
+          "nextSaleMs": 166,
+          "longTaskCount": 4,
+          "longTaskMs": 333,
+          "heapBytes": 5900988
+        },
+        {
+          "initialRenderMs": 1162,
+          "interactiveMs": 1174,
+          "selectorMs": 283,
+          "saleConfirmationMs": 302,
+          "nextSaleMs": 210,
+          "longTaskCount": 5,
+          "longTaskMs": 373,
+          "heapBytes": 5911200
+        },
+        {
+          "initialRenderMs": 1171,
+          "interactiveMs": 1181,
+          "selectorMs": 260,
+          "saleConfirmationMs": 280,
+          "nextSaleMs": 234,
+          "longTaskCount": 5,
+          "longTaskMs": 427,
+          "heapBytes": 5926424
+        },
+        {
+          "initialRenderMs": 1168,
+          "interactiveMs": 1177,
+          "selectorMs": 253,
+          "saleConfirmationMs": 297,
+          "nextSaleMs": 370,
+          "longTaskCount": 6,
+          "longTaskMs": 564,
+          "heapBytes": 5980512
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "1536x864",
+      "kind": "ny-etta",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1241,
+      "interactiveMs": 1249,
+      "selectorMs": 266,
+      "saleConfirmationMs": 369,
+      "nextSaleMs": 327,
+      "longTaskCount": 7,
+      "longTaskMs": 526,
+      "heapBytes": 4704464,
+      "trials": [
+        {
+          "initialRenderMs": 1424,
+          "interactiveMs": 1436,
+          "selectorMs": 266,
+          "saleConfirmationMs": 430,
+          "nextSaleMs": 401,
+          "longTaskCount": 5,
+          "longTaskMs": 503,
+          "heapBytes": 6010812
+        },
+        {
+          "initialRenderMs": 1241,
+          "interactiveMs": 1259,
+          "selectorMs": 273,
+          "saleConfirmationMs": 369,
+          "nextSaleMs": 357,
+          "longTaskCount": 7,
+          "longTaskMs": 649,
+          "heapBytes": 6059628
+        },
+        {
+          "initialRenderMs": 1194,
+          "interactiveMs": 1213,
+          "selectorMs": 280,
+          "saleConfirmationMs": 393,
+          "nextSaleMs": 282,
+          "longTaskCount": 7,
+          "longTaskMs": 603,
+          "heapBytes": 4704464
+        },
+        {
+          "initialRenderMs": 1182,
+          "interactiveMs": 1190,
+          "selectorMs": 262,
+          "saleConfirmationMs": 305,
+          "nextSaleMs": 317,
+          "longTaskCount": 7,
+          "longTaskMs": 526,
+          "heapBytes": 4674944
+        },
+        {
+          "initialRenderMs": 1242,
+          "interactiveMs": 1249,
+          "selectorMs": 259,
+          "saleConfirmationMs": 361,
+          "nextSaleMs": 327,
+          "longTaskCount": 5,
+          "longTaskMs": 458,
+          "heapBytes": 4668956
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "1024x768",
+      "kind": "standard",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1264,
+      "interactiveMs": 1273,
+      "selectorMs": 227,
+      "saleConfirmationMs": 331,
+      "nextSaleMs": 247,
+      "longTaskCount": 5,
+      "longTaskMs": 451,
+      "heapBytes": 5886192,
+      "trials": [
+        {
+          "initialRenderMs": 1303,
+          "interactiveMs": 1307,
+          "selectorMs": 202,
+          "saleConfirmationMs": 336,
+          "nextSaleMs": 247,
+          "longTaskCount": 5,
+          "longTaskMs": 432,
+          "heapBytes": 5933816
+        },
+        {
+          "initialRenderMs": 1188,
+          "interactiveMs": 1198,
+          "selectorMs": 214,
+          "saleConfirmationMs": 287,
+          "nextSaleMs": 149,
+          "longTaskCount": 5,
+          "longTaskMs": 411,
+          "heapBytes": 5855132
+        },
+        {
+          "initialRenderMs": 1249,
+          "interactiveMs": 1261,
+          "selectorMs": 268,
+          "saleConfirmationMs": 331,
+          "nextSaleMs": 278,
+          "longTaskCount": 5,
+          "longTaskMs": 451,
+          "heapBytes": 5985924
+        },
+        {
+          "initialRenderMs": 1264,
+          "interactiveMs": 1273,
+          "selectorMs": 290,
+          "saleConfirmationMs": 330,
+          "nextSaleMs": 253,
+          "longTaskCount": 6,
+          "longTaskMs": 528,
+          "heapBytes": 4633288
+        },
+        {
+          "initialRenderMs": 1324,
+          "interactiveMs": 1334,
+          "selectorMs": 227,
+          "saleConfirmationMs": 372,
+          "nextSaleMs": 216,
+          "longTaskCount": 5,
+          "longTaskMs": 502,
+          "heapBytes": 5886192
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "1024x768",
+      "kind": "ny-etta",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1196,
+      "interactiveMs": 1213,
+      "selectorMs": 255,
+      "saleConfirmationMs": 353,
+      "nextSaleMs": 320,
+      "longTaskCount": 6,
+      "longTaskMs": 476,
+      "heapBytes": 4696972,
+      "trials": [
+        {
+          "initialRenderMs": 1150,
+          "interactiveMs": 1158,
+          "selectorMs": 230,
+          "saleConfirmationMs": 352,
+          "nextSaleMs": 320,
+          "longTaskCount": 6,
+          "longTaskMs": 489,
+          "heapBytes": 4698496
+        },
+        {
+          "initialRenderMs": 1207,
+          "interactiveMs": 1215,
+          "selectorMs": 255,
+          "saleConfirmationMs": 310,
+          "nextSaleMs": 248,
+          "longTaskCount": 5,
+          "longTaskMs": 428,
+          "heapBytes": 5944924
+        },
+        {
+          "initialRenderMs": 1165,
+          "interactiveMs": 1175,
+          "selectorMs": 259,
+          "saleConfirmationMs": 358,
+          "nextSaleMs": 302,
+          "longTaskCount": 5,
+          "longTaskMs": 428,
+          "heapBytes": 4664428
+        },
+        {
+          "initialRenderMs": 1204,
+          "interactiveMs": 1213,
+          "selectorMs": 238,
+          "saleConfirmationMs": 390,
+          "nextSaleMs": 340,
+          "longTaskCount": 6,
+          "longTaskMs": 546,
+          "heapBytes": 4691052
+        },
+        {
+          "initialRenderMs": 1196,
+          "interactiveMs": 1214,
+          "selectorMs": 305,
+          "saleConfirmationMs": 353,
+          "nextSaleMs": 340,
+          "longTaskCount": 6,
+          "longTaskMs": 476,
+          "heapBytes": 4696972
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "390x844",
+      "kind": "standard",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1171,
+      "interactiveMs": 1196,
+      "selectorMs": 207,
+      "saleConfirmationMs": 228,
+      "nextSaleMs": 177,
+      "longTaskCount": 4,
+      "longTaskMs": 309,
+      "heapBytes": 5904676,
+      "trials": [
+        {
+          "initialRenderMs": 1150,
+          "interactiveMs": 1175,
+          "selectorMs": 224,
+          "saleConfirmationMs": 250,
+          "nextSaleMs": 177,
+          "longTaskCount": 3,
+          "longTaskMs": 270,
+          "heapBytes": 5911392
+        },
+        {
+          "initialRenderMs": 1197,
+          "interactiveMs": 1224,
+          "selectorMs": 231,
+          "saleConfirmationMs": 228,
+          "nextSaleMs": 183,
+          "longTaskCount": 4,
+          "longTaskMs": 377,
+          "heapBytes": 5904676
+        },
+        {
+          "initialRenderMs": 1171,
+          "interactiveMs": 1196,
+          "selectorMs": 205,
+          "saleConfirmationMs": 263,
+          "nextSaleMs": 191,
+          "longTaskCount": 4,
+          "longTaskMs": 341,
+          "heapBytes": 5855180
+        },
+        {
+          "initialRenderMs": 1213,
+          "interactiveMs": 1237,
+          "selectorMs": 186,
+          "saleConfirmationMs": 199,
+          "nextSaleMs": 150,
+          "longTaskCount": 2,
+          "longTaskMs": 212,
+          "heapBytes": 5916976
+        },
+        {
+          "initialRenderMs": 1139,
+          "interactiveMs": 1164,
+          "selectorMs": 207,
+          "saleConfirmationMs": 214,
+          "nextSaleMs": 164,
+          "longTaskCount": 4,
+          "longTaskMs": 309,
+          "heapBytes": 5893080
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "390x844",
+      "kind": "ny-etta",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1167,
+      "interactiveMs": 1194,
+      "selectorMs": 202,
+      "saleConfirmationMs": 246,
+      "nextSaleMs": 184,
+      "longTaskCount": 4,
+      "longTaskMs": 332,
+      "heapBytes": 5916492,
+      "trials": [
+        {
+          "initialRenderMs": 1215,
+          "interactiveMs": 1240,
+          "selectorMs": 176,
+          "saleConfirmationMs": 246,
+          "nextSaleMs": 174,
+          "longTaskCount": 4,
+          "longTaskMs": 316,
+          "heapBytes": 5868840
+        },
+        {
+          "initialRenderMs": 1160,
+          "interactiveMs": 1189,
+          "selectorMs": 202,
+          "saleConfirmationMs": 217,
+          "nextSaleMs": 184,
+          "longTaskCount": 4,
+          "longTaskMs": 291,
+          "heapBytes": 5904216
+        },
+        {
+          "initialRenderMs": 1155,
+          "interactiveMs": 1182,
+          "selectorMs": 237,
+          "saleConfirmationMs": 244,
+          "nextSaleMs": 187,
+          "longTaskCount": 5,
+          "longTaskMs": 332,
+          "heapBytes": 5942268
+        },
+        {
+          "initialRenderMs": 1167,
+          "interactiveMs": 1194,
+          "selectorMs": 200,
+          "saleConfirmationMs": 280,
+          "nextSaleMs": 225,
+          "longTaskCount": 4,
+          "longTaskMs": 343,
+          "heapBytes": 5916492
+        },
+        {
+          "initialRenderMs": 1210,
+          "interactiveMs": 1234,
+          "selectorMs": 243,
+          "saleConfirmationMs": 254,
+          "nextSaleMs": 163,
+          "longTaskCount": 4,
+          "longTaskMs": 351,
+          "heapBytes": 5968708
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "844x390",
+      "kind": "standard",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1201,
+      "interactiveMs": 1226,
+      "selectorMs": 218,
+      "saleConfirmationMs": 210,
+      "nextSaleMs": 169,
+      "longTaskCount": 3,
+      "longTaskMs": 249,
+      "heapBytes": 5874240,
+      "trials": [
+        {
+          "initialRenderMs": 1213,
+          "interactiveMs": 1239,
+          "selectorMs": 205,
+          "saleConfirmationMs": 210,
+          "nextSaleMs": 169,
+          "longTaskCount": 3,
+          "longTaskMs": 293,
+          "heapBytes": 5862816
+        },
+        {
+          "initialRenderMs": 1201,
+          "interactiveMs": 1226,
+          "selectorMs": 209,
+          "saleConfirmationMs": 185,
+          "nextSaleMs": 157,
+          "longTaskCount": 2,
+          "longTaskMs": 238,
+          "heapBytes": 5916892
+        },
+        {
+          "initialRenderMs": 1261,
+          "interactiveMs": 1292,
+          "selectorMs": 230,
+          "saleConfirmationMs": 225,
+          "nextSaleMs": 159,
+          "longTaskCount": 3,
+          "longTaskMs": 281,
+          "heapBytes": 5874240
+        },
+        {
+          "initialRenderMs": 1123,
+          "interactiveMs": 1146,
+          "selectorMs": 218,
+          "saleConfirmationMs": 224,
+          "nextSaleMs": 175,
+          "longTaskCount": 3,
+          "longTaskMs": 249,
+          "heapBytes": 5793288
+        },
+        {
+          "initialRenderMs": 1174,
+          "interactiveMs": 1202,
+          "selectorMs": 220,
+          "saleConfirmationMs": 191,
+          "nextSaleMs": 178,
+          "longTaskCount": 2,
+          "longTaskMs": 213,
+          "heapBytes": 5906096
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "viewport": "844x390",
+      "kind": "ny-etta",
+      "cpuThrottle": 4,
+      "sellers": 10,
+      "initialRenderMs": 1152,
+      "interactiveMs": 1179,
+      "selectorMs": 237,
+      "saleConfirmationMs": 237,
+      "nextSaleMs": 208,
+      "longTaskCount": 4,
+      "longTaskMs": 301,
+      "heapBytes": 5921864,
+      "trials": [
+        {
+          "initialRenderMs": 1152,
+          "interactiveMs": 1179,
+          "selectorMs": 177,
+          "saleConfirmationMs": 296,
+          "nextSaleMs": 243,
+          "longTaskCount": 5,
+          "longTaskMs": 366,
+          "heapBytes": 4685636
+        },
+        {
+          "initialRenderMs": 1157,
+          "interactiveMs": 1186,
+          "selectorMs": 291,
+          "saleConfirmationMs": 228,
+          "nextSaleMs": 208,
+          "longTaskCount": 3,
+          "longTaskMs": 275,
+          "heapBytes": 5917296
+        },
+        {
+          "initialRenderMs": 1190,
+          "interactiveMs": 1220,
+          "selectorMs": 237,
+          "saleConfirmationMs": 199,
+          "nextSaleMs": 157,
+          "longTaskCount": 2,
+          "longTaskMs": 211,
+          "heapBytes": 5921864
+        },
+        {
+          "initialRenderMs": 1141,
+          "interactiveMs": 1170,
+          "selectorMs": 311,
+          "saleConfirmationMs": 265,
+          "nextSaleMs": 257,
+          "longTaskCount": 5,
+          "longTaskMs": 471,
+          "heapBytes": 5989024
+        },
+        {
+          "initialRenderMs": 1142,
+          "interactiveMs": 1172,
+          "selectorMs": 213,
+          "saleConfirmationMs": 237,
+          "nextSaleMs": 184,
+          "longTaskCount": 4,
+          "longTaskMs": 301,
+          "heapBytes": 5949476
+        }
+      ]
+    }
+  ],
+  "earlyDevelopmentMeasurement": {
+    "method": "START_HEAD 54f6b95 baseline versus working tree, identical Vite React servers 5212/5213, 4x Chromium CPU, 3 trials median, identical 10-seller mocked API, real click to visible state. Initial readiness includes navigation/lazy modules. Not physical hardware or production network.",
+    "results": [
+      {
+        "variant": "baseline",
+        "viewport": "1920x1080",
+        "cpuThrottle": 4,
+        "sellers": 10,
+        "confirmationMs": 691,
+        "openSellerMs": 310,
+        "nextDuringCelebrationMs": 578,
+        "initialStartRenderMs": 2298,
+        "before": null,
+        "trials": [
+          {
+            "confirmationMs": 651,
+            "openSellerMs": 310,
+            "nextDuringCelebrationMs": 598,
+            "initialStartRenderMs": 4057,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 758,
+            "longTasks": [
+              {
+                "start": 4143.70000000298,
+                "duration": 150
+              },
+              {
+                "start": 4546.5999999940395,
+                "duration": 174
+              },
+              {
+                "start": 4907.70000000298,
+                "duration": 103
+              },
+              {
+                "start": 5015.5,
+                "duration": 72
+              },
+              {
+                "start": 5307.399999991059,
+                "duration": 70
+              },
+              {
+                "start": 5445.29999999702,
+                "duration": 170
+              }
+            ]
+          },
+          {
+            "confirmationMs": 703,
+            "openSellerMs": 310,
+            "nextDuringCelebrationMs": 578,
+            "initialStartRenderMs": 2111,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 744,
+            "longTasks": [
+              {
+                "start": 2184.6000000089407,
+                "duration": 130
+              },
+              {
+                "start": 2532.9000000059605,
+                "duration": 178
+              },
+              {
+                "start": 2946.6000000089407,
+                "duration": 106
+              },
+              {
+                "start": 3054.1000000089407,
+                "duration": 88
+              },
+              {
+                "start": 3316.4000000059605,
+                "duration": 82
+              },
+              {
+                "start": 3478.9000000059605,
+                "duration": 158
+              }
+            ]
+          },
+          {
+            "confirmationMs": 691,
+            "openSellerMs": 337,
+            "nextDuringCelebrationMs": 537,
+            "initialStartRenderMs": 2298,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 739,
+            "longTasks": [
+              {
+                "start": 2392.7999999970198,
+                "duration": 142
+              },
+              {
+                "start": 2809.2000000029802,
+                "duration": 181
+              },
+              {
+                "start": 3208.2000000029802,
+                "duration": 101
+              },
+              {
+                "start": 3314.2999999970198,
+                "duration": 64
+              },
+              {
+                "start": 3544.4000000059605,
+                "duration": 61
+              },
+              {
+                "start": 3704,
+                "duration": 139
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "variant": "baseline",
+        "viewport": "1536x864",
+        "cpuThrottle": 4,
+        "sellers": 10,
+        "confirmationMs": 724,
+        "openSellerMs": 398,
+        "nextDuringCelebrationMs": 607,
+        "initialStartRenderMs": 2285,
+        "before": null,
+        "trials": [
+          {
+            "confirmationMs": 749,
+            "openSellerMs": 398,
+            "nextDuringCelebrationMs": 826,
+            "initialStartRenderMs": 2312,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 919,
+            "longTasks": [
+              {
+                "start": 2415.7000000029802,
+                "duration": 219
+              },
+              {
+                "start": 2887.5999999940395,
+                "duration": 220
+              },
+              {
+                "start": 3292.2000000029802,
+                "duration": 136
+              },
+              {
+                "start": 3431.2000000029802,
+                "duration": 97
+              },
+              {
+                "start": 3754.7999999970198,
+                "duration": 78
+              },
+              {
+                "start": 3947.5,
+                "duration": 287
+              }
+            ]
+          },
+          {
+            "confirmationMs": 635,
+            "openSellerMs": 327,
+            "nextDuringCelebrationMs": 607,
+            "initialStartRenderMs": 1869,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 720,
+            "longTasks": [
+              {
+                "start": 1978.7000000029802,
+                "duration": 139
+              },
+              {
+                "start": 2391.5,
+                "duration": 190
+              },
+              {
+                "start": 2726.9000000059605,
+                "duration": 115
+              },
+              {
+                "start": 2848.5,
+                "duration": 82
+              },
+              {
+                "start": 3172.0999999940395,
+                "duration": 63
+              },
+              {
+                "start": 3254.7999999970198,
+                "duration": 192
+              },
+              {
+                "start": 3453,
+                "duration": 51
+              }
+            ]
+          },
+          {
+            "confirmationMs": 724,
+            "openSellerMs": 400,
+            "nextDuringCelebrationMs": 571,
+            "initialStartRenderMs": 2285,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 761,
+            "longTasks": [
+              {
+                "start": 2371.199999988079,
+                "duration": 176
+              },
+              {
+                "start": 2891.3999999910593,
+                "duration": 165
+              },
+              {
+                "start": 3326.7999999970198,
+                "duration": 125
+              },
+              {
+                "start": 3454,
+                "duration": 71
+              },
+              {
+                "start": 3757.699999988079,
+                "duration": 238
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "variant": "baseline",
+        "viewport": "1024x768",
+        "cpuThrottle": 4,
+        "sellers": 10,
+        "confirmationMs": 561,
+        "openSellerMs": 356,
+        "nextDuringCelebrationMs": 501,
+        "initialStartRenderMs": 1594,
+        "before": null,
+        "trials": [
+          {
+            "confirmationMs": 561,
+            "openSellerMs": 344,
+            "nextDuringCelebrationMs": 533,
+            "initialStartRenderMs": 1594,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 719,
+            "longTasks": [
+              {
+                "start": 1694,
+                "duration": 140
+              },
+              {
+                "start": 2108.9000000059605,
+                "duration": 158
+              },
+              {
+                "start": 2427.4000000059605,
+                "duration": 99
+              },
+              {
+                "start": 2531.4000000059605,
+                "duration": 69
+              },
+              {
+                "start": 2730.5,
+                "duration": 59
+              },
+              {
+                "start": 2889,
+                "duration": 152
+              }
+            ]
+          },
+          {
+            "confirmationMs": 599,
+            "openSellerMs": 410,
+            "nextDuringCelebrationMs": 431,
+            "initialStartRenderMs": 1641,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 700,
+            "longTasks": [
+              {
+                "start": 1740.2999999970198,
+                "duration": 198
+              },
+              {
+                "start": 2233.7999999970198,
+                "duration": 176
+              },
+              {
+                "start": 2572.3999999910593,
+                "duration": 89
+              },
+              {
+                "start": 2664.3999999910593,
+                "duration": 68
+              },
+              {
+                "start": 2854.199999988079,
+                "duration": 53
+              },
+              {
+                "start": 2999.7999999970198,
+                "duration": 146
+              }
+            ]
+          },
+          {
+            "confirmationMs": 553,
+            "openSellerMs": 356,
+            "nextDuringCelebrationMs": 501,
+            "initialStartRenderMs": 1570,
+            "portrait": {
+              "width": 117.59375,
+              "height": 117.59375,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 686,
+            "longTasks": [
+              {
+                "start": 1658.1000000089407,
+                "duration": 176
+              },
+              {
+                "start": 2088.9000000059605,
+                "duration": 147
+              },
+              {
+                "start": 2391.1000000089407,
+                "duration": 92
+              },
+              {
+                "start": 2655.9000000059605,
+                "duration": 56
+              },
+              {
+                "start": 2819.9000000059605,
+                "duration": 164
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "variant": "baseline",
+        "viewport": "390x844",
+        "cpuThrottle": 4,
+        "sellers": 10,
+        "confirmationMs": 493,
+        "openSellerMs": 253,
+        "nextDuringCelebrationMs": 412,
+        "initialStartRenderMs": 1577,
+        "before": null,
+        "trials": [
+          {
+            "confirmationMs": 484,
+            "openSellerMs": 255,
+            "nextDuringCelebrationMs": 348,
+            "initialStartRenderMs": 1668,
+            "portrait": {
+              "width": 90.1875,
+              "height": 90.1875,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 590,
+            "longTasks": [
+              {
+                "start": 1760.5,
+                "duration": 114
+              },
+              {
+                "start": 2111.5999999940395,
+                "duration": 133
+              },
+              {
+                "start": 2348.5,
+                "duration": 86
+              },
+              {
+                "start": 2583.5,
+                "duration": 50
+              },
+              {
+                "start": 2724.7000000029802,
+                "duration": 74
+              }
+            ]
+          },
+          {
+            "confirmationMs": 493,
+            "openSellerMs": 253,
+            "nextDuringCelebrationMs": 412,
+            "initialStartRenderMs": 1577,
+            "portrait": {
+              "width": 90.1875,
+              "height": 90.1875,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 631,
+            "longTasks": [
+              {
+                "start": 1686.1000000089407,
+                "duration": 92
+              },
+              {
+                "start": 2003.6000000089407,
+                "duration": 138
+              },
+              {
+                "start": 2252.5,
+                "duration": 101
+              },
+              {
+                "start": 2520,
+                "duration": 53
+              },
+              {
+                "start": 2648.6000000089407,
+                "duration": 100
+              }
+            ]
+          },
+          {
+            "confirmationMs": 530,
+            "openSellerMs": 253,
+            "nextDuringCelebrationMs": 426,
+            "initialStartRenderMs": 1538,
+            "portrait": {
+              "width": 90.1875,
+              "height": 90.1875,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 690,
+            "longTasks": [
+              {
+                "start": 1634,
+                "duration": 105
+              },
+              {
+                "start": 1964.1000000089407,
+                "duration": 118
+              },
+              {
+                "start": 2248.6000000089407,
+                "duration": 120
+              },
+              {
+                "start": 2688.4000000059605,
+                "duration": 102
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "variant": "baseline",
+        "viewport": "844x390",
+        "cpuThrottle": 4,
+        "sellers": 10,
+        "confirmationMs": 491,
+        "openSellerMs": 299,
+        "nextDuringCelebrationMs": 393,
+        "initialStartRenderMs": 1983,
+        "before": null,
+        "trials": [
+          {
+            "confirmationMs": 478,
+            "openSellerMs": 299,
+            "nextDuringCelebrationMs": 393,
+            "initialStartRenderMs": 1983,
+            "portrait": {
+              "width": 80,
+              "height": 80,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 609,
+            "longTasks": [
+              {
+                "start": 2116.1000000089407,
+                "duration": 121
+              },
+              {
+                "start": 2522.1000000089407,
+                "duration": 149
+              },
+              {
+                "start": 2770.1000000089407,
+                "duration": 83
+              },
+              {
+                "start": 3129,
+                "duration": 95
+              }
+            ]
+          },
+          {
+            "confirmationMs": 491,
+            "openSellerMs": 277,
+            "nextDuringCelebrationMs": 417,
+            "initialStartRenderMs": 1857,
+            "portrait": {
+              "width": 80,
+              "height": 80,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 625,
+            "longTasks": [
+              {
+                "start": 1963.7999999970198,
+                "duration": 118
+              },
+              {
+                "start": 2326.4000000059605,
+                "duration": 121
+              },
+              {
+                "start": 2548.7000000029802,
+                "duration": 83
+              },
+              {
+                "start": 2853.7999999970198,
+                "duration": 58
+              },
+              {
+                "start": 2995.9000000059605,
+                "duration": 91
+              }
+            ]
+          },
+          {
+            "confirmationMs": 702,
+            "openSellerMs": 349,
+            "nextDuringCelebrationMs": 368,
+            "initialStartRenderMs": 2013,
+            "portrait": {
+              "width": 80,
+              "height": 80,
+              "naturalWidth": 1774,
+              "naturalHeight": 887
+            },
+            "scriptMs": 716,
+            "longTasks": [
+              {
+                "start": 2147.7000000029802,
+                "duration": 124
+              },
+              {
+                "start": 2600.5999999940395,
+                "duration": 201
+              },
+              {
+                "start": 2974.8999999910593,
+                "duration": 99
+              },
+              {
+                "start": 3076.0999999940395,
+                "duration": 57
+              },
+              {
+                "start": 3371.5999999940395,
+                "duration": 95
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "polling": {
+      "visibleArenaMs": 12000,
+      "activeFightMs": 5000,
+      "bootstrapMs": 60000,
+      "normalRequestsPerMinute": 6,
+      "activeFightHomeRequestsPerMinute": 13,
+      "activeFightPageRequestsPerMinute": 12,
+      "hiddenNormalRequestsPerMinute": 0,
+      "notes": "Steady state estimates excluding initial load, sales, retries, filters and clock boundary refreshes. Cadence/pause/resume are verified with virtual-clock browser and unit tests."
+    }
+  },
+  "fightCenter": {
+    "fightCenter": {
+      "method": "Actual React UI at 4x CDP CPU throttle, deterministic test payloads, median of 3 trials. Initial opens include navigation and lazy JS; tab switches include the actual Playwright click and visible DOM wait. Local production client build, not physical cash-register hardware and not a production network benchmark.",
+      "results": [
+        {
+          "viewport": "1920x1080",
+          "cpuThrottle": 4,
+          "centerInitialOpenMs": 707,
+          "ownMatchInitialOpenMs": 494,
+          "leagueTableOpenMs": 155,
+          "bracketOpenMs": 89,
+          "trials": [
+            {
+              "centerInitialOpenMs": 707,
+              "ownMatchInitialOpenMs": 509,
+              "leagueTableOpenMs": 155,
+              "bracketOpenMs": 77
+            },
+            {
+              "centerInitialOpenMs": 657,
+              "ownMatchInitialOpenMs": 494,
+              "leagueTableOpenMs": 176,
+              "bracketOpenMs": 89
+            },
+            {
+              "centerInitialOpenMs": 709,
+              "ownMatchInitialOpenMs": 478,
+              "leagueTableOpenMs": 147,
+              "bracketOpenMs": 114
+            }
+          ]
+        },
+        {
+          "viewport": "1536x864",
+          "cpuThrottle": 4,
+          "centerInitialOpenMs": 764,
+          "ownMatchInitialOpenMs": 513,
+          "leagueTableOpenMs": 160,
+          "bracketOpenMs": 97,
+          "trials": [
+            {
+              "centerInitialOpenMs": 1117,
+              "ownMatchInitialOpenMs": 481,
+              "leagueTableOpenMs": 160,
+              "bracketOpenMs": 97
+            },
+            {
+              "centerInitialOpenMs": 716,
+              "ownMatchInitialOpenMs": 541,
+              "leagueTableOpenMs": 145,
+              "bracketOpenMs": 96
+            },
+            {
+              "centerInitialOpenMs": 764,
+              "ownMatchInitialOpenMs": 513,
+              "leagueTableOpenMs": 173,
+              "bracketOpenMs": 105
+            }
+          ]
+        },
+        {
+          "viewport": "1024x768",
+          "cpuThrottle": 4,
+          "centerInitialOpenMs": 677,
+          "ownMatchInitialOpenMs": 493,
+          "leagueTableOpenMs": 171,
+          "bracketOpenMs": 99,
+          "trials": [
+            {
+              "centerInitialOpenMs": 711,
+              "ownMatchInitialOpenMs": 514,
+              "leagueTableOpenMs": 171,
+              "bracketOpenMs": 92
+            },
+            {
+              "centerInitialOpenMs": 658,
+              "ownMatchInitialOpenMs": 493,
+              "leagueTableOpenMs": 142,
+              "bracketOpenMs": 99
+            },
+            {
+              "centerInitialOpenMs": 677,
+              "ownMatchInitialOpenMs": 470,
+              "leagueTableOpenMs": 174,
+              "bracketOpenMs": 102
+            }
+          ]
+        },
+        {
+          "viewport": "390x844",
+          "cpuThrottle": 4,
+          "centerInitialOpenMs": 709,
+          "ownMatchInitialOpenMs": 495,
+          "leagueTableOpenMs": 113,
+          "bracketOpenMs": 98,
+          "trials": [
+            {
+              "centerInitialOpenMs": 709,
+              "ownMatchInitialOpenMs": 495,
+              "leagueTableOpenMs": 135,
+              "bracketOpenMs": 97
+            },
+            {
+              "centerInitialOpenMs": 722,
+              "ownMatchInitialOpenMs": 517,
+              "leagueTableOpenMs": 105,
+              "bracketOpenMs": 98
+            },
+            {
+              "centerInitialOpenMs": 656,
+              "ownMatchInitialOpenMs": 482,
+              "leagueTableOpenMs": 113,
+              "bracketOpenMs": 123
+            }
+          ]
+        },
+        {
+          "viewport": "844x390",
+          "cpuThrottle": 4,
+          "centerInitialOpenMs": 709,
+          "ownMatchInitialOpenMs": 496,
+          "leagueTableOpenMs": 133,
+          "bracketOpenMs": 98,
+          "trials": [
+            {
+              "centerInitialOpenMs": 709,
+              "ownMatchInitialOpenMs": 486,
+              "leagueTableOpenMs": 133,
+              "bracketOpenMs": 98
+            },
+            {
+              "centerInitialOpenMs": 728,
+              "ownMatchInitialOpenMs": 496,
+              "leagueTableOpenMs": 127,
+              "bracketOpenMs": 87
+            },
+            {
+              "centerInitialOpenMs": 661,
+              "ownMatchInitialOpenMs": 518,
+              "leagueTableOpenMs": 156,
+              "bracketOpenMs": 111
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "idleAndAdmin": {
+    "method": "Local React mocked API, 4x Chromium CPU. Idle: warm 5-second real-time windows with countdown enabled. Admin/Superadmin: authorized entry, median of 3 cold page navigations; PIN verification cost measured separately. Not physical hardware.",
+    "results": [
+      {
+        "viewport": "1920x1080",
+        "activeFight": false,
+        "cpuThrottle": 4,
+        "wallMs": 5006,
+        "taskMs": 10,
+        "scriptMs": 0,
+        "layoutMs": 0,
+        "heapBytes": 3660904,
+        "nodes": 559,
+        "requests": 0
+      },
+      {
+        "viewport": "1920x1080",
+        "activeFight": true,
+        "cpuThrottle": 4,
+        "wallMs": 5003,
+        "taskMs": 98,
+        "scriptMs": 37,
+        "layoutMs": 12,
+        "heapBytes": 3797880,
+        "nodes": 642,
+        "requests": 1
+      },
+      {
+        "viewport": "1920x1080",
+        "view": "admin-authorized",
+        "cpuThrottle": 4,
+        "openMs": 790,
+        "trials": [
+          790,
+          764,
+          861
+        ]
+      },
+      {
+        "viewport": "1920x1080",
+        "view": "superadmin",
+        "cpuThrottle": 4,
+        "openMs": 698,
+        "trials": [
+          731,
+          620,
+          698
+        ]
+      },
+      {
+        "viewport": "1536x864",
+        "activeFight": false,
+        "cpuThrottle": 4,
+        "wallMs": 5005,
+        "taskMs": 9,
+        "scriptMs": 0,
+        "layoutMs": 0,
+        "heapBytes": 3653884,
+        "nodes": 560,
+        "requests": 0
+      },
+      {
+        "viewport": "1536x864",
+        "activeFight": true,
+        "cpuThrottle": 4,
+        "wallMs": 5002,
+        "taskMs": 76,
+        "scriptMs": 24,
+        "layoutMs": 9,
+        "heapBytes": 3801740,
+        "nodes": 648,
+        "requests": 1
+      },
+      {
+        "viewport": "1536x864",
+        "view": "admin-authorized",
+        "cpuThrottle": 4,
+        "openMs": 712,
+        "trials": [
+          712,
+          762,
+          680
+        ]
+      },
+      {
+        "viewport": "1536x864",
+        "view": "superadmin",
+        "cpuThrottle": 4,
+        "openMs": 633,
+        "trials": [
+          609,
+          662,
+          633
+        ]
+      },
+      {
+        "viewport": "1024x768",
+        "activeFight": false,
+        "cpuThrottle": 4,
+        "wallMs": 5002,
+        "taskMs": 9,
+        "scriptMs": 0,
+        "layoutMs": 0,
+        "heapBytes": 3657092,
+        "nodes": 561,
+        "requests": 0
+      },
+      {
+        "viewport": "1024x768",
+        "activeFight": true,
+        "cpuThrottle": 4,
+        "wallMs": 5003,
+        "taskMs": 74,
+        "scriptMs": 27,
+        "layoutMs": 8,
+        "heapBytes": 4015600,
+        "nodes": 647,
+        "requests": 1
+      },
+      {
+        "viewport": "1024x768",
+        "view": "admin-authorized",
+        "cpuThrottle": 4,
+        "openMs": 729,
+        "trials": [
+          729,
+          750,
+          688
+        ]
+      },
+      {
+        "viewport": "1024x768",
+        "view": "superadmin",
+        "cpuThrottle": 4,
+        "openMs": 680,
+        "trials": [
+          690,
+          655,
+          680
+        ]
+      },
+      {
+        "viewport": "390x844",
+        "activeFight": false,
+        "cpuThrottle": 4,
+        "wallMs": 5004,
+        "taskMs": 11,
+        "scriptMs": 0,
+        "layoutMs": 0,
+        "heapBytes": 3659628,
+        "nodes": 532,
+        "requests": 0
+      },
+      {
+        "viewport": "390x844",
+        "activeFight": true,
+        "cpuThrottle": 4,
+        "wallMs": 5002,
+        "taskMs": 83,
+        "scriptMs": 33,
+        "layoutMs": 9,
+        "heapBytes": 4011588,
+        "nodes": 609,
+        "requests": 1
+      },
+      {
+        "viewport": "390x844",
+        "view": "admin-authorized",
+        "cpuThrottle": 4,
+        "openMs": 748,
+        "trials": [
+          750,
+          748,
+          725
+        ]
+      },
+      {
+        "viewport": "390x844",
+        "view": "superadmin",
+        "cpuThrottle": 4,
+        "openMs": 726,
+        "trials": [
+          798,
+          726,
+          618
+        ]
+      },
+      {
+        "viewport": "844x390",
+        "activeFight": false,
+        "cpuThrottle": 4,
+        "wallMs": 5004,
+        "taskMs": 10,
+        "scriptMs": 0,
+        "layoutMs": 0,
+        "heapBytes": 3672088,
+        "nodes": 533,
+        "requests": 0
+      },
+      {
+        "viewport": "844x390",
+        "activeFight": true,
+        "cpuThrottle": 4,
+        "wallMs": 5004,
+        "taskMs": 78,
+        "scriptMs": 28,
+        "layoutMs": 8,
+        "heapBytes": 3821152,
+        "nodes": 607,
+        "requests": 1
+      },
+      {
+        "viewport": "844x390",
+        "view": "admin-authorized",
+        "cpuThrottle": 4,
+        "openMs": 692,
+        "trials": [
+          692,
+          712,
+          687
+        ]
+      },
+      {
+        "viewport": "844x390",
+        "view": "superadmin",
+        "cpuThrottle": 4,
+        "openMs": 640,
+        "trials": [
+          604,
+          684,
+          640
+        ]
+      }
+    ]
+  },
+  "queryBudget": {
+    "stations": 10,
+    "registrations": 5000,
+    "engine": "local SQLite, not remote D1",
+    "rows_read": null,
+    "rows_written": null,
+    "reports": [
+      {
+        "label": "normal",
+        "queryCount": 10,
+        "queries": [
+          {
+            "sql": "SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url FROM arena_sellers WHERE station_id=?",
+            "params": [
+              "budget-0"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_sellers USING INDEX arena_sellers_station (station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count\n      FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)\n      GROUP BY r.seller_id,a.id",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z",
+              null,
+              null,
+              null,
+              null
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 9,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 24,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 36,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers\n      FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR count(DISTINCT)"
+              },
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT c.id,c.name,c.activity_id,c.start_at,c.end_at,c.target_count,c.target_points,c.active\n    FROM arena_campaigns c JOIN arena_activities a ON a.id=c.activity_id AND a.station_id=c.station_id\n    WHERE c.station_id=? AND c.active=1 AND a.active=1 AND c.start_at<=? AND c.end_at>?\n    ORDER BY c.start_at DESC,c.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 7,
+                "parent": 0,
+                "notused": 50,
+                "detail": "SEARCH c USING INDEX arena_campaigns_station_period (station_id=? AND active=? AND start_at<?)"
+              },
+              {
+                "id": 19,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 55,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 51,
+                "detail": "SEARCH arena_station_goals USING INDEX arena_station_goals_period (station_id=? AND start_date<?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_personal_goals USING INDEX arena_personal_goals_period (station_id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at\n      FROM arena_registrations r\n      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id\n      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 10,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 22,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 72,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT l.id FROM arena_leagues l JOIN arena_league_members m ON m.league_id=l.id WHERE m.station_id=? AND l.request_key IS NOT NULL AND l.result_json IS NULL AND l.status='open' AND l.start_day<=? ORDER BY l.start_day LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 55,
+                "detail": "SEARCH m USING COVERING INDEX arena_league_member_station (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH l USING INDEX sqlite_autoindex_arena_leagues_1 (id=?)"
+              },
+              {
+                "id": 35,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT f.id FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id\n    WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))\n    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-14T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH s USING COVERING INDEX arena_fight_station_lookup (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 50,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT (SELECT COUNT(*) FROM arena_challenges WHERE challenged_id=? AND status='pending' AND expires_at>?) incoming,(SELECT COUNT(*) FROM arena_fight_notifications WHERE station_id=? AND read_at IS NULL) unread,(SELECT COUNT(*) FROM arena_challenges WHERE challenger_id=? AND status='pending' AND expires_at>?) outgoing,(SELECT COUNT(*) FROM arena_station_bookings WHERE station_id=? AND released_at IS NULL AND start_at>?) scheduled",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 1,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCAN CONSTANT ROW"
+              },
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 9,
+                "parent": 4,
+                "notused": 46,
+                "detail": "SEARCH arena_challenges USING COVERING INDEX arena_challenge_incoming (challenged_id=? AND status=? AND expires_at>?)"
+              },
+              {
+                "id": 27,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 32,
+                "parent": 27,
+                "notused": 54,
+                "detail": "SEARCH arena_fight_notifications USING COVERING INDEX arena_fight_notice_station (station_id=? AND read_at=?)"
+              },
+              {
+                "id": 48,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 3"
+              },
+              {
+                "id": 54,
+                "parent": 48,
+                "notused": 62,
+                "detail": "SEARCH arena_challenges USING INDEX arena_challenge_outgoing (challenger_id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 4"
+              },
+              {
+                "id": 80,
+                "parent": 74,
+                "notused": 50,
+                "detail": "SEARCH arena_station_bookings USING INDEX arena_booking_period (station_id=? AND start_at>?)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "fight-first",
+        "queryCount": 20,
+        "queries": [
+          {
+            "sql": "SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url FROM arena_sellers WHERE station_id=?",
+            "params": [
+              "budget-0"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_sellers USING INDEX arena_sellers_station (station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count\n      FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)\n      GROUP BY r.seller_id,a.id",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z",
+              null,
+              null,
+              null,
+              null
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 9,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 24,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 36,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers\n      FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR count(DISTINCT)"
+              },
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT c.id,c.name,c.activity_id,c.start_at,c.end_at,c.target_count,c.target_points,c.active\n    FROM arena_campaigns c JOIN arena_activities a ON a.id=c.activity_id AND a.station_id=c.station_id\n    WHERE c.station_id=? AND c.active=1 AND a.active=1 AND c.start_at<=? AND c.end_at>?\n    ORDER BY c.start_at DESC,c.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 7,
+                "parent": 0,
+                "notused": 50,
+                "detail": "SEARCH c USING INDEX arena_campaigns_station_period (station_id=? AND active=? AND start_at<?)"
+              },
+              {
+                "id": 19,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 55,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 51,
+                "detail": "SEARCH arena_station_goals USING INDEX arena_station_goals_period (station_id=? AND start_date<?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_personal_goals USING INDEX arena_personal_goals_period (station_id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at\n      FROM arena_registrations r\n      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id\n      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 10,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 22,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 72,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT l.id FROM arena_leagues l JOIN arena_league_members m ON m.league_id=l.id WHERE m.station_id=? AND l.request_key IS NOT NULL AND l.result_json IS NULL AND l.status='open' AND l.start_day<=? ORDER BY l.start_day LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 55,
+                "detail": "SEARCH m USING COVERING INDEX arena_league_member_station (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH l USING INDEX sqlite_autoindex_arena_leagues_1 (id=?)"
+              },
+              {
+                "id": 35,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT f.id FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id\n    WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))\n    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-14T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH s USING COVERING INDEX arena_fight_station_lookup (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 50,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,name,description,start_at,end_at,score_metric,status,result_json,live_json,leader_signature,leader_checked_at,revision,version,competition_id,knockout_json,participant_json,scoring_mode,COALESCE(match_win,day_win_points) day_win_points,COALESCE(match_draw,day_tie_points) day_tie_points FROM arena_fights WHERE id=?",
+            "params": [
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 39,
+                "detail": "SEARCH arena_fights USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT current.id,previous.id previous_id,previous.result_json,previous.live_json\n FROM arena_fights current JOIN arena_fights previous ON previous.start_at<current.start_at AND previous.id<>current.id\n WHERE previous.knockout_json IS NOT NULL AND current.id IN (SELECT value FROM json_each(?)) AND (json_extract(previous.live_json,'$.sudden_death')=1 OR json_extract(previous.result_json,'$.sudden_death_ended_at') IS NOT NULL)\n AND EXISTS(SELECT 1 FROM arena_fight_stations a JOIN arena_fight_stations b ON b.station_id=a.station_id WHERE a.fight_id=current.id AND b.fight_id=previous.id)",
+            "params": [
+              "[\"budget-fight\"]"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 5,
+                "parent": 0,
+                "notused": 92,
+                "detail": "SEARCH current USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 9,
+                "parent": 0,
+                "notused": 0,
+                "detail": "LIST SUBQUERY 1"
+              },
+              {
+                "id": 11,
+                "parent": 9,
+                "notused": 0,
+                "detail": "SCAN json_each VIRTUAL TABLE INDEX 1:"
+              },
+              {
+                "id": 28,
+                "parent": 0,
+                "notused": 193,
+                "detail": "SEARCH previous USING INDEX arena_knockout_window (start_at<?)"
+              },
+              {
+                "id": 43,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 48,
+                "parent": 43,
+                "notused": 56,
+                "detail": "SEARCH a USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 53,
+                "parent": 43,
+                "notused": 45,
+                "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,\n    SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count\n    FROM arena_fight_stations f JOIN arena_stations s ON s.id=f.station_id\n    LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n      AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=f.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=f.fight_id AND rule.station_id=s.id AND rule.activity_id=r.activity_id))\n    WHERE f.fight_id=? GROUP BY s.id",
+            "params": [
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z",
+              0,
+              "2026-10-15T14:00:00Z",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 10,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH f USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 16,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 21,
+                "parent": 0,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?) LEFT-JOIN"
+              },
+              {
+                "id": 46,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 51,
+                "parent": 46,
+                "notused": 39,
+                "detail": "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 64,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 68,
+                "parent": 64,
+                "notused": 39,
+                "detail": "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 82,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT 'sale:'||r.id id,'sale' kind,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,r.registered_at created_at,r.seller_id,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),seller.name) seller_name,seller.avatar_index,CASE WHEN seller.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||seller.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode\n    FROM arena_fight_stations member JOIN arena_registrations r ON r.station_id=member.station_id\n    JOIN arena_stations station ON station.id=r.station_id\n    JOIN arena_sellers seller ON seller.id=r.seller_id AND seller.station_id=r.station_id\n    JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n    WHERE member.fight_id=? AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=member.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=member.fight_id AND rule.station_id=r.station_id AND rule.activity_id=r.activity_id)) AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL\n    FROM arena_fight_lead_events WHERE fight_id=? AND created_at>=? AND created_at<? AND created_at<=?\n    ORDER BY created_at DESC,id DESC LIMIT 20",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z",
+              0,
+              "2026-10-15T14:00:00Z",
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 0,
+                "detail": "MERGE (UNION ALL)"
+              },
+              {
+                "id": 6,
+                "parent": 4,
+                "notused": 0,
+                "detail": "LEFT"
+              },
+              {
+                "id": 20,
+                "parent": 6,
+                "notused": 56,
+                "detail": "SEARCH member USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 26,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 34,
+                "parent": 6,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 56,
+                "parent": 6,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 61,
+                "parent": 56,
+                "notused": 39,
+                "detail": "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 6,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 78,
+                "parent": 74,
+                "notused": 39,
+                "detail": "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 89,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH seller USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 97,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 143,
+                "parent": 6,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              },
+              {
+                "id": 162,
+                "parent": 4,
+                "notused": 0,
+                "detail": "RIGHT"
+              },
+              {
+                "id": 166,
+                "parent": 162,
+                "notused": 62,
+                "detail": "SEARCH arena_fight_lead_events USING INDEX sqlite_autoindex_arena_fight_lead_events_2 (fight_id=?)"
+              },
+              {
+                "id": 201,
+                "parent": 162,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "UPDATE arena_fights SET status='active',leader_signature=?,leader_checked_at=?,live_json=?,revision=revision+1,version=?\n      WHERE id=? AND revision=? AND leader_checked_at<=? AND result_json IS NULL",
+            "params": [
+              "",
+              "2026-10-15T12:00:00.000Z",
+              "{\"competition_id\":null,\"id\":\"budget-fight\",\"name\":\"Scoped QA\",\"description\":\"\",\"start_at\":\"2026-10-15T10:00:00Z\",\"end_at\":\"2026-10-15T14:00:00Z\",\"metric\":\"points\",\"phase\":\"active\",\"snapshot_at\":\"2026-10-15T12:00:00.000Z\",\"version\":0,\"standings\":[{\"id\":\"budget-0\",\"name\":\"budget-0\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-1\",\"name\":\"budget-1\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-2\",\"name\":\"budget-2\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-3\",\"name\":\"budget-3\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-4\",\"name\":\"budget-4\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-5\",\"name\":\"budget-5\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-6\",\"name\":\"budget-6\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-7\",\"name\":\"budget-7\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-8\",\"name\":\"budget-8\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-9\",\"name\":\"budget-9\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0}],\"leader_ids\":[\"budget-0\",\"budget-1\",\"budget-2\",\"budget-3\",\"budget-4\",\"budget-5\",\"budget-6\",\"budget-7\",\"budget-8\",\"budget-9\"],\"winner_ids\":[],\"events\":[{\"id\":\"sale:budget-9:r99\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r98\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r97\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r96\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r95\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r94\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r93\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r92\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r91\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r90\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r9\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r89\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r88\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r87\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r86\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r85\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r84\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r83\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r82\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r81\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"}]}",
+              0,
+              "budget-fight",
+              0,
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": []
+          },
+          {
+            "sql": "SELECT version,station_id,station_name,created_at FROM arena_fight_lead_events WHERE fight_id=? ORDER BY version DESC LIMIT 1",
+            "params": [
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 5,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_fight_lead_events USING INDEX sqlite_autoindex_arena_fight_lead_events_2 (fight_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT s.id,s.external_staff_id,s.name,s.color,s.active,s.avatar_index,s.station_id,COALESCE(json_extract(f.participant_json,'$.\"'||s.station_id||'\"'),station.name) station_name,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) GROUP BY s.id ORDER BY s.id",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 18,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 39,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 58,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 62,
+                "parent": 58,
+                "notused": 39,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 82,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.id,r.seller_id,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),s.name) seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 18,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 39,
+                "parent": 0,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 60,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 64,
+                "parent": 60,
+                "notused": 39,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 76,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 84,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 128,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT t.*,f.status,f.result_json FROM arena_temporary_fight_activities t JOIN arena_fights f ON f.id=t.fight_id JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=t.station_id WHERE t.station_id=? AND t.fight_id=? AND t.start_at<=strftime('%Y-%m-%dT%H:%M:%fZ','now') AND (t.end_at>strftime('%Y-%m-%dT%H:%M:%fZ','now') OR json_extract(f.live_json,'$.sudden_death')=1) AND f.status<>'cancelled' AND f.result_json IS NULL",
+            "params": [
+              "budget-0",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 16,
+                "parent": 0,
+                "notused": 47,
+                "detail": "SEARCH t USING INDEX sqlite_autoindex_arena_temporary_fight_activities_2 (fight_id=? AND station_id=?)"
+              },
+              {
+                "id": 40,
+                "parent": 0,
+                "notused": 45,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT f.scope_json,q.activity_id FROM arena_fights f\n JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=?\n LEFT JOIN arena_fight_activity_rules q ON q.fight_id=f.id AND q.station_id=m.station_id\n WHERE f.id=? AND f.status<>'cancelled' AND f.result_json IS NULL ORDER BY q.activity_id",
+            "params": [
+              "budget-0",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 17,
+                "parent": 0,
+                "notused": 45,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              },
+              {
+                "id": 26,
+                "parent": 0,
+                "notused": 55,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=?) LEFT-JOIN"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT (SELECT COUNT(*) FROM arena_challenges WHERE challenged_id=? AND status='pending' AND expires_at>?) incoming,(SELECT COUNT(*) FROM arena_fight_notifications WHERE station_id=? AND read_at IS NULL) unread,(SELECT COUNT(*) FROM arena_challenges WHERE challenger_id=? AND status='pending' AND expires_at>?) outgoing,(SELECT COUNT(*) FROM arena_station_bookings WHERE station_id=? AND released_at IS NULL AND start_at>?) scheduled",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 1,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCAN CONSTANT ROW"
+              },
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 9,
+                "parent": 4,
+                "notused": 46,
+                "detail": "SEARCH arena_challenges USING COVERING INDEX arena_challenge_incoming (challenged_id=? AND status=? AND expires_at>?)"
+              },
+              {
+                "id": 27,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 32,
+                "parent": 27,
+                "notused": 54,
+                "detail": "SEARCH arena_fight_notifications USING COVERING INDEX arena_fight_notice_station (station_id=? AND read_at=?)"
+              },
+              {
+                "id": 48,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 3"
+              },
+              {
+                "id": 54,
+                "parent": 48,
+                "notused": 62,
+                "detail": "SEARCH arena_challenges USING INDEX arena_challenge_outgoing (challenger_id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 4"
+              },
+              {
+                "id": 80,
+                "parent": 74,
+                "notused": 50,
+                "detail": "SEARCH arena_station_bookings USING INDEX arena_booking_period (station_id=? AND start_at>?)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "fight-warm",
+        "queryCount": 20,
+        "queries": [
+          {
+            "sql": "SELECT id,external_staff_id,name,color,active,avatar_index,CASE WHEN profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||profile_image_id END profile_url FROM arena_sellers WHERE station_id=?",
+            "params": [
+              "budget-0"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_sellers USING INDEX arena_sellers_station (station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.seller_id,a.id,a.name,a.category,COUNT(*) count,SUM(r.points_awarded) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count\n      FROM arena_registrations r JOIN arena_activities a ON r.activity_id=a.id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      AND (? IS NULL OR r.activity_id=?) AND (? IS NULL OR a.category=?)\n      GROUP BY r.seller_id,a.id",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z",
+              null,
+              null,
+              null,
+              null
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 9,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 24,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 36,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT COUNT(*) count,COALESCE(SUM(points_awarded),0) points,COUNT(DISTINCT seller_id) sellers\n      FROM arena_registrations WHERE station_id=? AND voided_at IS NULL AND registered_at>=? AND registered_at<?",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR count(DISTINCT)"
+              },
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH arena_registrations USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT c.id,c.name,c.activity_id,c.start_at,c.end_at,c.target_count,c.target_points,c.active\n    FROM arena_campaigns c JOIN arena_activities a ON a.id=c.activity_id AND a.station_id=c.station_id\n    WHERE c.station_id=? AND c.active=1 AND a.active=1 AND c.start_at<=? AND c.end_at>?\n    ORDER BY c.start_at DESC,c.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 7,
+                "parent": 0,
+                "notused": 50,
+                "detail": "SEARCH c USING INDEX arena_campaigns_station_period (station_id=? AND active=? AND start_at<?)"
+              },
+              {
+                "id": 19,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 55,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,period_type,start_date,end_date,target_points FROM arena_station_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 51,
+                "detail": "SEARCH arena_station_goals USING INDEX arena_station_goals_period (station_id=? AND start_date<?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,seller_id,period_type,start_date,end_date,target_points FROM arena_personal_goals WHERE station_id=? AND start_date<=? AND end_date>=? ORDER BY start_date DESC,id",
+            "params": [
+              "budget-0",
+              "2026-10-15",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_personal_goals USING INDEX arena_personal_goals_period (station_id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.id,r.seller_id,s.name seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,a.name activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at\n      FROM arena_registrations r\n      JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id\n      JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n      WHERE r.station_id=? AND r.voided_at IS NULL AND r.registered_at>=? AND r.registered_at<?\n      ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+            "params": [
+              "budget-0",
+              "2026-10-14T22:00:00.000Z",
+              "2026-10-15T22:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 10,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 22,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 72,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR LAST TERM OF ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT l.id FROM arena_leagues l JOIN arena_league_members m ON m.league_id=l.id WHERE m.station_id=? AND l.request_key IS NOT NULL AND l.result_json IS NULL AND l.status='open' AND l.start_day<=? ORDER BY l.start_day LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 55,
+                "detail": "SEARCH m USING COVERING INDEX arena_league_member_station (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH l USING INDEX sqlite_autoindex_arena_leagues_1 (id=?)"
+              },
+              {
+                "id": 35,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT f.id FROM arena_fights f JOIN arena_fight_stations s ON s.fight_id=f.id\n    WHERE s.station_id=? AND f.status<>'cancelled' AND f.start_at<=? AND (f.end_at>? OR (f.result_json IS NULL AND json_extract(f.live_json,'$.sudden_death')=1))\n    ORDER BY CASE WHEN json_extract(f.live_json,'$.sudden_death')=1 AND f.result_json IS NULL THEN -1 WHEN f.end_at>? THEN 0 ELSE 1 END,f.start_at DESC,f.id LIMIT 1",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "2026-10-14T12:00:00.000Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH s USING COVERING INDEX arena_fight_station_lookup (station_id=?)"
+              },
+              {
+                "id": 12,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 50,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT id,name,description,start_at,end_at,score_metric,status,result_json,live_json,leader_signature,leader_checked_at,revision,version,competition_id,knockout_json,participant_json,scoring_mode,COALESCE(match_win,day_win_points) day_win_points,COALESCE(match_draw,day_tie_points) day_tie_points FROM arena_fights WHERE id=?",
+            "params": [
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 3,
+                "parent": 0,
+                "notused": 39,
+                "detail": "SEARCH arena_fights USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT current.id,previous.id previous_id,previous.result_json,previous.live_json\n FROM arena_fights current JOIN arena_fights previous ON previous.start_at<current.start_at AND previous.id<>current.id\n WHERE previous.knockout_json IS NOT NULL AND current.id IN (SELECT value FROM json_each(?)) AND (json_extract(previous.live_json,'$.sudden_death')=1 OR json_extract(previous.result_json,'$.sudden_death_ended_at') IS NOT NULL)\n AND EXISTS(SELECT 1 FROM arena_fight_stations a JOIN arena_fight_stations b ON b.station_id=a.station_id WHERE a.fight_id=current.id AND b.fight_id=previous.id)",
+            "params": [
+              "[\"budget-fight\"]"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 5,
+                "parent": 0,
+                "notused": 92,
+                "detail": "SEARCH current USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 9,
+                "parent": 0,
+                "notused": 0,
+                "detail": "LIST SUBQUERY 1"
+              },
+              {
+                "id": 11,
+                "parent": 9,
+                "notused": 0,
+                "detail": "SCAN json_each VIRTUAL TABLE INDEX 1:"
+              },
+              {
+                "id": 28,
+                "parent": 0,
+                "notused": 193,
+                "detail": "SEARCH previous USING INDEX arena_knockout_window (start_at<?)"
+              },
+              {
+                "id": 43,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 48,
+                "parent": 43,
+                "notused": 56,
+                "detail": "SEARCH a USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 53,
+                "parent": 43,
+                "notused": 45,
+                "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT s.id,s.name,0 rank,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,\n    SUM(CASE WHEN r.id IS NOT NULL AND r.tb_ore_awarded IS NULL THEN 1 ELSE 0 END) unknown_tb_count\n    FROM arena_fight_stations f JOIN arena_stations s ON s.id=f.station_id\n    LEFT JOIN arena_registrations r ON r.station_id=s.id AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n      AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=f.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=f.fight_id AND rule.station_id=s.id AND rule.activity_id=r.activity_id))\n    WHERE f.fight_id=? GROUP BY s.id",
+            "params": [
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z",
+              0,
+              "2026-10-15T14:00:00Z",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 10,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH f USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 16,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 21,
+                "parent": 0,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?) LEFT-JOIN"
+              },
+              {
+                "id": 46,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 51,
+                "parent": 46,
+                "notused": 39,
+                "detail": "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 64,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 68,
+                "parent": 64,
+                "notused": 39,
+                "detail": "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 82,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT 'sale:'||r.id id,'sale' kind,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,r.registered_at created_at,r.seller_id,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),seller.name) seller_name,seller.avatar_index,CASE WHEN seller.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||seller.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,r.points_awarded,r.tb_ore_awarded,a.display_mode\n    FROM arena_fight_stations member JOIN arena_registrations r ON r.station_id=member.station_id\n    JOIN arena_stations station ON station.id=r.station_id\n    JOIN arena_sellers seller ON seller.id=r.seller_id AND seller.station_id=r.station_id\n    JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id\n    WHERE member.fight_id=? AND (NOT EXISTS(SELECT 1 FROM arena_fights scoped WHERE scoped.id=member.fight_id AND scoped.scope_json IS NOT NULL) OR EXISTS(SELECT 1 FROM arena_fight_activity_rules rule WHERE rule.fight_id=member.fight_id AND rule.station_id=r.station_id AND rule.activity_id=r.activity_id)) AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=?\n      AND (r.voided_at IS NULL OR (?=1 AND r.voided_at>=?))\n    UNION ALL SELECT 'lead:'||version,'lead',station_id,station_name,created_at,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL\n    FROM arena_fight_lead_events WHERE fight_id=? AND created_at>=? AND created_at<? AND created_at<=?\n    ORDER BY created_at DESC,id DESC LIMIT 20",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z",
+              0,
+              "2026-10-15T14:00:00Z",
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 0,
+                "detail": "MERGE (UNION ALL)"
+              },
+              {
+                "id": 6,
+                "parent": 4,
+                "notused": 0,
+                "detail": "LEFT"
+              },
+              {
+                "id": 20,
+                "parent": 6,
+                "notused": 56,
+                "detail": "SEARCH member USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 26,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 34,
+                "parent": 6,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 56,
+                "parent": 6,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 61,
+                "parent": 56,
+                "notused": 39,
+                "detail": "SEARCH scoped USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 6,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 78,
+                "parent": 74,
+                "notused": 39,
+                "detail": "SEARCH rule USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 89,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH seller USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 97,
+                "parent": 6,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 143,
+                "parent": 6,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              },
+              {
+                "id": 162,
+                "parent": 4,
+                "notused": 0,
+                "detail": "RIGHT"
+              },
+              {
+                "id": 166,
+                "parent": 162,
+                "notused": 62,
+                "detail": "SEARCH arena_fight_lead_events USING INDEX sqlite_autoindex_arena_fight_lead_events_2 (fight_id=?)"
+              },
+              {
+                "id": 201,
+                "parent": 162,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "UPDATE arena_fights SET status='active',leader_signature=?,leader_checked_at=?,live_json=?,revision=revision+1,version=?\n      WHERE id=? AND revision=? AND leader_checked_at<=? AND result_json IS NULL",
+            "params": [
+              "",
+              "2026-10-15T12:00:00.000Z",
+              "{\"competition_id\":null,\"id\":\"budget-fight\",\"name\":\"Scoped QA\",\"description\":\"\",\"start_at\":\"2026-10-15T10:00:00Z\",\"end_at\":\"2026-10-15T14:00:00Z\",\"metric\":\"points\",\"phase\":\"active\",\"snapshot_at\":\"2026-10-15T12:00:00.000Z\",\"version\":0,\"standings\":[{\"id\":\"budget-0\",\"name\":\"budget-0\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-1\",\"name\":\"budget-1\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-2\",\"name\":\"budget-2\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-3\",\"name\":\"budget-3\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-4\",\"name\":\"budget-4\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-5\",\"name\":\"budget-5\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-6\",\"name\":\"budget-6\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-7\",\"name\":\"budget-7\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-8\",\"name\":\"budget-8\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0},{\"id\":\"budget-9\",\"name\":\"budget-9\",\"rank\":1,\"count\":500,\"points\":1000,\"tb_ore\":1750000,\"unknown_tb_count\":0}],\"leader_ids\":[\"budget-0\",\"budget-1\",\"budget-2\",\"budget-3\",\"budget-4\",\"budget-5\",\"budget-6\",\"budget-7\",\"budget-8\",\"budget-9\"],\"winner_ids\":[],\"events\":[{\"id\":\"sale:budget-9:r99\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r98\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r97\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r96\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r95\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r94\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r93\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r92\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r91\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r90\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r9\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r89\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r88\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r87\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r86\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r85\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r84\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r83\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r82\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"},{\"id\":\"sale:budget-9:r81\",\"kind\":\"sale\",\"station_id\":\"budget-9\",\"station_name\":\"budget-9\",\"created_at\":\"2026-10-15T11:00:00Z\",\"seller_id\":\"budget-9:seller\",\"seller_name\":\"Peter 9\",\"avatar_index\":null,\"profile_url\":null,\"activity_name\":\"Biltvätt\",\"points_awarded\":2,\"tb_ore_awarded\":3500,\"display_mode\":\"points\"}]}",
+              0,
+              "budget-fight",
+              1,
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": []
+          },
+          {
+            "sql": "SELECT version,station_id,station_name,created_at FROM arena_fight_lead_events WHERE fight_id=? ORDER BY version DESC LIMIT 1",
+            "params": [
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 5,
+                "parent": 0,
+                "notused": 62,
+                "detail": "SEARCH arena_fight_lead_events USING INDEX sqlite_autoindex_arena_fight_lead_events_2 (fight_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT s.id,s.external_staff_id,s.name,s.color,s.active,s.avatar_index,s.station_id,COALESCE(json_extract(f.participant_json,'$.\"'||s.station_id||'\"'),station.name) station_name,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COUNT(r.id) count,COALESCE(SUM(r.points_awarded),0) points,COALESCE(SUM(r.tb_ore_awarded),0) tb_ore,SUM(r.tb_ore_awarded IS NULL) unknown_tb_count FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) GROUP BY s.id ORDER BY s.id",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 18,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 39,
+                "parent": 0,
+                "notused": 48,
+                "detail": "SEARCH r USING INDEX arena_valid_registrations (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 58,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 62,
+                "parent": 58,
+                "notused": 39,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 82,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR GROUP BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT r.id,r.seller_id,r.station_id,COALESCE(json_extract(r.event_snapshot,'$.station_name'),station.name) station_name,COALESCE(json_extract(r.event_snapshot,'$.seller_name'),s.name) seller_name,s.avatar_index,CASE WHEN s.profile_image_id IS NOT NULL THEN '/api/arena/portraits/'||s.profile_image_id END profile_url,COALESCE(json_extract(r.event_snapshot,'$.activity_name'),a.name) activity_name,a.display_mode,r.points_awarded,r.tb_ore_awarded,r.registered_at FROM arena_fights f JOIN arena_fight_stations m ON m.fight_id=f.id JOIN arena_stations station ON station.id=m.station_id JOIN arena_registrations r ON r.station_id=m.station_id JOIN arena_sellers s ON s.id=r.seller_id AND s.station_id=r.station_id JOIN arena_activities a ON a.id=r.activity_id AND a.station_id=r.station_id WHERE f.id=? AND r.registered_at>=? AND r.registered_at<? AND r.registered_at<=? AND r.voided_at IS NULL AND (f.scope_json IS NULL OR EXISTS(SELECT 1 FROM arena_fight_activity_rules q WHERE q.fight_id=f.id AND q.station_id=r.station_id AND q.activity_id=r.activity_id)) ORDER BY r.registered_at DESC,r.id DESC LIMIT 10",
+            "params": [
+              "budget-fight",
+              "2026-10-15T10:00:00Z",
+              "2026-10-15T14:00:00Z",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 18,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 25,
+                "parent": 0,
+                "notused": 56,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=?)"
+              },
+              {
+                "id": 31,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH station USING INDEX sqlite_autoindex_arena_stations_1 (id=?)"
+              },
+              {
+                "id": 39,
+                "parent": 0,
+                "notused": 49,
+                "detail": "SEARCH r USING INDEX arena_registrations_station_time (station_id=? AND registered_at>? AND registered_at<?)"
+              },
+              {
+                "id": 60,
+                "parent": 0,
+                "notused": 0,
+                "detail": "CORRELATED SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 64,
+                "parent": 60,
+                "notused": 39,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=? AND activity_id=?)"
+              },
+              {
+                "id": 76,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH s USING INDEX sqlite_autoindex_arena_sellers_1 (id=?)"
+              },
+              {
+                "id": 84,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH a USING INDEX sqlite_autoindex_arena_activities_1 (id=?)"
+              },
+              {
+                "id": 128,
+                "parent": 0,
+                "notused": 0,
+                "detail": "USE TEMP B-TREE FOR ORDER BY"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT t.*,f.status,f.result_json FROM arena_temporary_fight_activities t JOIN arena_fights f ON f.id=t.fight_id JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=t.station_id WHERE t.station_id=? AND t.fight_id=? AND t.start_at<=strftime('%Y-%m-%dT%H:%M:%fZ','now') AND (t.end_at>strftime('%Y-%m-%dT%H:%M:%fZ','now') OR json_extract(f.live_json,'$.sudden_death')=1) AND f.status<>'cancelled' AND f.result_json IS NULL",
+            "params": [
+              "budget-0",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 16,
+                "parent": 0,
+                "notused": 47,
+                "detail": "SEARCH t USING INDEX sqlite_autoindex_arena_temporary_fight_activities_2 (fight_id=? AND station_id=?)"
+              },
+              {
+                "id": 40,
+                "parent": 0,
+                "notused": 45,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT f.scope_json,q.activity_id FROM arena_fights f\n JOIN arena_fight_stations m ON m.fight_id=f.id AND m.station_id=?\n LEFT JOIN arena_fight_activity_rules q ON q.fight_id=f.id AND q.station_id=m.station_id\n WHERE f.id=? AND f.status<>'cancelled' AND f.result_json IS NULL ORDER BY q.activity_id",
+            "params": [
+              "budget-0",
+              "budget-fight"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 6,
+                "parent": 0,
+                "notused": 46,
+                "detail": "SEARCH f USING INDEX sqlite_autoindex_arena_fights_1 (id=?)"
+              },
+              {
+                "id": 17,
+                "parent": 0,
+                "notused": 45,
+                "detail": "SEARCH m USING COVERING INDEX sqlite_autoindex_arena_fight_stations_1 (fight_id=? AND station_id=?)"
+              },
+              {
+                "id": 26,
+                "parent": 0,
+                "notused": 55,
+                "detail": "SEARCH q USING COVERING INDEX sqlite_autoindex_arena_fight_activity_rules_1 (fight_id=? AND station_id=?) LEFT-JOIN"
+              }
+            ]
+          },
+          {
+            "sql": "SELECT (SELECT COUNT(*) FROM arena_challenges WHERE challenged_id=? AND status='pending' AND expires_at>?) incoming,(SELECT COUNT(*) FROM arena_fight_notifications WHERE station_id=? AND read_at IS NULL) unread,(SELECT COUNT(*) FROM arena_challenges WHERE challenger_id=? AND status='pending' AND expires_at>?) outgoing,(SELECT COUNT(*) FROM arena_station_bookings WHERE station_id=? AND released_at IS NULL AND start_at>?) scheduled",
+            "params": [
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z",
+              "budget-0",
+              "2026-10-15T12:00:00.000Z"
+            ],
+            "ms": 0,
+            "plan": [
+              {
+                "id": 1,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCAN CONSTANT ROW"
+              },
+              {
+                "id": 4,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 1"
+              },
+              {
+                "id": 9,
+                "parent": 4,
+                "notused": 46,
+                "detail": "SEARCH arena_challenges USING COVERING INDEX arena_challenge_incoming (challenged_id=? AND status=? AND expires_at>?)"
+              },
+              {
+                "id": 27,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 2"
+              },
+              {
+                "id": 32,
+                "parent": 27,
+                "notused": 54,
+                "detail": "SEARCH arena_fight_notifications USING COVERING INDEX arena_fight_notice_station (station_id=? AND read_at=?)"
+              },
+              {
+                "id": 48,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 3"
+              },
+              {
+                "id": 54,
+                "parent": 48,
+                "notused": 62,
+                "detail": "SEARCH arena_challenges USING INDEX arena_challenge_outgoing (challenger_id=?)"
+              },
+              {
+                "id": 74,
+                "parent": 0,
+                "notused": 0,
+                "detail": "SCALAR SUBQUERY 4"
+              },
+              {
+                "id": 80,
+                "parent": 74,
+                "notused": 50,
+                "detail": "SEARCH arena_station_bookings USING INDEX arena_booking_period (station_id=? AND start_at>?)"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

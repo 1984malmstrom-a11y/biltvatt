@@ -1,0 +1,223 @@
+{
+  "baseline": {
+    "files": [
+      {
+        "file": "ArenaAccount-DdNXPq1Z.js",
+        "bytes": 5112,
+        "gzipBytes": 2028
+      },
+      {
+        "file": "ArenaAdmin-BR_JpD_l.js",
+        "bytes": 19178,
+        "gzipBytes": 5791
+      },
+      {
+        "file": "ArenaApp-CF2duZ6d.css",
+        "bytes": 235660,
+        "gzipBytes": 38240
+      },
+      {
+        "file": "ArenaApp-CjbtrE7N.js",
+        "bytes": 64800,
+        "gzipBytes": 19995
+      },
+      {
+        "file": "ArenaCompetition-4-M5YFEp.js",
+        "bytes": 10866,
+        "gzipBytes": 3876
+      },
+      {
+        "file": "ArenaCompetitions-C-UI_i5E.js",
+        "bytes": 11135,
+        "gzipBytes": 3638
+      },
+      {
+        "file": "ArenaFight-6frrVkWl.js",
+        "bytes": 7393,
+        "gzipBytes": 2964
+      },
+      {
+        "file": "ArenaFightQuickAction-DSX6yFkD.js",
+        "bytes": 3450,
+        "gzipBytes": 1519
+      },
+      {
+        "file": "ArenaFightQuickAction-DfBC0rYe.css",
+        "bytes": 1702,
+        "gzipBytes": 552
+      },
+      {
+        "file": "ArenaLeague-C5NFBPcY.js",
+        "bytes": 3353,
+        "gzipBytes": 1384
+      },
+      {
+        "file": "ArenaNetwork-DCmxQ9So.js",
+        "bytes": 41095,
+        "gzipBytes": 11327
+      },
+      {
+        "file": "ArenaRecovery-xFQUBKy_.js",
+        "bytes": 3138,
+        "gzipBytes": 1309
+      },
+      {
+        "file": "ArenaReports-D1s1CjhZ.js",
+        "bytes": 6595,
+        "gzipBytes": 2356
+      },
+      {
+        "file": "arena-competitions-8JPxLAyO.css",
+        "bytes": 22936,
+        "gzipBytes": 4641
+      },
+      {
+        "file": "arena-competitions-s43vm8ci.js",
+        "bytes": 4824,
+        "gzipBytes": 2180
+      },
+      {
+        "file": "arena-route-id-nE-jfgl6.js",
+        "bytes": 173,
+        "gzipBytes": 163
+      },
+      {
+        "file": "index-2h522wtU.js",
+        "bytes": 406788,
+        "gzipBytes": 122751
+      },
+      {
+        "file": "index-C_TdpUt1.css",
+        "bytes": 134392,
+        "gzipBytes": 28208
+      },
+      {
+        "file": "index-R0BEOjO9.js",
+        "bytes": 310643,
+        "gzipBytes": 98742
+      }
+    ],
+    "jsBytes": 898543,
+    "cssBytes": 394690,
+    "jsGzipBytes": 280023,
+    "cssGzipBytes": 71641
+  },
+  "after": {
+    "files": [
+      {
+        "file": "ArenaAccount-CdmYHErs.js",
+        "bytes": 5112,
+        "gzipBytes": 2027
+      },
+      {
+        "file": "ArenaAdmin-CNYjNAlW.js",
+        "bytes": 20133,
+        "gzipBytes": 6166
+      },
+      {
+        "file": "ArenaAdminPin-Cz7cCg51.js",
+        "bytes": 5299,
+        "gzipBytes": 2200
+      },
+      {
+        "file": "ArenaAdminPin-DJYA0zFu.css",
+        "bytes": 1625,
+        "gzipBytes": 693
+      },
+      {
+        "file": "ArenaApp--HoP3dPG.js",
+        "bytes": 65283,
+        "gzipBytes": 20186
+      },
+      {
+        "file": "ArenaApp-CF2duZ6d.css",
+        "bytes": 235660,
+        "gzipBytes": 38240
+      },
+      {
+        "file": "ArenaCompetition-DQDvm3hZ.js",
+        "bytes": 10866,
+        "gzipBytes": 3878
+      },
+      {
+        "file": "ArenaCompetitions-B40P-VEZ.js",
+        "bytes": 11135,
+        "gzipBytes": 3637
+      },
+      {
+        "file": "ArenaFight-Byqz4j8m.js",
+        "bytes": 7393,
+        "gzipBytes": 2964
+      },
+      {
+        "file": "ArenaFightQuickAction-DZoN7nqR.js",
+        "bytes": 3450,
+        "gzipBytes": 1520
+      },
+      {
+        "file": "ArenaFightQuickAction-DfBC0rYe.css",
+        "bytes": 1702,
+        "gzipBytes": 552
+      },
+      {
+        "file": "ArenaLeague-BkUK5HyU.js",
+        "bytes": 3353,
+        "gzipBytes": 1385
+      },
+      {
+        "file": "ArenaNetwork-ClxNWRwz.js",
+        "bytes": 41768,
+        "gzipBytes": 11568
+      },
+      {
+        "file": "ArenaRecovery-B6l9Fh9u.js",
+        "bytes": 3138,
+        "gzipBytes": 1309
+      },
+      {
+        "file": "ArenaReports-CMdBv0O3.css",
+        "bytes": 3061,
+        "gzipBytes": 1075
+      },
+      {
+        "file": "ArenaReports-DXOwAVjE.js",
+        "bytes": 11028,
+        "gzipBytes": 3757
+      },
+      {
+        "file": "arena-competitions-8JPxLAyO.css",
+        "bytes": 22936,
+        "gzipBytes": 4641
+      },
+      {
+        "file": "arena-competitions-s43vm8ci.js",
+        "bytes": 4824,
+        "gzipBytes": 2180
+      },
+      {
+        "file": "arena-route-id-nE-jfgl6.js",
+        "bytes": 173,
+        "gzipBytes": 163
+      },
+      {
+        "file": "index-C_TdpUt1.css",
+        "bytes": 134392,
+        "gzipBytes": 28208
+      },
+      {
+        "file": "index-Dx_hjec8.js",
+        "bytes": 406796,
+        "gzipBytes": 122757
+      },
+      {
+        "file": "index-z_8Q-6Yi.js",
+        "bytes": 310643,
+        "gzipBytes": 98741
+      }
+    ],
+    "jsBytes": 910394,
+    "cssBytes": 399376,
+    "jsGzipBytes": 284438,
+    "cssGzipBytes": 73409
+  }
+}

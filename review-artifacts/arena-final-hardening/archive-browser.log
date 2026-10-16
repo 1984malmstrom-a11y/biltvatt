@@ -1,0 +1,10 @@
+
+Running 2 tests using 1 worker
+
+(node:496873) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/2] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 1920x1080
+[2/2] e2e/arena-hardening.spec.ts:10:50 › Hardening: frozen award history and preview 390x844
+  2 passed (6.1s)

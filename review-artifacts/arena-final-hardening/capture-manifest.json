@@ -1,0 +1,202 @@
+[
+  {
+    "file": "start-1920x1080.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "start-1536x864.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 1536,
+      "height": 864
+    }
+  },
+  {
+    "file": "start-1448x1086.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 1448,
+      "height": 1086
+    }
+  },
+  {
+    "file": "start-1024x768.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    }
+  },
+  {
+    "file": "start-390x844.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "start-844x390.png",
+    "group": "Startscreen",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    }
+  },
+  {
+    "file": "fight-1920x1080.png",
+    "group": "Fight regression",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "fight-1024x768.png",
+    "group": "Fight regression",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    }
+  },
+  {
+    "file": "fight-390x844.png",
+    "group": "Fight regression",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "leader-1920x1080.png",
+    "group": "Celebration regression",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "leader-390x844.png",
+    "group": "Celebration regression",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "leader-844x390.png",
+    "group": "Celebration regression",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    }
+  },
+  {
+    "file": "goal-1920x1080.png",
+    "group": "Celebration regression",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "goal-390x844.png",
+    "group": "Celebration regression",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "pin-1920x1080.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "pin-390x844.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "pin-844x390.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    }
+  },
+  {
+    "file": "pin-wrong.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "pin-locked.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "pin-unconfigured.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "admin-unlocked.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "admin-change-pin.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "superadmin-reset-pin.png",
+    "group": "Station admin PIN",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "award-archive-1920x1080.png",
+    "group": "Award archive",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  {
+    "file": "award-archive-390x844.png",
+    "group": "Award archive",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  }
+]

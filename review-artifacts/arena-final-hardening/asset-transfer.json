@@ -1,0 +1,295 @@
+{
+  "method": "Chromium CDP Network trace, production static local server, 1920x1080 initial showcase, no clock emulation. Disk/gzip bytes are actual loaded files; local HTTP is uncompressed and not edge cache behavior. Mocked API resources may report zero network bytes.",
+  "results": [
+    {
+      "phase": "baseline",
+      "resources": [
+        {
+          "url": "/arena",
+          "mime": "text/html",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 1205
+        },
+        {
+          "url": "/assets/index-C_TdpUt1.css",
+          "mime": "text/css",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 134581,
+          "bodyBytes": 134392,
+          "gzipBytes": 28389
+        },
+        {
+          "url": "/assets/index-2h522wtU.js",
+          "mime": "text/javascript",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 406984,
+          "bodyBytes": 406788,
+          "gzipBytes": 123656
+        },
+        {
+          "url": "/assets/ArenaApp-CF2duZ6d.css",
+          "mime": "text/css",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 235849,
+          "bodyBytes": 235660,
+          "gzipBytes": 38931
+        },
+        {
+          "url": "/assets/ArenaApp-CjbtrE7N.js",
+          "mime": "text/javascript",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 64995,
+          "bodyBytes": 64800,
+          "gzipBytes": 20133
+        },
+        {
+          "url": "/icons/tvattligan-192.png",
+          "mime": "image/png",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 5429,
+          "bodyBytes": 5241,
+          "gzipBytes": 5137
+        },
+        {
+          "url": "/api/arena/bootstrap",
+          "mime": "application/json",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 2424
+        },
+        {
+          "url": "/api/arena/stats",
+          "mime": "application/json",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 2714
+        },
+        {
+          "url": "/arena-products/01_arena-biltvatt.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 159345,
+          "bodyBytes": 159154,
+          "gzipBytes": 159222
+        },
+        {
+          "url": "/arena-products/03_arena-tva-for-25.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 143243,
+          "bodyBytes": 143052,
+          "gzipBytes": 143065
+        },
+        {
+          "url": "/arena-products/05_arena-spolarvatska.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 114097,
+          "bodyBytes": 113906,
+          "gzipBytes": 113146
+        },
+        {
+          "url": "/arena-products/02_arena-korv-med-mos.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 318229,
+          "bodyBytes": 318038,
+          "gzipBytes": 316660
+        },
+        {
+          "url": "/arena-products/04_arena-kaffe-bulle.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 70670,
+          "bodyBytes": 70480,
+          "gzipBytes": 70334
+        },
+        {
+          "url": "/arena-products/06_arena-raksallad.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 115639,
+          "bodyBytes": 115448,
+          "gzipBytes": 115416
+        },
+        {
+          "url": "/arena-products/07_arena-tva-for-30.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 84566,
+          "bodyBytes": 84376,
+          "gzipBytes": 84372
+        },
+        {
+          "url": "/arena-showroom/portraits.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 101603,
+          "bodyBytes": 101412,
+          "gzipBytes": 101465
+        }
+      ],
+      "networkBytes": 1961573,
+      "fileBodyBytes": 1952747
+    },
+    {
+      "phase": "after",
+      "resources": [
+        {
+          "url": "/arena",
+          "mime": "text/html",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 1205
+        },
+        {
+          "url": "/assets/index-C_TdpUt1.css",
+          "mime": "text/css",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 134581,
+          "bodyBytes": 134392,
+          "gzipBytes": 28389
+        },
+        {
+          "url": "/assets/index-Dx_hjec8.js",
+          "mime": "text/javascript",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 406992,
+          "bodyBytes": 406796,
+          "gzipBytes": 123662
+        },
+        {
+          "url": "/assets/ArenaApp-CF2duZ6d.css",
+          "mime": "text/css",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 235849,
+          "bodyBytes": 235660,
+          "gzipBytes": 38931
+        },
+        {
+          "url": "/assets/ArenaApp--HoP3dPG.js",
+          "mime": "text/javascript",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 65478,
+          "bodyBytes": 65283,
+          "gzipBytes": 20323
+        },
+        {
+          "url": "/icons/tvattligan-192.png",
+          "mime": "image/png",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 5429,
+          "bodyBytes": 5241,
+          "gzipBytes": 5137
+        },
+        {
+          "url": "/api/arena/bootstrap",
+          "mime": "application/json",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 2424
+        },
+        {
+          "url": "/api/arena/stats",
+          "mime": "application/json",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 2714
+        },
+        {
+          "url": "/arena-products/03_arena-tva-for-25.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 143243,
+          "bodyBytes": 143052,
+          "gzipBytes": 143065
+        },
+        {
+          "url": "/arena-products/01_arena-biltvatt.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 159345,
+          "bodyBytes": 159154,
+          "gzipBytes": 159222
+        },
+        {
+          "url": "/arena-products/02_arena-korv-med-mos.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 318229,
+          "bodyBytes": 318038,
+          "gzipBytes": 316660
+        },
+        {
+          "url": "/arena-products/04_arena-kaffe-bulle.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 70670,
+          "bodyBytes": 70480,
+          "gzipBytes": 70334
+        },
+        {
+          "url": "/arena-products/05_arena-spolarvatska.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 114097,
+          "bodyBytes": 113906,
+          "gzipBytes": 113146
+        },
+        {
+          "url": "/arena-products/06_arena-raksallad.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 115639,
+          "bodyBytes": 115448,
+          "gzipBytes": 115416
+        },
+        {
+          "url": "/arena-products/07_arena-tva-for-30.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 84566,
+          "bodyBytes": 84376,
+          "gzipBytes": 84372
+        },
+        {
+          "url": "/arena-showroom/portraits.webp",
+          "mime": "image/webp",
+          "cache": false,
+          "status": 200,
+          "networkBytes": 101603,
+          "bodyBytes": 101412,
+          "gzipBytes": 101465
+        }
+      ],
+      "networkBytes": 1962064,
+      "fileBodyBytes": 1953238
+    }
+  ]
+}

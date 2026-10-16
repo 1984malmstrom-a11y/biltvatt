@@ -1,0 +1,14 @@
+{
+  "startHead": "54f6b95e3b314cbf16b4b8db60c0e53fa87e5b06",
+  "finalHead": "52a6d87d8024e7b5bd995db0253536130717e50e",
+  "branch": "feat/arena-v1",
+  "clean": true,
+  "originFeat": "4529926d6f8edc8e80fc08b2239f8eadcd8036d1",
+  "commitMessage": "Arena V1: add gaming awards station admin pin and final performance hardening",
+  "commitsCreated": 1,
+  "push": false,
+  "deploy": false,
+  "remoteMigration": false,
+  "merge": false,
+  "branchSwitch": false
+}

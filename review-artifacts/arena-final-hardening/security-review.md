@@ -1,0 +1,14 @@
+# Local security review
+
+Review scope: newly introduced Arena-only admin elevation, award/report ownership and period maintenance. Existing integrated auth, Owner protection, cross-site guard, station isolation, recovery and competition authorization remain in force.
+
+- All `/api/admin/arena/*` access requires either the existing legacy admin session (no Arena station cookie) or a verified station/admin elevation. Config, uploads, portraits, challenges and reports share that guard. The verified identity is reused downstream; request bodies cannot override station scope.
+- PIN KDF uses the established salted 600k PBKDF2 implementation. No default/initial PIN is invented. The public station session cannot set the initial secret. PIN reset is Owner/Superadmin-only, with recent-auth enforcement. No PIN/hash/cookie payload is audited or returned as readable credentials.
+- Station-scoped attempt reservation is atomic before verification, including simultaneous failures. This intentionally favors security over availability: someone holding the display session can temporarily lock admin by exhausting the bucket; controlled Superadmin reset is the recovery route.
+- Elevation token storage is hashed. Station/session/PIN-version binding prevents cross-tenant or old-credential reuse. Issue/change use credential-version checks after the KDF. Changed/revoked display sessions or PINs invalidate elevation. Direct requests remain server-protected even if UI state is stale.
+- Idle enforcement is server-side; background reads do not keep admin open. Return revokes, pagehide is best-effort, and idle/absolute expiry covers abrupt loss. Return remains usable if a local network request stalls. Cookie flags and existing CSRF guards remain unchanged.
+- Award creation checks parent report ownership, eligibility and frozen recipient IDs server-side, then inherits station/fight/competition ownership. Regeneration reads stored snapshot JSON only. No live names/TB/goal/standings are consulted by PDF rendering. New goal snapshots freeze explicit goal kind and seller ID; ambiguous legacy goal snapshots cannot create misleading goal awards.
+- PDF strings are WinAnsi hex, not executable PDF syntax. No remote assets, scripts, attachments, external font downloads or raster effect dependencies are introduced. Determinism, malicious names, Swedish text, page boundaries and independent reader parsing are verified.
+- Period maintenance has no HTTP/scheduled entry point in this pass. It is bounded, idempotent and resumable with explicit work metadata. No remote trigger, mail provider or production credential is used.
+
+No production security certification is claimed. Required manual checks: Owner provisioning and recovery custody, real mail-provider verification, backup/restore rehearsal, authorized MASTER-test migration/deploy and human sign-off. See docs/arena-final-release-readiness.md.

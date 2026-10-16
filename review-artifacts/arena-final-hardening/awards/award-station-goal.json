@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "id": "award-review-station-goal",
+  "type": "station",
+  "title": "STATIONSMÅL UPPNÅTT · Tingsryd",
+  "created_at": "2026-10-15T12:00:00.000Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": {
+    "id": "review",
+    "name": "Tingsryd"
+  },
+  "totals": {
+    "count": 87,
+    "points": 142,
+    "tb_ore": 1246000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Peter"
+  ],
+  "metric": "points",
+  "source": "award:hardening-station-goal:station-goal:review",
+  "leaderboard": [
+    {
+      "id": "p-0",
+      "name": "Peter",
+      "rank": 1,
+      "count": 25,
+      "points": 42,
+      "tb_ore": 450000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-1",
+      "name": "Alva",
+      "rank": 2,
+      "count": 21,
+      "points": 34,
+      "tb_ore": 300000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-2",
+      "name": "Jonas",
+      "rank": 3,
+      "count": 18,
+      "points": 28,
+      "tb_ore": 220000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-3",
+      "name": "Sara",
+      "rank": 4,
+      "count": 13,
+      "points": 22,
+      "tb_ore": 160000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "p-4",
+      "name": "Erik",
+      "rank": 5,
+      "count": 10,
+      "points": 16,
+      "tb_ore": 116000,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [
+    {
+      "name": "Biltvätt",
+      "count": 34,
+      "points": 68,
+      "tb_ore": 1000000
+    },
+    {
+      "name": "Kaffe + bulle",
+      "count": 18,
+      "points": 18,
+      "tb_ore": 72500
+    },
+    {
+      "name": "Korv med mos",
+      "count": 15,
+      "points": 15,
+      "tb_ore": 48000
+    },
+    {
+      "name": "Spolarvätska",
+      "count": 12,
+      "points": 24,
+      "tb_ore": 85600
+    },
+    {
+      "name": "Räksallad",
+      "count": 8,
+      "points": 17,
+      "tb_ore": 39900
+    }
+  ],
+  "goals": [
+    {
+      "kind": "station",
+      "seller_id": null,
+      "name": "Lagets mål",
+      "points": 142,
+      "target_points": 140
+    }
+  ],
+  "award": {
+    "variant": "station-goal",
+    "recipient": {
+      "id": "review",
+      "name": "Tingsryd"
+    },
+    "source_report_id": "hardening-station-goal",
+    "context": "Tingsryd",
+    "result": "142 poäng"
+  }
+}

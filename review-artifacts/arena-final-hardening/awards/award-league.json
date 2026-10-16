@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "id": "award-review-league",
+  "type": "fight",
+  "title": "LIGAMÄSTARE · Tingsryd",
+  "created_at": "2026-10-15T12:00:00.000Z",
+  "period": {
+    "start": "2026-09-01",
+    "end": "2026-09-30"
+  },
+  "station": null,
+  "totals": {
+    "count": 87,
+    "points": 142,
+    "tb_ore": 1246000,
+    "unknown_tb_count": 0
+  },
+  "winner_names": [
+    "Tingsryd"
+  ],
+  "metric": "points",
+  "source": "award:hardening-league:league:review",
+  "leaderboard": [
+    {
+      "id": "review",
+      "name": "Tingsryd",
+      "rank": 1,
+      "count": 87,
+      "points": 142,
+      "tb_ore": 1246000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "k",
+      "name": "Karlskrona",
+      "rank": 2,
+      "count": 82,
+      "points": 134,
+      "tb_ore": 1226000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "club-2",
+      "name": "Kalmar",
+      "rank": 3,
+      "count": 77,
+      "points": 126,
+      "tb_ore": 1206000,
+      "unknown_tb_count": 0
+    },
+    {
+      "id": "club-3",
+      "name": "Ronneby",
+      "rank": 4,
+      "count": 72,
+      "points": 118,
+      "tb_ore": 1186000,
+      "unknown_tb_count": 0
+    }
+  ],
+  "activities": [],
+  "goals": [
+    {
+      "kind": "station",
+      "seller_id": null,
+      "name": "Lagets mål",
+      "points": 402,
+      "target_points": 140
+    }
+  ],
+  "competition": {
+    "id": "review-league",
+    "station_id": "review",
+    "name": "Sydostmästerskapet",
+    "format": "league",
+    "rules": {
+      "name": "Sydostmästerskapet",
+      "request_id": "review-only",
+      "format": "league",
+      "station_ids": [
+        "review",
+        "k",
+        "club-2",
+        "club-3"
+      ],
+      "metric": "points",
+      "start_day": "2026-10-14",
+      "end_day": "2026-10-20",
+      "double_round": false,
+      "playoff_size": 4,
+      "match_days": 1,
+      "win": 1,
+      "draw": 0.5,
+      "secondary_metric": "tb",
+      "tie_rule": "secondary",
+      "scope": {
+        "kind": "all"
+      }
+    },
+    "phase": "finished",
+    "frozen": true,
+    "champion_ids": [
+      "review"
+    ],
+    "standings": [
+      {
+        "id": "review",
+        "name": "Tingsryd",
+        "rank": 1,
+        "seed": 1,
+        "played": 3,
+        "won": 3,
+        "drawn": 0,
+        "lost": 0,
+        "match_points": 3,
+        "metric_for": 126,
+        "metric_against": 90
+      },
+      {
+        "id": "k",
+        "name": "Karlskrona",
+        "rank": 2,
+        "seed": 2,
+        "played": 3,
+        "won": 2,
+        "drawn": 0,
+        "lost": 1,
+        "match_points": 2,
+        "metric_for": 111,
+        "metric_against": 96
+      },
+      {
+        "id": "club-2",
+        "name": "Kalmar",
+        "rank": 3,
+        "seed": 3,
+        "played": 3,
+        "won": 0,
+        "drawn": 1,
+        "lost": 2,
+        "match_points": 0.5,
+        "metric_for": 96,
+        "metric_against": 102
+      },
+      {
+        "id": "club-3",
+        "name": "Ronneby",
+        "rank": 4,
+        "seed": 4,
+        "played": 3,
+        "won": 0,
+        "drawn": 1,
+        "lost": 2,
+        "match_points": 0.5,
+        "metric_for": 81,
+        "metric_against": 108
+      }
+    ],
+    "matches": [
+      {
+        "id": "r1-0",
+        "round": 1,
+        "day": "2026-10-14",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "review",
+        "away_id": "club-3",
+        "home_name": "Tingsryd",
+        "away_name": "Ronneby",
+        "phase": "finished",
+        "score": [
+          126,
+          121
+        ],
+        "winner_ids": [
+          "review"
+        ],
+        "start_at": "2026-10-13T22:00:00.000Z",
+        "end_at": "2026-10-14T22:00:00.000Z"
+      },
+      {
+        "id": "r1-1",
+        "round": 1,
+        "day": "2026-10-14",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "k",
+        "away_id": "club-2",
+        "home_name": "Karlskrona",
+        "away_name": "Kalmar",
+        "phase": "finished",
+        "score": [
+          123,
+          119
+        ],
+        "winner_ids": [
+          "k"
+        ],
+        "start_at": "2026-10-13T22:00:00.000Z",
+        "end_at": "2026-10-14T22:00:00.000Z"
+      },
+      {
+        "id": "r2-2",
+        "round": 2,
+        "day": "2026-10-15",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "club-2",
+        "away_id": "review",
+        "home_name": "Kalmar",
+        "away_name": "Tingsryd",
+        "phase": "finished",
+        "score": [
+          120,
+          117
+        ],
+        "winner_ids": [],
+        "start_at": "2026-10-14T22:00:00.000Z",
+        "end_at": "2026-10-15T22:00:00.000Z"
+      },
+      {
+        "id": "r2-3",
+        "round": 2,
+        "day": "2026-10-15",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "k",
+        "away_id": "club-3",
+        "home_name": "Karlskrona",
+        "away_name": "Ronneby",
+        "phase": "finished",
+        "score": [
+          117,
+          115
+        ],
+        "winner_ids": [],
+        "start_at": "2026-10-14T22:00:00.000Z",
+        "end_at": "2026-10-15T22:00:00.000Z"
+      },
+      {
+        "id": "r3-4",
+        "round": 3,
+        "day": "2026-10-16",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "review",
+        "away_id": "k",
+        "home_name": "Tingsryd",
+        "away_name": "Karlskrona",
+        "phase": "finished",
+        "score": [
+          114,
+          113
+        ],
+        "winner_ids": [],
+        "start_at": "2026-10-15T22:00:00.000Z",
+        "end_at": "2026-10-16T22:00:00.000Z"
+      },
+      {
+        "id": "r3-5",
+        "round": 3,
+        "day": "2026-10-16",
+        "stage": "league",
+        "slot": 0,
+        "home_id": "club-2",
+        "away_id": "club-3",
+        "home_name": "Kalmar",
+        "away_name": "Ronneby",
+        "phase": "finished",
+        "score": [
+          111,
+          111
+        ],
+        "winner_ids": [],
+        "start_at": "2026-10-15T22:00:00.000Z",
+        "end_at": "2026-10-16T22:00:00.000Z"
+      }
+    ],
+    "bracket": [],
+    "own_match": null
+  },
+  "winner_ids": [
+    "review"
+  ],
+  "award": {
+    "variant": "league",
+    "recipient": {
+      "id": "review",
+      "name": "Tingsryd"
+    },
+    "source_report_id": "hardening-league",
+    "context": "Sydostmästerskapet",
+    "result": "#1 · 3 matchpoäng",
+    "standing": {
+      "rank": 1,
+      "played": 3,
+      "won": 3,
+      "drawn": 0,
+      "lost": 0,
+      "match_points": 3
+    }
+  }
+}

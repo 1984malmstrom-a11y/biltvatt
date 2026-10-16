@@ -1,0 +1,946 @@
+{
+  "title": "Arena final hardening",
+  "startHead": "54f6b95e3b314cbf16b4b8db60c0e53fa87e5b06",
+  "curatedPngCount": 35,
+  "browserPngCount": 25,
+  "pdfPageRenderCount": 10,
+  "pdfCount": 10,
+  "images": [
+    {
+      "file": "start-1920x1080.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "start-1536x864.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "pixels": [
+        1536,
+        864
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "start-1448x1086.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 1448,
+        "height": 1086
+      },
+      "pixels": [
+        1448,
+        1086
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "start-1024x768.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "pixels": [
+        1024,
+        768
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "start-390x844.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "start-844x390.png",
+      "group": "Startscreen",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "pixels": [
+        844,
+        390
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-1920x1080.png",
+      "group": "Fight regression",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-1024x768.png",
+      "group": "Fight regression",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "pixels": [
+        1024,
+        768
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "fight-390x844.png",
+      "group": "Fight regression",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "leader-1920x1080.png",
+      "group": "Celebration regression",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "leader-390x844.png",
+      "group": "Celebration regression",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "leader-844x390.png",
+      "group": "Celebration regression",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "pixels": [
+        844,
+        390
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "goal-1920x1080.png",
+      "group": "Celebration regression",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "goal-390x844.png",
+      "group": "Celebration regression",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-1920x1080.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-390x844.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-844x390.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "pixels": [
+        844,
+        390
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-wrong.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-locked.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        844
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "pin-unconfigured.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "admin-unlocked.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "admin-change-pin.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "superadmin-reset-pin.png",
+      "group": "Station admin PIN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1080
+      ],
+      "capture": "viewport"
+    },
+    {
+      "file": "award-archive-1920x1080.png",
+      "group": "Award archive",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "pixels": [
+        1920,
+        1317
+      ],
+      "capture": "full-page"
+    },
+    {
+      "file": "award-archive-390x844.png",
+      "group": "Award archive",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "pixels": [
+        390,
+        2408
+      ],
+      "capture": "full-page"
+    },
+    {
+      "file": "awards/award-cup.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-cup.pdf"
+    },
+    {
+      "file": "awards/award-fight.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-fight.pdf"
+    },
+    {
+      "file": "awards/award-individual.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-individual.pdf"
+    },
+    {
+      "file": "awards/award-league.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-league.pdf"
+    },
+    {
+      "file": "awards/award-monthly.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-monthly.pdf"
+    },
+    {
+      "file": "awards/award-personal-goal.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-personal-goal.pdf"
+    },
+    {
+      "file": "awards/award-playoffs.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-playoffs.pdf"
+    },
+    {
+      "file": "awards/award-station-goal.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-station-goal.pdf"
+    },
+    {
+      "file": "awards/award-station.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-station.pdf"
+    },
+    {
+      "file": "awards/award-weekly.png",
+      "group": "Gaming Awards · riktiga A4-PDF",
+      "pixels": [
+        778,
+        1100
+      ],
+      "capture": "Poppler PDF render",
+      "pdf": "awards/award-weekly.pdf"
+    }
+  ],
+  "notes": [
+    "No duplicate/internal screenshot dump.",
+    "Synthetic local QA data; no production accounts or secrets.",
+    "Exact A4 PDFs independently parsed/rendered with PyMuPDF and Poppler.",
+    "No push/deploy/remote migration/merge/branch switch."
+  ],
+  "files": [
+    {
+      "path": "admin-change-pin.png",
+      "bytes": 490147,
+      "sha256": "0abfeea4851aea7406dd1cf808c375f3cf10a4d4c6a370744fb1ac119f2280a9"
+    },
+    {
+      "path": "admin-query-plans.json",
+      "bytes": 1005,
+      "sha256": "398fe6956d43b07f73c5d9f1e43c0acfbb114bf66b59dd5eb244a4ed3dbbc90a"
+    },
+    {
+      "path": "admin-unlocked.png",
+      "bytes": 662649,
+      "sha256": "a637197d169d551f60b10b71d1c9e4b57b90b4b87f5f39076345f5c9ba3e9d11"
+    },
+    {
+      "path": "archive-browser.log",
+      "bytes": 412,
+      "sha256": "cc12618bbfba81d66075188b94092cf1dc285a1fedf3c07b549d614a646057e7"
+    },
+    {
+      "path": "arena-playwright.log",
+      "bytes": 38177,
+      "sha256": "e7736fd9c5c0a17cfdeb6583db910c1263fdae99c22ffdc3cb177eb43a597194"
+    },
+    {
+      "path": "asset-transfer.json",
+      "bytes": 8180,
+      "sha256": "7fff19baac7151c8740ced94bdf5b4441c1b32903928caa0d2dbc2ffd30514a8"
+    },
+    {
+      "path": "award-archive-1920x1080.png",
+      "bytes": 648742,
+      "sha256": "4d360103c450598a4f7ce9c96cc560d063012dd909dcef3b347f356ba9b4fc6e"
+    },
+    {
+      "path": "award-archive-390x844.png",
+      "bytes": 355900,
+      "sha256": "c8258dcbabec6aa04d56f62d2ac323e77a7e3ac183b4988bd494bd298601c438"
+    },
+    {
+      "path": "award-pdf-validation.json",
+      "bytes": 2936,
+      "sha256": "d20bd43fc7a7ed021f00087f1ee168b9658c310039145d7dd4841cd961f4071d"
+    },
+    {
+      "path": "award-pdf-validation.md",
+      "bytes": 1389,
+      "sha256": "4fb1223a354c8b7d89990277cc569ccf8afd355aeaf410fabbef8b56df3877f3"
+    },
+    {
+      "path": "awards/award-cup.json",
+      "bytes": 10137,
+      "sha256": "af880fc0d53ed1bb5dcd71486f4196bf7a7d3f8055a7ef606850dffac3846885"
+    },
+    {
+      "path": "awards/award-cup.pdf",
+      "bytes": 5175,
+      "sha256": "7f25eaa46046909bf204d7f4f4ba98d9fe7d780aad14997db660b84b6d771c8b"
+    },
+    {
+      "path": "awards/award-cup.png",
+      "bytes": 68592,
+      "sha256": "b07ece26ecf1c1ce20f048f329e24aa1490a41856e8d08f080a82a6f4d1ad67a"
+    },
+    {
+      "path": "awards/award-fight.json",
+      "bytes": 1394,
+      "sha256": "fdd437cfa5708c7b4d1e91fc689f79db3706a4150ba7d30b17507783726d7c0d"
+    },
+    {
+      "path": "awards/award-fight.pdf",
+      "bytes": 5171,
+      "sha256": "3fcbfdfe4bb3c503ef7488598c7cab8116ac873f60e0898abcd59122adc0cb5b"
+    },
+    {
+      "path": "awards/award-fight.png",
+      "bytes": 68484,
+      "sha256": "e6bc7e8713797ea2af41dea0b3cd5e606d60a5bb245f069a9d09e0004a767cad"
+    },
+    {
+      "path": "awards/award-individual.json",
+      "bytes": 1722,
+      "sha256": "d6fc6c44b51dea84b25de357e40d126a7c9861fd8a57e330e30e88ea16b24d86"
+    },
+    {
+      "path": "awards/award-individual.pdf",
+      "bytes": 4981,
+      "sha256": "5a3ff91ebbf80a96e646d733bc501258e926cee236acf4636dcec341c4560a68"
+    },
+    {
+      "path": "awards/award-individual.png",
+      "bytes": 62403,
+      "sha256": "a4a3673d5b84ae4491b9ec79a9c595e97adc320f3aaf1788ad011169a54bd082"
+    },
+    {
+      "path": "awards/award-league.json",
+      "bytes": 6481,
+      "sha256": "59db3aae1700775f3b5346c3c564c00fdaafb4177e0bc2f2b7534cfd1e54703d"
+    },
+    {
+      "path": "awards/award-league.pdf",
+      "bytes": 5189,
+      "sha256": "21cc4e0b8093754d51ebf2b2c5032542bda241059c0e7b08709b66b9ee408a5a"
+    },
+    {
+      "path": "awards/award-league.png",
+      "bytes": 68997,
+      "sha256": "361312bbda48d2255fd62917f8b8b02b98e3390949be15ce7d05136acf5d5392"
+    },
+    {
+      "path": "awards/award-monthly.json",
+      "bytes": 1652,
+      "sha256": "0602d987b9656a06b786de4bd5bed91f575e99b2af6cc10414ce708c37202070"
+    },
+    {
+      "path": "awards/award-monthly.pdf",
+      "bytes": 4948,
+      "sha256": "a1cc90dbca29c51a5b2dcdcf09be54615658be2c8d99ef54bcef7881b66f8e61"
+    },
+    {
+      "path": "awards/award-monthly.png",
+      "bytes": 57615,
+      "sha256": "638748103d76f4c294786ba8208dd06a7038bc50708be92a6ed7486ecd2e1205"
+    },
+    {
+      "path": "awards/award-personal-goal.json",
+      "bytes": 1687,
+      "sha256": "ee17da6cc5834c0001c7317ca3f56ee0863d218877398ce98a3f4e2b7df0ab73"
+    },
+    {
+      "path": "awards/award-personal-goal.pdf",
+      "bytes": 5124,
+      "sha256": "a7e7d898c2b056742b0ef0e370c3e41fa9b95c26f43468d530d3ad9df8319f3f"
+    },
+    {
+      "path": "awards/award-personal-goal.png",
+      "bytes": 64421,
+      "sha256": "2c609c80b72ca5efe070ebff87536b6f8c656820476b98b1ff52ff0ec8afb3bc"
+    },
+    {
+      "path": "awards/award-playoffs.json",
+      "bytes": 8506,
+      "sha256": "6c341dbd704584b3ce68ffe2f1ac848b8af6a198de94188cb30c315d150def61"
+    },
+    {
+      "path": "awards/award-playoffs.pdf",
+      "bytes": 5207,
+      "sha256": "c2f77f999ab1acf3475b04c1c9b1aef342f73c14b4247cad5db9d1b93ba672fb"
+    },
+    {
+      "path": "awards/award-playoffs.png",
+      "bytes": 71255,
+      "sha256": "172d9a7b24b164df3ed633711601162a7348f7a911f66047c4a34888d3e0f849"
+    },
+    {
+      "path": "awards/award-station-goal.json",
+      "bytes": 2286,
+      "sha256": "50a3a5cb85bd5f691fcf7ecb9bbd63070142cc8d109f70f929b9c86d94fa08c7"
+    },
+    {
+      "path": "awards/award-station-goal.pdf",
+      "bytes": 5119,
+      "sha256": "23f1324712680b3fa2286ee218cea1139fb23f051e09a79cef4cea417ada1ea5"
+    },
+    {
+      "path": "awards/award-station-goal.png",
+      "bytes": 65713,
+      "sha256": "bd2c3d33318dd5c6ee0be37fe2d17624e19fae006e3a026e24a8ab724a439985"
+    },
+    {
+      "path": "awards/award-station.json",
+      "bytes": 1399,
+      "sha256": "06f7724ab0151bc17b76f9bac06b1d78e3aaadd10a1d68f832eb20adcf2c4195"
+    },
+    {
+      "path": "awards/award-station.pdf",
+      "bytes": 5178,
+      "sha256": "0ffe303ca7c855b93d948354340c26c2d9e1546ceda31403cbeea307a1d58495"
+    },
+    {
+      "path": "awards/award-station.png",
+      "bytes": 67737,
+      "sha256": "3a8a009d58d442dff114ce368b4f211b09ad7b45b53698b20f270eefc3d9ec2c"
+    },
+    {
+      "path": "awards/award-weekly.json",
+      "bytes": 1645,
+      "sha256": "89792ece228cfd23365d4c06416355689b3a10cdfc7525c06604598dc47c715a"
+    },
+    {
+      "path": "awards/award-weekly.pdf",
+      "bytes": 4923,
+      "sha256": "599c6a9b3f84e48aa3356cbaafc1899a5a163b4855bb01b6106540456f2a63a0"
+    },
+    {
+      "path": "awards/award-weekly.png",
+      "bytes": 56596,
+      "sha256": "6af8c38aec1b2102a6b8544f3e99c7b5eaecf291892dd1470facd56f4b504304"
+    },
+    {
+      "path": "baseline-integrity.json",
+      "bytes": 189,
+      "sha256": "5810c648fedd96bcf3ab0820bcbc44445cee8cb261184450221622f0d838a1ee"
+    },
+    {
+      "path": "browser-coverage.json",
+      "bytes": 106,
+      "sha256": "c7c927722456dcb308907dae6a4bb67e2f986751ca8ab7b51b5884236bb6f68c"
+    },
+    {
+      "path": "build.log",
+      "bytes": 3014,
+      "sha256": "0a7342456cddcda466f313662f4e2b3866c613b4037a9f043c5ff34873921a08"
+    },
+    {
+      "path": "bundle-report.json",
+      "bytes": 4857,
+      "sha256": "91dc3d55472ecc8585c4bac4e07ce9405cc30b53850f9c9893f7deae9ac9883b"
+    },
+    {
+      "path": "bundle-review.md",
+      "bytes": 1296,
+      "sha256": "5ecfdd2368f5e84a9af78805529803503485b89a8c3a0291245e27c251827f12"
+    },
+    {
+      "path": "capture-manifest.json",
+      "bytes": 3542,
+      "sha256": "e136c7a9b816525ef24c26360c3f6f2034c3b8424a54204e0091996b06a84a8a"
+    },
+    {
+      "path": "changed-files.txt",
+      "bytes": 1246,
+      "sha256": "6407d7cefd5b46bb38f1f23f2a41381082f1539b361ff05b3f445436c2184a6e"
+    },
+    {
+      "path": "deployment-readiness.md",
+      "bytes": 4002,
+      "sha256": "be81ec214ce7772c86a62585d569f73e3b167bb97aaae3443bad8c20de6486b2"
+    },
+    {
+      "path": "development-request-overlap.json",
+      "bytes": 273,
+      "sha256": "632326fb83633f3bd67d2e5a1cbb87f993bdb9466753cbe5914447a33fc1d6c2"
+    },
+    {
+      "path": "fight-1024x768.png",
+      "bytes": 782654,
+      "sha256": "c01ccd35156d06b5257811f949be354efd9a9fade46c6694e87797e0880a28a2"
+    },
+    {
+      "path": "fight-1920x1080.png",
+      "bytes": 1816300,
+      "sha256": "143ae94569190c16275a1e029defb895858b35de02ff9530c8dcdd7fbb84a4e0"
+    },
+    {
+      "path": "fight-390x844.png",
+      "bytes": 386772,
+      "sha256": "e5dfefa671ccf2941a11e61043b40cb47aecc2f68b155262c64d2787641cb65d"
+    },
+    {
+      "path": "final-report.md",
+      "bytes": 5249,
+      "sha256": "b734c82a716f2560193b24110b4b3ef779e52052edade0157e005ecd668bb606"
+    },
+    {
+      "path": "git-final-state.json",
+      "bytes": 456,
+      "sha256": "d41f0643e6ade2a0d9f50877cf753e93ca492b4a62b1daec4aaa75e8f22a4a1b"
+    },
+    {
+      "path": "goal-1920x1080.png",
+      "bytes": 1685750,
+      "sha256": "6d1ece6d37aaf6630143c1c09b0c9c25460167826edc8fa863b182d4d5c57c38"
+    },
+    {
+      "path": "goal-390x844.png",
+      "bytes": 360502,
+      "sha256": "56a40d78ae854b57f2cbd50fcc945a340c947c26581bd6476d8fc3fb9b606717"
+    },
+    {
+      "path": "index.html",
+      "bytes": 11616,
+      "sha256": "a15a908589d564b74777f2fa58ee8dda34b81548c43a219c3b7b78134cfd0c8b"
+    },
+    {
+      "path": "leader-1920x1080.png",
+      "bytes": 1686979,
+      "sha256": "97d3b40150e3e7a87cdaca7e65ff7084677eaf50f4b77f1c2df426e32b89226b"
+    },
+    {
+      "path": "leader-390x844.png",
+      "bytes": 360502,
+      "sha256": "56a40d78ae854b57f2cbd50fcc945a340c947c26581bd6476d8fc3fb9b606717"
+    },
+    {
+      "path": "leader-844x390.png",
+      "bytes": 338354,
+      "sha256": "cf4dde3380c5e7edfd2dd0f87dcf7de1a4eab43302ee45b1ba5ae41aecf48a90"
+    },
+    {
+      "path": "local-finalization-table.log",
+      "bytes": 650,
+      "sha256": "2a6416107c8db722050eb6a7a912710d495ab362c53a21f9fa4e5dbc022d74f1"
+    },
+    {
+      "path": "local-migration.log",
+      "bytes": 2698,
+      "sha256": "294b2b5b23e278432df73e52c0cdf11cb4f592d188260f5af7fd111f15f6f9a3"
+    },
+    {
+      "path": "memory-report.json",
+      "bytes": 2799,
+      "sha256": "9e7d9c447f19041b9581e3dd7038593b93788f9b781446efbf9a35617803a8d1"
+    },
+    {
+      "path": "memory-review.md",
+      "bytes": 1274,
+      "sha256": "efec6229500d23c292391138a5f923544e9533e2145f6fb02a0b649f419f6321"
+    },
+    {
+      "path": "migration-review.md",
+      "bytes": 1469,
+      "sha256": "ec11042a9e1c2d76da4df8702351d7853a6e0f7b5903ed79abad6fb948da13cc"
+    },
+    {
+      "path": "native-rerun.log",
+      "bytes": 743,
+      "sha256": "cce4b1b772e337d480f63bdc7ce7d5b8aa685f8274b97b4ac957c4f4f77586aa"
+    },
+    {
+      "path": "performance-after.json",
+      "bytes": 124594,
+      "sha256": "fdd11b1d44dcf1c096954be08750f2bf62b08f91febcd1771462a6cbac85787c"
+    },
+    {
+      "path": "performance-baseline.json",
+      "bytes": 142523,
+      "sha256": "d0213005823c5622930a781fd82e36ada59e0023b2891061b0f90a3dc36bfc64"
+    },
+    {
+      "path": "performance-diff.md",
+      "bytes": 6394,
+      "sha256": "4df692c78156fc454fd3d9edccd9b6af686e3f2b2af3fb00c83b5ab0e415108f"
+    },
+    {
+      "path": "pin-1920x1080.png",
+      "bytes": 501116,
+      "sha256": "a05981cc66e9ec271222b44fa2e278f72eacc56896fe8edac38a0e9ef7c60088"
+    },
+    {
+      "path": "pin-390x844.png",
+      "bytes": 114053,
+      "sha256": "11fb30c602b27aea11c01b363b589d6c79f0e4e0316b0b25366185f296b311af"
+    },
+    {
+      "path": "pin-844x390.png",
+      "bytes": 136018,
+      "sha256": "b64d569a1f3a26f55c7abc1166ce423edda7f55e3d0ab8710db41b302e8b7b15"
+    },
+    {
+      "path": "pin-locked.png",
+      "bytes": 117050,
+      "sha256": "97f5f7a61d6182a4ef5208eca4060f0b919eb2a8a200301b4b346ff57c84b805"
+    },
+    {
+      "path": "pin-unconfigured.png",
+      "bytes": 463852,
+      "sha256": "0c3619b175176762a06864d70337bcfd6cd1fb9090ff527792f955930016b296"
+    },
+    {
+      "path": "pin-wrong.png",
+      "bytes": 508672,
+      "sha256": "79f03daeac48fd129e2f8bdd100a4016ed2f3957fa78a68a47027d518fed033c"
+    },
+    {
+      "path": "playwright-results.json",
+      "bytes": 347203,
+      "sha256": "4dfca77affacfaa26072e1555c69670b4b1d8530a9b5069a18b6d2987af25928"
+    },
+    {
+      "path": "playwright-targeted-results.json",
+      "bytes": 16338,
+      "sha256": "42ca07e0b103fd08ec66202856c3037255aed04e6a40eeabcc682dbb76869315"
+    },
+    {
+      "path": "playwright-targeted.log",
+      "bytes": 1758,
+      "sha256": "bf0b0be0d31a4f36f62b13f9a2bdb81022eb60a0b9263c08ac2b5e1854b328c3"
+    },
+    {
+      "path": "query-after.json",
+      "bytes": 33151,
+      "sha256": "cec4eb4f216f2de0206ed4b9cecb2e4c604528de82336864c8e7b057358039d1"
+    },
+    {
+      "path": "query-baseline.json",
+      "bytes": 33326,
+      "sha256": "31043c85a2951bc18059a286c73b36c8e4fa08259e76497e23df7e2f061e7985"
+    },
+    {
+      "path": "query-budget-after.json",
+      "bytes": 92972,
+      "sha256": "d30f6848edffc216ef67cfa83bc067047dc0d0c0a1ffdb25a10a4fe5bc695136"
+    },
+    {
+      "path": "query-budget-baseline.json",
+      "bytes": 93406,
+      "sha256": "7eb24a455697fcc0b26257a7bafcf15230d546fb2a6c839e9a9343403f30e4af"
+    },
+    {
+      "path": "query-plan-review.md",
+      "bytes": 1398,
+      "sha256": "a7936492fde79141ec6cb60da70456305cb4e2e05bab5b2bc50b9fad91e4fac2"
+    },
+    {
+      "path": "request-budget.md",
+      "bytes": 1363,
+      "sha256": "020e04c1807de2a5aeeae09d8704db72406ee877ccd34a4e20e75f45f3f74157"
+    },
+    {
+      "path": "request-overlap.json",
+      "bytes": 273,
+      "sha256": "1bcb58d8013847afb72438f95d4efb4ab51619497e442e7e000958cc35a4315b"
+    },
+    {
+      "path": "responsive-report.json",
+      "bytes": 614,
+      "sha256": "d898b199902aa42fd9dd0927282360381ff8025acb901ea8c1990d5e64b75e13"
+    },
+    {
+      "path": "responsive-report.md",
+      "bytes": 883,
+      "sha256": "2ab04f9947e54b3554305b25dff6019db87f200aee06723ebde9a2192daac211"
+    },
+    {
+      "path": "security-review.md",
+      "bytes": 2901,
+      "sha256": "cbb9a39e3a61cd0aa2dd9930bb63a2c890b624c5e28f04600c8c0a07c9831ebc"
+    },
+    {
+      "path": "start-1024x768.png",
+      "bytes": 724774,
+      "sha256": "a633c86dacba76dbe85b486a46f53df76fe988896fdf8eb87bdd0eb7f77d7fd7"
+    },
+    {
+      "path": "start-1448x1086.png",
+      "bytes": 1321523,
+      "sha256": "3bbcf6c8577ead706c7d29c0d473a3a6e46ac5bf35ae1dd21c0cb7ee0ac9c8a9"
+    },
+    {
+      "path": "start-1536x864.png",
+      "bytes": 1155810,
+      "sha256": "d53cdbb6d363c4dab09ed0f36e70b84a020e4045b0922664921ec9212ba12107"
+    },
+    {
+      "path": "start-1920x1080.png",
+      "bytes": 1677413,
+      "sha256": "53909e906ba824e5ded2856da9ae8075bd604b93621633bdac7c9f99799c5526"
+    },
+    {
+      "path": "start-390x844.png",
+      "bytes": 359546,
+      "sha256": "9ceff35916c517a662d4e854a9042a4d8b81f7d0795b981f9861b2afc870c231"
+    },
+    {
+      "path": "start-844x390.png",
+      "bytes": 333645,
+      "sha256": "8b8775f901049fd0a477a944ef6789eaadd3cb78362f89bc7d82e152446a63be"
+    },
+    {
+      "path": "superadmin-reset-pin.png",
+      "bytes": 222325,
+      "sha256": "1718fb958071b124958d04a606622db97168463c870194df73f6e407d30d8a66"
+    },
+    {
+      "path": "test-report.md",
+      "bytes": 3091,
+      "sha256": "078c8d8a97fea471b6e377f4cbfe7d65dba00af04ec73b138bceb877d6ed9cc4"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 254,
+      "sha256": "31fa748d865d3e344ee49d5828ee11adf82c11961f347c8f3816dfc985ca3a35"
+    },
+    {
+      "path": "unit-results.json",
+      "bytes": 161175,
+      "sha256": "340a5b6a07a42f351ea8904e15380a30d866dd87d77865274a00f01979a07b69"
+    },
+    {
+      "path": "unit-test.log",
+      "bytes": 431,
+      "sha256": "42376d47cedbb5fadce21dc77a0e85230400eec491ce518ccd8cff90476a6084"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 341,
+      "sha256": "977620bb7df65613a83bc6a936297183b8826cc2a3c76e16c632aa6dd015cb04"
+    }
+  ],
+  "finalHead": "52a6d87d8024e7b5bd995db0253536130717e50e",
+  "workingTreeClean": true,
+  "totalReviewFiles": 101
+}
