@@ -1,3 +1,5 @@
+> **Fortsättning 2026-10-17:** Alla 13 pilotmigrationer och faktisk Windows-restore är klara, och Resend är Verified enligt operatören. Använd [nästa-steg-runbooken](arena-pilot-next-steps.md). Befintliga privata configs/kvitton bevaras. Äldre start-/inventeringsblock nedan är referens, inte en order att skapa resurser eller göra om genomförda steg.
+
 > **Uppdatering 2026-10-17:** För den redan skapade pilotdatabasen `8044ee1b-9185-4644-954f-d5455330a7a7`, använd [det nya stegvisa Windows-flödet](arena-pilot-finalization.md). Kör inte databascreation eller den äldre kompletta körordningen igen. `PRAGMA integrity_check` stöds inte via D1:s SQL-gränssnitt; full kontroll görs på faktiskt återställd lokal SQLite.
 
 # ARENAN – isolerad VD-pilot, kontrollerad Windows-release
@@ -16,7 +18,7 @@ Uppdatering från Resend-passet: separat mailerkod/config och egen körordning f
 | MASTER D1 / DB | `stationmastertest` / `ca2d4bb8-0c28-47b7-9514-8c893ea47c09` | Skyddad; migrations-master |
 | Integrerad Arena / ARENA_DB | `arena-master-test` / `767b5a12-6b40-4516-9f7c-e072c1130480` | Skyddad; får inte återanvändas |
 | Ny pilot-Worker | `arenan-pilot-vd-20261019` | Föreslagen, inte skapad av detta pass |
-| Ny pilot-D1 | `arenan-pilot-vd-20261019` | Föreslagen, UUID saknas tills ny resurs skapats |
+| Pilot-D1 | `arenan-pilot-vd-20261019` / `8044ee1b-9185-4644-954f-d5455330a7a7` | Finns och migrerad enligt operatören; aldrig skapa igen |
 | ARENA_MAILER-service | Operatören anger en separat, verifierad mailer | Krävs; ingen finns konfigurerad här |
 
 Worker- och D1-namn ligger i olika namnrymder. Kontot, remote-bindningar och namnens tillgänglighet är **inte verifierade**: miljöns konfigurerade Cloudflare-token gav GET /accounts **403, kod 9109, Invalid access token**. Inga resurser har skapats/ändrats. Namn ovan är hämtade ur tillgängliga Git-konfigurationer, inte en påstådd fullständig kontoinventering.
@@ -83,20 +85,9 @@ $D1Before | ConvertTo-Json -Depth 10 | Set-Content .arena-pilot/d1-before-privat
 
 **STOPP 0:** rätt konto/ägare, fullständig inventering, de skyddade resursernas URL:er/versions-ID:n, plan/CPU/D1-budget och begränsad pilotgrupp ska godkännas. Om GET misslyckas, saknar sidor eller visar oväntade resurser: ingen mutation. Spara skyddade Worker-versioner och välj oföränderliga befintliga försäljnings-/historikreferenser privat som före/efter-underlag. En aktiv Tvättligan kan få legitima nya försäljningar; totalrader kan därför inte ensamma bevisa påverkan.
 
-## 3. Skapa endast NY pilot-D1
+## 3. Pilot-D1 finns redan – skapa inte igen
 
-Resursconfigen nedan används bara för D1-skapandet. Den saknar databasbindning och app-entry och kan inte publicera appen. `d1 create` har inget --json-stöd i låst Wrangler; läs dess faktiska UUID i svaret. EU-jurisdiktion är ett explicit val att godkänna, inte en påstådd befintlig placering.
-
-```powershell
-@{ name=$Pilot; account_id=$Account; compatibility_date='2026-10-07' } | ConvertTo-Json | Set-Content -Encoding ascii .arena-pilot/resource-only.json
-Gate 'SKAPA-NY-PILOT-D1'
-W d1 create $Pilot --jurisdiction eu --update-config=false --config .arena-pilot/resource-only.json
-$ArenaId = Read-Host 'Kopiera UUID från JUST DEN NYSKAPADE pilot-D1-resursen'
-$db = (CF "accounts/$Account/d1/database/$ArenaId").result
-if ($db.uuid -ne $ArenaId -or $db.name -ne $Pilot) { throw 'Fel D1-identitet' }
-```
-
-**STOPP 1:** granska skapandesvaret och matcha exakt konto/namn/UUID. Denna nya UUID får aldrig ersättas med någon av tabellens tre skyddade UUID:er. Återuppta inte create-blocket vid fel senare; använd den sparade verifierade UUID:n.
+Operatören har verifierat D1 `8044ee1b-9185-4644-954f-d5455330a7a7` och installerat alla 13 migrationer. Fortsätt med read-only `Inspect` via [nästa-steg-runbooken](arena-pilot-next-steps.md). Ett fel senare i kedjan får aldrig leda till ny D1 eller automatisk migrationsomkörning. De tre skyddade äldre UUID:erna är fortsatt förbjudna. Codex har inte på nytt remote-verifierat operatörsuppgifterna.
 
 ## 4. Mailer, secrets och faktisk pilotconfig
 

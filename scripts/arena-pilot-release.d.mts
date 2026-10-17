@@ -3,3 +3,5 @@ export const STEPS:string[];
 export function assertPilotReleaseConfig(config:any,root:string):any;
 export function runPilotStep(step:string, options?:any, dependencies?:any):Promise<any>;
 export function command(root:string,kind:string,args:string[],options?:{interactive?:boolean;input?:string}):string;
+export function assertPilotOrigin(origin:string):string;
+export function assertMailerReleaseConfig(config:any,root:string,options?:{origin?:string;verified?:boolean}):any;

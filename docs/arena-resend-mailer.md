@@ -1,6 +1,6 @@
 # ARENAN – separat Resend-mailer för pilot
 
-Lokalt implementerad och testad. **Ingen remote Worker, secret, e-post, DNS eller D1 har ändrats i detta pass.** Domänen är enligt operatören fortfarande Partially Verified. All sändning är därför spärrad i den incheckade konfigurationen.
+Lokalt implementerad och testad. **Ingen remote Worker, secret, e-post, DNS eller D1 har ändrats i detta pass.** Domänen är nu **Verified enligt operatörens uppdatering 2026-10-17**; inte live-verifierad av Codex. EU-region och avstängd tracking måste fortfarande bekräftas. Den incheckade standardkonfigurationen fortsätter avsiktligt att spärra sändning tills operatören skapar den effektiva verifierade configen.
 
 ## Arkitektur och faktiska kontrakt
 
@@ -47,7 +47,7 @@ node scripts/arena-mailer-smoke.mjs --bundle .arena-pilot/mailer-dry-run/arena-m
 
 Stanna på varje felkod. Smoken använder riktig lokal workerd/named Service Binding men mockar **alla** provideranrop och läser ingen riktig nyckel. Den kontrollerar standard-entrypoint/headerspoofing, fel caller-props, alla tre mejltyper, redirect och 429 utan retry. Ingen offentlig mutationsväg används. Inga omfattande E2E-matriser behövs.
 
-## Senare manuell release – kör INTE nu
+## Kontrollerad manuell release – eget godkännande före varje fjärrändring
 
 Följ även `docs/arena-isolated-pilot.md` för inventering, målbackup, migration och rollback. Operatören har angivit ny separat pilot-D1 **8044ee1b-9185-4644-954f-d5455330a7a7**. Verifiera med read-only GET i rätt konto; skapa inte ännu en databas eller kör dess skapandeblock på nytt utan separat beslut. Tvättligan/MASTER och deras tre tidigare UUID:er förblir skyddade. Ingen uppgift här är ett nytt remote-verifieringsbevis.
 
@@ -60,46 +60,9 @@ Följ även `docs/arena-isolated-pilot.md` för inventering, målbackup, migrati
 7. **Eget godkännande:** ett kontrollerat verifieringsmejl till egen godkänd testadress via behörigt appflöde eller en separat uttryckligen godkänd intern testcaller. Ingen publik test-relay. Kontrollera Resend event/status, inkorg/spam, svensk HTML/text, exakt länk utan trackingomskrivning och engångsanvändning.
 8. Fortsätt säker Owner-bootstrap/verify/reset/invite enligt pilotrunbooken. Om första kontrollerade mejlet är Owners verifiering, krävs offline bootstrap först; skapa inte ett parallellt testauth-/bootstrap-API för att kringgå detta beroende. Förvara Owner-/recovery-uppgifter offline och radera privat bootstrap-SQL efter användning.
 
-PowerShell 7-block för de uttryckligen godkända stegen ovan, **inte en automatisk körfil**:
+Använd nu enbart [nästa-steg-runbooken](arena-pilot-next-steps.md) och `scripts/arena-pilot-release.ps1`. Den befintliga pilotconfigen och migrationskvittot ska bevaras. Gör inte om D1-creation, migration, backup/restore eller configgenerering bara för att fortsätta till mailern.
 
-```powershell
-$ErrorActionPreference = 'Stop'
-function W { & node .\node_modules\wrangler\bin\wrangler.js @args; if ($LASTEXITCODE -ne 0) { throw 'Wrangler-fel: STOPP' } }
-function Gate([string]$Step) { if ((Read-Host "Skriv GODKÄNN $Step") -cne "GODKÄNN $Step") { throw 'Inte godkänt' } }
-$MailerConfig = '.arena-pilot/mailer.json'
-if (Test-Path $MailerConfig) { throw 'Granska befintlig config; skriv inte över' }
-$Origin = Read-Host 'Kopiera verifierad exakt HTTPS-origin för pilotappen, utan slash/path'
-$u = [Uri]$Origin
-if ($u.Scheme -ne 'https' -or $u.GetLeftPart([UriPartial]::Authority) -cne $Origin -or $u.UserInfo -or $Origin.Contains('*')) { throw 'Ogiltig origin' }
-if ((Read-Host 'Bekräfta full Resend-domänstatus: skriv VERIFIED') -cne 'VERIFIED') { throw 'Ingen sändning före Verified' }
-$c = Get-Content wrangler.arena-mailer.jsonc -Raw | ConvertFrom-Json
-if ($c.name -ne 'arenan-mailer-pilot' -or $c.account_id -ne 'aff95af21a7f160722dd524471fc25b0' -or $c.workers_dev -or $c.preview_urls -or $c.routes.Count) { throw 'Fel eller offentlig mailerconfig' }
-$c.main = (Resolve-Path worker/arena-mailer.ts).Path
-$c.vars.ARENA_ALLOWED_ORIGINS = ConvertTo-Json -InputObject @($Origin) -Compress
-$c.vars.RESEND_DOMAIN_VERIFIED = '1'
-New-Item -ItemType Directory -Force .arena-pilot | Out-Null
-[IO.File]::WriteAllText((Join-Path $PWD $MailerConfig), ($c | ConvertTo-Json -Depth 12), [Text.UTF8Encoding]::new($false))
-W deploy --dry-run --config $MailerConfig --outdir .arena-pilot/mailer-release-dry-run
-```
-
-Cloudflare-token/login sätts via godkänd operatörsautentisering. Ingen token skrivs i config. Verifiera konto/plan/nytt namn före nästa block. Secretkommandot läser nyckeln dolt i Wrangler-prompten; lägg den inte i kommandorad, vars, skärmdelning/transkript eller review.
-
-```powershell
-Gate 'SPARA-MAILER-SECRET-OCH-EVENTUELL-TOM-WORKER'
-W secret put RESEND_API_KEY --config $MailerConfig
-Gate 'PUBLICERA-ENDAST-ARENAN-MAILER-PILOT'
-W deploy --config $MailerConfig
-```
-
-Separat förberedelse av appbinding, utan deploy:
-
-```powershell
-node scripts/arena-pilot-config.mjs --account-id aff95af21a7f160722dd524471fc25b0 --arena-db 8044ee1b-9185-4644-954f-d5455330a7a7 --mailer arenan-mailer-pilot --mailer-entrypoint ArenaMailer
-node scripts/arena-release-preflight.mjs .arena-pilot/pilot.json --expected-worker arenan-pilot-vd-20261019 --expected-arena-db 8044ee1b-9185-4644-954f-d5455330a7a7
-W deploy --dry-run --config .arena-pilot/pilot.json --outdir .arena-pilot/app-release-dry-run
-```
-
-Generatorn skriver inte över befintlig config. Förvaras redan en tidigare lokal pilotconfig där: granska/arkivera den privat först. Från denna punkt används pilotrunbookens egna backup-, migrations-, Owner- och deploygodkännanden. Inga remote-kommandon ovan har körts av detta implementationpass.
+Ordning: lokal `Preflight` → read-only `Inspect` → lokal `PrepareMailer -Origin <verifierad exakt origin>` → separat godkänd `MailerSecret` → separat godkänd `DeployMailer` → lokal `OwnerSql` → separat godkänd `OwnerBootstrap` → separat godkänd `DeployPilot` → read-only `Verify`. Varje steg avslutas utan automatisk fortsättning. Verktyget kontrollerar konfiguration och bara secretens namn/typmetadata, aldrig dess värde. Ingen verklig e-post skickas av releaseverktyget. Kontrollerat första verifieringsmejl och inbox/engångslänk är ett senare eget godkännande.
 
 ## Fel och rollback
 

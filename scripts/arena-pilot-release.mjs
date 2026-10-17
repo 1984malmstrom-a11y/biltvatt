@@ -9,7 +9,7 @@ import {inspectArenaPilotConfig} from './arena-release-preflight.mjs';
 import {verifyLocalArenaRestore,sha256,migrationDigest} from './arena-pilot-restore-check.mjs';
 
 export const PILOT={account:'aff95af21a7f160722dd524471fc25b0',worker:'arenan-pilot-vd-20261019',database:'8044ee1b-9185-4644-954f-d5455330a7a7',mailer:'arenan-mailer-pilot',backupSha256:'12b4d609d563571a2bbe9615dadd52fa835ee6f0e29cdf77ef6c64ca8ec3cb68'};
-export const STEPS=['Plan','Restore','Inspect','Migrate','PrepareMailer','MailerSecret','DeployMailer','OwnerSql','OwnerBootstrap','DeployPilot','Verify'];
+export const STEPS=['Plan','Preflight','Restore','Inspect','Migrate','PrepareMailer','MailerSecret','DeployMailer','OwnerSql','OwnerBootstrap','DeployPilot','Verify'];
 const fail=message=>{throw Error(message);};
 const samePath=(a,b)=>process.platform==='win32'?resolve(a).toLowerCase()===resolve(b).toLowerCase():resolve(a)===resolve(b);
 export function assertPilotReleaseConfig(c,root){
@@ -19,6 +19,22 @@ export function assertPilotReleaseConfig(c,root){
  if(c.d1_databases[0].database_name!==PILOT.worker||c.services?.length!==1||c.services[0].service!==PILOT.mailer||c.services[0].entrypoint!=='ArenaMailer'||c.services[0].props?.caller!==PILOT.worker)fail('Wrong dedicated mailer binding.');
  const allowed=['name','account_id','main','compatibility_date','workers_dev','preview_urls','assets','vars','d1_databases','services','observability','$schema'];
  if(Object.keys(c).some(k=>!allowed.includes(k))||Object.keys(c.vars).some(k=>!['ARENA_ONLY','STATION_ID'].includes(k))||c.workers_dev!==true||c.preview_urls!==false)fail('Unreviewed pilot settings/resources.');
+ return c;
+}
+// The pilot uses exactly <worker>.<verified-account-namespace>.workers.dev.
+// Format validation cannot replace the operator's account-namespace verification.
+export function assertPilotOrigin(origin){
+ let u;try{u=new URL(origin);}catch{fail('Supply the verified exact pilot HTTPS origin.');}
+ const labels=u.hostname.split('.');
+ if(u.origin!==origin||u.protocol!=='https:'||u.username||u.password||u.port||labels.length!==4||labels[0]!==PILOT.worker||labels[2]!=='workers'||labels[3]!=='dev'||!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(labels[1]))fail('Wrong pilot origin; no preview labels, paths, alternate Worker, port or custom domain.');
+ return origin;
+}
+export function assertMailerReleaseConfig(c,root,{origin,verified=false}={}){
+ const allowed=['$schema','name','account_id','main','compatibility_date','workers_dev','preview_urls','routes','observability','vars'];
+ if(!c||Object.keys(c).some(k=>!allowed.includes(k))||c.name!==PILOT.mailer||c.account_id!==PILOT.account||!samePath(c.main,join(root,'worker/arena-mailer.ts'))||c.workers_dev!==false||c.preview_urls!==false||c.routes!==undefined&&(!Array.isArray(c.routes)||c.routes.length)||c.observability?.enabled!==false||Object.keys(c.observability).some(k=>k!=='enabled'))fail('Mailer config is not the isolated reviewed target; no extra bindings/routes/resources.');
+ if(!c.vars||Object.keys(c.vars).length!==2||Object.keys(c.vars).some(k=>!['RESEND_DOMAIN_VERIFIED','ARENA_ALLOWED_ORIGINS'].includes(k)))fail('Mailer vars must contain only domain approval and exact origin allowlist; never a secret.');
+ if(verified)assertPilotOrigin(origin);
+ if(c.vars.RESEND_DOMAIN_VERIFIED!==(verified?'1':'0')||c.vars.ARENA_ALLOWED_ORIGINS!==(verified?JSON.stringify([origin]):'[]'))fail('Mailer domain approval or exact origin does not match.');
  return c;
 }
 export function command(root,kind,args,{interactive=false,input}={}){
@@ -45,11 +61,11 @@ export async function runPilotStep(step,options={},dependencies={}){
  const git=(...args)=>run('git',args).trim(),head=git('rev-parse','HEAD'),branch=git('branch','--show-current'),clean=!git('status','--porcelain');
  const configPath=join(privateDir,'pilot.json'),mailerPath=join(privateDir,'mailer.json'),proofPath=join(privateDir,'restore-proof.json'),statePath=join(privateDir,'release-state.json');
  const existingProof=existsSync(proofPath)?JSON.parse(readFileSync(proofPath,'utf8')):null;
- if(step==='Plan')return {step,branch,head,clean,remoteActions:0,pilotConfigExists:existsSync(configPath),restoreVerified:existingProof?.head===head&&existingProof?.status==='PASS'&&existingProof?.importExecuted===true&&existingProof?.fullIntegrity==='ok',resend:'Operator reports Partially Verified; no e-mail or publication before real Verified',next:'Restore (offline), Inspect (read-only), Migrate (explicit approval). Mailer/Owner/publish remain separately gated.',steps:STEPS};
+ const state=existsSync(statePath)?JSON.parse(readFileSync(statePath,'utf8')):{};
+ if(step==='Plan')return {step,branch,head,clean,remoteActions:0,pilotConfigExists:existsSync(configPath),restoreVerified:existingProof?.head===head&&existingProof?.status==='PASS'&&existingProof?.importExecuted===true&&existingProof?.fullIntegrity==='ok',resend:'Verified per operator report 2026-10-17; not queried here. EU region, tracking and exact namespace still require attestation.',operatorReported:{source:'operator, not live remote verification',migrationCount:13,windowsRestore:'verified',resendDomain:'Verified'},migrationReceipt:state.MIGRATE?.status??'not present in this checkout; Inspect verifies the live ledger',next:'Preflight (local), Inspect (read-only), then PrepareMailer. Do not repeat completed migrations. Each later remote write remains separately gated.',steps:STEPS};
  if(branch!=='feat/arena-v1'||!clean)fail('Requires feat/arena-v1 with clean working tree.');
  git('merge-base','--is-ancestor','35cfdc6ee7d768bb911204633d28b55a9083b386','HEAD');
  mkdirSync(privateDir,{recursive:true});
- const state=existsSync(statePath)?JSON.parse(readFileSync(statePath,'utf8')):{};
  const read=path=>JSON.parse(readFileSync(path,'utf8'));
  const wr=(args,path=configPath,extra)=>run('wrangler',[...args,'--config',path],extra);
  const json=(args,path=configPath)=>JSON.parse(wr([...args,'--json'],path));
@@ -96,20 +112,37 @@ export async function runPilotStep(step,options={},dependencies={}){
  }
  if(step==='PrepareMailer'){
   config();if(existsSync(mailerPath))fail('Mailer config already exists. Review it; never overwrite automatically.');
-  let u;try{u=new URL(options.origin);}catch{fail('Supply the actually verified pilot HTTPS origin.');}
-  if(u.origin!==options.origin||u.protocol!=='https:'||u.username||u.password||u.port||!u.hostname.startsWith(PILOT.worker+'.')||!u.hostname.endsWith('.workers.dev'))fail('Only the exact verified pilot workers.dev origin is approved here; no DNS/custom-domain changes.');
+  assertPilotOrigin(options.origin);
   const required=`VERIFIED eu-west-1 TRACKING-OFF ${options.origin}`;
   if(await confirm({localOnly:true,required:'Confirm actual Resend Verified, EU domain region, tracking off and verified account namespace; Partially Verified is not enough.'},required)!==required)fail('Resend/origin readiness not confirmed.');
-  const c=read(join(root,'wrangler.arena-mailer.jsonc'));c.main=join(root,'worker/arena-mailer.ts');c.vars={RESEND_DOMAIN_VERIFIED:'1',ARENA_ALLOWED_ORIGINS:JSON.stringify([options.origin])};
+  const c=read(join(root,'wrangler.arena-mailer.jsonc'));c.main=join(root,'worker/arena-mailer.ts');assertMailerReleaseConfig(c,root);c.vars={RESEND_DOMAIN_VERIFIED:'1',ARENA_ALLOWED_ORIGINS:JSON.stringify([options.origin])};
   writeFileSync(mailerPath,JSON.stringify(c,null,2)+'\n',{mode:0o600,flag:'wx'});
   wr(['deploy','--dry-run','--outdir',join(privateDir,'mailer-dry-run')],mailerPath);
   state.mailerPrepared={head,configSha256:sha256(readFileSync(mailerPath)),origin:options.origin};save(statePath,state);return {step,localOnly:true,origin:options.origin};
  }
  const mailerReady=()=>{
   const p=state.mailerPrepared;if(!p||p.head!==head||p.configSha256!==sha256(readFileSync(mailerPath)))fail('Prepare and attest the mailer/origin after full Resend Verified first.');
-  const c=read(mailerPath);
-  if(c.name!==PILOT.mailer||c.account_id!==PILOT.account||c.workers_dev!==false||c.preview_urls!==false||c.routes?.length||c.d1_databases?.length||!samePath(c.main,join(root,'worker/arena-mailer.ts'))||c.vars.RESEND_DOMAIN_VERIFIED!=='1'||c.vars.RESEND_API_KEY!==undefined||c.vars.ARENA_ALLOWED_ORIGINS!==JSON.stringify([p.origin]))fail('Mailer config is not the isolated reviewed target.');
+  assertMailerReleaseConfig(read(mailerPath),root,{origin:p.origin,verified:true});
  };
+ const requireMailerSecret=remote=>{
+  mailerReady();if(!remote.mailer.exists)fail('Mailer Worker is missing after its secret step. STOP.');
+  // Only names/types are returned by Wrangler. No secret value is ever read.
+  const metadata=JSON.parse(wr(['secret','list','--format','json'],mailerPath));
+  if(!Array.isArray(metadata)||!metadata.some(x=>x.name==='RESEND_API_KEY'&&x.type==='secret_text'))fail('Dedicated mailer secret metadata is missing; no value read. STOP.');
+ };
+ if(step==='Preflight'){
+  config();expectedMigrations();
+  for(const file of ['dist/client/index.html','worker/index.ts','worker/arena-mailer.ts','scripts/arena-mailer-smoke.mjs'])if(!existsSync(join(root,file)))fail('Local build or required release input missing: '+file);
+  const template=read(join(root,'wrangler.arena-mailer.jsonc'));template.main=join(root,'worker/arena-mailer.ts');assertMailerReleaseConfig(template,root);
+  if(options.origin)assertPilotOrigin(options.origin);
+  if(existsSync(mailerPath)||state.mailerPrepared)mailerReady();
+  const mailerConfig=existsSync(mailerPath)?mailerPath:join(root,'wrangler.arena-mailer.jsonc');
+  const bundle=join(privateDir,'mailer-dry-run');
+  wr(['deploy','--dry-run','--outdir',join(privateDir,'app-dry-run')]);
+  wr(['deploy','--dry-run','--outdir',bundle],mailerConfig);
+  run('node',['scripts/arena-mailer-smoke.mjs','--bundle',join(bundle,'arena-mailer.js'),'--report',join(privateDir,'mailer-native-proof.json')]);
+  return {step,status:'PASS_LOCAL_ONLY',account:PILOT.account,database:PILOT.database,worker:PILOT.worker,mailer:PILOT.mailer,remoteActions:0,remoteVerified:false,secretValuesRead:false,next:'Inspect (read-only), then PrepareMailer with the verified exact origin/EU/tracking attestation. No migration retry.'};
+ }
  if(step==='OwnerSql'){
   config();if(!options.ownerInput)fail('Owner input must come from hidden PowerShell input via stdin.');
   const output=join(privateDir,'owner-bootstrap-private.sql');
@@ -117,7 +150,7 @@ export async function runPilotStep(step,options={},dependencies={}){
   state.ownerSql={head,sha256:sha256(readFileSync(output))};save(statePath,state);return {step,localOnly:true,privateSqlPrepared:true};
  }
  const remote=inspect();
- if(step==='Inspect')return {step,...remote,remoteMutations:0};
+ if(step==='Inspect')return {step,...remote,migrationCount:remote.ledger.length,ledgerComplete:JSON.stringify(remote.ledger)===JSON.stringify(expectedMigrations()),next:'Expected 13 exact migration names, unpublished pilot and mailer. If confirmed: PrepareMailer; otherwise STOP and inspect, never retry migrations blindly.',remoteMutations:0};
  if(step==='Migrate'){
   expectedMigrations();
   const proof=read(proofPath);
@@ -136,23 +169,29 @@ export async function runPilotStep(step,options={},dependencies={}){
  }
  if(step==='DeployMailer'){
   mailerReady();if(state['MAILER-SECRET']?.status!=='complete')fail('The separately approved secret step is required first.');
+  requireMailerSecret(remote);
   wr(['deploy','--dry-run','--outdir',join(privateDir,'mailer-dry-run')],mailerPath);
-  return mutate('DEPLOY-MAILER',{currentMailer:remote.mailer,action:'Deploy only arenan-mailer-pilot; no public routes, no database, no mail send.'},()=>{mailerReady();if(JSON.stringify(workerState(PILOT.mailer))!==JSON.stringify(remote.mailer))fail('Mailer changed during approval; no overwrite.');wr(['deploy'],mailerPath);return {step,status:'complete'};});
+  return mutate('DEPLOY-MAILER',{currentMailer:remote.mailer,action:'Deploy only arenan-mailer-pilot; no public routes, no database, no mail send.'},()=>{requireMailerSecret(remote);if(JSON.stringify(workerState(PILOT.mailer))!==JSON.stringify(remote.mailer))fail('Mailer changed during approval; no overwrite.');wr(['deploy'],mailerPath);return {step,status:'complete'};});
  }
  if(step==='OwnerBootstrap'){
   requireFullLedger(remote);health();mailerReady();if(state['DEPLOY-MAILER']?.status!=='complete'||!remote.mailer.exists)fail('Deploy and verify the private mailer before remote Owner bootstrap.');
-  const path=join(privateDir,'owner-bootstrap-private.sql');if(state.ownerSql?.head!==head||state.ownerSql.sha256!==sha256(readFileSync(path)))fail('Generate and privately review the Owner SQL first.');
+  requireMailerSecret(remote);
+  const path=join(privateDir,'owner-bootstrap-private.sql');
+  const ownerSqlReady=()=>{if(state.ownerSql?.head!==head||state.ownerSql.sha256!==sha256(readFileSync(path)))fail('Generate and privately review the unchanged Owner SQL first.');};ownerSqlReady();
   if(sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==0)fail('Owner already exists; no bootstrap or overwrite.');
-  return mutate('BOOTSTRAP-OWNER',{sqlSha256:state.ownerSql.sha256,action:'Insert one unverified individual Owner from privately reviewed offline SQL; no email and no automatic verification.'},()=>{const applied=JSON.parse(wr(['d1','execute','ARENA_DB','--remote','--file',path,'--json']));if(!Array.isArray(applied)||!applied.length||applied.some(r=>r.success!==true)||sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==1)fail('Owner bootstrap result is uncertain; stop and investigate.');return {step,status:'complete',privateSql:'Remove securely after review/use.'};});
+  return mutate('BOOTSTRAP-OWNER',{sqlSha256:state.ownerSql.sha256,action:'Insert one unverified individual Owner from privately reviewed offline SQL; no email and no automatic verification.'},()=>{ownerSqlReady();if(sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==0)fail('Owner appeared during approval; no overwrite.');const applied=JSON.parse(wr(['d1','execute','ARENA_DB','--remote','--file',path,'--json']));if(!Array.isArray(applied)||!applied.length||applied.some(r=>r.success!==true)||sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==1)fail('Owner bootstrap result is uncertain; stop and investigate.');return {step,status:'complete',privateSql:'Remove securely after review/use.'};});
  }
  if(step==='DeployPilot'){
   requireFullLedger(remote);health();mailerReady();if(state['DEPLOY-MAILER']?.status!=='complete'||state['BOOTSTRAP-OWNER']?.status!=='complete'||!remote.mailer.exists||remote.pilot.exists)fail('Requires approved mailer + Owner and a still-unpublished pilot Worker. No unexpected overwrite.');
+  requireMailerSecret(remote);
   if(sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==1)fail('Exactly one Owner is required.');
   wr(['deploy','--dry-run','--outdir',join(privateDir,'app-dry-run')]);
   return mutate('DEPLOY-PILOT',{origin:state.mailerPrepared.origin,action:'First publish of the isolated pilot Worker only, ARENA_DB + named mailer; no DNS, email or station DB.'},()=>{mailerReady();if(workerState(PILOT.worker).exists)fail('Pilot Worker appeared during approval; no overwrite.');wr(['deploy']);return {step,status:'complete',origin:state.mailerPrepared.origin};});
  }
  if(step==='Verify'){
-  requireFullLedger(remote);health();return {step,...remote,next:'Manual approved Owner login/email verification, recovery, PIN, Showtime/Battle demo and inbox/edge checks. No email or mutations automated.',remoteMutations:0};
+  requireFullLedger(remote);health();if(!remote.pilot.exists||!remote.mailer.exists)fail('Both dedicated Workers must exist before Verify; use Inspect for unpublished resources.');
+  requireMailerSecret(remote);if(state['DEPLOY-PILOT']?.status!=='complete'||state['DEPLOY-MAILER']?.status!=='complete'||state['BOOTSTRAP-OWNER']?.status!=='complete'||sql("SELECT COUNT(*) n FROM arena_superadmins WHERE role='owner'")[0]?.n!==1)fail('Expected approved first-release receipts and one Owner. STOP.');
+  return {step,status:'METADATA_VERIFIED_ONLY',...remote,inboxVerified:false,next:'Manual approved Owner login/email verification, recovery, PIN, Showtime/Battle demo and inbox/edge checks. No email or mutations automated.',remoteMutations:0};
  }
  fail('Unhandled step.');
 }
@@ -161,6 +200,8 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).hr
   const args=process.argv.slice(2),options={};let step='Plan';
   for(let i=0;i<args.length;i++){const key=args[i],value=args[++i];if(!value)fail('Missing option value.');if(key==='--step')step=value;else if(key==='--backup')options.backupPath=resolve(value);else if(key==='--origin')options.origin=value;else fail('Unknown option.');}
   if(step==='OwnerSql')options.ownerInput=readFileSync(0,'utf8');
-  console.log(JSON.stringify(await runPilotStep(step,options),null,2));
+  const result=await runPilotStep(step,options);
+  const next={PrepareMailer:'MailerSecret (separate remote approval; operator enters only a dedicated key)',MailerSecret:'DeployMailer (separate remote approval)',DeployMailer:'OwnerSql (local hidden input)',OwnerSql:'Privately review Owner SQL, then OwnerBootstrap (separate remote approval)',OwnerBootstrap:'Remove the private SQL securely, then DeployPilot (separate remote approval)',DeployPilot:'Verify (read-only); real Owner email/demo acceptance needs its own approval'};
+  console.log(JSON.stringify({...result,...(next[step]?{nextOperatorStep:next[step]}:{})},null,2));
  }catch(error){console.error(error.message);process.exitCode=1;}
 }

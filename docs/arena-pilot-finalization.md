@@ -1,3 +1,5 @@
+> **Aktuellt 2026-10-17:** Operatören bekräftar installerade 13 migrationer, verifierad faktisk Windows-restore och Resend **Verified**. Fortsätt enligt [den korta nästa-steg-runbooken](arena-pilot-next-steps.md). Kör inte D1-create/Restore/Migrate igen. Detta är operatörsuppgifter, inte Codex remote-verifiering.
+
 # ARENAN: sista pilotstegen på Windows
 
 Gäller endast konto `aff95af21a7f160722dd524471fc25b0`, befintlig D1 `arenan-pilot-vd-20261019` / `8044ee1b-9185-4644-954f-d5455330a7a7`, ny app-Worker med samma namn och separat `arenan-mailer-pilot`. Ingen D1 skapas. Tvättligan, master-test och deras tre databas-ID:n tillåts aldrig som mål. Inga standardconfig-, DNS-, mailutskicks- eller raderingskommandon ingår.
@@ -15,7 +17,7 @@ Set-Location -LiteralPath 'C:\Users\Preem\Documents\ARENAN-PILOT'
 .\scripts\arena-pilot-release.ps1
 ```
 
-Standardsteget `Plan` är helt offline och gör inga ändringar. Alla kommandon nedan gör **ett** steg och avslutas; de ska köras var för sig efter granskning av föregående resultat. Vid minsta fel: STOPP. Ingen automatisk fortsättning eller blind retry. Ta inte bort ett misslyckat kvitto för att försöka igen; kontrollera först det verkliga remote-resultatet och fatta ett separat beslut.
+Standardsteget `Plan` är helt offline och gör inga ändringar. `Preflight` kör lokala config/build-kontroller, två dry-runs och mockad native mailersmoke; ingen remote-läsning eller -ändring. Alla kommandon nedan gör **ett** steg och avslutas; de ska köras var för sig efter granskning av föregående resultat. Vid minsta fel: STOPP. Ingen automatisk fortsättning eller blind retry. Ta inte bort ett misslyckat kvitto för att försöka igen; kontrollera först det verkliga remote-resultatet och fatta ett separat beslut.
 
 ## 1. Bevisa återställningen lokalt
 
@@ -25,7 +27,7 @@ Standardsteget `Plan` är helt offline och gör inga ändringar. Alla kommandon 
 
 Standardfil är `C:\Users\Preem\ARENAN-Private-Backups\arenan-pilot-before-migrations-20261017.sql`. Alternativ plats: `-BackupPath 'D:\Privat mapp\samma-backup.sql'`. Exakt godkänd SHA-256 måste vara `12B4D609D563571A2BBE9615DADD52FA835EE6F0E29CDF77EF6C64CA8EC3CB68`.
 
-Detta är första nödvändiga steget på jobbdatorn. Tidigare PASS i backupverifieraren betyder att SQL kunde laddas i minnet, **inte** att Wrangler-importen kördes. Den nya kontrollen importerar själv i ny disponibel lokal D1, kör separata quick/FK-kontroller, öppnar återställd SQLite read-only för full integritet och jämför schema och alla radfingerprints med källan. SQL-filen bevaras. Rapport `.arena-pilot/restore-proof.json` får aldrig läggas i Git/review; heller inte lokal D1-state.
+Detta steg är redan genomfört enligt operatören; upprepa det inte i den fortsatta releasekedjan. Tidigare PASS i backupverifieraren betyder att SQL kunde laddas i minnet, **inte** att Wrangler-importen kördes. Den nya kontrollen importerar själv i ny disponibel lokal D1, kör separata quick/FK-kontroller, öppnar återställd SQLite read-only för full integritet och jämför schema och alla radfingerprints med källan. SQL-filen bevaras. Rapport `.arena-pilot/restore-proof.json` får aldrig läggas i Git/review; heller inte lokal D1-state.
 
 `SQLITE_AUTH` kom från workerds förbud mot `PRAGMA integrity_check`, vilket har reproducerats lokalt. Det är inte ett bevis på fel config, fel backup eller att flera SQL-satser är förbjudna. Full integritetskontroll försvinner inte: den körs utanför workerd på den faktiskt importerade databasen.
 
@@ -49,7 +51,7 @@ Wranglers migrationskörning kan lämna tidigare lyckade migrationer applicerade
 
 ## 4. Resend måste bli helt Verified
 
-**Nuvarande status enligt operatören: Partially Verified. STOPP före mailer, Owner och publicering.** Ingen riktig e-post får skickas. Ändra inte DNS via detta verktyg. Domänägaren måste åtgärda/avvakta verifieringen separat, bekräfta EU-region `eu-west-1`, stänga av open/click tracking och besluta en dedikerad restricted sending API-nyckel för rätt domän enligt [mailer-guiden](arena-resend-mailer.md). Infrastrukturansvarig måste också verifiera kontots verkliga workers.dev-namnrymd; hitta inte på en URL.
+**Uppdaterad status enligt operatören: Verified.** EU-region, avstängd tracking och faktisk pilot-origin måste fortfarande bekräftas före mailer, Owner och publicering. Ingen riktig e-post får skickas. Ändra inte DNS via detta verktyg. Domänägaren måste åtgärda/avvakta verifieringen separat, bekräfta EU-region `eu-west-1`, stänga av open/click tracking och besluta en dedikerad restricted sending API-nyckel för rätt domän enligt [mailer-guiden](arena-resend-mailer.md). Infrastrukturansvarig måste också verifiera kontots verkliga workers.dev-namnrymd; hitta inte på en URL.
 
 När detta är gjort, ange den **verifierade faktiska** pilot-URL:en som visas i kontot. Följande placeholder får inte kopieras bokstavligt:
 

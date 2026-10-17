@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 [CmdletBinding()]
 param(
-  [ValidateSet('Plan','Restore','Inspect','Migrate','PrepareMailer','MailerSecret','DeployMailer','OwnerSql','OwnerBootstrap','DeployPilot','Verify')]
+  [ValidateSet('Plan','Preflight','Restore','Inspect','Migrate','PrepareMailer','MailerSecret','DeployMailer','OwnerSql','OwnerBootstrap','DeployPilot','Verify')]
   [string]$Step = 'Plan',
   [string]$BackupPath = '',
   [string]$Origin = ''
