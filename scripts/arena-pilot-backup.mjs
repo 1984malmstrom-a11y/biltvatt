@@ -4,6 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {inspectArenaDatabase} from './arena-pilot-database.mjs';
 const identifier=value=>'"'+value.replaceAll('"','""')+'"';
 export function verifyArenaPilotBackup(sql,{allowEmpty=false}={}){
  const db=new DatabaseSync(':memory:');
@@ -11,9 +12,7 @@ export function verifyArenaPilotBackup(sql,{allowEmpty=false}={}){
   // Export table order is not guaranteed. Validate references AFTER full load.
   db.exec('PRAGMA foreign_keys=OFF');db.exec(sql);
   const tables=db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT GLOB '_cf_*' ORDER BY name").all();
-  if(tables.some(t=>!t.name.startsWith('arena_')&&t.name!=='d1_migrations'))throw Error('Non-Arena business tables are not approved.');
-  if(!tables.some(t=>t.name==='arena_stations')&&!(allowEmpty&&tables.every(t=>t.name==='d1_migrations')))throw Error('Not an Arena backup (or explicitly empty new pilot).');
-  if(db.prepare('PRAGMA integrity_check').get().integrity_check!=='ok'||db.prepare('PRAGMA foreign_key_check').all().length)throw Error('Backup integrity or foreign keys failed.');
+  const proof=inspectArenaDatabase(db,{allowEmpty});
   const restore=['PRAGMA defer_foreign_keys=ON;',...tables.map(t=>t.sql+';')];
   let rowCount=0;
   for(const table of tables){
@@ -25,7 +24,7 @@ export function verifyArenaPilotBackup(sql,{allowEmpty=false}={}){
   }
   const objects=db.prepare("SELECT sql FROM sqlite_master WHERE type IN ('index','trigger','view') AND sql IS NOT NULL ORDER BY CASE type WHEN 'view' THEN 0 WHEN 'index' THEN 1 ELSE 2 END,name").all();
   restore.push(...objects.map(o=>o.sql+';'),'PRAGMA defer_foreign_keys=OFF;');
-  return {restoreSql:restore.join('\n')+'\n',report:{status:'PASS',tables:tables.length,rows:rowCount,integrity:'ok',foreignKeys:'ok',remoteActions:0}};
+  return {restoreSql:restore.join('\n')+'\n',report:{...proof,rows:rowCount,remoteActions:0}};
  }finally{db.close();}
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){

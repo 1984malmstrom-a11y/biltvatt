@@ -1,3 +1,5 @@
+> **Uppdatering 2026-10-17:** För den redan skapade pilotdatabasen `8044ee1b-9185-4644-954f-d5455330a7a7`, använd [det nya stegvisa Windows-flödet](arena-pilot-finalization.md). Kör inte databascreation eller den äldre kompletta körordningen igen. `PRAGMA integrity_check` stöds inte via D1:s SQL-gränssnitt; full kontroll görs på faktiskt återställd lokal SQLite.
+
 # ARENAN – isolerad VD-pilot, kontrollerad Windows-release
 
 Denna körordning är för **senare uttryckligen godkända** remote-steg. Inget remote-steg har körts i förberedelsepasset. Använd PowerShell 7, Node >=22.13 och projektets låsta npm-installation. Kör blocken ett i taget; ett inmatat GODKÄNN är operatörens godkännande, aldrig något som agenten fyller i automatiskt.
@@ -144,27 +146,27 @@ Get-FileHash $Backup -Algorithm SHA256
 W d1 execute ARENA_DB --remote --config $Config --command "SELECT name,type FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY name" --json
 ```
 
-Verifiera exporten genom återläsning i **lokal disponibel D1** (inget remote-restoremål behövs för första tomma piloten). Läs inte dumpen i produktion. Använd endast egen betrodd export; verktyget exekverar SQL lokalt i minnet. Originalexporten bevaras. D1-exportens tabell-/dataradordning kan annars ge `no such table` vid direkt import; verifieraren kontrollerar FK/integritet och skapar alla tabeller före data samt triggers sist. `--allow-empty` gäller första tomma piloten, inte framtida backup där Arena-tabeller ska finnas. Kör `node scripts/arena-pilot-config.mjs --local` en gång och därefter:
+Verifiera exporten genom en **verklig import till ny lokal disponibel D1**. Endast betrodd operatörsägd export får läsas; SQL exekveras lokalt. Originalfilen bevaras. Ange backupens separat kontrollerade SHA-256:
 
 ```powershell
-$Restore = "$Backup.verified-restore.sql"
-node scripts/arena-pilot-backup.mjs $Backup --restore-output $Restore --allow-empty
-if ($LASTEXITCODE -ne 0) { throw 'Backup underkänd' }
-W d1 execute ARENA_DB --local --config .arena-pilot/local.json --persist-to .arena-pilot/backup-check --file $Restore
-W d1 execute ARENA_DB --local --config .arena-pilot/local.json --persist-to .arena-pilot/backup-check --command "PRAGMA integrity_check; PRAGMA foreign_key_check; SELECT name FROM sqlite_master WHERE type='table' ORDER BY name" --json
+$BackupHash = Read-Host 'Tidigare verifierad SHA-256 för exakt denna backup'
+node scripts/arena-pilot-restore-check.mjs --backup $Backup --expected-sha256 $BackupHash --allow-empty
+if ($LASTEXITCODE -ne 0) { throw 'Restore INTE verifierad. STOPP.' }
 ```
 
-**STOPP 3:** verifiera lyckad restore, schema/integritet/FK samt att remote är tomt utan oväntad affärsdata. D1:s eventuella interna metadata är inte affärsdata. Om schemat redan har Arena-tabeller eller ledger från en tidigare körning: STOPP och jämför backup, originalmigrationschecksummor och ledger före fortsatt separat beslut. Ingen import från stationsdatabaser. Lokal 0001–0013-installation, omkörning, privat export/restore och syntetiska rader har redan repeterats i detta pass.
+Verktyget gör importen själv och godkänner inte en automatiskt skapad tom D1 som bevis. Det kontrollerar `quick_check` och `foreign_key_check` separat via D1, öppnar sedan **den faktiskt återställda** SQLite-filen read-only för full `integrity_check`, FK, schema- och radjämförelse. Ett grönt kvitto skrivs först när allt matchar. `--allow-empty` gäller första tomma piloten; utelämna det för framtida Arena-backups. Tillfällig återställnings-SQL raderas, privat lokal D1-state kvarstår under ignorerad `.arena-pilot/`.
+
+**Varför föregående kontroll gav SQLITE_AUTH:** workerd tillåter inte `PRAGMA integrity_check`. Flera SQL-satser är inte orsaken. Felet bevisar varken att import kördes eller att backupen är korrupt. Ersätt inte full integritet med enbart `quick_check`.
+
+**STOPP 3:** För den aktuella fasta piloten, använd följande steg i [nya körguiden](arena-pilot-finalization.md):
 
 ```powershell
-CheckPilot
-W d1 migrations list ARENA_DB --remote --config $Config
-Gate 'MIGRERA-ENDAST-NY-PILOT-ARENA-DB'
-W d1 migrations apply ARENA_DB --remote --config $Config
-W d1 execute ARENA_DB --remote --config $Config --command "SELECT name FROM d1_migrations ORDER BY id; PRAGMA integrity_check; PRAGMA foreign_key_check" --json
+.\scripts\arena-pilot-release.ps1 -Step Restore
+.\scripts\arena-pilot-release.ps1 -Step Inspect
+.\scripts\arena-pilot-release.ps1 -Step Migrate
 ```
 
-Kontrollera 0001–0013 exakt en gång, integrity=ok och inga FK-fel. Ingen DB-bindning finns att migrera. Hämta inte eller applicera migrations-master.
+`Migrate` kräver matchande backup/restore-kvitto, rätt konto, D1-UUID, tomt schema och uttryckligt godkännande. En partiell ledger eller ett tidigare misslyckat försök ger STOPP, inte automatisk omkörning. Alla 13 originalfiler verifieras före skrivning och exakt ledger samt separata D1 quick/FK-kontroller efteråt. Full fysisk integritetskontroll kan inte göras på remote D1 via SQL; full kontroll görs lokalt efter exporterad backup/restore. Export efter migration är en separat godkänd remote-operation enligt backupavsnittet ovan.
 
 ## 6. Owner före publicering
 
