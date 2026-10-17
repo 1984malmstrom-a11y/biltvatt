@@ -1,0 +1,1 @@
+export function verifyArenaPilotBackup(sql:string, options?:{allowEmpty?:boolean}):{restoreSql:string;report:{status:string;tables:number;rows:number;integrity:string;foreignKeys:string;remoteActions:number}};

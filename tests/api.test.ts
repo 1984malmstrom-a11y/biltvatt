@@ -404,6 +404,21 @@ describe("Admin, sessioner och export", () => {
     expect(csv).toContain("'=FORMEL");
     expect(csv).not.toContain("undo_token_hash");
   });
+  it("exports Swedish names and quoted program text as UTF-8 without changing CSV escaping", async () => {
+    const cookie = await login();
+    db.prepare("UPDATE staff SET name=? WHERE id='emma'").run("Åsa Östermalm");
+    db.prepare("UPDATE wash_programs SET name=? WHERE id='preemium'").run('Tvätt "ÅÄÖ"; Deluxe');
+    expect((await sale()).status).toBe(201);
+    const response = await call("/admin/export", "GET", undefined, cookie);
+    expect(response.headers.get("Content-Type")).toBe("text/csv; charset=utf-8");
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    expect([...bytes.slice(0, 3)]).toEqual([239, 187, 191]);
+    const csv = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    expect(csv.split("\r\n")[0]).toBe("Datum;Tid;Säljare;Tvättprogram;Pris;Status");
+    expect(csv).toContain('"Åsa Östermalm"');
+    expect(csv).toContain('"Tvätt ""ÅÄÖ""; Deluxe"');
+    expect(csv).not.toMatch(/SÃ¤ljare|TvÃ¤ttprogram|\uFFFD/);
+  });
 });
 describe("Säkert Admin-underhåll", () => {
   it("framåtmigrerar befintlig historik utan ändrade försäljningsvärden eller FK-brott", () => {

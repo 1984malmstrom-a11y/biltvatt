@@ -414,7 +414,7 @@ async function api(
         .replace(/^[=+@\-\t\r]/, "'$&")
         .replaceAll('"', '""')}"`;
     const lines = [
-      "Datum;Tid;SÃ¤ljare;TvÃ¤ttprogram;Pris;Status",
+      "Datum;Tid;Säljare;Tvättprogram;Pris;Status",
       ...rows.results.map((row) =>
         [
           stockholmDay(new Date(row.sold_at)),

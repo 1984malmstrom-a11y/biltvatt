@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const protectedWorkers=new Set(['tvattligan','tvattligan-master-test']);
-const protectedDatabases=new Set(['695033b7-6bb2-47a3-a9c3-08d4ca818088','ca2d4bb8-0c28-47b7-9514-8c893ea47c09']);
+const protectedDatabases=new Set(['695033b7-6bb2-47a3-a9c3-08d4ca818088','ca2d4bb8-0c28-47b7-9514-8c893ea47c09','767b5a12-6b40-4516-9f7c-e072c1130480']);
 export function inspectArenaPilotConfig(config,{worker,arenaDatabaseId}={}){
  const errors=[];const need=(ok,message)=>{if(!ok)errors.push(message);};
  const uuid=/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
@@ -17,7 +17,7 @@ export function inspectArenaPilotConfig(config,{worker,arenaDatabaseId}={}){
  const bindings=config.d1_databases??[],arena=bindings.filter(x=>x.binding==='ARENA_DB');
  need(arena.length===1,'Exactly one ARENA_DB binding is required.');
  need(bindings.length===1,'Standalone pilot must not bind the station DB or integrated station databases.');
- need(arena[0]?.database_id===arenaDatabaseId&&!protectedDatabases.has(arena[0]?.database_id),'Arena D1 must match the approved UUID and never a protected station database.');
+ need(arena[0]?.database_id===arenaDatabaseId&&!protectedDatabases.has(arena[0]?.database_id),'Arena D1 must match the approved UUID and never a protected station or integrated Arena database.');
  need(arena[0]?.migrations_dir?.replace(/\\/g,'/').replace(/\/$/,'').split('/').at(-1)==='migrations-arena','ARENA_DB must use migrations-arena.');
  const first=config.assets?.run_worker_first;
  need(Array.isArray(first)&&first.includes('/')&&first.includes('/api/*'),'Assets must run the Worker first for / and /api/*.');

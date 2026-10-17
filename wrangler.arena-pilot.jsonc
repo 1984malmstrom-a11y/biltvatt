@@ -1,0 +1,29 @@
+{
+  "name": "arenan-pilot-vd-20261019",
+  "account_id": "REQUIRED_APPROVED_ACCOUNT_ID",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-07",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/", "/api/*"]
+  },
+  "vars": {
+    "ARENA_ONLY": "1",
+    "STATION_ID": "arenan-pilot-vd-20261019"
+  },
+  "d1_databases": [{
+    "binding": "ARENA_DB",
+    "database_name": "arenan-pilot-vd-20261019",
+    "database_id": "REQUIRED_NEW_PILOT_D1_UUID",
+    "migrations_dir": "migrations-arena"
+  }],
+  "services": [{
+    "binding": "ARENA_MAILER",
+    "service": "REQUIRED_APPROVED_MAILER_SERVICE"
+  }],
+  "observability": {"enabled": true}
+}
