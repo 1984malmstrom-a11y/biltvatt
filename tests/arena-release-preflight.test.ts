@@ -6,3 +6,9 @@ it('read-only preflight accepts only explicit standalone identities and never cl
 it.each(['tvattligan','tvattligan-master-test'])('refuses protected Worker %s even when explicitly supplied',name=>{expect(inspectArenaPilotConfig({...good(),name},{...approved,worker:name}).ok).toBe(false);});
 it.each(['695033b7-6bb2-47a3-a9c3-08d4ca818088','ca2d4bb8-0c28-47b7-9514-8c893ea47c09','767b5a12-6b40-4516-9f7c-e072c1130480'])('refuses protected station or integrated Arena D1 %s',database_id=>{const c=good();c.d1_databases[0].database_id=database_id;expect(inspectArenaPilotConfig(c,{...approved,arenaDatabaseId:database_id}).ok).toBe(false);});
 it('rejects integrated DB bindings, dev bypass, plaintext secrets, wrong migrations, domains and cron',()=>{const edits=[(c:any)=>c.d1_databases.push({binding:'DB'}),(c:any)=>c.vars.ARENA_AUTH_DEV='1',(c:any)=>c.vars.ADMIN_PIN='123456',(c:any)=>c.d1_databases[0].migrations_dir='migrations-master',(c:any)=>c.assets.run_worker_first=['/api/*'],(c:any)=>c.routes=[{pattern:'arenanplay.se'}],(c:any)=>c.triggers={crons:['* * * * *']},(c:any)=>c.services=[]];for(const edit of edits){const c=good();edit(c);expect(inspectArenaPilotConfig(c,approved).ok).toBe(false);}});
+it('rejects a dedicated Resend binding until its named entrypoint and caller props are complete',()=>{
+ const c:any=good();c.services[0].service='arenan-mailer-pilot';expect(inspectArenaPilotConfig(c,approved).ok).toBe(false);
+ c.services[0].entrypoint='ArenaMailer';expect(inspectArenaPilotConfig(c,approved).ok).toBe(false);
+ c.services[0].props={caller:'other-worker'};expect(inspectArenaPilotConfig(c,approved).ok).toBe(false);
+ c.services[0].props.caller=approved.worker;expect(inspectArenaPilotConfig(c,approved).ok).toBe(true);
+});

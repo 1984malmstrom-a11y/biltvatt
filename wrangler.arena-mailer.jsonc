@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "arenan-mailer-pilot",
+  "account_id": "aff95af21a7f160722dd524471fc25b0",
+  "main": "worker/arena-mailer.ts",
+  "compatibility_date": "2026-10-07",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "observability": {"enabled": false},
+  "vars": {
+    "RESEND_DOMAIN_VERIFIED": "0",
+    "ARENA_ALLOWED_ORIGINS": "[]"
+  }
+}

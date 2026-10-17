@@ -25,3 +25,9 @@ it('local rehearsal has no account, remote ID or service, and cannot pass deploy
  expect(c.d1_databases).toHaveLength(1);expect(inspectArenaPilotConfig(c,{worker:c.name,arenaDatabaseId:c.d1_databases[0].database_id}).ok).toBe(false);
  expect(()=>prepareArenaPilotConfig(template,{...options,local:true})).toThrow();
 });
+it('supports the isolated named mailer without changing generic existing mailer bindings',()=>{
+ const config=prepareArenaPilotConfig(template,{...options,mailer:'arenan-mailer-pilot',mailerEntrypoint:'ArenaMailer'});
+ expect(config.services).toEqual([{binding:'ARENA_MAILER',service:'arenan-mailer-pilot',entrypoint:'ArenaMailer',props:{caller:'arenan-pilot-vd-20261019'}}]);
+ expect(prepareArenaPilotConfig(template,options).services).toEqual([{binding:'ARENA_MAILER',service:options.mailer}]);
+ expect(()=>prepareArenaPilotConfig(template,{...options,mailerEntrypoint:'Unreviewed'})).toThrow();
+});

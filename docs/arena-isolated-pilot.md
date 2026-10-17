@@ -2,6 +2,8 @@
 
 Denna körordning är för **senare uttryckligen godkända** remote-steg. Inget remote-steg har körts i förberedelsepasset. Använd PowerShell 7, Node >=22.13 och projektets låsta npm-installation. Kör blocken ett i taget; ett inmatat GODKÄNN är operatörens godkännande, aldrig något som agenten fyller i automatiskt.
 
+Uppdatering från Resend-passet: separat mailerkod/config och egen körordning finns i `docs/arena-resend-mailer.md`. Operatören anger nu pilot-D1 `8044ee1b-9185-4644-954f-d5455330a7a7` i konto `aff95af21a7f160722dd524471fc25b0`. Dessa uppgifter är inte remote-verifierade här. Kontrollera dem med GET och återanvänd just den separata pilotresursen efter verifiering; kör **inte** skapa-D1-blocket igen om den redan finns. De tre skyddade äldre UUID:erna förblir spärrade.
+
 ## 1. Identiteter och nuläge
 
 | Resurs | Lokalt belagt namn / UUID | Hantering |
@@ -96,7 +98,7 @@ if ($db.uuid -ne $ArenaId -or $db.name -ne $Pilot) { throw 'Fel D1-identitet' }
 
 ## 4. Mailer, secrets och faktisk pilotconfig
 
-**STOPP 2 – separat remote-godkännande för varje mailer-/secret-/senderändring.** Appen har inget provider-specifikt mailerbygge; det får inte antas att ett service-namn i config skapar en fungerande tjänst. Ange en separat granskad service först när följande är klart:
+**STOPP 2 – separat remote-godkännande för varje mailer-/secret-/senderändring.** Den separata Resend-implementationen för `arenan-mailer-pilot` är lokalt testad, men inte publicerad. Följ först `docs/arena-resend-mailer.md`. Ett service-namn skapar aldrig tjänsten. Ange en separat granskad service först när följande är klart:
 
 - Service binding ARENA_MAILER ska acceptera intern POST `https://arena-mailer.internal/send`, JSON `{to,purpose,url}`; purpose verify/reset/invite. Returnera 2xx bara vid accepterad leverans. Inga råa token/länkar i loggar. Blockera obehörigt publikt anrop till tjänsten; använd intern tjänst utan publik route/workers.dev eller motsvarande verifierat skydd.
 - Godkänd mailprovider, avsändaradress/domän, ev. leverantörsnyckel i **mailertjänstens** secret store, rätt leveransregion och godkända testmottagare. Ingen DNS/SPF/DKIM-ändring ingår; använd redan verifierad avsändare eller invänta separat beslut.
@@ -106,7 +108,9 @@ if ($db.uuid -ne $ArenaId -or $db.name -ne $Pilot) { throw 'Fel D1-identitet' }
 ```powershell
 $Mailer = Read-Host 'Verifierad separat mailer-Worker/service i samma konto'
 if (@(CFList "accounts/$Account/workers/scripts").id -notcontains $Mailer) { throw 'Mailer finns inte' }
-node scripts/arena-pilot-config.mjs --account-id $Account --arena-db $ArenaId --mailer $Mailer
+$MailerArgs = @()
+if ($Mailer -eq 'arenan-mailer-pilot') { $MailerArgs = @('--mailer-entrypoint', 'ArenaMailer') }
+node scripts/arena-pilot-config.mjs --account-id $Account --arena-db $ArenaId --mailer $Mailer @MailerArgs
 if ($LASTEXITCODE -ne 0) { throw 'Config nekad' }
 function CheckPilot {
   node scripts/arena-release-preflight.mjs $Config --expected-worker $Pilot --expected-arena-db $ArenaId

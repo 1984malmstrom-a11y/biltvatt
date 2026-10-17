@@ -27,6 +27,9 @@ export function inspectArenaPilotConfig(config,{worker,arenaDatabaseId}={}){
  need(!(config.triggers?.crons?.length),'No automatic maintenance cron is approved.');
  need(!(config.r2_buckets?.length)&&!(config.queues?.producers?.length)&&!(config.queues?.consumers?.length),'No additional storage or queue resources are approved.');
  need((config.services??[]).some(x=>x.binding==='ARENA_MAILER'&&typeof x.service==='string'&&x.service.length>0),'Verified ARENA_MAILER service binding is required for recovery/invitations.');
+ for(const service of config.services??[]){
+  if(service.binding==='ARENA_MAILER'&&(service.service==='arenan-mailer-pilot'||service.entrypoint==='ArenaMailer'))need(service.entrypoint==='ArenaMailer'&&service.props?.caller===worker,'Isolated Resend mailer requires ArenaMailer entrypoint and the approved pilot caller prop.');
+ }
  return {ok:errors.length===0,errors,remoteVerified:false,mutationsPerformed:false};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
